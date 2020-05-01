@@ -8,7 +8,6 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    console.log('#####');
     const token = localStorage.getItem('@auth:token');
     if (token) {
       setUser({});
@@ -17,13 +16,11 @@ export const AuthProvider = ({ children }) => {
 
   async function signIn() {
     const response = await auth.signIn();
-    console.log(response);
     setUser(response.user);
     localStorage.setItem('@auth:token', response.token);
   }
 
   function signOut() {
-    console.log('signout');
     setUser(null);
     localStorage.removeItem('@auth:token');
   }

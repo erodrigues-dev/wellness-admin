@@ -12,8 +12,6 @@
         "extensions": [".js", ".jsx"]
       }
     ],
-    "global-require": "off",
-    "import/prefer-default-export": "off",
     "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
     "comma-dangle": ["error", "only-multiline"],
     "import/no-extraneous-dependencies": [
@@ -38,7 +36,9 @@
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "no-console": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "global-require": "off",
+    "import/prefer-default-export": "off"
   },
   "settings": {
     "import/resolver": {
