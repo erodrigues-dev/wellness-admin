@@ -23,3 +23,4 @@ Copie o arquivo .env.example para .env e preencha as variáveis de ambiente
 - [ESList import helpers](https://www.youtube.com/watch?v=0Y-x9PZDvQU&t=546s)
 - [VSCode configurations](https://www.youtube.com/watch?v=c7P03kkrEG8)
 - [Relative Paths](https://www.youtube.com/watch?v=lAV1-19hHqw)
+- [Routes e Auth](https://www.youtube.com/watch?v=KISMYYXSIX8)
