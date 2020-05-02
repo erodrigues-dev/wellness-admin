@@ -16,7 +16,7 @@ const Routes = () => {
   if (signed && !isEmployee) {
     return <CustomersRoutes />;
   }
-  console.log('>>>>>');
+
   return <AuthRoutes />;
 };
 

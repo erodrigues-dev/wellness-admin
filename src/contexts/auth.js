@@ -1,28 +1,21 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 
 import * as auth from '~/services/auth';
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
+  const userStoraged = auth.getUserFromStorage();
+  const [user, setUser] = useState(userStoraged);
 
-  useEffect(() => {
-    const token = localStorage.getItem('@auth:token');
-    if (token) {
-      setUser({});
-    }
-  }, []);
-
-  async function signIn() {
-    const response = await auth.signIn();
-    setUser(response.user);
-    localStorage.setItem('@auth:token', response.token);
+  async function signIn({ email, password }) {
+    const userAuthenticated = await auth.signIn({ email, password });
+    setUser(userAuthenticated);
   }
 
   function signOut() {
+    auth.signOut();
     setUser(null);
-    localStorage.removeItem('@auth:token');
   }
 
   return (
