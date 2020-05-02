@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 
 import App from './App';
 
-import './theme/custom.scss';
+import './styles.scss';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -11,3 +11,7 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root')
 );
+
+if (module.hot) {
+  module.hot.accept();
+}

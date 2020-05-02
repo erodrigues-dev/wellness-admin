@@ -1,6 +1,9 @@
 $theme-colors: (
-  // 'primary': tomato,
-    // 'danger': teal,
+  'primary': #294651,
+  'secondary': #b0d04c,
+  'info': #42c5be,
+  'warning': #9ce81a,
+  'dark': #132131,
 );
 
 @import '~bootstrap/scss/bootstrap';
