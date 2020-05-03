@@ -2,9 +2,9 @@ import React from 'react';
 
 import useAuth from '~/contexts/auth';
 
-import AuthRoutes from './auth.routes';
 import CustomersRoutes from './customers.routes';
 import EmployeesRoutes from './employees.routes';
+import PublicRoutes from './public.routes';
 
 const Routes = () => {
   const { signed, isEmployee } = useAuth();
@@ -17,7 +17,7 @@ const Routes = () => {
     return <CustomersRoutes />;
   }
 
-  return <AuthRoutes />;
+  return <PublicRoutes />;
 };
 
 export default Routes;

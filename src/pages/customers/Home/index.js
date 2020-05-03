@@ -1,20 +1,6 @@
 import React from 'react';
+import { Card } from 'react-bootstrap';
 
-import useAuth from '~/contexts/auth';
-
-const Home = () => {
-  const { signOut } = useAuth();
-
-  return (
-    <>
-      <h1>Home customer</h1>
-      <br />
-      <br />
-      <button type="button" onClick={signOut}>
-        SignOut
-      </button>
-    </>
-  );
-};
+const Home = () => <Card body>home customer</Card>;
 
 export default Home;
