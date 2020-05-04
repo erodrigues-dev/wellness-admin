@@ -21,7 +21,6 @@ import {
   AvatarProfile,
   Menu,
   Item,
-  Icon,
 } from './styles';
 
 const Sidebar = ({ open }) => (
