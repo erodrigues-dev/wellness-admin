@@ -6,6 +6,10 @@ export const Container = styled.aside`
   background-size: 150% 150%;
   display: flex;
   flex-direction: column;
+  position: absolute;
+  height: 100%;
+  left: ${(props) => (props.open ? '0' : '-260px')};
+  transition: left 0.3s;
 `;
 
 export const Top = styled.div`
@@ -15,25 +19,49 @@ export const Top = styled.div`
   justify-content: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 `;
-
 export const Logo = styled.img`
   margin: 0 8px;
-  height: 30px;
-`;
-
-export const Title = styled.p`
-  text-transform: uppercase;
-  font-weight: 500;
-  font-size: 16px;
-  color: #eee;
-  margin: 0;
 `;
 
 export const Content = styled.div`
   flex: 1;
 `;
-export const Itens = styled.ul`
-  margin-top: 20px;
+
+export const AvatarContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  margin-top: 24px;
+`;
+export const Avatar = styled.div`
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #666;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+
+  & svg {
+    stroke-width: 1;
+  }
+`;
+export const AvatarName = styled.p`
+  color: #fff;
+  font-size: 14px;
+  margin: 0;
+`;
+export const AvatarProfile = styled.p`
+  color: #666;
+  font-size: 10px;
+  margin: 0;
+`;
+
+export const Menu = styled.ul`
+  margin-top: 24px;
 `;
 export const Item = styled.li`
   color: #fff;
@@ -49,13 +77,14 @@ export const Item = styled.li`
   transition: background-color 0.2s;
   cursor: pointer;
 
+  & svg {
+    margin-right: 24px;
+    stroke-width: 1;
+    color: #fff;
+  }
+
   &.active,
   &:hover {
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.1);
   }
-`;
-
-export const Icon = styled.div`
-  margin-right: 16px;
-  font-weight: 400;
 `;

@@ -6,11 +6,11 @@ import { AuthProvider } from '~/contexts/auth';
 import Routes from './routes';
 
 const App = () => (
-  <BrowserRouter>
-    <AuthProvider>
+  <AuthProvider>
+    <BrowserRouter>
       <Routes />
-    </AuthProvider>
-  </BrowserRouter>
+    </BrowserRouter>
+  </AuthProvider>
 );
 
 export default App;

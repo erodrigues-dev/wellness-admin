@@ -1,55 +1,72 @@
 import React from 'react';
 import {
+  FiClock,
+  FiUser,
   FiUsers,
   FiActivity,
-  FiCheckSquare,
   FiBriefcase,
+  FiShoppingBag,
+  FiSettings,
+  FiLogOut,
 } from 'react-icons/fi';
 
 import {
   Container,
   Top,
   Logo,
-  Title,
   Content,
-  Itens,
+  AvatarContainer,
+  Avatar,
+  AvatarName,
+  AvatarProfile,
+  Menu,
   Item,
   Icon,
 } from './styles';
 
-const Sidebar = () => (
-  <Container>
+const Sidebar = ({ open }) => (
+  <Container open={open}>
     <Top>
-      <Logo src="/images/logo-simple.png" />
-      <Title>Elite wellness</Title>
+      <Logo src="/images/logo-1.png" />
     </Top>
     <Content>
-      <Itens>
+      <AvatarContainer>
+        <Avatar>
+          <FiUser size="56" />
+        </Avatar>
+        <AvatarName>John Doe</AvatarName>
+        <AvatarProfile>Administrator</AvatarProfile>
+      </AvatarContainer>
+      <Menu>
         <Item className="active">
-          <Icon>
-            <FiUsers size="22" />
-          </Icon>
-          Employees
+          <FiClock size="24" />
+          Schedules
         </Item>
         <Item>
-          <Icon>
-            <FiBriefcase size="22" />
-          </Icon>
+          <FiBriefcase size="24" />
           Customers
         </Item>
         <Item>
-          <Icon>
-            <FiActivity size="22" />
-          </Icon>
+          <FiUsers size="24" />
+          Employees
+        </Item>
+        <Item>
+          <FiActivity size="24" />
           Activities
         </Item>
         <Item>
-          <Icon>
-            <FiCheckSquare size="22" />
-          </Icon>
+          <FiShoppingBag size="24" />
+          Packages
+        </Item>
+        <Item>
+          <FiSettings size="24" />
           Profiles
         </Item>
-      </Itens>
+        <Item>
+          <FiLogOut size="24" />
+          Sign-Out
+        </Item>
+      </Menu>
     </Content>
   </Container>
 );

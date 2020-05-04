@@ -1,14 +1,14 @@
 import React from 'react';
-import { FiLogOut } from 'react-icons/fi';
+import { FiMenu } from 'react-icons/fi';
 
 import { Container, Brand, Buttons, Button } from './styles';
 
-const Navbar = () => (
+const Navbar = ({ toggleSidebar }) => (
   <Container>
     <Brand>Dashboard</Brand>
     <Buttons>
-      <Button>
-        <FiLogOut size={22} />
+      <Button onClick={toggleSidebar}>
+        <FiMenu size={22} />
       </Button>
     </Buttons>
   </Container>

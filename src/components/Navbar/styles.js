@@ -1,12 +1,15 @@
 import styled from 'styled-components';
 
 export const Container = styled.nav`
+  background: linear-gradient(to right, #282828 0%, #111 100%);
+  background-size: 150% 150%;
   height: 60px;
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #fff;
 `;
 
 export const Brand = styled.p`
@@ -14,7 +17,9 @@ export const Brand = styled.p`
   margin: 0;
 `;
 
-export const Buttons = styled.div``;
+export const Buttons = styled.div`
+  display: flex;
+`;
 
 export const Button = styled.div`
   cursor: pointer;
@@ -27,6 +32,6 @@ export const Button = styled.div`
   transition: background 0.2s;
 
   &:hover {
-    background: #ddd;
+    background: rgba(255, 255, 255, 0.1);
   }
 `;
