@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
-import Navbar from '~/components/Navbar';
-import Sidebar from '~/components/Sidebar';
+import Navbar from '~/components/layouts/Navbar';
+import Sidebar from '~/components/layouts/Sidebar';
 
 import { Container, Main, Content, Footer } from './styles';
 
