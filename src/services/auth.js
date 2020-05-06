@@ -28,11 +28,12 @@ export function signOut() {
 }
 
 export function getUserFromStorage() {
-  const token = localStorage.getItem('@auth:token');
+  try {
+    const token = localStorage.getItem('@auth:token');
+    if (token) return JwtDecode(token);
 
-  if (token) {
-    return JwtDecode(token);
+    return null;
+  } catch {
+    return null;
   }
-
-  return null;
 }
