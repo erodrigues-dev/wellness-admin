@@ -4,7 +4,7 @@
     "browser": true
   },
   "plugins": ["react", "jsx-a11y", "import", "import-helpers"],
-  "extends": ["airbnb"],
+  "extends": ["airbnb", "prettier"],
   "rules": {
     "react/jsx-filename-extension": [
       "error",
@@ -35,8 +35,6 @@
     ],
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
-    "no-console": "off",
-    "object-curly-newline": "off",
     "global-require": "off",
     "import/prefer-default-export": "off"
   },
