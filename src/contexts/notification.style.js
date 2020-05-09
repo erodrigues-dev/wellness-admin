@@ -32,7 +32,7 @@ export const style = {
     },
 
     tr: {
-      top: '0px',
+      top: '-8px',
       bottom: 'auto',
       left: 'auto',
       right: '0px',

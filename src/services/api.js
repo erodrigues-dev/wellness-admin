@@ -13,4 +13,13 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    let message = 'Has ocurred an unuxpected error, please try again';
+    if (error.response.status === 400) message = error.response.data.message;
+    throw new Error(message);
+  }
+);
+
 export default api;
