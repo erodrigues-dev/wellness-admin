@@ -78,7 +78,12 @@ export const Item = styled.li`
   transition: background-color 0.2s;
   cursor: pointer;
 
-  & svg {
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  svg {
     margin-right: 24px;
     stroke-width: 1;
     color: #fff;

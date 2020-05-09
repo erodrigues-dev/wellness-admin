@@ -2,8 +2,10 @@ import JwtDecode from 'jwt-decode';
 
 import api from './api';
 
+const KEY_TOKEN = '@auth:token';
+
 function setStorage(token) {
-  localStorage.setItem('@auth:token', token);
+  localStorage.setItem(KEY_TOKEN, token);
 }
 
 export async function signIn({ email, password }) {
@@ -24,7 +26,7 @@ export async function signIn({ email, password }) {
 }
 
 export function signOut() {
-  localStorage.removeItem('@auth:token');
+  localStorage.removeItem(KEY_TOKEN);
 }
 
 export function getUserFromStorage() {

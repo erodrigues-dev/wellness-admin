@@ -36,7 +36,15 @@
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "global-require": "off",
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false
+      }
+    ],
+    "radix": ["error", "as-needed"],
+    "no-restricted-globals": "off"
   },
   "settings": {
     "import/resolver": {

@@ -1,14 +1,6 @@
 import React from 'react';
-import {
-  FiClock,
-  FiUser,
-  FiUsers,
-  FiActivity,
-  FiBriefcase,
-  FiShoppingBag,
-  FiSettings,
-  FiLogOut,
-} from 'react-icons/fi';
+import { FiUser, FiLogOut } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
 
@@ -25,12 +17,14 @@ import {
   Item,
 } from './styles';
 
-const Sidebar = ({ open }) => {
+const Sidebar = ({ open, routes }) => {
   const { signOut } = useAuth();
   return (
     <Container open={open}>
       <Top>
-        <Logo src="/images/logo-1.png" />
+        <Link to="/">
+          <Logo src="/images/logo-1.png" />
+        </Link>
       </Top>
       <Content>
         <AvatarContainer>
@@ -41,7 +35,19 @@ const Sidebar = ({ open }) => {
           <AvatarProfile>Administrator</AvatarProfile>
         </AvatarContainer>
         <Menu>
-          <Item className="active">
+          {routes.map((route) => (
+            <Item key={route.path}>
+              <Link to={route.path}>
+                <route.Icon size={24} />
+                {route.title}
+              </Link>
+            </Item>
+          ))}
+          <Item onClick={signOut}>
+            <FiLogOut size="24" />
+            Sign-Out
+          </Item>
+          {/* <Item className="active">
             <FiClock size="24" />
             Schedules
           </Item>
@@ -68,7 +74,7 @@ const Sidebar = ({ open }) => {
           <Item onClick={signOut}>
             <FiLogOut size="24" />
             Sign-Out
-          </Item>
+          </Item> */}
         </Menu>
       </Content>
     </Container>

@@ -5,8 +5,8 @@ import Sidebar from '~/components/layouts/Sidebar';
 
 import { Container, Main, Content, Footer } from './styles';
 
-const MainLayout = ({ children }) => {
-  const [sidebar, setSidebar] = useState(false);
+const MainLayout = ({ children, routes }) => {
+  const [sidebar, setSidebar] = useState(true);
 
   const handleResize = () => {
     const isOpen = window.innerWidth > 1024;
@@ -14,6 +14,7 @@ const MainLayout = ({ children }) => {
   };
 
   useEffect(() => {
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -24,7 +25,7 @@ const MainLayout = ({ children }) => {
 
   return (
     <Container>
-      <Sidebar open={sidebar} />
+      <Sidebar open={sidebar} routes={routes} />
       <Main sidebarOpen={sidebar}>
         <Navbar sidebarOpen={sidebar} toggleSidebar={handleToglesidebar} />
         <Content>{children}</Content>
