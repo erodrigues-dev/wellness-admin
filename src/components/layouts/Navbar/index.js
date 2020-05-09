@@ -1,11 +1,11 @@
 import React from 'react';
 import { FiMenu } from 'react-icons/fi';
 
-import { Container, Brand, Buttons, Button } from './styles';
+import { Container, Buttons, Button } from './styles';
 
-const Navbar = ({ toggleSidebar }) => (
+const Navbar = ({ sidebarOpen, toggleSidebar }) => (
   <Container>
-    <Brand>Dashboard</Brand>
+    <div>{!sidebarOpen && <img src="/images/logo-1.png" alt="logo" />}</div>
     <Buttons>
       <Button onClick={toggleSidebar}>
         <FiMenu size={22} />

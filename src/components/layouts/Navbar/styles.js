@@ -12,11 +12,6 @@ export const Container = styled.nav`
   color: #fff;
 `;
 
-export const Brand = styled.p`
-  line-height: 40px;
-  margin: 0;
-`;
-
 export const Buttons = styled.div`
   display: flex;
 `;
