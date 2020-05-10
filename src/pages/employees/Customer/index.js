@@ -39,7 +39,7 @@ const Customer = () => {
   return (
     <Card body>
       <Card.Title>Customers</Card.Title>
-
+      <hr />
       <Filter onFilter={handleFilter} />
       <List list={list} />
       <Paginate

@@ -69,7 +69,7 @@ function EmployeeForm() {
   return (
     <Card body>
       <Card.Title>{action}</Card.Title>
-
+      <hr />
       <Form onSubmit={formik.handleSubmit}>
         <Form.Group>
           <Form.Label>Name</Form.Label>

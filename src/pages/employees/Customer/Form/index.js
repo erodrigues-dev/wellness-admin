@@ -49,10 +49,10 @@ function FormComponent() {
     try {
       if (id === undefined) {
         await service.create(values);
-        sendNotification('Employee created with success.');
+        sendNotification('Customer created with success.');
       } else {
         await service.update(values);
-        sendNotification('Employee updated with success.');
+        sendNotification('Customer updated with success.');
       }
 
       history.goBack();
@@ -69,7 +69,7 @@ function FormComponent() {
   return (
     <Card body>
       <Card.Title>{action}</Card.Title>
-
+      <hr />
       <Form onSubmit={formik.handleSubmit}>
         <Form.Group>
           <Form.Label>Name</Form.Label>
