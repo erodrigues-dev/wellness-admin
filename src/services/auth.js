@@ -32,10 +32,24 @@ export function signOut() {
 export function getUserFromStorage() {
   try {
     const token = localStorage.getItem('@auth:token');
-    if (token) return JwtDecode(token);
+    if (token) {
+      const decoded = JwtDecode(token);
+
+      if (isExpired(decoded.exp)) return null;
+
+      return decoded;
+    }
 
     return null;
   } catch {
     return null;
   }
+}
+
+function isExpired(exp) {
+  const now = new Date().getTime() + 1 / 1000;
+
+  if (exp < now) return false;
+
+  return true;
 }
