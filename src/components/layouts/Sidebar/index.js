@@ -19,7 +19,7 @@ import {
 
 const Sidebar = ({ open, routes }) => {
   const location = useLocation();
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
 
   const isActive = (route) => {
     return location.pathname.includes(route.path);
@@ -37,7 +37,7 @@ const Sidebar = ({ open, routes }) => {
           <Avatar>
             <FiUser size="56" />
           </Avatar>
-          <AvatarName>John Doe</AvatarName>
+          <AvatarName>{user.name}</AvatarName>
           <AvatarProfile>Administrator</AvatarProfile>
         </AvatarContainer>
         <Menu>
