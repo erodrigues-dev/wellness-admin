@@ -2,6 +2,7 @@ import React from 'react';
 import {
   // FiClock,
   FiUsers,
+  FiSettings,
   // FiActivity,
   // FiBriefcase,
   // FiShoppingBag,
@@ -15,6 +16,8 @@ import {
   EmployeeForm,
   Customer,
   CustomerForm,
+  Profile,
+  ProfileForm,
 } from '~/pages/employees';
 
 const routes = [
@@ -27,6 +30,11 @@ const routes = [
     title: 'Customers',
     path: '/customers',
     Icon: FiUsers,
+  },
+  {
+    title: 'Profiles',
+    path: '/profiles',
+    Icon: FiSettings,
   },
 ];
 
@@ -42,6 +50,10 @@ const EmployeesRoutes = () => (
       <Route exact path="/customers" component={Customer} />
       <Route path="/customers/create" component={CustomerForm} />
       <Route path="/customers/:id" component={CustomerForm} />
+
+      <Route exact path="/profiles" component={Profile} />
+      <Route path="/profiles/create" component={ProfileForm} />
+      <Route path="/profiles/:id" component={ProfileForm} />
 
       <Redirect to="/" />
     </Switch>
