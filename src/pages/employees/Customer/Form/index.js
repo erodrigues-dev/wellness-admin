@@ -28,7 +28,6 @@ function FormComponent() {
   });
 
   useEffect(() => {
-    console.log('id>>>');
     if (!id) return;
     service
       .get(id)
@@ -43,6 +42,10 @@ function FormComponent() {
         });
       })
       .catch(({ message }) => sendNotification(message, false));
+
+    // TODO
+    // React Hook useEffect has missing dependencies
+    // eslint-disable-next-line
   }, [id]);
 
   async function handleSubmit(values, { setSubmitting }) {

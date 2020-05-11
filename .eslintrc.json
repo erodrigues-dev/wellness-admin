@@ -3,24 +3,13 @@
   "env": {
     "browser": true
   },
-  "plugins": [
-    "react",
-    "jsx-a11y",
-    "import",
-    "import-helpers"
-  ],
-  "extends": [
-    "airbnb",
-    "prettier"
-  ],
+  "plugins": ["react", "jsx-a11y", "import", "import-helpers"],
+  "extends": ["airbnb", "prettier"],
   "rules": {
     "react/jsx-filename-extension": [
       "error",
       {
-        "extensions": [
-          ".js",
-          ".jsx"
-        ]
+        "extensions": [".js", ".jsx"]
       }
     ],
     "no-unused-expressions": [
@@ -29,10 +18,7 @@
         "allowTaggedTemplates": true
       }
     ],
-    "comma-dangle": [
-      "error",
-      "only-multiline"
-    ],
+    "comma-dangle": ["error", "only-multiline"],
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -47,11 +33,7 @@
           "/^react/",
           "module",
           "/^~/",
-          [
-            "parent",
-            "sibling",
-            "index"
-          ]
+          ["parent", "sibling", "index"]
         ],
         "alphabetize": {
           "order": "asc",
@@ -69,12 +51,10 @@
         "functions": false
       }
     ],
-    "radix": [
-      "error",
-      "as-needed"
-    ],
+    "radix": ["error", "as-needed"],
     "no-restricted-globals": "off",
-    "no-template-curly-in-string": "off"
+    "no-template-curly-in-string": "off",
+    "no-bitwise": "off"
   },
   "settings": {
     "import/resolver": {
