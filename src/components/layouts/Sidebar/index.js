@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiUser, FiLogOut } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
 
@@ -18,7 +18,13 @@ import {
 } from './styles';
 
 const Sidebar = ({ open, routes }) => {
+  const location = useLocation();
   const { signOut } = useAuth();
+
+  const isActive = (route) => {
+    return location.pathname.includes(route.path);
+  };
+
   return (
     <Container open={open}>
       <Top>
@@ -36,7 +42,7 @@ const Sidebar = ({ open, routes }) => {
         </AvatarContainer>
         <Menu>
           {routes.map((route) => (
-            <Item key={route.path}>
+            <Item key={route.path} active={isActive(route)}>
               <Link to={route.path}>
                 <route.Icon size={24} />
                 {route.title}

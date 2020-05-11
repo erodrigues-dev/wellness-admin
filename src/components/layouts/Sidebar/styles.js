@@ -65,6 +65,7 @@ export const Menu = styled.ul`
   margin-top: 24px;
 `;
 export const Item = styled.li`
+  cursor: pointer;
   color: #fff;
   margin: 8px 16px;
   padding: 8px 16px;
@@ -76,7 +77,8 @@ export const Item = styled.li`
   text-transform: uppercase;
   border-radius: 4px;
   transition: background-color 0.2s;
-  cursor: pointer;
+  background-color: ${({ active }) =>
+    active ? 'rgba(255, 255, 255, 0.1)' : 'transparent'};
 
   a {
     text-decoration: none;
@@ -89,7 +91,6 @@ export const Item = styled.li`
     color: #fff;
   }
 
-  &.active,
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
