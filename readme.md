@@ -1,5 +1,9 @@
 # Wellness frontend
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/cd4f9d1a-929c-4aea-965e-91d7945749f7/deploy-status)](https://app.netlify.com/sites/wellness-release/deploys)
+
+- [link para release](https://wellness-release.netlify.app)
+
 ## .ENV
 
 Copie o arquivo .env.example para .env e preencha as variáveis de ambiente
