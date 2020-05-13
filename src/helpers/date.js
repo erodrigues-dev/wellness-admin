@@ -1,10 +1,6 @@
-import { format, parseJSON } from 'date-fns';
-
-const formats = {
-  list: 'dd/MM/yyyy HH:mm',
-};
+import { parseJSON, formatDistanceToNow } from 'date-fns';
 
 export function formatToList(value) {
   const date = parseJSON(value);
-  return format(date, formats.list);
+  return formatDistanceToNow(date, { addSuffix: true });
 }
