@@ -4,7 +4,7 @@
     "browser": true
   },
   "plugins": ["react", "jsx-a11y", "import", "import-helpers"],
-  "extends": ["airbnb"],
+  "extends": ["airbnb", "prettier"],
   "rules": {
     "react/jsx-filename-extension": [
       "error",
@@ -12,7 +12,12 @@
         "extensions": [".js", ".jsx"]
       }
     ],
-    "no-unused-expressions": ["error", { "allowTaggedTemplates": true }],
+    "no-unused-expressions": [
+      "error",
+      {
+        "allowTaggedTemplates": true
+      }
+    ],
     "comma-dangle": ["error", "only-multiline"],
     "import/no-extraneous-dependencies": [
       "error",
@@ -30,15 +35,26 @@
           "/^~/",
           ["parent", "sibling", "index"]
         ],
-        "alphabetize": { "order": "asc", "ignoreCase": true }
+        "alphabetize": {
+          "order": "asc",
+          "ignoreCase": true
+        }
       }
     ],
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
-    "no-console": "off",
-    "object-curly-newline": "off",
     "global-require": "off",
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false
+      }
+    ],
+    "radix": ["error", "as-needed"],
+    "no-restricted-globals": "off",
+    "no-template-curly-in-string": "off",
+    "no-bitwise": "off"
   },
   "settings": {
     "import/resolver": {

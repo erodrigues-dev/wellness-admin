@@ -2,32 +2,54 @@ import JwtDecode from 'jwt-decode';
 
 import api from './api';
 
+const KEY_TOKEN = '@auth:token';
+
 function setStorage(token) {
-  localStorage.setItem('@auth:token', token);
+  localStorage.setItem(KEY_TOKEN, token);
 }
 
 export async function signIn({ email, password }) {
-  const {
-    data: { token },
-  } = await api.post('/sessions', {
-    email,
-    password,
-  });
-
-  setStorage(token);
-  return JwtDecode(token);
+  try {
+    const {
+      data: { token },
+    } = await api.post('/sessions', {
+      email,
+      password,
+    });
+    setStorage(token);
+    return JwtDecode(token);
+  } catch (error) {
+    if (error.response.status === 401)
+      throw new Error('Email or password are invalid!');
+    throw new Error('Unexpected error, try again!');
+  }
 }
 
 export function signOut() {
-  localStorage.removeItem('@auth:token');
+  localStorage.removeItem(KEY_TOKEN);
 }
 
 export function getUserFromStorage() {
-  const token = localStorage.getItem('@auth:token');
+  try {
+    const token = localStorage.getItem('@auth:token');
+    if (token) {
+      const decoded = JwtDecode(token);
 
-  if (token) {
-    return JwtDecode(token);
+      if (isExpired(decoded.exp)) return null;
+
+      return decoded;
+    }
+
+    return null;
+  } catch {
+    return null;
   }
+}
 
-  return null;
+function isExpired(exp) {
+  const now = new Date().getTime() + 1 / 1000;
+
+  if (exp < now) return false;
+
+  return true;
 }

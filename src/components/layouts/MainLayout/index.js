@@ -1,12 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import Navbar from '~/components/Navbar';
-import Sidebar from '~/components/Sidebar';
+import Navbar from '~/components/layouts/Navbar';
+import Sidebar from '~/components/layouts/Sidebar';
 
 import { Container, Main, Content, Footer } from './styles';
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, routes }) => {
   const [sidebar, setSidebar] = useState(true);
+
+  const handleResize = () => {
+    const isOpen = window.innerWidth > 1024;
+    setSidebar(isOpen);
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleToglesidebar = () => {
     setSidebar(!sidebar);
@@ -14,9 +25,9 @@ const MainLayout = ({ children }) => {
 
   return (
     <Container>
-      <Sidebar open={sidebar} />
+      <Sidebar open={sidebar} routes={routes} />
       <Main sidebarOpen={sidebar}>
-        <Navbar toggleSidebar={handleToglesidebar} />
+        <Navbar sidebarOpen={sidebar} toggleSidebar={handleToglesidebar} />
         <Content>{children}</Content>
         <Footer>&copy; 2020 . Elite Wellness . Performance & Recovery</Footer>
       </Main>

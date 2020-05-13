@@ -25,6 +25,7 @@ export const Logo = styled.img`
 
 export const Content = styled.div`
   flex: 1;
+  overflow-y: auto;
 `;
 
 export const AvatarContainer = styled.div`
@@ -64,6 +65,7 @@ export const Menu = styled.ul`
   margin-top: 24px;
 `;
 export const Item = styled.li`
+  cursor: pointer;
   color: #fff;
   margin: 8px 16px;
   padding: 8px 16px;
@@ -75,15 +77,20 @@ export const Item = styled.li`
   text-transform: uppercase;
   border-radius: 4px;
   transition: background-color 0.2s;
-  cursor: pointer;
+  background-color: ${({ active }) =>
+    active ? 'rgba(255, 255, 255, 0.1)' : 'transparent'};
 
-  & svg {
+  a {
+    text-decoration: none;
+    color: #fff;
+  }
+
+  svg {
     margin-right: 24px;
     stroke-width: 1;
     color: #fff;
   }
 
-  &.active,
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
