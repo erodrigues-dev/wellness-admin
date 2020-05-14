@@ -19,7 +19,7 @@ const Employee = () => {
         params: {
           ...filter,
           page,
-          rows: 10,
+          limit: 10,
         },
       })
       .then((response) => {
