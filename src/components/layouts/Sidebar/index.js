@@ -38,7 +38,7 @@ const Sidebar = ({ open, routes }) => {
             <FiUser size="56" />
           </Avatar>
           <AvatarName>{user.name}</AvatarName>
-          <AvatarProfile>Administrator</AvatarProfile>
+          <AvatarProfile>{user.profile?.name}</AvatarProfile>
         </AvatarContainer>
         <Menu>
           {routes.map((route) => (

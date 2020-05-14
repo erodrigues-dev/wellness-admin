@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -7,10 +7,20 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
 import * as employeeService from '~/services/employee';
+import * as profileService from '~/services/profile';
 
 import schema from './schema';
 
 function EmployeeForm() {
+  const initialValues = {
+    id: 0,
+    name: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    profileId: '',
+  };
+  const [profiles, setProfiles] = useState([]);
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
@@ -18,13 +28,7 @@ function EmployeeForm() {
   const formik = useFormik({
     validationSchema: schema,
     onSubmit: handleSubmit,
-    initialValues: {
-      id: 0,
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
-    },
+    initialValues,
   });
 
   useEffect(() => {
@@ -32,11 +36,12 @@ function EmployeeForm() {
     employeeService
       .get(id)
       .then((response) => {
-        const { name, email } = response.data;
+        const { name, email, profileId } = response.data;
         formik.setValues({
           id,
           name,
           email,
+          profileId,
           password: '',
           confirmPassword: '',
         });
@@ -47,6 +52,10 @@ function EmployeeForm() {
     // React Hook useEffect has missing dependencies
     // eslint-disable-next-line
   }, [id]);
+
+  useEffect(() => {
+    profileService.listAll().then((response) => setProfiles(response.data));
+  }, []);
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
@@ -139,6 +148,32 @@ function EmployeeForm() {
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.confirmPassword}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+        <Form.Row>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Profile</Form.Label>
+            <Form.Control
+              placeholder="Profile"
+              as="select"
+              custom
+              name="profileId"
+              value={formik.values.profileId}
+              onBlur={formik.handleBlur}
+              onChange={formik.handleChange}
+              isValid={formik.touched.profileId && !formik.errors.profileId}
+              isInvalid={formik.touched.profileId && formik.errors.profileId}
+            >
+              <option value="">Select</option>
+              {profiles.map((profile) => (
+                <option key={profile.id} value={profile.id}>
+                  {profile.name}
+                </option>
+              ))}
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.profileId}
             </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>
