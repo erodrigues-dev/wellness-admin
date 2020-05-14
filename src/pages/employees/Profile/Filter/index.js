@@ -27,7 +27,7 @@ function Filter({ onFilter }) {
     <Container>
       <Form onSubmit={formik.handleSubmit}>
         <Row>
-          <Form.Group as={Col} lg="6" xl="4">
+          <Form.Group as={Col} md="6">
             <Form.Control
               placeholder="Name"
               name="name"
@@ -35,7 +35,7 @@ function Filter({ onFilter }) {
               onChange={formik.handleChange}
             />
           </Form.Group>
-          <Form.Group as={Col} lg="6" xl="4">
+          <Form.Group as={Col} md="6">
             <Form.Control
               placeholder="Description"
               name="description"
@@ -43,7 +43,9 @@ function Filter({ onFilter }) {
               onChange={formik.handleChange}
             />
           </Form.Group>
-          <Col lg="12" xl="4">
+        </Row>
+        <Row>
+          <Col className="d-flex justifiy-content-end">
             <Button type="submit">Filter</Button>
             <Button type="reset" className="ml-2" onClick={formik.handleReset}>
               Clear Filters
