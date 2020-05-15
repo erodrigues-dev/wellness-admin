@@ -25,9 +25,9 @@ const MainLayout = ({ children, routes }) => {
 
   return (
     <Container>
+      <Navbar sidebarOpen={sidebar} toggleSidebar={handleToglesidebar} />
       <Sidebar open={sidebar} routes={routes} />
       <Main sidebarOpen={sidebar}>
-        <Navbar sidebarOpen={sidebar} toggleSidebar={handleToglesidebar} />
         <Content>{children}</Content>
         <Footer>&copy; 2020 . Elite Wellness . Performance & Recovery</Footer>
       </Main>

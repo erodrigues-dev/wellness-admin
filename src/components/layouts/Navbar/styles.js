@@ -12,6 +12,14 @@ export const Container = styled.nav`
   color: #fff;
 `;
 
+export const Brand = styled.div`
+  width: ${({ sidebarOpen }) => (sidebarOpen ? '260px' : '160px')};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: width 0.3s;
+`;
+
 export const Buttons = styled.div`
   display: flex;
 `;

@@ -6,8 +6,6 @@ import useAuth from '~/contexts/auth';
 
 import {
   Container,
-  Top,
-  Logo,
   Content,
   AvatarContainer,
   Avatar,
@@ -27,11 +25,6 @@ const Sidebar = ({ open, routes }) => {
 
   return (
     <Container open={open}>
-      <Top>
-        <Link to="/">
-          <Logo src="/images/logo-1.png" />
-        </Link>
-      </Top>
       <Content>
         <AvatarContainer>
           <Avatar>
@@ -53,34 +46,6 @@ const Sidebar = ({ open, routes }) => {
             <FiLogOut size="24" />
             Sign-Out
           </Item>
-          {/* <Item className="active">
-            <FiClock size="24" />
-            Schedules
-          </Item>
-          <Item>
-            <FiBriefcase size="24" />
-            Customers
-          </Item>
-          <Item>
-            <FiUsers size="24" />
-            Employees
-          </Item>
-          <Item>
-            <FiActivity size="24" />
-            Activities
-          </Item>
-          <Item>
-            <FiShoppingBag size="24" />
-            Packages
-          </Item>
-          <Item>
-            <FiSettings size="24" />
-            Profiles
-          </Item>
-          <Item onClick={signOut}>
-            <FiLogOut size="24" />
-            Sign-Out
-          </Item> */}
         </Menu>
       </Content>
     </Container>

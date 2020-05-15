@@ -7,20 +7,11 @@ export const Container = styled.aside`
   display: flex;
   flex-direction: column;
   position: absolute;
-  height: 100%;
+  height: calc(100% - 60px);
   left: ${(props) => (props.open ? '0' : '-260px')};
+  top: 60px;
+  border-top: 2px solid rgba(255, 255, 255, 0.2);
   transition: left 0.3s;
-`;
-
-export const Top = styled.div`
-  height: 60px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-`;
-export const Logo = styled.img`
-  margin: 0 8px;
 `;
 
 export const Content = styled.div`

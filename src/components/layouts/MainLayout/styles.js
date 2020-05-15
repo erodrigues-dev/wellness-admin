@@ -9,7 +9,7 @@ export const Main = styled.main`
   display: flex;
   flex-direction: column;
   background-color: #f0f0f0;
-  min-height: 100vh;
+  min-height: calc(100vh - 60px);
   margin-left: ${({ sidebarOpen }) => (sidebarOpen ? '259px' : 0)};
   transition: margin-left 0.3s;
 `;
