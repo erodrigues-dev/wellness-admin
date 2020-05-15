@@ -11,6 +11,8 @@ function Filter({ onFilter }) {
     initialValues: {
       name: '',
       email: '',
+      profile: '',
+      specialty: '',
     },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
@@ -37,6 +39,22 @@ function Filter({ onFilter }) {
               placeholder="E-mail"
               name="email"
               value={formik.values.email}
+              onChange={formik.handleChange}
+            />
+          </Form.Group>
+          <Form.Group as={Col} md="6">
+            <Form.Control
+              placeholder="Profile"
+              name="profile"
+              value={formik.values.profile}
+              onChange={formik.handleChange}
+            />
+          </Form.Group>
+          <Form.Group as={Col} md="6">
+            <Form.Control
+              placeholder="Specialty"
+              name="specialty"
+              value={formik.values.specialty}
               onChange={formik.handleChange}
             />
           </Form.Group>

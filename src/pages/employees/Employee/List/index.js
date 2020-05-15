@@ -17,6 +17,7 @@ function List({ list }) {
             <th>Name</th>
             <th>E-mail</th>
             <th>Profile</th>
+            <th>Specialty</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -31,12 +32,13 @@ function List({ list }) {
               <td>{item.name}</td>
               <td>{item.email}</td>
               <td>{item.profile.name}</td>
+              <td>{item.specialty}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan="5">No record found</td>
+              <td colSpan="6">No record found</td>
             </tr>
           )}
         </tbody>

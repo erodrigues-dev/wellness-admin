@@ -19,6 +19,7 @@ function EmployeeForm() {
     password: '',
     confirmPassword: '',
     profileId: '',
+    specialty: '',
   };
   const [profiles, setProfiles] = useState([]);
   const { sendNotification } = useNotification();
@@ -36,12 +37,14 @@ function EmployeeForm() {
     employeeService
       .get(id)
       .then((response) => {
-        const { name, email, profileId } = response.data;
+        const { name, email, profileId, specialty } = response.data;
+
         formik.setValues({
           id,
           name,
           email,
           profileId,
+          specialty: specialty ?? '',
           password: '',
           confirmPassword: '',
         });
@@ -174,6 +177,21 @@ function EmployeeForm() {
             </Form.Control>
             <Form.Control.Feedback type="invalid">
               {formik.errors.profileId}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Specialty</Form.Label>
+            <Form.Control
+              placeholder="Specialty"
+              name="specialty"
+              value={formik.values.specialty}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.specialty && formik.errors.specialty}
+              isValid={formik.touched.specialty && !formik.errors.specialty}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.specialty}
             </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>

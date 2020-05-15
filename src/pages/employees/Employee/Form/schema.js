@@ -20,6 +20,7 @@ const schema = yup.object().shape({
       !id || !!pwd ? mixed.required() : mixed
     ),
   profileId: yup.number().label('profile').required(),
+  specialty: yup.string().max(100),
 });
 
 export default schema;
