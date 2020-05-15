@@ -1,17 +1,23 @@
 import api from './api';
 
 const ENDPOINT = '/profiles';
-const ROWS = 10;
+const LIMIT = 10;
 
 export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
+}
+
+export function listAll(filters = {}) {
+  return api.get(ENDPOINT, {
+    ...filters,
+  });
 }
 
 export function list(page, filters) {
   return api.get(ENDPOINT, {
     params: {
       page,
-      rows: ROWS,
+      limit: LIMIT,
       ...filters,
     },
   });

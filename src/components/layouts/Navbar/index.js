@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiMenu } from 'react-icons/fi';
-import Link from 'react-router-dom/Link';
+import { Link } from 'react-router-dom';
 
 import { Container, Buttons, Button } from './styles';
 

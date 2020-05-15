@@ -5,7 +5,7 @@ import MainLayout from '~/components/layouts/MainLayout';
 import Home from '~/pages/customers/Home';
 
 const CustomersRoutes = () => (
-  <MainLayout>
+  <MainLayout routes={[]}>
     <Switch>
       <Route exact path="/" component={Home} />
       <Redirect to="/" />
