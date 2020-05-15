@@ -6,7 +6,7 @@ const schema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup
     .string()
-    .min(3)
+    .min(8)
     .max(20)
     .when('id', (id, mixed) => (id ? mixed : mixed.required())),
   confirmPassword: yup
@@ -20,6 +20,7 @@ const schema = yup.object().shape({
       !id || !!pwd ? mixed.required() : mixed
     ),
   profileId: yup.number().label('profile').required(),
+  specialty: yup.string().max(100),
 });
 
 export default schema;

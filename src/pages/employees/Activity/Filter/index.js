@@ -8,12 +8,7 @@ import { Container } from './styles';
 
 function Filter({ onFilter }) {
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      email: '',
-      profile: '',
-      specialty: '',
-    },
+    initialValues: { name: '' },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
@@ -26,35 +21,11 @@ function Filter({ onFilter }) {
     <Container>
       <Form onSubmit={formik.handleSubmit}>
         <Row>
-          <Form.Group as={Col} md="6">
+          <Form.Group as={Col}>
             <Form.Control
               placeholder="Name"
               name="name"
               value={formik.values.name}
-              onChange={formik.handleChange}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Control
-              placeholder="E-mail"
-              name="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Control
-              placeholder="Profile"
-              name="profile"
-              value={formik.values.profile}
-              onChange={formik.handleChange}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Control
-              placeholder="Specialty"
-              name="specialty"
-              value={formik.values.specialty}
               onChange={formik.handleChange}
             />
           </Form.Group>
@@ -67,11 +38,11 @@ function Filter({ onFilter }) {
             </Button>
             <Button
               as={Link}
-              to="/employees/create"
+              to="/activities/create"
               variant="secondary"
               className="ml-2"
             >
-              Add Employee
+              Add Activity
             </Button>
           </Col>
         </Row>

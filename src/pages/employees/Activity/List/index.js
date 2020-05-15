@@ -4,10 +4,13 @@ import { FiEdit } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import * as dateHelper from '~/helpers/date';
+import { currency } from '~/helpers/intl';
 
 import { Container } from './styles';
 
 function List({ list }) {
+  const formatCurrency = (value) => currency.format(value);
+
   return (
     <Container>
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -15,9 +18,8 @@ function List({ list }) {
           <tr>
             <th className="text-center">Actions</th>
             <th>Name</th>
-            <th>E-mail</th>
-            <th>Profile</th>
-            <th>Specialty</th>
+            <th>Price</th>
+            <th>Duration</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -25,20 +27,22 @@ function List({ list }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center">
-                <Link to={`/employees/${item.id}`}>
+                <Link to={`/activities/${item.id}`}>
                   <FiEdit size="18" />
                 </Link>
               </td>
               <td>{item.name}</td>
-              <td>{item.email}</td>
-              <td>{item.profile.name}</td>
-              <td>{item.specialty}</td>
+              <td>{formatCurrency(item.price)}</td>
+              <td>
+                {item.duration}
+                min
+              </td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan="6">No record found</td>
+              <td colSpan="5">No record found</td>
             </tr>
           )}
         </tbody>

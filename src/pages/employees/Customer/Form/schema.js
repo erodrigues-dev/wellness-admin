@@ -6,8 +6,8 @@ const schema = yup.object().shape({
   email: yup.string().email().required(),
   password: yup
     .string()
-    .min(3)
-    .max(8)
+    .min(8)
+    .max(20)
     .when('id', (id, mixed) => (id ? mixed : mixed.required())),
   confirmPassword: yup
     .string()
