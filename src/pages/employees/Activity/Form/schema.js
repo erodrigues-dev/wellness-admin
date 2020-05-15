@@ -1,0 +1,19 @@
+import * as yup from 'yup';
+
+import { number } from '~/helpers/sanitize';
+
+const schema = yup.object().shape({
+  id: yup.number(),
+  name: yup.string().min(3).max(50).required(),
+  description: yup.string().required(),
+  duration: yup.number().positive().min(1).max(99999).required(),
+  price: yup
+    .number()
+    .positive()
+    .min(0.01)
+    .max(999999999.99)
+    .required()
+    .transform((_value, originalValue) => number(originalValue)),
+});
+
+export default schema;

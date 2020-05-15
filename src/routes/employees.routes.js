@@ -3,7 +3,7 @@ import {
   // FiClock,
   FiUsers,
   FiSettings,
-  // FiActivity,
+  FiActivity,
   // FiBriefcase,
   // FiShoppingBag,
 } from 'react-icons/fi';
@@ -18,9 +18,16 @@ import {
   CustomerForm,
   Profile,
   ProfileForm,
+  Activity,
+  ActivityForm,
 } from '~/pages/employees';
 
 const routes = [
+  {
+    title: 'Activities',
+    path: '/activities',
+    Icon: FiActivity,
+  },
   {
     title: 'Employees',
     path: '/employees',
@@ -42,6 +49,10 @@ const EmployeesRoutes = () => (
   <MainLayout routes={routes}>
     <Switch>
       <Route exact path="/" component={Home} />
+
+      <Route exact path="/activities" component={Activity} />
+      <Route path="/activities/create" component={ActivityForm} />
+      <Route path="/activities/:id" component={ActivityForm} />
 
       <Route exact path="/employees" component={Employee} />
       <Route path="/employees/create" component={EmployeeForm} />
