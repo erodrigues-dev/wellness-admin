@@ -47,9 +47,7 @@ export function getUserFromStorage() {
 }
 
 function isExpired(exp) {
-  const now = new Date().getTime() + 1 / 1000;
+  const now = new Date().getTime() / 1000;
 
-  if (exp < now) return false;
-
-  return true;
+  return now > exp;
 }
