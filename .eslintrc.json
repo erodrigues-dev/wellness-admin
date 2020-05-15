@@ -3,8 +3,8 @@
   "env": {
     "browser": true
   },
-  "plugins": ["react", "jsx-a11y", "import", "import-helpers"],
   "extends": ["airbnb", "prettier"],
+  "plugins": ["react", "jsx-a11y", "import", "import-helpers", "prettier"],
   "rules": {
     "react/jsx-filename-extension": [
       "error",
@@ -54,7 +54,8 @@
     "radix": ["error", "as-needed"],
     "no-restricted-globals": "off",
     "no-template-curly-in-string": "off",
-    "no-bitwise": "off"
+    "no-bitwise": "off",
+    "prettier/prettier": ["error"]
   },
   "settings": {
     "import/resolver": {
