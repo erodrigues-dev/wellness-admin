@@ -6,7 +6,6 @@ const schema = yup.object().shape({
   id: yup.number(),
   name: yup.string().min(3).max(50).required(),
   description: yup.string().required(),
-  duration: yup.number().positive().min(1).max(99999).required(),
   price: yup
     .number()
     .positive()
@@ -14,6 +13,15 @@ const schema = yup.object().shape({
     .max(999999999.99)
     .required()
     .transform((_value, originalValue) => sanitize.number(originalValue)),
+  activities: yup
+    .array()
+    .of(
+      yup.object({
+        id: yup.number(),
+        quantity: yup.number().min(1).required(),
+      })
+    )
+    .required('must be add at least on activity'),
 });
 
 export default schema;

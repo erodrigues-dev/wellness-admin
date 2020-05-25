@@ -3,6 +3,9 @@ export { default as Home } from './Home';
 export { default as Activity } from './Activity';
 export { default as ActivityForm } from './Activity/Form';
 
+export { default as Package } from './Package';
+export { default as PackageForm } from './Package/Form';
+
 export { default as Employee } from './Employee';
 export { default as EmployeeForm } from './Employee/Form';
 
