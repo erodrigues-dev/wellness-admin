@@ -14,7 +14,7 @@ const Activity = () => {
   const [filter, setFilter] = useState({ name: '' });
 
   useEffect(() => {
-    service.index(page, filter).then((response) => {
+    service.list(page, filter).then((response) => {
       setList(response.data);
       setTotal(parseInt(response.headers['x-total-count']));
     });

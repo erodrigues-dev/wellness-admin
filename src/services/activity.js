@@ -5,11 +5,19 @@ import api from './api';
 const ENDPOINT = '/activities';
 const LIMIT = 10;
 
-export function index(page, filters) {
+export function list(page, filters) {
   return api.get(ENDPOINT, {
     params: {
       page,
       limit: LIMIT,
+      ...filters,
+    },
+  });
+}
+
+export function listAll(filters) {
+  return api.get(ENDPOINT, {
+    params: {
       ...filters,
     },
   });
