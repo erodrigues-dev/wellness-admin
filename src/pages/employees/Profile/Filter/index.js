@@ -45,7 +45,7 @@ function Filter({ onFilter }) {
           </Form.Group>
         </Row>
         <Row>
-          <Col className="d-flex justifiy-content-end">
+          <Col className="d-flex justify-content-end">
             <Button type="submit">Filter</Button>
             <Button type="reset" className="ml-2" onClick={formik.handleReset}>
               Clear Filters
