@@ -1,15 +1,9 @@
+import { sanitize } from '~/helpers/sanitize';
+
 import api from './api';
 
 const ENDPOINT = '/activities';
 const LIMIT = 10;
-
-function sanitizeNumber(value) {
-  if (typeof value === 'number') return value;
-
-  if (!value) return null;
-
-  return parseFloat(value.replace(/,/g, ''));
-}
 
 export function index(page, filters) {
   return api.get(ENDPOINT, {
@@ -29,8 +23,8 @@ export function create({ name, description, price, duration }) {
   return api.post(ENDPOINT, {
     name,
     description,
-    price: sanitizeNumber(price),
-    duration: sanitizeNumber(duration),
+    price: sanitize.number(price),
+    duration: sanitize.number(duration),
   });
 }
 
@@ -39,7 +33,7 @@ export function update({ id, name, description, price, duration }) {
     id,
     name,
     description,
-    price: sanitizeNumber(price),
-    duration: sanitizeNumber(duration),
+    price: sanitize.number(price),
+    duration: sanitize.number(duration),
   });
 }
