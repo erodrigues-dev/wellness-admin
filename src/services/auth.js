@@ -19,9 +19,7 @@ export async function signIn({ email, password }) {
     setStorage(token);
     return JwtDecode(token);
   } catch (error) {
-    if (error.response.status === 401)
-      throw new Error('Email or password are invalid!');
-    throw new Error('Unexpected error, try again!');
+    throw new Error('Email or password are invalid!');
   }
 }
 
