@@ -1,20 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Form, Col, Button, Table } from 'react-bootstrap';
-import { FiX } from 'react-icons/fi';
+import React, { useEffect } from 'react';
+import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
-import { decimal, currency } from '~/helpers/intl';
-import * as activityService from '~/services/activity';
+import { decimal } from '~/helpers/intl';
 import service from '~/services/package';
 
+import Activities from './Activities';
 import schema from './schema';
 
 function FormComponent() {
-  const [listActivity, setListActivity] = useState([]);
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
@@ -51,12 +49,6 @@ function FormComponent() {
     // React Hook useEffect has missing dependencies
     // eslint-disable-next-line
   }, [id]);
-
-  useEffect(() => {
-    activityService
-      .listAll()
-      .then((response) => setListActivity(response.data));
-  }, []);
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
@@ -138,7 +130,6 @@ function FormComponent() {
           </Form.Group>
         </Form.Row>
         <Form.Row />
-
         <Form.Group>
           <Form.Label>Description</Form.Label>
           <Form.Control
@@ -156,56 +147,7 @@ function FormComponent() {
             {formik.errors.description}
           </Form.Control.Feedback>
         </Form.Group>
-
-        <Form.Row>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Activity</Form.Label>
-            <Form.Control as="select" custom>
-              <option value="">Selecione</option>
-              {listActivity.map((item) => (
-                <option key={item.id} value={item}>
-                  {item.name}
-                </option>
-              ))}
-            </Form.Control>
-          </Form.Group>
-          <Form.Group as={Col} className="d-flex align-items-end">
-            <Button>Add</Button>
-          </Form.Group>
-        </Form.Row>
-
-        <Table striped hover responsive>
-          <thead>
-            <tr>
-              <th className="text-center">Remove</th>
-              <th>Activity</th>
-              <th>Price</th>
-              <th>Duration</th>
-              <th>Quantity</th>
-            </tr>
-          </thead>
-          <tbody>
-            {formik.values.activities.map((item) => (
-              <tr key={item.id}>
-                <td className="text-center">
-                  <Button variant="outline-danger" size="sm">
-                    <FiX size="22" />
-                  </Button>
-                </td>
-                <td>{item.name}</td>
-                <td>{currency.format(item.price)}</td>
-                <td>{`${item.duration}min`}</td>
-                <td>
-                  <Form.Control
-                    style={{ width: 80 }}
-                    defaultValue={item.PackageActivity.quantity}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-
+        <Activities formik={formik} />
         <Form.Row className="d-flex justify-content-end">
           <Button
             variant="secondary"

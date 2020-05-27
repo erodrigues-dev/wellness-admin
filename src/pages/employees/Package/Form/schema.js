@@ -21,7 +21,7 @@ const schema = yup.object().shape({
         quantity: yup.number().min(1).required(),
       })
     )
-    .required('must be add at least on activity'),
+    .required('must be add at least one activity'),
 });
 
 export default schema;
