@@ -6,7 +6,7 @@ export const Container = styled.aside`
   background-size: 150% 150%;
   display: flex;
   flex-direction: column;
-  position: absolute;
+  position: fixed;
   height: calc(100% - 60px);
   left: ${(props) => (props.open ? '0' : '-260px')};
   top: 60px;
