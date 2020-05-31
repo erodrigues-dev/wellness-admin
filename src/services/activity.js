@@ -27,21 +27,23 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function create({ name, description, price, duration }) {
+export function create({ name, description, price, duration, employeeId }) {
   return api.post(ENDPOINT, {
     name,
     description,
     price: sanitize.number(price),
     duration: sanitize.number(duration),
+    employeeId,
   });
 }
 
-export function update({ id, name, description, price, duration }) {
+export function update({ id, name, description, price, duration, employeeId }) {
   return api.put(ENDPOINT, {
     id,
     name,
     description,
     price: sanitize.number(price),
     duration: sanitize.number(duration),
+    employeeId,
   });
 }

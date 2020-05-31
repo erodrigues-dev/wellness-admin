@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -8,10 +8,12 @@ import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import * as service from '~/services/activity';
+import * as employeeService from '~/services/employee';
 
 import schema from './schema';
 
 function FormComponent() {
+  const [employees, setEmployees] = useState([]);
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
@@ -25,6 +27,7 @@ function FormComponent() {
       price: '',
       duration: '',
       description: '',
+      employeeId: '',
     },
   });
 
@@ -33,13 +36,20 @@ function FormComponent() {
     service
       .get(id)
       .then((response) => {
-        const { name, price, duration, description } = response.data;
+        const {
+          name,
+          price,
+          duration,
+          description,
+          employeeId,
+        } = response.data;
         formik.setValues({
           id,
           name,
           price: decimal.format(price),
           duration,
           description,
+          employeeId,
         });
       })
       .catch(({ message }) => sendNotification(message, false));
@@ -48,6 +58,10 @@ function FormComponent() {
     // React Hook useEffect has missing dependencies
     // eslint-disable-next-line
   }, [id]);
+
+  useEffect(() => {
+    employeeService.listAll().then((response) => setEmployees(response.data));
+  }, []);
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
@@ -140,6 +154,32 @@ function FormComponent() {
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.duration}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Employee</Form.Label>
+            <Form.Control
+              as="select"
+              custom
+              name="employeeId"
+              value={formik.values.employeeId}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.employeeId && formik.errors.employeeId}
+              isValid={formik.touched.employeeId && !formik.errors.employeeId}
+            >
+              <option value="">Selecione</option>
+              {employees.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.employeeId}
             </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>

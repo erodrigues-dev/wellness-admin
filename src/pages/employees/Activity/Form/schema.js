@@ -14,6 +14,7 @@ const schema = yup.object().shape({
     .max(999999999.99)
     .required()
     .transform((_value, originalValue) => sanitize.number(originalValue)),
+  employeeId: yup.number().label('employee').required(),
 });
 
 export default schema;

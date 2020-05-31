@@ -13,6 +13,14 @@ export function index(page, filters) {
   });
 }
 
+export function listAll(filters) {
+  return api.get(ENDPOINT, {
+    params: {
+      ...filters,
+    },
+  });
+}
+
 export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
@@ -37,3 +45,13 @@ export function update({ id, name, email, password, profileId, specialty }) {
     specialty,
   });
 }
+
+const service = {
+  list: index,
+  listAll,
+  get,
+  create,
+  update,
+};
+
+export default service;
