@@ -6,7 +6,6 @@ const schema = yup.object().shape({
   id: yup.number(),
   name: yup.string().min(3).max(50).required(),
   description: yup.string().required(),
-  duration: yup.number().positive().min(1).max(99999).required(),
   price: yup
     .number()
     .positive()
@@ -14,7 +13,18 @@ const schema = yup.object().shape({
     .max(999999999.99)
     .required()
     .transform((_value, originalValue) => sanitize.number(originalValue)),
-  employeeId: yup.number().label('employee').required(),
+  activities: yup
+    .array()
+    .of(
+      yup.object({
+        id: yup.number(),
+        quantity: yup
+          .number()
+          .min(1, 'quantity must be greater than or equal to 1')
+          .required('quantity must be required'),
+      })
+    )
+    .required('must have at least one activity'),
 });
 
 export default schema;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -7,17 +7,16 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
-import * as service from '~/services/activity';
-import * as employeeService from '~/services/employee';
+import service from '~/services/package';
 
+import Activities from './Activities';
 import schema from './schema';
 
 function FormComponent() {
-  const [employees, setEmployees] = useState([]);
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
-  const action = id ? 'Edit Activity' : 'Add Activity';
+  const action = id ? 'Edit Package' : 'Add Package';
   const formik = useFormik({
     validationSchema: schema,
     onSubmit: handleSubmit,
@@ -25,9 +24,8 @@ function FormComponent() {
       id: 0,
       name: '',
       price: '',
-      duration: '',
       description: '',
-      employeeId: '',
+      activities: [],
     },
   });
 
@@ -36,20 +34,13 @@ function FormComponent() {
     service
       .get(id)
       .then((response) => {
-        const {
-          name,
-          price,
-          duration,
-          description,
-          employeeId,
-        } = response.data;
+        const { name, price, description, activities } = response.data;
         formik.setValues({
           id,
           name,
           price: decimal.format(price),
-          duration,
           description,
-          employeeId,
+          activities,
         });
       })
       .catch(({ message }) => sendNotification(message, false));
@@ -59,18 +50,14 @@ function FormComponent() {
     // eslint-disable-next-line
   }, [id]);
 
-  useEffect(() => {
-    employeeService.listAll().then((response) => setEmployees(response.data));
-  }, []);
-
   async function handleSubmit(values, { setSubmitting }) {
     try {
       if (id === undefined) {
         await service.create(values);
-        sendNotification('Activity created with success.');
+        sendNotification('Package created with success.');
       } else {
         await service.update(values);
-        sendNotification('Activity updated with success.');
+        sendNotification('Package updated with success.');
       }
 
       history.goBack();
@@ -99,33 +86,27 @@ function FormComponent() {
     formik.handleChange(e);
   }
 
-  function maskDuration(e) {
-    e.target.value = e.target.value.replace(/\D/g, '');
-
-    formik.handleChange(e);
-  }
-
   return (
     <Card body>
       <Card.Title>{action}</Card.Title>
       <hr />
       <Form onSubmit={formik.handleSubmit}>
-        <Form.Group>
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            placeholder="Name"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.name && formik.errors.name}
-            isValid={formik.touched.name && !formik.errors.name}
-          />
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.name}
-          </Form.Control.Feedback>
-        </Form.Group>
         <Form.Row>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              placeholder="Name"
+              name="name"
+              value={formik.values.name}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.name && formik.errors.name}
+              isValid={formik.touched.name && !formik.errors.name}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.name}
+            </Form.Control.Feedback>
+          </Form.Group>
           <Form.Group as={Col} md="6">
             <Form.Label>Price</Form.Label>
             <Form.Control
@@ -141,49 +122,8 @@ function FormComponent() {
               {formik.errors.price}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Duration</Form.Label>
-            <Form.Control
-              placeholder="Duration"
-              name="duration"
-              value={formik.values.duration}
-              onChange={maskDuration}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.duration && formik.errors.duration}
-              isValid={formik.touched.duration && !formik.errors.duration}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.duration}
-            </Form.Control.Feedback>
-          </Form.Group>
         </Form.Row>
-
-        <Form.Row>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Employee</Form.Label>
-            <Form.Control
-              as="select"
-              custom
-              name="employeeId"
-              value={formik.values.employeeId}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.employeeId && formik.errors.employeeId}
-              isValid={formik.touched.employeeId && !formik.errors.employeeId}
-            >
-              <option value="">Selecione</option>
-              {employees.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.employeeId}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Form.Row>
-
+        <Form.Row />
         <Form.Group>
           <Form.Label>Description</Form.Label>
           <Form.Control
@@ -201,7 +141,7 @@ function FormComponent() {
             {formik.errors.description}
           </Form.Control.Feedback>
         </Form.Group>
-
+        <Activities formik={formik} />
         <Form.Row className="d-flex justify-content-end">
           <Button
             variant="secondary"

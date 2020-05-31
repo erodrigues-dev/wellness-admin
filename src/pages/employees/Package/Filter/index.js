@@ -3,18 +3,12 @@ import { Form, Col, Row, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
-import styled from 'styled-components';
 
-const Container = styled.div`
-  margin-top: 24px;
-`;
+import { Container } from './styles';
 
 function Filter({ onFilter }) {
   const formik = useFormik({
-    initialValues: {
-      name: '',
-      description: '',
-    },
+    initialValues: { name: '' },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
@@ -27,19 +21,11 @@ function Filter({ onFilter }) {
     <Container>
       <Form onSubmit={formik.handleSubmit}>
         <Row>
-          <Form.Group as={Col} md="6">
+          <Form.Group as={Col}>
             <Form.Control
               placeholder="Name"
               name="name"
               value={formik.values.name}
-              onChange={formik.handleChange}
-            />
-          </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Control
-              placeholder="Description"
-              name="description"
-              value={formik.values.description}
               onChange={formik.handleChange}
             />
           </Form.Group>
@@ -52,11 +38,11 @@ function Filter({ onFilter }) {
             </Button>
             <Button
               as={Link}
-              to="/profiles/create"
+              to="/packages/create"
               variant="secondary"
               className="ml-2"
             >
-              Add Profile
+              Add Package
             </Button>
           </Col>
         </Row>

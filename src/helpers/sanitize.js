@@ -4,3 +4,7 @@ export function number(value) {
   const sanitized = value.replace(/,/g, '');
   return parseFloat(sanitized);
 }
+
+export const sanitize = {
+  number,
+};

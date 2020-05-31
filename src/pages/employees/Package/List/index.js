@@ -19,8 +19,6 @@ function List({ list }) {
             <th className="text-center">Actions</th>
             <th>Name</th>
             <th>Price</th>
-            <th>Duration</th>
-            <th>Employee</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -28,20 +26,18 @@ function List({ list }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center">
-                <Link to={`/activities/${item.id}`}>
+                <Link to={`/packages/${item.id}`}>
                   <FiEdit size="18" />
                 </Link>
               </td>
               <td>{item.name}</td>
               <td>{formatCurrency(item.price)}</td>
-              <td>{`${item.duration}min`}</td>
-              <td>{item.employee.name}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan="6">No record found</td>
+              <td colSpan="4">No record found</td>
             </tr>
           )}
         </tbody>

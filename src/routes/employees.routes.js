@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  // FiClock,
-  FiUsers,
-  FiSettings,
-  FiActivity,
-  // FiBriefcase,
-  // FiShoppingBag,
-} from 'react-icons/fi';
+import { FiUsers, FiSettings, FiActivity, FiPackage } from 'react-icons/fi';
 import { Route, Redirect, Switch } from 'react-router-dom';
 
 import MainLayout from '~/components/layouts/MainLayout';
@@ -20,6 +13,8 @@ import {
   ProfileForm,
   Activity,
   ActivityForm,
+  Package,
+  PackageForm,
 } from '~/pages/employees';
 
 const routes = [
@@ -27,6 +22,11 @@ const routes = [
     title: 'Activities',
     path: '/activities',
     Icon: FiActivity,
+  },
+  {
+    title: 'Packages',
+    path: '/packages',
+    Icon: FiPackage,
   },
   {
     title: 'Employees',
@@ -53,6 +53,10 @@ const EmployeesRoutes = () => (
       <Route exact path="/activities" component={Activity} />
       <Route path="/activities/create" component={ActivityForm} />
       <Route path="/activities/:id" component={ActivityForm} />
+
+      <Route exact path="/packages" component={Package} />
+      <Route path="/packages/create" component={PackageForm} />
+      <Route path="/packages/:id" component={PackageForm} />
 
       <Route exact path="/employees" component={Employee} />
       <Route path="/employees/create" component={EmployeeForm} />

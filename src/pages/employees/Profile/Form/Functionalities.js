@@ -83,7 +83,7 @@ function Functionalities({ list, formik }) {
           ))}
         </tbody>
       </Table>
-      <p className="text-danger">
+      <p className="text-error">
         {formik.touched.functionalities && formik.errors.functionalities}
       </p>
     </>

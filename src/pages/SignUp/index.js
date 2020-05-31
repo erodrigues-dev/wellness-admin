@@ -14,7 +14,7 @@ import { Container, Box, Logo } from './styles';
 const schema = yup.object().shape({
   name: yup.string().min(3).required(),
   email: yup.string().email().required().label('e-mail'),
-  password: yup.string().min(3).max(8).required(),
+  password: yup.string().min(8).max(20).required(),
   confirmPassword: yup
     .string()
     .label('confirm password')

@@ -2,19 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
-import * as service from '~/services/activity';
+import service from '~/services/package';
 
 import Filter from './Filter';
 import List from './List';
 
-const Activity = () => {
+const Package = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '' });
 
   useEffect(() => {
-    service.list(page, filter).then((response) => {
+    service.index(page, filter).then((response) => {
       setList(response.data);
       setTotal(parseInt(response.headers['x-total-count']));
     });
@@ -30,7 +30,7 @@ const Activity = () => {
 
   return (
     <Card body>
-      <Card.Title>Activities</Card.Title>
+      <Card.Title>Packages</Card.Title>
       <hr />
       <Filter onFilter={handleFilter} />
       <List list={list} />
@@ -44,4 +44,4 @@ const Activity = () => {
   );
 };
 
-export default Activity;
+export default Package;

@@ -1,15 +1,18 @@
 import styled from 'styled-components';
 
 export const Container = styled.nav`
+  position: fixed;
   background: linear-gradient(to right, #282828 0%, #111 100%);
   background-size: 150% 150%;
   height: 60px;
+  width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.2);
   padding: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: #fff;
+  z-index: 100;
 `;
 
 export const Brand = styled.div`
