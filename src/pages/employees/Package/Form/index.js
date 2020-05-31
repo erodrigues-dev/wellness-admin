@@ -86,12 +86,6 @@ function FormComponent() {
     formik.handleChange(e);
   }
 
-  // function maskDuration(e) {
-  //   e.target.value = e.target.value.replace(/\D/g, '');
-
-  //   formik.handleChange(e);
-  // }
-
   return (
     <Card body>
       <Card.Title>{action}</Card.Title>

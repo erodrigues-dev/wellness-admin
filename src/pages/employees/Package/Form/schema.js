@@ -18,10 +18,13 @@ const schema = yup.object().shape({
     .of(
       yup.object({
         id: yup.number(),
-        quantity: yup.number().min(1).required(),
+        quantity: yup
+          .number()
+          .min(1, 'quantity must be greater than or equal to 1')
+          .required('quantity must be required'),
       })
     )
-    .required('must be add at least one activity'),
+    .required('must have at least one activity'),
 });
 
 export default schema;

@@ -23,17 +23,32 @@ const Activities = ({ formik }) => {
   const addItem = () => {
     const id = Number(activityRef.current.value);
     if (id) {
-      formik.setFieldTouched('activities', true);
       const item = activities.find((x) => x.id === id);
-      const newList = [...formik.values.activities, item];
+      const newList = [{ ...item, quantity: 1 }, ...formik.values.activities];
       formik.setFieldValue('activities', newList);
+      formik.setFieldTouched('activities', true);
     } else sendNotification('Select an activity', false);
   };
 
   const removeItem = (id) => {
-    formik.setFieldTouched('activities', true);
     const newList = formik.values.activities.filter((x) => x.id !== id);
     formik.setFieldValue('activities', newList);
+    setTimeout(() => formik.setFieldTouched('activities', true));
+  };
+
+  const getError = () => {
+    const touched = formik.touched.activities;
+    if (touched === undefined) return null;
+
+    const err = formik.errors.activities;
+
+    if (typeof err === 'string') return err;
+
+    if (Array.isArray(err)) {
+      return err.map((item) => item?.quantity).filter((item) => !!item)[0];
+    }
+
+    return null;
   };
 
   return (
@@ -55,11 +70,13 @@ const Activities = ({ formik }) => {
         </Form.Group>
       </Form.Row>
 
-      <List list={formik.values.activities} onRemove={removeItem} />
+      <List
+        list={formik.values.activities}
+        formik={formik}
+        onRemove={removeItem}
+      />
 
-      {formik.touched.activities && formik.values.activities.length === 0 && (
-        <p className="text-error">must be add at least one activity</p>
-      )}
+      <p className="text-error">{getError()}</p>
     </>
   );
 };

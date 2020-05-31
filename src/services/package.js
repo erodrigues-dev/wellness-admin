@@ -19,22 +19,28 @@ function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-function create({ name, description, price, duration }) {
+function create({ name, description, price, activities }) {
   return api.post(ENDPOINT, {
     name,
     description,
     price: sanitize.number(price),
-    duration: sanitize.number(duration),
+    activities: activities.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+    })),
   });
 }
 
-function update({ id, name, description, price, duration }) {
+function update({ id, name, description, price, activities }) {
   return api.put(ENDPOINT, {
     id,
     name,
     description,
     price: sanitize.number(price),
-    duration: sanitize.number(duration),
+    activities: activities.map((item) => ({
+      id: item.id,
+      quantity: item.quantity,
+    })),
   });
 }
 
