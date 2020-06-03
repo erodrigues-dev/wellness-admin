@@ -59,7 +59,6 @@ export const Item = styled.li`
   cursor: pointer;
   color: #fff;
   margin: 8px 16px;
-  padding: 8px 16px;
   font-size: 12px;
   font-weight: 600;
   height: 50px;
@@ -72,8 +71,10 @@ export const Item = styled.li`
     active ? 'rgba(255, 255, 255, 0.1)' : 'transparent'};
 
   a {
+    padding: 8px 16px;
     text-decoration: none;
     color: #fff;
+    flex: 1;
   }
 
   svg {
