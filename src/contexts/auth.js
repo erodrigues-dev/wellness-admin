@@ -18,6 +18,17 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   }
 
+  function hasPermission(functionality, action) {
+    console.log(`has permission ${functionality} - ${action}`);
+    const { actions } = user.profile.functionalities.find(
+      (x) => x.name.toLowerCase() === functionality.toLowerCase()
+    );
+
+    const allowed = (action & actions) === action;
+
+    return allowed;
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -26,6 +37,7 @@ export const AuthProvider = ({ children }) => {
         user,
         signIn,
         signOut,
+        hasPermission,
       }}
     >
       {children}
