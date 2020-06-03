@@ -8,7 +8,7 @@ import { listAll as listAllEmployees } from '~/services/employee';
 
 import { Container } from './styles';
 
-function Filter({ onFilter }) {
+function Filter({ onFilter, allowCreate }) {
   const [employees, setEmployees] = useState([]);
   const formik = useFormik({
     initialValues: { name: '', employeeId: '' },
@@ -59,14 +59,16 @@ function Filter({ onFilter }) {
             <Button type="reset" className="ml-2" onClick={formik.handleReset}>
               Clear Filters
             </Button>
-            <Button
-              as={Link}
-              to="/activities/create"
-              variant="secondary"
-              className="ml-2"
-            >
-              Add Activity
-            </Button>
+            {allowCreate && (
+              <Button
+                as={Link}
+                to="/activities/create"
+                variant="secondary"
+                className="ml-2"
+              >
+                Add Activity
+              </Button>
+            )}
           </Col>
         </Row>
       </Form>

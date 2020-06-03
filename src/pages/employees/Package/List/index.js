@@ -8,7 +8,7 @@ import { currency } from '~/helpers/intl';
 
 import { Container } from './styles';
 
-function List({ list }) {
+function List({ list, allowEdit }) {
   const formatCurrency = (value) => currency.format(value);
 
   return (
@@ -16,7 +16,7 @@ function List({ list }) {
       <Table style={{ minWidth: 800 }} striped hover responsive>
         <thead>
           <tr>
-            <th className="text-center">Actions</th>
+            {allowEdit && <th className="text-center">Actions</th>}
             <th>Name</th>
             <th>Price</th>
             <th>Created At</th>
@@ -25,11 +25,13 @@ function List({ list }) {
         <tbody>
           {list.map((item) => (
             <tr key={item.id}>
-              <td className="text-center">
-                <Link to={`/packages/${item.id}`}>
-                  <FiEdit size="18" />
-                </Link>
-              </td>
+              {allowEdit && (
+                <td className="text-center">
+                  <Link to={`/packages/${item.id}`}>
+                    <FiEdit size="18" />
+                  </Link>
+                </td>
+              )}
               <td>{item.name}</td>
               <td>{formatCurrency(item.price)}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
@@ -37,7 +39,7 @@ function List({ list }) {
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan="4">No record found</td>
+              <td colSpan={allowEdit ? 4 : 3}>No record found</td>
             </tr>
           )}
         </tbody>

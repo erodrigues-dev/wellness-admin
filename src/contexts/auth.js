@@ -2,6 +2,13 @@ import React, { createContext, useState, useContext } from 'react';
 
 import * as auth from '~/services/auth';
 
+const ACTIONS = {
+  LIST: 1,
+  GET: 1,
+  CREATE: 2,
+  UPDATE: 4,
+};
+
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
@@ -19,7 +26,6 @@ export const AuthProvider = ({ children }) => {
   }
 
   function hasPermission(functionality, action) {
-    console.log(`has permission ${functionality} - ${action}`);
     const { actions } = user.profile.functionalities.find(
       (x) => x.name.toLowerCase() === functionality.toLowerCase()
     );
@@ -38,6 +44,7 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         hasPermission,
+        ACTIONS,
       }}
     >
       {children}
