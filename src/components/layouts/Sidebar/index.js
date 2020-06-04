@@ -15,7 +15,7 @@ import {
   Item,
 } from './styles';
 
-const Sidebar = ({ open, routes }) => {
+const Sidebar = ({ open, routes, handleClose }) => {
   const location = useLocation();
   const { signOut, user } = useAuth();
 
@@ -35,7 +35,11 @@ const Sidebar = ({ open, routes }) => {
         </AvatarContainer>
         <Menu>
           {routes.map((route) => (
-            <Item key={route.path} active={isActive(route)}>
+            <Item
+              key={route.path}
+              active={isActive(route)}
+              onClick={handleClose}
+            >
               <Link to={route.path}>
                 <route.Icon size={24} />
                 {route.title}

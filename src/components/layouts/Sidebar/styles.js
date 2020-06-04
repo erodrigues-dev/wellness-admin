@@ -12,6 +12,7 @@ export const Container = styled.aside`
   top: 60px;
   border-top: 2px solid rgba(255, 255, 255, 0.2);
   transition: left 0.3s;
+  z-index: 100;
 `;
 
 export const Content = styled.div`

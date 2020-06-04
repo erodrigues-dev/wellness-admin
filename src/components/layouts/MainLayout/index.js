@@ -13,6 +13,10 @@ const MainLayout = ({ children, routes }) => {
     setSidebar(isOpen);
   };
 
+  const handleClickMenuItem = () => {
+    if (window.innerWidth <= 1024) setSidebar(false);
+  };
+
   useEffect(() => {
     handleResize();
     window.addEventListener('resize', handleResize);
@@ -26,7 +30,11 @@ const MainLayout = ({ children, routes }) => {
   return (
     <>
       <Navbar sidebarOpen={sidebar} toggleSidebar={handleToglesidebar} />
-      <Sidebar open={sidebar} routes={routes} />
+      <Sidebar
+        open={sidebar}
+        routes={routes}
+        handleClose={handleClickMenuItem}
+      />
       <Main sidebarOpen={sidebar}>
         <Content>{children}</Content>
         <Footer>&copy; 2020 . Elite Wellness . Performance & Recovery</Footer>

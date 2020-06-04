@@ -28,7 +28,7 @@ function Filter({ onFilter, allowCreate }) {
     <Container>
       <Form onSubmit={formik.handleSubmit}>
         <Row>
-          <Form.Group as={Col}>
+          <Form.Group as={Col} sm={6}>
             <Form.Control
               placeholder="Name"
               name="name"
@@ -36,7 +36,7 @@ function Filter({ onFilter, allowCreate }) {
               onChange={formik.handleChange}
             />
           </Form.Group>
-          <Form.Group as={Col}>
+          <Form.Group as={Col} sm={6}>
             <Form.Control
               custom
               as="select"

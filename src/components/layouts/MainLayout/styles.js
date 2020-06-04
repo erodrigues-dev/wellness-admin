@@ -9,6 +9,10 @@ export const Main = styled.main`
   margin-left: ${({ sidebarOpen }) => (sidebarOpen ? '259px' : 0)};
   transition: margin-left 0.3s;
   min-height: 100vh;
+
+  @media (max-width: 1024px) {
+    margin-left: 0;
+  }
 `;
 
 export const Content = styled.div`
