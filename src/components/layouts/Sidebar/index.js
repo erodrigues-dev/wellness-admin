@@ -47,8 +47,10 @@ const Sidebar = ({ open, routes, handleClose }) => {
             </Item>
           ))}
           <Item onClick={signOut}>
-            <FiLogOut size="24" />
-            Sign-Out
+            <a href>
+              <FiLogOut size="24" />
+              Sign-Out
+            </a>
           </Item>
         </Menu>
       </Content>
