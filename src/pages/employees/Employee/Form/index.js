@@ -4,6 +4,7 @@ import { useHistory, useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
+import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
 import * as employeeService from '~/services/employee';
@@ -11,16 +12,19 @@ import * as profileService from '~/services/profile';
 
 import schema from './schema';
 
+const initialValues = {
+  id: 0,
+  name: '',
+  email: '',
+  password: '',
+  confirmPassword: '',
+  profileId: '',
+  specialty: '',
+  imageUrl: '',
+};
+
 function EmployeeForm() {
-  const initialValues = {
-    id: 0,
-    name: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-    profileId: '',
-    specialty: '',
-  };
+  const [file, setFile] = useState(null);
   const [profiles, setProfiles] = useState([]);
   const { sendNotification } = useNotification();
   const { id } = useParams();
@@ -37,14 +41,15 @@ function EmployeeForm() {
     employeeService
       .get(id)
       .then((response) => {
-        const { name, email, profileId, specialty } = response.data;
+        const { name, email, profileId, specialty, imageUrl } = response.data;
 
         formik.setValues({
           id,
           name,
           email,
           profileId,
-          specialty: specialty ?? '',
+          specialty: specialty || '',
+          imageUrl: imageUrl || '',
           password: '',
           confirmPassword: '',
         });
@@ -63,10 +68,10 @@ function EmployeeForm() {
   async function handleSubmit(values, { setSubmitting }) {
     try {
       if (id === undefined) {
-        await employeeService.create(values);
+        await employeeService.create({ ...values, file });
         sendNotification('Employee created with success.');
       } else {
-        await employeeService.update(values);
+        await employeeService.update({ ...values, file });
         sendNotification('Employee updated with success.');
       }
 
@@ -86,6 +91,8 @@ function EmployeeForm() {
       <Card.Title>{action}</Card.Title>
       <hr />
       <Form onSubmit={formik.handleSubmit}>
+        <AvatarUpload imageUrl={formik.values.imageUrl} handleFile={setFile} />
+
         <Form.Group>
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -116,6 +123,7 @@ function EmployeeForm() {
             {formik.errors.email}
           </Form.Control.Feedback>
         </Form.Group>
+
         <Form.Row>
           <Form.Group as={Col} md="6">
             <Form.Label>Password</Form.Label>
@@ -195,6 +203,7 @@ function EmployeeForm() {
             </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>
+
         <Form.Row className="d-flex justify-content-end">
           <Button
             variant="secondary"
