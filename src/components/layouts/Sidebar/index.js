@@ -9,6 +9,7 @@ import {
   Content,
   AvatarContainer,
   Avatar,
+  AvatarImage,
   AvatarName,
   AvatarProfile,
   Menu,
@@ -28,7 +29,7 @@ const Sidebar = ({ open, routes, handleClose }) => {
       <Content>
         <AvatarContainer>
           <Avatar>
-            <FiUser size="56" />
+            <AvatarImage src={user.imageUrl} />
           </Avatar>
           <AvatarName>{user.name}</AvatarName>
           <AvatarProfile>{user.profile?.name}</AvatarProfile>
@@ -47,10 +48,10 @@ const Sidebar = ({ open, routes, handleClose }) => {
             </Item>
           ))}
           <Item onClick={signOut}>
-            <a href>
+            <div>
               <FiLogOut size="24" />
               Sign-Out
-            </a>
+            </div>
           </Item>
         </Menu>
       </Content>
