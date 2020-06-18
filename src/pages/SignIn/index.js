@@ -27,7 +27,6 @@ const SignIn = () => {
       sendNotification('Welcome! You are signed with success!');
     } catch (error) {
       sendNotification(error.message, false);
-    } finally {
       setSubmitting(false);
     }
   };
