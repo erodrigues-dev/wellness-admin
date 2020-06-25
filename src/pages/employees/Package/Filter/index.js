@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 
 import { Container } from './styles';
 
-function Filter({ onFilter }) {
+function Filter({ onFilter, allowCreate }) {
   const formik = useFormik({
     initialValues: { name: '' },
     onSubmit: handleSubmit,
@@ -36,14 +36,16 @@ function Filter({ onFilter }) {
             <Button type="reset" className="ml-2" onClick={formik.handleReset}>
               Clear Filters
             </Button>
-            <Button
-              as={Link}
-              to="/packages/create"
-              variant="secondary"
-              className="ml-2"
-            >
-              Add Package
-            </Button>
+            {allowCreate && (
+              <Button
+                as={Link}
+                to="/packages/create"
+                variant="secondary"
+                className="ml-2"
+              >
+                Add Package
+              </Button>
+            )}
           </Col>
         </Row>
       </Form>

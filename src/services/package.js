@@ -19,29 +19,47 @@ function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-function create({ name, description, price, activities }) {
-  return api.post(ENDPOINT, {
-    name,
-    description,
-    price: sanitize.number(price),
-    activities: activities.map((item) => ({
-      id: item.id,
-      quantity: item.quantity,
-    })),
-  });
+function create({ name, description, price, activities, image }) {
+  const data = new FormData();
+  data.append('name', name);
+  data.append('description', description);
+  data.append('price', sanitize.number(price));
+
+  activities.map((item) =>
+    data.append(
+      'activities[]',
+      JSON.stringify({
+        id: item.id,
+        quantity: item.quantity,
+      })
+    )
+  );
+
+  if (image) data.append('image', image);
+
+  return api.post(ENDPOINT, data);
 }
 
-function update({ id, name, description, price, activities }) {
-  return api.put(ENDPOINT, {
-    id,
-    name,
-    description,
-    price: sanitize.number(price),
-    activities: activities.map((item) => ({
-      id: item.id,
-      quantity: item.quantity,
-    })),
-  });
+function update({ id, name, description, price, activities, image }) {
+  const data = new FormData();
+  data.append('id', id);
+  data.append('name', name);
+  data.append('description', description);
+  data.append('price', sanitize.number(price));
+
+  activities.map((item) =>
+    data.append(
+      'activities[]',
+      JSON.stringify({
+        id: item.id,
+        quantity: item.quantity,
+      })
+    )
+  );
+
+  if (image) data.append('image', image);
+
+  return api.put(ENDPOINT, data);
 }
 
 const service = {

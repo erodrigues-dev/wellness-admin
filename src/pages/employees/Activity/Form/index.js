@@ -11,8 +11,10 @@ import * as service from '~/services/activity';
 import * as employeeService from '~/services/employee';
 
 import schema from './schema';
+import { ImageContainer } from './styles';
 
 function FormComponent() {
+  const [image, setImage] = useState({ file: null, url: null });
   const [employees, setEmployees] = useState([]);
   const { sendNotification } = useNotification();
   const { id } = useParams();
@@ -42,7 +44,9 @@ function FormComponent() {
           duration,
           description,
           employeeId,
+          imageUrl,
         } = response.data;
+
         formik.setValues({
           id,
           name,
@@ -51,6 +55,8 @@ function FormComponent() {
           description,
           employeeId,
         });
+
+        setImage({ url: imageUrl });
       })
       .catch(({ message }) => sendNotification(message, false));
 
@@ -66,10 +72,10 @@ function FormComponent() {
   async function handleSubmit(values, { setSubmitting }) {
     try {
       if (id === undefined) {
-        await service.create(values);
+        await service.create({ ...values, image: image.file });
         sendNotification('Activity created with success.');
       } else {
-        await service.update(values);
+        await service.update({ ...values, image: image.file });
         sendNotification('Activity updated with success.');
       }
 
@@ -105,6 +111,18 @@ function FormComponent() {
     formik.handleChange(e);
   }
 
+  function handleImage(e) {
+    if (e.target.files.length === 0) {
+      setImage({ file: null, url: null });
+      return;
+    }
+
+    const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+
+    setImage({ file, url });
+  }
+
   return (
     <Card body>
       <Card.Title>{action}</Card.Title>
@@ -125,6 +143,7 @@ function FormComponent() {
             {formik.errors.name}
           </Form.Control.Feedback>
         </Form.Group>
+
         <Form.Row>
           <Form.Group as={Col} md="6">
             <Form.Label>Price</Form.Label>
@@ -200,6 +219,16 @@ function FormComponent() {
           <Form.Control.Feedback type="invalid">
             {formik.errors.description}
           </Form.Control.Feedback>
+        </Form.Group>
+
+        <Form.Group>
+          <Form.Label>Image</Form.Label>
+          <Form.Control type="file" onChange={handleImage} />
+          <ImageContainer>
+            {image.url && (
+              <img src={image.url} alt="cover" accept=".jpg,.jpeg,.png" />
+            )}
+          </ImageContainer>
         </Form.Group>
 
         <Form.Row className="d-flex justify-content-end">

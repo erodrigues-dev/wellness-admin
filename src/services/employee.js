@@ -25,25 +25,39 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function create({ name, email, password, profileId, specialty }) {
-  return api.post(ENDPOINT, {
-    name,
-    email,
-    password,
-    profileId,
-    specialty,
-  });
+export function create({ name, email, password, profileId, specialty, file }) {
+  const formData = new FormData();
+
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('password', password);
+  formData.append('profileId', profileId);
+  formData.append('specialty', specialty);
+  if (file) formData.append('image', file);
+
+  return api.post(ENDPOINT, formData);
 }
 
-export function update({ id, name, email, password, profileId, specialty }) {
-  return api.put(ENDPOINT, {
-    id,
-    name,
-    email,
-    password,
-    profileId,
-    specialty,
-  });
+export function update({
+  id,
+  name,
+  email,
+  password,
+  profileId,
+  specialty,
+  file,
+}) {
+  const formData = new FormData();
+
+  formData.append('id', id);
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('password', password);
+  formData.append('profileId', profileId);
+  formData.append('specialty', specialty);
+  if (file) formData.append('image', file);
+
+  return api.put(ENDPOINT, formData);
 }
 
 const service = {

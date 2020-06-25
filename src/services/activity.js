@@ -27,23 +27,44 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function create({ name, description, price, duration, employeeId }) {
-  return api.post(ENDPOINT, {
-    name,
-    description,
-    price: sanitize.number(price),
-    duration: sanitize.number(duration),
-    employeeId,
-  });
+export function create({
+  name,
+  description,
+  price,
+  duration,
+  employeeId,
+  image,
+}) {
+  const data = new FormData();
+
+  data.append('name', name);
+  data.append('description', description);
+  data.append('price', sanitize.number(price));
+  data.append('duration', sanitize.number(duration));
+  data.append('employeeId', employeeId);
+  if (image) data.append('image', image);
+
+  return api.post(ENDPOINT, data);
 }
 
-export function update({ id, name, description, price, duration, employeeId }) {
-  return api.put(ENDPOINT, {
-    id,
-    name,
-    description,
-    price: sanitize.number(price),
-    duration: sanitize.number(duration),
-    employeeId,
-  });
+export function update({
+  id,
+  name,
+  description,
+  price,
+  duration,
+  employeeId,
+  image,
+}) {
+  const data = new FormData();
+
+  data.append('id', id);
+  data.append('name', name);
+  data.append('description', description);
+  data.append('price', sanitize.number(price));
+  data.append('duration', sanitize.number(duration));
+  data.append('employeeId', employeeId);
+  if (image) data.append('image', image);
+
+  return api.put(ENDPOINT, data);
 }

@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
+import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
 import * as service from '~/services/customer';
@@ -11,6 +12,7 @@ import * as service from '~/services/customer';
 import schema from './schema';
 
 function FormComponent() {
+  const [file, setFile] = useState(null);
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
@@ -32,11 +34,12 @@ function FormComponent() {
     service
       .get(id)
       .then((response) => {
-        const { name, email } = response.data;
+        const { name, email, imageUrl } = response.data;
         formik.setValues({
           id,
           name,
           email,
+          imageUrl,
           password: '',
           confirmPassword: '',
         });
@@ -51,10 +54,10 @@ function FormComponent() {
   async function handleSubmit(values, { setSubmitting }) {
     try {
       if (id === undefined) {
-        await service.create(values);
+        await service.create({ ...values, file });
         sendNotification('Customer created with success.');
       } else {
-        await service.update(values);
+        await service.update({ ...values, file });
         sendNotification('Customer updated with success.');
       }
 
@@ -74,6 +77,7 @@ function FormComponent() {
       <Card.Title>{action}</Card.Title>
       <hr />
       <Form onSubmit={formik.handleSubmit}>
+        <AvatarUpload imageUrl={formik.values.imageUrl} handleFile={setFile} />
         <Form.Group>
           <Form.Label>Name</Form.Label>
           <Form.Control

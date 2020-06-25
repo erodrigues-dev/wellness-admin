@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 
 import { Container } from './styles';
 
-function Filter({ onFilter }) {
+function Filter({ onFilter, allowCreate }) {
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -65,14 +65,16 @@ function Filter({ onFilter }) {
             <Button type="reset" className="ml-2" onClick={formik.handleReset}>
               Clear Filters
             </Button>
-            <Button
-              as={Link}
-              to="/employees/create"
-              variant="secondary"
-              className="ml-2"
-            >
-              Add Employee
-            </Button>
+            {allowCreate && (
+              <Button
+                as={Link}
+                to="/employees/create"
+                variant="secondary"
+                className="ml-2"
+              >
+                Add Employee
+              </Button>
+            )}
           </Col>
         </Row>
       </Form>

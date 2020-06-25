@@ -9,7 +9,7 @@ const Container = styled.div`
   margin-top: 24px;
 `;
 
-function Filter({ onFilter }) {
+function Filter({ onFilter, allowCreate }) {
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -50,14 +50,16 @@ function Filter({ onFilter }) {
             <Button type="reset" className="ml-2" onClick={formik.handleReset}>
               Clear Filters
             </Button>
-            <Button
-              as={Link}
-              to="/profiles/create"
-              variant="secondary"
-              className="ml-2"
-            >
-              Add Profile
-            </Button>
+            {allowCreate && (
+              <Button
+                as={Link}
+                to="/profiles/create"
+                variant="secondary"
+                className="ml-2"
+              >
+                Add Profile
+              </Button>
+            )}
           </Col>
         </Row>
       </Form>

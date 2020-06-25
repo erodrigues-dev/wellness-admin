@@ -11,13 +11,13 @@ const Container = styled.div`
   margin-top: 24px;
 `;
 
-function List({ list }) {
+function List({ list, allowEdit }) {
   return (
     <Container>
       <Table style={{ minWidth: 800 }} striped hover responsive>
         <thead>
           <tr>
-            <th className="text-center">Actions</th>
+            {allowEdit && <th className="text-center">Actions</th>}
             <th>Name</th>
             <th>Description</th>
             <th>Created At</th>
@@ -26,11 +26,13 @@ function List({ list }) {
         <tbody>
           {list.map((item) => (
             <tr key={item.id}>
-              <td className="text-center">
-                <Link to={`/profiles/${item.id}`}>
-                  <FiEdit size="18" />
-                </Link>
-              </td>
+              {allowEdit && (
+                <td className="text-center">
+                  <Link to={`/profiles/${item.id}`}>
+                    <FiEdit size="18" />
+                  </Link>
+                </td>
+              )}
               <td>{item.name}</td>
               <td>{item.description}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
@@ -38,7 +40,7 @@ function List({ list }) {
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan="4">No record found</td>
+              <td colSpan={allowEdit ? 4 : 3}>No record found</td>
             </tr>
           )}
         </tbody>

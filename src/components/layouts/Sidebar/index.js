@@ -9,13 +9,14 @@ import {
   Content,
   AvatarContainer,
   Avatar,
+  AvatarImage,
   AvatarName,
   AvatarProfile,
   Menu,
   Item,
 } from './styles';
 
-const Sidebar = ({ open, routes }) => {
+const Sidebar = ({ open, routes, handleClose }) => {
   const location = useLocation();
   const { signOut, user } = useAuth();
 
@@ -28,14 +29,18 @@ const Sidebar = ({ open, routes }) => {
       <Content>
         <AvatarContainer>
           <Avatar>
-            <FiUser size="56" />
+            <AvatarImage src={user.imageUrl} />
           </Avatar>
           <AvatarName>{user.name}</AvatarName>
           <AvatarProfile>{user.profile?.name}</AvatarProfile>
         </AvatarContainer>
         <Menu>
           {routes.map((route) => (
-            <Item key={route.path} active={isActive(route)}>
+            <Item
+              key={route.path}
+              active={isActive(route)}
+              onClick={handleClose}
+            >
               <Link to={route.path}>
                 <route.Icon size={24} />
                 {route.title}
@@ -43,8 +48,10 @@ const Sidebar = ({ open, routes }) => {
             </Item>
           ))}
           <Item onClick={signOut}>
-            <FiLogOut size="24" />
-            Sign-Out
+            <div>
+              <FiLogOut size="24" />
+              Sign-Out
+            </div>
           </Item>
         </Menu>
       </Content>

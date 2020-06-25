@@ -3,7 +3,7 @@ import React from 'react';
 import useAuth from '~/contexts/auth';
 
 import CustomersRoutes from './customers.routes';
-import EmployeesRoutes from './employees.routes';
+import EmployeesRoutes from './Employees';
 import PublicRoutes from './public.routes';
 
 const Routes = () => {

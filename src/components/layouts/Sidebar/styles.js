@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import avatarBgImg from '~/assets/images/avatar.svg';
+
 export const Container = styled.aside`
   width: 260px;
   background: linear-gradient(to bottom, #282828 0%, #111 100%);
@@ -12,6 +14,7 @@ export const Container = styled.aside`
   top: 60px;
   border-top: 2px solid rgba(255, 255, 255, 0.2);
   transition: left 0.3s;
+  z-index: 100;
 `;
 
 export const Content = styled.div`
@@ -30,17 +33,21 @@ export const Avatar = styled.div`
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #666;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 8px;
-
-  & svg {
-    stroke-width: 1;
-  }
+  background: url(${avatarBgImg});
+  background-size: cover;
+  overflow: hidden;
 `;
+
+export const AvatarImage = styled.img`
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
 export const AvatarName = styled.p`
   color: #fff;
   font-size: 14px;
@@ -59,7 +66,6 @@ export const Item = styled.li`
   cursor: pointer;
   color: #fff;
   margin: 8px 16px;
-  padding: 8px 16px;
   font-size: 12px;
   font-weight: 600;
   height: 50px;
@@ -71,9 +77,12 @@ export const Item = styled.li`
   background-color: ${({ active }) =>
     active ? 'rgba(255, 255, 255, 0.1)' : 'transparent'};
 
-  a {
+  a,
+  div {
+    padding: 8px 16px;
     text-decoration: none;
     color: #fff;
+    flex: 1;
   }
 
   svg {
