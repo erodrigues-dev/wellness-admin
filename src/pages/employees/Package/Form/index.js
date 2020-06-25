@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -11,8 +11,10 @@ import service from '~/services/package';
 
 import Activities from './Activities';
 import schema from './schema';
+import { ImageContainer } from './styles';
 
 function FormComponent() {
+  const [image, setImage] = useState({ file: null, url: null });
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
@@ -34,7 +36,13 @@ function FormComponent() {
     service
       .get(id)
       .then((response) => {
-        const { name, price, description, activities } = response.data;
+        const {
+          name,
+          price,
+          description,
+          activities,
+          imageUrl,
+        } = response.data;
         formik.setValues({
           id,
           name,
@@ -42,6 +50,8 @@ function FormComponent() {
           description,
           activities,
         });
+
+        setImage({ file: null, url: imageUrl });
       })
       .catch(({ message }) => sendNotification(message, false));
 
@@ -53,10 +63,10 @@ function FormComponent() {
   async function handleSubmit(values, { setSubmitting }) {
     try {
       if (id === undefined) {
-        await service.create(values);
+        await service.create({ ...values, image: image.file });
         sendNotification('Package created with success.');
       } else {
-        await service.update(values);
+        await service.update({ ...values, image: image.file });
         sendNotification('Package updated with success.');
       }
 
@@ -84,6 +94,18 @@ function FormComponent() {
     }
     e.target.value = value;
     formik.handleChange(e);
+  }
+
+  function handleImage(e) {
+    if (e.target.files.length === 0) {
+      setImage({ file: null, url: null });
+      return;
+    }
+
+    const file = e.target.files[0];
+    const url = URL.createObjectURL(file);
+
+    setImage({ file, url });
   }
 
   return (
@@ -142,6 +164,15 @@ function FormComponent() {
           </Form.Control.Feedback>
         </Form.Group>
         <Activities formik={formik} />
+        <Form.Group>
+          <Form.Label>Image</Form.Label>
+          <Form.Control type="file" onChange={handleImage} />
+          <ImageContainer>
+            {image.url && (
+              <img src={image.url} alt="cover" accept=".jpg,.jpeg,.png" />
+            )}
+          </ImageContainer>
+        </Form.Group>
         <Form.Row className="d-flex justify-content-end">
           <Button
             variant="secondary"
