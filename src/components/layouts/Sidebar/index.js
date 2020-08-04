@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiUser, FiLogOut } from 'react-icons/fi';
+import { FiLogOut } from 'react-icons/fi';
 import { Link, useLocation } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
@@ -29,7 +29,7 @@ const Sidebar = ({ open, routes, handleClose }) => {
       <Content>
         <AvatarContainer>
           <Avatar>
-            <AvatarImage src={user.imageUrl} />
+            {user.imageUrl && <AvatarImage src={user.imageUrl} />}
           </Avatar>
           <AvatarName>{user.name}</AvatarName>
           <AvatarProfile>{user.profile?.name}</AvatarProfile>
