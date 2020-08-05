@@ -3,9 +3,12 @@ import styled from 'styled-components';
 export const ImageContainer = styled.div`
   width: 100%;
   overflow: hidden;
-  margin-top: 8px;
+  margin: 8px 0;
+  text-align: center;
 
   img {
-    width: 100%;
+    width: 260px;
+    height: 220px;
+    border-radius: 4px;
   }
 `;

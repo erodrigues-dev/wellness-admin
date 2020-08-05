@@ -25,7 +25,7 @@ Copie o arquivo .env.example para .env e preencha as variáveis de ambiente
 
 - [Integrating Prettier + ESLint + Airbnb Style Guide in VSCode](https://blog.echobind.com/integrating-prettier-eslint-airbnb-style-guide-in-vscode-47f07b5d7d6a)
 - [ESLint, Prettier and Editorconfig](https://www.youtube.com/watch?v=TI4v4Y8yRjw)
-- [ESList import helpers](https://www.youtube.com/watch?v=0Y-x9PZDvQU&t=546s)
+- [ESLint import helpers](https://www.youtube.com/watch?v=0Y-x9PZDvQU)
 - [VSCode configurations](https://www.youtube.com/watch?v=c7P03kkrEG8)
 - [Relative Paths](https://www.youtube.com/watch?v=lAV1-19hHqw)
 - [Routes e Auth](https://www.youtube.com/watch?v=KISMYYXSIX8)
