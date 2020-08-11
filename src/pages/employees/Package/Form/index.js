@@ -29,7 +29,9 @@ function FormComponent() {
       name: '',
       price: '',
       description: '',
-      expiration: new Date(2020, 10, 20),
+      expiration: null,
+      showInApp: true,
+      showInWeb: true,
       activities: [],
     },
   });
@@ -124,7 +126,6 @@ function FormComponent() {
       </ImageContainer>
 
       <Form onSubmit={formik.handleSubmit}>
-        <input type="number" />
         <Form.Row>
           <Form.Group as={Col} md="6">
             <Form.Label>Name</Form.Label>
@@ -163,7 +164,7 @@ function FormComponent() {
             <Form.Label>Description</Form.Label>
             <Form.Control
               as="textarea"
-              rows="5"
+              rows="10"
               placeholder="Description"
               name="description"
               value={formik.values.description}
@@ -180,6 +181,10 @@ function FormComponent() {
           </Form.Group>
           <Col>
             <Form.Group>
+              <Form.Label>Image</Form.Label>
+              <Form.Control type="file" onChange={handleImage} />
+            </Form.Group>
+            <Form.Group>
               <Form.Label>Expiration Date</Form.Label>
               <Datepicker
                 min={minDate}
@@ -193,8 +198,25 @@ function FormComponent() {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Image</Form.Label>
-              <Form.Control type="file" onChange={handleImage} />
+              <Form.Label>Show In</Form.Label>
+              <Form.Group controlId="showInApp">
+                <Form.Check
+                  type="checkbox"
+                  label="App"
+                  onChange={formik.handleChange}
+                  checked={formik.values.showInApp}
+                  custom
+                />
+              </Form.Group>
+              <Form.Group controlId="showInWeb">
+                <Form.Check
+                  type="checkbox"
+                  label="Web"
+                  onChange={formik.handleChange}
+                  checked={formik.values.showInWeb}
+                  custom
+                />
+              </Form.Group>
             </Form.Group>
           </Col>
         </Form.Row>
@@ -214,7 +236,6 @@ function FormComponent() {
           </ButtonLoading>
         </Form.Row>
       </Form>
-      <pre>{JSON.stringify(formik.values, null, 2)}</pre>
     </Card>
   );
 }
