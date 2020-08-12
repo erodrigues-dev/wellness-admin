@@ -49,8 +49,8 @@ function FormComponent() {
           expiration: response.data.expiration
             ? new Date(response.data.expiration)
             : null,
-          showInApp: response.data.showInApp,
-          showInWeb: response.data.showInWeb,
+          showInApp: response.data.showInApp ?? true,
+          showInWeb: response.data.showInWeb ?? true,
           activities: response.data.activities,
         });
 
