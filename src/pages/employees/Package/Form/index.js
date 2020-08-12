@@ -35,29 +35,26 @@ function FormComponent() {
       activities: [],
     },
   });
-  // const [expirationDate, setExpirationDate] = useState(new Date());
 
   useEffect(() => {
     if (!id) return;
     service
       .get(id)
       .then((response) => {
-        const {
-          name,
-          price,
-          description,
-          activities,
-          imageUrl,
-        } = response.data;
         formik.setValues({
           id,
-          name,
-          price: decimal.format(price),
-          description,
-          activities,
+          name: response.data.name,
+          price: decimal.format(response.data.price),
+          description: response.data.description,
+          expiration: response.data.expiration
+            ? new Date(response.data.expiration)
+            : null,
+          showInApp: response.data.showInApp,
+          showInWeb: response.data.showInWeb,
+          activities: response.data.activities,
         });
 
-        setImage({ file: null, url: imageUrl });
+        setImage({ file: null, url: response.data.imageUrl });
       })
       .catch(({ message }) => sendNotification(message, false));
 

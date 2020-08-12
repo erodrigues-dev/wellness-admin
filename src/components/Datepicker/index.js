@@ -11,13 +11,17 @@ import { Container, Popover } from './styles';
 function Datepicker({ min, max, value, onChange, ...props }) {
   const componentRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [date, setDate] = useState(value);
+  const [date, setDate] = useState(null);
   const [formated, setFormated] = useState('');
 
   useEffect(() => {
     document.addEventListener('click', handleClickOutside);
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
+
+  useEffect(() => {
+    setDate(value);
+  }, [value]);
 
   useEffect(() => {
     setFormated(date instanceof Date ? formatToDisplay(date) : '');
