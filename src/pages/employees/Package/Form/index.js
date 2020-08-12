@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
+import Datepicker from '~/components/Datepicker';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import service from '~/services/package';
@@ -14,6 +15,7 @@ import schema from './schema';
 import { ImageContainer } from './styles';
 
 function FormComponent() {
+  const [minDate] = useState(new Date());
   const [image, setImage] = useState({ file: null, url: null });
   const { sendNotification } = useNotification();
   const { id } = useParams();
@@ -27,6 +29,9 @@ function FormComponent() {
       name: '',
       price: '',
       description: '',
+      expiration: null,
+      showInApp: true,
+      showInWeb: true,
       activities: [],
     },
   });
@@ -36,22 +41,20 @@ function FormComponent() {
     service
       .get(id)
       .then((response) => {
-        const {
-          name,
-          price,
-          description,
-          activities,
-          imageUrl,
-        } = response.data;
         formik.setValues({
           id,
-          name,
-          price: decimal.format(price),
-          description,
-          activities,
+          name: response.data.name,
+          price: decimal.format(response.data.price),
+          description: response.data.description,
+          expiration: response.data.expiration
+            ? new Date(response.data.expiration)
+            : null,
+          showInApp: response.data.showInApp,
+          showInWeb: response.data.showInWeb,
+          activities: response.data.activities,
         });
 
-        setImage({ file: null, url: imageUrl });
+        setImage({ file: null, url: response.data.imageUrl });
       })
       .catch(({ message }) => sendNotification(message, false));
 
@@ -112,6 +115,13 @@ function FormComponent() {
     <Card body>
       <Card.Title>{action}</Card.Title>
       <hr />
+
+      <ImageContainer>
+        {image.url && (
+          <img src={image.url} alt="cover" accept=".jpg,.jpeg,.png" />
+        )}
+      </ImageContainer>
+
       <Form onSubmit={formik.handleSubmit}>
         <Form.Row>
           <Form.Group as={Col} md="6">
@@ -146,33 +156,69 @@ function FormComponent() {
           </Form.Group>
         </Form.Row>
         <Form.Row />
-        <Form.Group>
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            as="textarea"
-            rows="5"
-            placeholder="Description"
-            name="description"
-            value={formik.values.description}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.description && formik.errors.description}
-            isValid={formik.touched.description && !formik.errors.description}
-          />
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.description}
-          </Form.Control.Feedback>
-        </Form.Group>
+        <Form.Row>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Description</Form.Label>
+            <Form.Control
+              as="textarea"
+              rows="10"
+              placeholder="Description"
+              name="description"
+              value={formik.values.description}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={
+                formik.touched.description && formik.errors.description
+              }
+              isValid={formik.touched.description && !formik.errors.description}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.description}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Col>
+            <Form.Group>
+              <Form.Label>Image</Form.Label>
+              <Form.Control type="file" onChange={handleImage} />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Expiration Date</Form.Label>
+              <Datepicker
+                min={minDate}
+                name="expiration"
+                value={formik.values.expiration}
+                onChange={formik.handleChange}
+                isInvalid={
+                  formik.touched.expiration && formik.errors.expiration
+                }
+                isValid={formik.touched.expiration && !formik.errors.expiration}
+              />
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Show In</Form.Label>
+              <Form.Group controlId="showInApp">
+                <Form.Check
+                  type="checkbox"
+                  label="App"
+                  onChange={formik.handleChange}
+                  checked={formik.values.showInApp}
+                  custom
+                />
+              </Form.Group>
+              <Form.Group controlId="showInWeb">
+                <Form.Check
+                  type="checkbox"
+                  label="Web"
+                  onChange={formik.handleChange}
+                  checked={formik.values.showInWeb}
+                  custom
+                />
+              </Form.Group>
+            </Form.Group>
+          </Col>
+        </Form.Row>
         <Activities formik={formik} />
-        <Form.Group>
-          <Form.Label>Image</Form.Label>
-          <Form.Control type="file" onChange={handleImage} />
-          <ImageContainer>
-            {image.url && (
-              <img src={image.url} alt="cover" accept=".jpg,.jpeg,.png" />
-            )}
-          </ImageContainer>
-        </Form.Group>
+
         <Form.Row className="d-flex justify-content-end">
           <Button
             variant="secondary"

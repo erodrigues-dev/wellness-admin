@@ -19,10 +19,22 @@ function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-function create({ name, description, price, activities, image }) {
+function create({
+  name,
+  description,
+  price,
+  expiration,
+  showInApp,
+  showInWeb,
+  activities,
+  image,
+}) {
   const data = new FormData();
   data.append('name', name);
   data.append('description', description);
+  if (expiration) data.append('expiration', expiration);
+  data.append('showInApp', showInApp);
+  data.append('showInWeb', showInWeb);
   data.append('price', sanitize.number(price));
 
   activities.map((item) =>
@@ -40,11 +52,24 @@ function create({ name, description, price, activities, image }) {
   return api.post(ENDPOINT, data);
 }
 
-function update({ id, name, description, price, activities, image }) {
+function update({
+  id,
+  name,
+  description,
+  price,
+  expiration,
+  showInApp,
+  showInWeb,
+  activities,
+  image,
+}) {
   const data = new FormData();
   data.append('id', id);
   data.append('name', name);
   data.append('description', description);
+  if (expiration) data.append('expiration', expiration);
+  data.append('showInApp', showInApp);
+  data.append('showInWeb', showInWeb);
   data.append('price', sanitize.number(price));
 
   activities.map((item) =>

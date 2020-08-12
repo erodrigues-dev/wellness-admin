@@ -29,7 +29,7 @@ const Sidebar = ({ open, routes, handleClose }) => {
       <Content>
         <AvatarContainer>
           <Avatar>
-            <AvatarImage src={user.imageUrl} />
+            {user.imageUrl && <AvatarImage src={user.imageUrl} />}
           </Avatar>
           <AvatarName>{user.name}</AvatarName>
           <AvatarProfile>{user.profile?.name}</AvatarProfile>
