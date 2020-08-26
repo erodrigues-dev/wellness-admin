@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit } from 'react-icons/fi';
+import { FiEdit, FiCalendar } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import * as dateHelper from '~/helpers/date';
@@ -28,9 +28,12 @@ function List({ list, allowEdit }) {
           {list.map((item) => (
             <tr key={item.id}>
               {allowEdit && (
-                <td className="text-center">
-                  <Link to={`/activities/${item.id}`}>
+                <td className="text-center actions">
+                  <Link to={`/activities/${item.id}`} title="Edit">
                     <FiEdit size="18" />
+                  </Link>
+                  <Link to={`/activities/${item.id}/schedule`} title="Schedule">
+                    <FiCalendar size="18" />
                   </Link>
                 </td>
               )}
