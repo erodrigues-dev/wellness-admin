@@ -2,7 +2,7 @@ import React, { createContext, useState, useContext } from 'react';
 
 import * as auth from '~/services/auth';
 
-const ACTIONS = {
+export const ACTIONS = {
   LIST: 1,
   GET: 1,
   CREATE: 2,
