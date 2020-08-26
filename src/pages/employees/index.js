@@ -2,6 +2,7 @@ export { default as Home } from './Home';
 
 export { default as Activity } from './Activity';
 export { default as ActivityForm } from './Activity/Form';
+export { default as ActivitySchedule } from './Activity/Schedule';
 
 export { default as Package } from './Package';
 export { default as PackageForm } from './Package/Form';
