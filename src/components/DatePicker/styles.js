@@ -1,14 +1,6 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  position: relative;
-
-  .input-group-append {
-    cursor: pointer;
-  }
-`;
-
-export const Popover = styled.div`
   position: absolute;
   z-index: 2;
 
