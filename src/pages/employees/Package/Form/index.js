@@ -5,7 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
-import Datepicker from '~/components/Datepicker';
+import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import service from '~/services/package';
@@ -183,7 +183,7 @@ function FormComponent() {
             </Form.Group>
             <Form.Group>
               <Form.Label>Expiration Date</Form.Label>
-              <Datepicker
+              <InputDatePicker
                 min={minDate}
                 name="expiration"
                 value={formik.values.expiration}

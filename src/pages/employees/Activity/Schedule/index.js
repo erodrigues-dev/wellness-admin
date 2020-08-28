@@ -3,7 +3,6 @@ import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import FullCalendar from '@fullcalendar/react';
-import uid from 'uid';
 
 import { FULLCALENDAR_CONFIG } from '~/consts/fullcalendar';
 import { get } from '~/services/activity';
@@ -14,23 +13,8 @@ import { Container } from './styles';
 function Schedule() {
   const { id } = useParams();
   const [activity, setActivity] = useState(null);
-  const [events, setEvents] = useState([
-    {
-      id: 1,
-      groupId: 1,
-      title: 'Teste recorrencia 001',
-      start: '2020-08-25T10:00',
-      end: '2020-08-25T12:00',
-    },
-    {
-      id: 2,
-      groupId: 1,
-      title: 'Teste recorrencia 002',
-      start: '2020-08-27T10:00',
-      end: '2020-08-27T12:00',
-    },
-  ]);
-  const [showForm, setShowForm] = useState(false);
+  const [events, setEvents] = useState([]);
+  const [showForm, setShowForm] = useState(true);
 
   useEffect(() => {
     get(id).then(({ data }) => setActivity(data));
@@ -89,6 +73,17 @@ function Schedule() {
     setShowForm(false);
   }
 
+  function handleFetchEvents(info, resolve, reject) {
+    console.log('fetch ->');
+    console.log(info);
+
+    try {
+      resolve(events);
+    } catch (error) {
+      reject(error);
+    }
+  }
+
   return (
     <Container className="activity-container">
       <Card body>
@@ -99,7 +94,7 @@ function Schedule() {
         <hr />
         <FullCalendar
           {...FULLCALENDAR_CONFIG}
-          events={events}
+          events={handleFetchEvents}
           select={handleSelect}
           eventDrop={handleUpdateEvent}
           eventResize={handleUpdateEvent}
