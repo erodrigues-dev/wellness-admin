@@ -8,3 +8,14 @@ export function formatToList(value) {
 export function formatToDisplay(date) {
   return format(date, 'MM/dd/y');
 }
+
+/**
+ * formatDateTime
+ * @returns {string} formated in mm/dd/yyyy hh:mm
+ * @param {Date} date
+ */
+export function formatToDateTime(date) {
+  if (date instanceof Date) return format(date, 'MM/dd/y h:mm a');
+
+  return null;
+}
