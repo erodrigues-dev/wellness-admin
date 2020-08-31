@@ -8,7 +8,14 @@ import DatePicker from '../DatePicker';
 import TimePicker from '../TimePicker';
 import { Container } from './styles';
 
-const InputDateTimePicker = ({ value, onChange }) => {
+const InputDateTimePicker = ({
+  name,
+  value,
+  onChange,
+  onBlur,
+  isInvalid,
+  isValid,
+}) => {
   const [dateTime, setDateTime] = useState(value);
   const [formatedValue, setFormatedValue] = useState('');
   const [openDatePicker, setOpenDatePicker] = useState(false);
@@ -18,7 +25,7 @@ const InputDateTimePicker = ({ value, onChange }) => {
 
   useEffect(() => {
     setFormatedValue(formatToDateTime(dateTime) || '');
-    onChange(dateTime);
+    onChange({ target: { name, value: dateTime } });
   }, [dateTime]);
 
   const handleToggleDatePicker = () => {
@@ -63,8 +70,12 @@ const InputDateTimePicker = ({ value, onChange }) => {
     <Container>
       <InputGroup>
         <FormControl
+          name={name}
           onClick={handleToggle}
           value={formatedValue}
+          onBlur={onBlur}
+          isValid={isValid}
+          isInvalid={isInvalid}
           placeholder="mm/dd/yyyy hh:mm"
         />
         <InputGroup.Append>
