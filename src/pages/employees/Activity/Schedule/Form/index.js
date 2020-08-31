@@ -1,37 +1,21 @@
-import React, { useState } from 'react';
-import { Modal, Form, Col } from 'react-bootstrap';
+import React from 'react';
+import { Modal, Form, Col, Button } from 'react-bootstrap';
 
+import { useFormik } from 'formik';
+
+import InputDatePicker from '~/components/InputDatePicker';
 import InputDateTimePicker from '~/components/InputDateTimePicker';
 
-// import { Container } from './styles';
-
-const weekDays = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-];
-
-const endsInOptions = ['Never', 'In', 'After'];
+import { WEEKDAYS, RECURRENCE, RECURRENCE_ENDSIN } from './consts';
+import ScheduleFormModel from './model';
 
 function ScheduleForm({ show, onClose }) {
-  const [recurrence, setRecurrence] = useState('diary');
-  const [endsIn, setEndsIn] = useState(endsInOptions[0]);
+  const formik = useFormik({
+    initialValues: new ScheduleFormModel(),
+    onSubmit: handleSubmit,
+  });
 
-  function handleChangeRecurrence({ target }) {
-    setRecurrence(target.value);
-  }
-
-  function handleChangeEndsIn({ target }) {
-    setEndsIn(target.value);
-  }
-
-  function handleChangeStart(date) {
-    console.log('change date ->', date);
-  }
+  function handleSubmit(values) {}
 
   return (
     <Modal show={show} onHide={onClose} size="lg" centered>
@@ -39,30 +23,56 @@ function ScheduleForm({ show, onClose }) {
         <Modal.Title>Event</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form>
+        <Form onSubmit={formik.handleSubmit}>
           <Form.Row>
             <Form.Group as={Col}>
               <Form.Label>Title</Form.Label>
-              <Form.Control placeholder="title" name="title" />
+              <Form.Control
+                placeholder="title"
+                name="title"
+                value={formik.values.title}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.title && formik.errors.title}
+                isValid={formik.touched.title && !formik.errors.title}
+              />
             </Form.Group>
             <Form.Group as={Col} sm={2}>
               <Form.Label>Color</Form.Label>
               <Form.Control
                 name="color"
                 type="color"
-                defaultValue="#b0d04c"
                 style={{ padding: 0 }}
+                value={formik.values.color}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.color && formik.errors.color}
+                isValid={formik.touched.color && !formik.errors.color}
               />
             </Form.Group>
           </Form.Row>
           <Form.Row>
             <Form.Group as={Col} lg="6">
               <Form.Label>Start</Form.Label>
-              <InputDateTimePicker name="start" onChange={handleChangeStart} />
+              <InputDateTimePicker
+                name="start"
+                value={formik.values.start}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.start && formik.errors.start}
+                isValid={formik.touched.start && !formik.errors.start}
+              />
             </Form.Group>
             <Form.Group as={Col} lg="6">
               <Form.Label>End</Form.Label>
-              <InputDateTimePicker name="end" onChange={() => {}} />
+              <InputDateTimePicker
+                name="end"
+                value={formik.values.end}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.end && formik.errors.end}
+                isValid={formik.touched.end && !formik.errors.end}
+              />
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -71,35 +81,55 @@ function ScheduleForm({ show, onClose }) {
               <Form.Control
                 placeholder="Repeat times"
                 name="repeat"
-                defaultValue={1}
+                value={formik.values.repeat}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.repeat && formik.errors.repeat}
+                isValid={formik.touched.repeat && !formik.errors.repeat}
               />
             </Form.Group>
             <Form.Group as={Col}>
               <Form.Label>Recurrence</Form.Label>
               <Form.Control
-                value={recurrence}
                 as="select"
                 name="recurrence"
-                onChange={handleChangeRecurrence}
+                value={formik.values.recurrence}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={
+                  formik.touched.recurrence && formik.errors.recurrence
+                }
+                isValid={formik.touched.recurrence && !formik.errors.recurrence}
                 custom
               >
-                <option value="diary" selected>
-                  Day(s)
-                </option>
-                <option value="weekly">Week(s)</option>
-                <option value="monthly">Month(s)</option>
+                {RECURRENCE.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.name}
+                  </option>
+                ))}
               </Form.Control>
             </Form.Group>
-            {recurrence === 'weekly' && (
+            {formik.values.recurrence === 'weekly' && (
               <Form.Group as={Col} md={12}>
-                <Form.Label>Week Days</Form.Label>
+                <Form.Label>Week days</Form.Label>
                 <Form.Group id="weekday">
-                  {weekDays.map((day) => (
+                  {WEEKDAYS.map((day) => (
                     <Form.Check
-                      key={day}
                       type="checkbox"
-                      label={day}
-                      id={day}
+                      key={day.value}
+                      id={day.value}
+                      label={day.name}
+                      name="weekDays"
+                      value={day.value}
+                      checked={formik.values.weekDays.includes(day.value)}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      isInvalid={
+                        formik.touched.weekDays && formik.errors.weekDays
+                      }
+                      isValid={
+                        formik.touched.weekDays && !formik.errors.weekDays
+                      }
                       custom
                       inline
                     />
@@ -110,36 +140,71 @@ function ScheduleForm({ show, onClose }) {
           </Form.Row>
           <Form.Row>
             <Form.Group as={Col} sm={12} md={3}>
-              <Form.Label>Ends In</Form.Label>
-              {endsInOptions.map((option) => (
+              <Form.Label>Ends in</Form.Label>
+              {RECURRENCE_ENDSIN.map((option) => (
                 <Form.Check
                   type="radio"
-                  key={option}
-                  id={option}
-                  label={option}
+                  key={option.value}
+                  id={option.value}
+                  label={option.name}
                   name="endsIn"
-                  value={option}
-                  onChange={handleChangeEndsIn}
-                  checked={endsIn === option}
+                  value={option.value}
+                  checked={formik.values.endsIn === option.value}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.endsIn && formik.errors.endsIn}
+                  isValid={formik.touched.endsIn && !formik.errors.endsIn}
                   custom
                 />
               ))}
             </Form.Group>
-            {endsIn === 'In' && (
-              <Form.Group as={Col}>
-                <Form.Label>Date</Form.Label>
-                <Form.Control placeholder="yyyy-mm-dd" />
+            {formik.values.endsIn === 'in' && (
+              <Form.Group as={Col} md={6}>
+                <Form.Label>Expiration</Form.Label>
+                <InputDatePicker
+                  name="expiration"
+                  value={formik.values.expiration}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={
+                    formik.touched.expiration && formik.errors.expiration
+                  }
+                  isValid={
+                    formik.touched.expiration && !formik.errors.expiration
+                  }
+                />
               </Form.Group>
             )}
-            {endsIn === 'After' && (
-              <Form.Group as={Col}>
+            {formik.values.endsIn === 'after' && (
+              <Form.Group as={Col} md={4}>
                 <Form.Label>Ocurrences</Form.Label>
-                <Form.Control placeholder="Ocurrences" />
+                <Form.Control
+                  placeholder="Ocurrences"
+                  name="ocurrences"
+                  value={formik.values.ocurrences}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={
+                    formik.touched.ocurrences && formik.errors.ocurrences
+                  }
+                  isValid={
+                    formik.touched.ocurrences && !formik.errors.ocurrences
+                  }
+                />
               </Form.Group>
             )}
           </Form.Row>
         </Form>
+        <Form.Row>
+          <pre as={Col}>{JSON.stringify(formik.values, null, 2)}</pre>
+          <pre as={Col}>{JSON.stringify(formik.touched, null, 2)}</pre>
+          <pre as={Col}>{JSON.stringify(formik.errors, null, 2)}</pre>
+        </Form.Row>
       </Modal.Body>
+      <Modal.Footer>
+        <Button variant="secondary">Cancel</Button>
+        <Button onClick={formik.handleSubmit}>Save</Button>
+      </Modal.Footer>
     </Modal>
   );
 }
