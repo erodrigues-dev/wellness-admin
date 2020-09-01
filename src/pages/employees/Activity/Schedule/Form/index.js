@@ -8,14 +8,24 @@ import InputDateTimePicker from '~/components/InputDateTimePicker';
 
 import { WEEKDAYS, RECURRENCE, RECURRENCE_ENDSIN } from './consts';
 import ScheduleFormModel from './model';
+import schema from './schema';
 
 function ScheduleForm({ show, onClose }) {
   const formik = useFormik({
+    validationSchema: schema,
     initialValues: new ScheduleFormModel(),
     onSubmit: handleSubmit,
   });
 
-  function handleSubmit(values) {}
+  function handleSubmit() {}
+
+  function isValid(field) {
+    return formik.touched[field] && !formik.errors[field];
+  }
+
+  function isInvalid(field) {
+    return formik.touched[field] && formik.errors[field];
+  }
 
   return (
     <Modal show={show} onHide={onClose} size="lg" centered>
@@ -33,9 +43,12 @@ function ScheduleForm({ show, onClose }) {
                 value={formik.values.title}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.title && formik.errors.title}
-                isValid={formik.touched.title && !formik.errors.title}
+                isValid={isValid('title')}
+                isInvalid={isInvalid('title')}
               />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.title}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} sm={2}>
               <Form.Label>Color</Form.Label>
@@ -49,6 +62,9 @@ function ScheduleForm({ show, onClose }) {
                 isInvalid={formik.touched.color && formik.errors.color}
                 isValid={formik.touched.color && !formik.errors.color}
               />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.color}
+              </Form.Control.Feedback>
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -62,6 +78,9 @@ function ScheduleForm({ show, onClose }) {
                 isInvalid={formik.touched.start && formik.errors.start}
                 isValid={formik.touched.start && !formik.errors.start}
               />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.start}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} lg="6">
               <Form.Label>End</Form.Label>
@@ -73,6 +92,9 @@ function ScheduleForm({ show, onClose }) {
                 isInvalid={formik.touched.end && formik.errors.end}
                 isValid={formik.touched.end && !formik.errors.end}
               />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.end}
+              </Form.Control.Feedback>
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -87,6 +109,9 @@ function ScheduleForm({ show, onClose }) {
                 isInvalid={formik.touched.repeat && formik.errors.repeat}
                 isValid={formik.touched.repeat && !formik.errors.repeat}
               />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.repeat}
+              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col}>
               <Form.Label>Recurrence</Form.Label>
@@ -108,6 +133,9 @@ function ScheduleForm({ show, onClose }) {
                   </option>
                 ))}
               </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.recurrence}
+              </Form.Control.Feedback>
             </Form.Group>
             {formik.values.recurrence === 'weekly' && (
               <Form.Group as={Col} md={12}>
@@ -124,17 +152,20 @@ function ScheduleForm({ show, onClose }) {
                       checked={formik.values.weekDays.includes(day.value)}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      isInvalid={
-                        formik.touched.weekDays && formik.errors.weekDays
-                      }
                       isValid={
                         formik.touched.weekDays && !formik.errors.weekDays
+                      }
+                      isInvalid={
+                        formik.touched.weekDays && formik.errors.weekDays
                       }
                       custom
                       inline
                     />
                   ))}
                 </Form.Group>
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.weekDays}
+                </Form.Control.Feedback>
               </Form.Group>
             )}
           </Form.Row>
@@ -173,6 +204,9 @@ function ScheduleForm({ show, onClose }) {
                     formik.touched.expiration && !formik.errors.expiration
                   }
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.expiration}
+                </Form.Control.Feedback>
               </Form.Group>
             )}
             {formik.values.endsIn === 'after' && (
@@ -184,13 +218,16 @@ function ScheduleForm({ show, onClose }) {
                   value={formik.values.ocurrences}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  isInvalid={
-                    formik.touched.ocurrences && formik.errors.ocurrences
-                  }
                   isValid={
                     formik.touched.ocurrences && !formik.errors.ocurrences
                   }
+                  isInvalid={
+                    formik.touched.ocurrences && formik.errors.ocurrences
+                  }
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.ocurrences}
+                </Form.Control.Feedback>
               </Form.Group>
             )}
           </Form.Row>
