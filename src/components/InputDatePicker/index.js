@@ -62,7 +62,7 @@ function InputDatePicker({ min, max, value, feedback, onChange, ...props }) {
           onClose={() => setOpen(false)}
           minDate={min}
           maxDate={max}
-          value={date}
+          value={date || new Date()}
         />
       )}
     </Container>

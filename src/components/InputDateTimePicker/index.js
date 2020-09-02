@@ -96,14 +96,14 @@ const InputDateTimePicker = ({
       </InputGroup>
       {openDatePicker && (
         <DatePicker
-          value={dateTime}
+          value={dateTime || new Date()}
           onChange={handleChangeDatePicker}
           onClose={handleToggleDatePicker}
         />
       )}
       {openTimePicker && (
         <TimePicker
-          value={dateTime}
+          value={dateTime || new Date()}
           onChange={handleChangeTimePicker}
           onClose={handleToggleTimePicker}
         />
