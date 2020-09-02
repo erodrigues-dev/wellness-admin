@@ -30,4 +30,26 @@ export default class ScheduleFormModel {
     model.expiration = obj.expiration;
     model.ocurrences = obj.ocurrences;
   }
+
+  static fromEvent(event) {
+    const model = new ScheduleFormModel();
+    model.id = event.id;
+    model.title = event.title;
+    model.start = event.start;
+    model.end = event.end;
+    model.color = event.backgroundColor;
+    return model;
+  }
+
+  toEvent() {
+    const event = {
+      id: this.id,
+      title: this.title,
+      start: this.start,
+      end: this.end,
+      backgroundColor: this.color,
+    };
+
+    return event;
+  }
 }
