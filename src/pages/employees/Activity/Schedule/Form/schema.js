@@ -9,7 +9,7 @@ const schema = yup.object().shape({
 
   color: yup.string().max(7).required(),
 
-  start: yup.date().required().min(new Date()),
+  start: yup.date().required(),
 
   end: yup
     .date()
@@ -17,7 +17,7 @@ const schema = yup.object().shape({
       if (value) {
         const date = new Date(value);
         date.setMinutes(date.getMinutes() + 1);
-        return mix.min(date);
+        return mix.min(date, 'end must be later than "start" field');
       }
       return mix;
     })
@@ -58,6 +58,7 @@ const schema = yup.object().shape({
     .number()
     .min(1)
     .integer()
+    .typeError('ocurrences must be a number')
     .when('endsIn', (value, mix) => (value === 'after' ? mix.required() : mix)),
 });
 
