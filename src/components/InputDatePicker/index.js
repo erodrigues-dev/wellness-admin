@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { FormControl, InputGroup } from 'react-bootstrap';
 import { FiCalendar, FiXCircle } from 'react-icons/fi';
 
@@ -7,7 +7,7 @@ import { formatToDisplay } from '~/helpers/date';
 import DatePicker from '../DatePicker';
 import { Container } from './styles';
 
-function InputDatePicker({ min, max, value, onChange, ...props }) {
+function InputDatePicker({ min, max, value, feedback, onChange, ...props }) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(null);
   const [formated, setFormated] = useState('');
@@ -24,7 +24,7 @@ function InputDatePicker({ min, max, value, onChange, ...props }) {
     setOpen(false);
     setDate(selectedDate);
     onChange({
-      target: { name: props.name, value: selectedDate },
+      target: { name: props.name, value: selectedDate || '' },
     });
   }
 
@@ -54,6 +54,7 @@ function InputDatePicker({ min, max, value, onChange, ...props }) {
             <FiCalendar />
           </InputGroup.Text>
         </InputGroup.Append>
+        <FormControl.Feedback type="invalid">{feedback}</FormControl.Feedback>
       </InputGroup>
       {open && (
         <DatePicker

@@ -15,6 +15,7 @@ const InputDateTimePicker = ({
   onBlur,
   isInvalid,
   isValid,
+  feedback,
 }) => {
   const [dateTime, setDateTime] = useState(value);
   const [formatedValue, setFormatedValue] = useState('');
@@ -25,7 +26,7 @@ const InputDateTimePicker = ({
 
   useEffect(() => {
     setFormatedValue(formatToDateTime(dateTime) || '');
-    onChange({ target: { name, value: dateTime } });
+    onChange({ target: { name, value: dateTime || '' } });
   }, [dateTime]);
 
   const handleToggleDatePicker = () => {
@@ -91,6 +92,7 @@ const InputDateTimePicker = ({
             <FiClock />
           </InputGroup.Text>
         </InputGroup.Append>
+        <FormControl.Feedback type="invalid">{feedback}</FormControl.Feedback>
       </InputGroup>
       {openDatePicker && (
         <DatePicker
