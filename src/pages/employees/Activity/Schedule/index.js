@@ -8,30 +8,42 @@ import { FULLCALENDAR_CONFIG } from '~/consts/fullcalendar';
 import { get } from '~/services/activity';
 
 import ScheduleForm from './Form';
+import ScheduleFormModel from './Form/model';
 import { Container } from './styles';
 
 function Schedule() {
   const { id } = useParams();
   const [activity, setActivity] = useState(null);
   const [events, setEvents] = useState([]);
-  const [showForm, setShowForm] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState(null);
+
+  const [newId, setNewId] = useState(0);
 
   useEffect(() => {
     get(id).then(({ data }) => setActivity(data));
-
-    // setShowForm(true);
   }, [id]);
 
-  function handleSelect({ start, end }) {
-    // const newEvent = {
-    //   id: uid(),
-    //   title: activity.name,
-    //   start,
-    //   end,
-    // };
+  function getNewFormData() {
+    const model = new ScheduleFormModel();
+    model.title = activity.name;
+    return model;
+  }
 
-    // setEvents([...events, newEvent]);
+  function handleSelect({ start, end }) {
+    const newFormData = getNewFormData();
+    newFormData.start = new Date(start);
+    newFormData.end = new Date(end);
+    setFormData(newFormData);
     setShowForm(true);
+  }
+
+  function handleClickEvent({ event }) {
+    console.log('click in event', event);
+    const eventFormData = ScheduleFormModel.fromEvent(event);
+
+    setShowForm(true);
+    setFormData(eventFormData);
   }
 
   function handleUpdateEvent({ event, relatedEvents }) {
@@ -53,30 +65,33 @@ function Schedule() {
       end: related.end,
     }));
 
-    console.log('#1');
-    console.log(updated, relateds);
-
     const others = events.filter(
       (x) => x.id !== updated.id && !relateds.some((y) => y.id === x.id)
     );
-    console.log('#2');
-    console.log(others);
+
     setEvents([...others, updated, ...relateds]);
   }
 
-  function handleClickEvent({ event }) {
-    console.log('click event -> ', event.id);
-    setShowForm(true);
-  }
-
-  function handleCloseForm() {
+  /**
+   * on handle close modal schedule form
+   * @param {string} role
+   * @param {ScheduleFormModel} model
+   */
+  function handleCloseForm(role, model) {
     setShowForm(false);
+
+    if (role === 'save') {
+      const event = model.toEvent();
+      if (!event.id) {
+        event.id = newId + 1;
+        setNewId((_id) => _id + 1);
+      }
+      const others = events.filter((x) => Number(x.id) !== Number(event.id));
+      setEvents([...others, event]);
+    }
   }
 
   function handleFetchEvents(info, resolve, reject) {
-    console.log('fetch ->');
-    console.log(info);
-
     try {
       resolve(events);
     } catch (error) {
@@ -85,12 +100,9 @@ function Schedule() {
   }
 
   return (
-    <Container className="activity-container">
+    <Container className="schedule-activity-container">
       <Card body>
-        <h3>
-          Schedule
-          <small>{` (${activity?.name})`}</small>
-        </h3>
+        <h3>{activity?.name}</h3>
         <hr />
         <FullCalendar
           {...FULLCALENDAR_CONFIG}
@@ -100,7 +112,11 @@ function Schedule() {
           eventResize={handleUpdateEvent}
           eventClick={handleClickEvent}
         />
-        <ScheduleForm show={showForm} onClose={handleCloseForm} />
+        <ScheduleForm
+          show={showForm}
+          data={formData}
+          onClose={handleCloseForm}
+        />
       </Card>
     </Container>
   );

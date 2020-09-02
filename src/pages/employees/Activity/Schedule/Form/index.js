@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Modal, Form, Col, Button } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
@@ -10,14 +10,28 @@ import { WEEKDAYS, RECURRENCE, RECURRENCE_ENDSIN } from './consts';
 import ScheduleFormModel from './model';
 import schema from './schema';
 
-function ScheduleForm({ show, onClose }) {
+function ScheduleForm({ show, data, onClose }) {
   const formik = useFormik({
     validationSchema: schema,
     initialValues: new ScheduleFormModel(),
     onSubmit: handleSubmit,
   });
 
-  function handleSubmit() {}
+  useEffect(() => {
+    // console.log('receive form value -> ', data);
+    const values = data || new ScheduleFormModel();
+    formik.resetForm();
+    formik.setValues(values);
+  }, [data]);
+
+  function handleSubmit(values) {
+    console.log('handle submit');
+    onClose('save', values);
+  }
+
+  function handleCancel() {
+    onClose('cancel');
+  }
 
   function isValid(field) {
     return formik.touched[field] && !formik.errors[field];
@@ -59,8 +73,8 @@ function ScheduleForm({ show, onClose }) {
                 value={formik.values.color}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.color && formik.errors.color}
-                isValid={formik.touched.color && !formik.errors.color}
+                isValid={isValid('color')}
+                isInvalid={isInvalid('color')}
               />
               <Form.Control.Feedback type="invalid">
                 {formik.errors.color}
@@ -75,12 +89,10 @@ function ScheduleForm({ show, onClose }) {
                 value={formik.values.start}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.start && formik.errors.start}
-                isValid={formik.touched.start && !formik.errors.start}
+                isValid={isValid('start')}
+                isInvalid={isInvalid('start')}
+                feedback={formik.errors.start}
               />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.start}
-              </Form.Control.Feedback>
             </Form.Group>
             <Form.Group as={Col} lg="6">
               <Form.Label>End</Form.Label>
@@ -89,12 +101,10 @@ function ScheduleForm({ show, onClose }) {
                 value={formik.values.end}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.end && formik.errors.end}
-                isValid={formik.touched.end && !formik.errors.end}
+                isValid={isValid('end')}
+                isInvalid={isInvalid('end')}
+                feedback={formik.errors.end}
               />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.end}
-              </Form.Control.Feedback>
             </Form.Group>
           </Form.Row>
           <Form.Row>
@@ -106,8 +116,8 @@ function ScheduleForm({ show, onClose }) {
                 value={formik.values.repeat}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.repeat && formik.errors.repeat}
-                isValid={formik.touched.repeat && !formik.errors.repeat}
+                isValid={isValid('repeat')}
+                isInvalid={isInvalid('repeat')}
               />
               <Form.Control.Feedback type="invalid">
                 {formik.errors.repeat}
@@ -121,10 +131,8 @@ function ScheduleForm({ show, onClose }) {
                 value={formik.values.recurrence}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                isInvalid={
-                  formik.touched.recurrence && formik.errors.recurrence
-                }
-                isValid={formik.touched.recurrence && !formik.errors.recurrence}
+                isValid={isValid('recurrence')}
+                isInvalid={isInvalid('recurrence')}
                 custom
               >
                 {RECURRENCE.map((option) => (
@@ -152,20 +160,21 @@ function ScheduleForm({ show, onClose }) {
                       checked={formik.values.weekDays.includes(day.value)}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      isValid={
-                        formik.touched.weekDays && !formik.errors.weekDays
-                      }
-                      isInvalid={
-                        formik.touched.weekDays && formik.errors.weekDays
-                      }
+                      isValid={isValid('weekDays')}
+                      isInvalid={isInvalid('weekDays')}
                       custom
                       inline
                     />
                   ))}
                 </Form.Group>
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.weekDays}
-                </Form.Control.Feedback>
+                {isInvalid('weekDays') && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block' }}
+                  >
+                    {formik.errors.weekDays}
+                  </Form.Control.Feedback>
+                )}
               </Form.Group>
             )}
           </Form.Row>
@@ -183,8 +192,8 @@ function ScheduleForm({ show, onClose }) {
                   checked={formik.values.endsIn === option.value}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.endsIn && formik.errors.endsIn}
-                  isValid={formik.touched.endsIn && !formik.errors.endsIn}
+                  isValid={isValid('endsIn')}
+                  isInvalid={isInvalid('endsIn')}
                   custom
                 />
               ))}
@@ -197,16 +206,10 @@ function ScheduleForm({ show, onClose }) {
                   value={formik.values.expiration}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  isInvalid={
-                    formik.touched.expiration && formik.errors.expiration
-                  }
-                  isValid={
-                    formik.touched.expiration && !formik.errors.expiration
-                  }
+                  isValid={isValid('expiration')}
+                  isInvalid={isInvalid('expiration')}
+                  feedback={formik.errors.expiration}
                 />
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.expiration}
-                </Form.Control.Feedback>
               </Form.Group>
             )}
             {formik.values.endsIn === 'after' && (
@@ -218,12 +221,8 @@ function ScheduleForm({ show, onClose }) {
                   value={formik.values.ocurrences}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  isValid={
-                    formik.touched.ocurrences && !formik.errors.ocurrences
-                  }
-                  isInvalid={
-                    formik.touched.ocurrences && formik.errors.ocurrences
-                  }
+                  isValid={isValid('ocurrences')}
+                  isInvalid={isInvalid('ocurrences')}
                 />
                 <Form.Control.Feedback type="invalid">
                   {formik.errors.ocurrences}
@@ -232,16 +231,20 @@ function ScheduleForm({ show, onClose }) {
             )}
           </Form.Row>
         </Form>
-        <Form.Row>
+        {/* <Form.Row>
           <pre as={Col}>{JSON.stringify(formik.values, null, 2)}</pre>
           <pre as={Col}>{JSON.stringify(formik.touched, null, 2)}</pre>
           <pre as={Col}>{JSON.stringify(formik.errors, null, 2)}</pre>
-        </Form.Row>
+        </Form.Row> */}
       </Modal.Body>
       <Modal.Footer>
-        <Button variant="secondary">Cancel</Button>
+        <Button variant="secondary" onClick={handleCancel}>
+          Cancel
+        </Button>
         <Button onClick={formik.handleSubmit}>Save</Button>
       </Modal.Footer>
+      <pre>{JSON.stringify(formik.values, null, 2)}</pre>
+      <pre>{JSON.stringify(formik.errors, null, 2)}</pre>
     </Modal>
   );
 }
