@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import InputDatePicker from '~/components/InputDatePicker';
 import InputDateTimePicker from '~/components/InputDateTimePicker';
 
-import { WEEKDAYS, RECURRENCE, RECURRENCE_ENDSIN } from './consts';
+import { WEEKDAYS, FREQUENCY, RECURRENCE_ENDSIN } from './consts';
 import ScheduleFormModel from './model';
 import schema from './schema';
 
@@ -25,7 +25,6 @@ function ScheduleForm({ show, data, onClose }) {
   }, [data]);
 
   function handleSubmit(values) {
-    console.log('handle submit');
     onClose('save', values);
   }
 
@@ -107,135 +106,145 @@ function ScheduleForm({ show, data, onClose }) {
               />
             </Form.Group>
           </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} sm={3} md={6}>
-              <Form.Label>Repeat every</Form.Label>
-              <Form.Control
-                placeholder="Repeat times"
-                name="repeat"
-                value={formik.values.repeat}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isValid={isValid('repeat')}
-                isInvalid={isInvalid('repeat')}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.repeat}
-              </Form.Control.Feedback>
-            </Form.Group>
-            <Form.Group as={Col}>
-              <Form.Label>Recurrence</Form.Label>
-              <Form.Control
-                as="select"
-                name="recurrence"
-                value={formik.values.recurrence}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isValid={isValid('recurrence')}
-                isInvalid={isInvalid('recurrence')}
-                custom
-              >
-                {RECURRENCE.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.name}
-                  </option>
-                ))}
-              </Form.Control>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.recurrence}
-              </Form.Control.Feedback>
-            </Form.Group>
-            {formik.values.recurrence === 'weekly' && (
-              <Form.Group as={Col} md={12}>
-                <Form.Label>Week days</Form.Label>
-                <Form.Group id="weekday">
-                  {WEEKDAYS.map((day) => (
+          <Form.Group>
+            <Form.Check
+              label="Recurrent"
+              name="recurrent"
+              id="recurrent"
+              checked={formik.values.recurrent}
+              onChange={formik.handleChange}
+              value
+              custom
+            />
+          </Form.Group>
+          {formik.values.recurrent && (
+            <>
+              <Form.Row>
+                <Form.Group as={Col} sm={3} md={6}>
+                  <Form.Label>Repeat every</Form.Label>
+                  <Form.Control
+                    placeholder="Repeat every"
+                    name="repeatEvery"
+                    value={formik.values.repeatEvery}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    isValid={isValid('repeatEvery')}
+                    isInvalid={isInvalid('repeatEvery')}
+                  />
+                  <Form.Control.Feedback type="invalid">
+                    {formik.errors.repeatEvery}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                <Form.Group as={Col}>
+                  <Form.Label>Frequency</Form.Label>
+                  <Form.Control
+                    as="select"
+                    name="frequency"
+                    value={formik.values.frequency}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                    isValid={isValid('frequency')}
+                    isInvalid={isInvalid('frequency')}
+                    custom
+                  >
+                    {FREQUENCY.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.name}
+                      </option>
+                    ))}
+                  </Form.Control>
+                  <Form.Control.Feedback type="invalid">
+                    {formik.errors.frequency}
+                  </Form.Control.Feedback>
+                </Form.Group>
+                {formik.values.frequency === 'WEEKLY' && (
+                  <Form.Group as={Col} md={12}>
+                    <Form.Label>Week days</Form.Label>
+                    <Form.Group id="weekday">
+                      {WEEKDAYS.map((day) => (
+                        <Form.Check
+                          type="checkbox"
+                          key={day.value}
+                          id={day.value}
+                          label={day.name}
+                          name="weekDays"
+                          value={day.value}
+                          checked={formik.values.weekDays.includes(day.value)}
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          isValid={isValid('weekDays')}
+                          isInvalid={isInvalid('weekDays')}
+                          custom
+                          inline
+                        />
+                      ))}
+                    </Form.Group>
+                    {isInvalid('weekDays') && (
+                      <Form.Control.Feedback
+                        type="invalid"
+                        style={{ display: 'block' }}
+                      >
+                        {formik.errors.weekDays}
+                      </Form.Control.Feedback>
+                    )}
+                  </Form.Group>
+                )}
+              </Form.Row>
+              <Form.Row>
+                <Form.Group as={Col} sm={12} md={3}>
+                  <Form.Label>Ends in</Form.Label>
+                  {RECURRENCE_ENDSIN.map((option) => (
                     <Form.Check
-                      type="checkbox"
-                      key={day.value}
-                      id={day.value}
-                      label={day.name}
-                      name="weekDays"
-                      value={day.value}
-                      checked={formik.values.weekDays.includes(day.value)}
+                      type="radio"
+                      key={option.value}
+                      id={option.value}
+                      label={option.name}
+                      name="endsIn"
+                      value={option.value}
+                      checked={formik.values.endsIn === option.value}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      isValid={isValid('weekDays')}
-                      isInvalid={isInvalid('weekDays')}
+                      isValid={isValid('endsIn')}
+                      isInvalid={isInvalid('endsIn')}
                       custom
-                      inline
                     />
                   ))}
                 </Form.Group>
-                {isInvalid('weekDays') && (
-                  <Form.Control.Feedback
-                    type="invalid"
-                    style={{ display: 'block' }}
-                  >
-                    {formik.errors.weekDays}
-                  </Form.Control.Feedback>
+                {formik.values.endsIn === 'IN' && (
+                  <Form.Group as={Col} md={6}>
+                    <Form.Label>Until</Form.Label>
+                    <InputDatePicker
+                      name="until"
+                      value={formik.values.until}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      isValid={isValid('until')}
+                      isInvalid={isInvalid('until')}
+                      feedback={formik.errors.until}
+                    />
+                  </Form.Group>
                 )}
-              </Form.Group>
-            )}
-          </Form.Row>
-          <Form.Row>
-            <Form.Group as={Col} sm={12} md={3}>
-              <Form.Label>Ends in</Form.Label>
-              {RECURRENCE_ENDSIN.map((option) => (
-                <Form.Check
-                  type="radio"
-                  key={option.value}
-                  id={option.value}
-                  label={option.name}
-                  name="endsIn"
-                  value={option.value}
-                  checked={formik.values.endsIn === option.value}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  isValid={isValid('endsIn')}
-                  isInvalid={isInvalid('endsIn')}
-                  custom
-                />
-              ))}
-            </Form.Group>
-            {formik.values.endsIn === 'in' && (
-              <Form.Group as={Col} md={6}>
-                <Form.Label>Expiration</Form.Label>
-                <InputDatePicker
-                  name="expiration"
-                  value={formik.values.expiration}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  isValid={isValid('expiration')}
-                  isInvalid={isInvalid('expiration')}
-                  feedback={formik.errors.expiration}
-                />
-              </Form.Group>
-            )}
-            {formik.values.endsIn === 'after' && (
-              <Form.Group as={Col} md={4}>
-                <Form.Label>Ocurrences</Form.Label>
-                <Form.Control
-                  placeholder="Ocurrences"
-                  name="ocurrences"
-                  value={formik.values.ocurrences}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  isValid={isValid('ocurrences')}
-                  isInvalid={isInvalid('ocurrences')}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.ocurrences}
-                </Form.Control.Feedback>
-              </Form.Group>
-            )}
-          </Form.Row>
+                {formik.values.endsIn === 'AFTER' && (
+                  <Form.Group as={Col} md={4}>
+                    <Form.Label>Ocurrences</Form.Label>
+                    <Form.Control
+                      placeholder="Ocurrences"
+                      name="ocurrences"
+                      value={formik.values.ocurrences}
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      isValid={isValid('ocurrences')}
+                      isInvalid={isInvalid('ocurrences')}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {formik.errors.ocurrences}
+                    </Form.Control.Feedback>
+                  </Form.Group>
+                )}
+              </Form.Row>
+            </>
+          )}
         </Form>
-        {/* <Form.Row>
-          <pre as={Col}>{JSON.stringify(formik.values, null, 2)}</pre>
-          <pre as={Col}>{JSON.stringify(formik.touched, null, 2)}</pre>
-          <pre as={Col}>{JSON.stringify(formik.errors, null, 2)}</pre>
-        </Form.Row> */}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={handleCancel}>

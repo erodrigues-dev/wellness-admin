@@ -23,27 +23,27 @@ const schema = yup.object().shape({
     })
     .required(),
 
-  repeat: yup
+  repeatEvery: yup
     .number()
     .integer()
     .typeError('repeat every must be a number')
     .required('repeat every is a required field')
     .min(1, 'repeat every must be greater than zero'),
 
-  recurrence: yup.string().required(),
+  frequency: yup.string().required(),
 
   weekDays: yup
     .array()
     .label('week days')
-    .when('recurrence', (value, mix) =>
-      value === 'weekly' ? mix.required() : mix
+    .when('frequency', (value, mix) =>
+      value === 'WEEKLY' ? mix.required() : mix
     ),
 
   endsIn: yup.string().required(),
 
-  expiration: yup.date().when(['endsIn', 'end'], (endsIn, end, mix) => {
+  until: yup.date().when(['endsIn', 'end'], (endsIn, end, mix) => {
     let expirationMix = mix;
-    if (endsIn === 'in') {
+    if (endsIn === 'IN') {
       expirationMix = expirationMix.required();
       if (end) {
         const date = new Date(end);
@@ -59,7 +59,7 @@ const schema = yup.object().shape({
     .min(1)
     .integer()
     .typeError('ocurrences must be a number')
-    .when('endsIn', (value, mix) => (value === 'after' ? mix.required() : mix)),
+    .when('endsIn', (value, mix) => (value === 'AFTER' ? mix.required() : mix)),
 });
 
 export default schema;

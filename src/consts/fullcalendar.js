@@ -1,9 +1,13 @@
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin from '@fullcalendar/interaction';
+import rrulePlugin from '@fullcalendar/rrule';
 import timeGridPlugin from '@fullcalendar/timegrid';
 
+const TIMEZONE = /\((.*)\)/.exec(new Date().toString())[1];
+
 export const FULLCALENDAR_CONFIG = {
-  plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+  timeZone: TIMEZONE,
+  plugins: [rrulePlugin, dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: 'timeGridWeek',
   headerToolbar: {
     end: 'prev,today,next dayGridMonth,timeGridWeek,timeGridDay',

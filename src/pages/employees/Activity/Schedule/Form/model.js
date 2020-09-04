@@ -1,3 +1,8 @@
+import { FREQUENCY, RECURRENCE_ENDSIN } from './consts';
+
+const [{ value: frequencyDefault }] = FREQUENCY;
+const [{ value: endsInDefault }] = RECURRENCE_ENDSIN;
+
 export default class ScheduleFormModel {
   constructor() {
     this.id = '';
@@ -6,29 +11,13 @@ export default class ScheduleFormModel {
     this.color = '#b0d04c';
     this.start = '';
     this.end = '';
-    this.repeat = 1;
-    this.recurrence = 'daily';
+    this.recurrent = false;
+    this.repeatEvery = 1;
+    this.frequency = frequencyDefault;
     this.weekDays = [];
-    this.endsIn = 'never';
-    this.expiration = '';
+    this.endsIn = endsInDefault;
+    this.until = '';
     this.ocurrences = '';
-  }
-
-  static fromObject(obj) {
-    const model = new ScheduleFormModel();
-
-    model.id = obj.id;
-    model.activityId = obj.activityId;
-    model.title = obj.title;
-    model.color = obj.color;
-    model.start = obj.start;
-    model.end = obj.end;
-    model.repeat = obj.repeat;
-    model.recurrence = obj.recurrence;
-    model.weekdays = obj.weekdays;
-    model.endsIn = obj.endsIn;
-    model.expiration = obj.expiration;
-    model.ocurrences = obj.ocurrences;
   }
 
   static fromEvent(event) {
@@ -49,6 +38,33 @@ export default class ScheduleFormModel {
       end: this.end,
       backgroundColor: this.color,
     };
+
+    if (this.recurrent) {
+      const rrule = {
+        dtstart: this.start,
+        interval: this.repeatEvery,
+        freq: this.frequency,
+      };
+
+      if (this.frequency === 'WEEKLY') {
+        rrule.byweekday = this.weekDays;
+      }
+
+      if (this.endsIn === 'IN') {
+        rrule.until = this.until;
+      }
+
+      if (this.endsIn === 'AFTER') {
+        rrule.count = Number(this.ocurrences);
+      }
+
+      delete event.start;
+      delete event.end;
+      event.rrule = rrule;
+      event.duration = this.end - this.start;
+    }
+
+    console.log('retorno toEvent', event);
 
     return event;
   }

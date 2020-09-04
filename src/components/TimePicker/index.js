@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import Fit from 'react-fit';
 import TimeKeeper from 'react-timekeeper';
 
+import { format } from 'date-fns';
+
 import { Container } from './styles';
 
 const TimePicker = ({ value, onChange, onClose }) => {
@@ -19,10 +21,11 @@ const TimePicker = ({ value, onChange, onClose }) => {
   useEffect(() => {
     const date = value || new Date();
 
-    setTime({
-      hour: date.getHours(),
-      minute: date.getMinutes(),
-    });
+    // setTime({
+    //   hour: date.getHours(),
+    //   minute: date.getMinutes(),
+    // });
+    setTime(format(date, 'h:mm a').toLowerCase());
   }, [value]);
 
   return (
