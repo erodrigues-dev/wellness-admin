@@ -3,7 +3,9 @@ import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 import timeGridPlugin from '@fullcalendar/timegrid';
 
-const TIMEZONE = /\((.*)\)/.exec(new Date().toString())[1];
+import { getTimezone } from '~/helpers/date';
+
+const TIMEZONE = getTimezone();
 
 export const FULLCALENDAR_CONFIG = {
   timeZone: TIMEZONE,
