@@ -19,3 +19,7 @@ export function formatToDateTime(date) {
 
   return null;
 }
+
+export function getTimezone() {
+  return /\((.*)\)/.exec(new Date().toString())[1];
+}
