@@ -3,22 +3,18 @@ import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 import timeGridPlugin from '@fullcalendar/timegrid';
 
-import { getTimezone } from '~/helpers/date';
-
-const TIMEZONE = getTimezone();
-
 export const FULLCALENDAR_CONFIG = {
-  timeZone: TIMEZONE,
   plugins: [rrulePlugin, dayGridPlugin, timeGridPlugin, interactionPlugin],
   initialView: 'timeGridWeek',
   headerToolbar: {
     end: 'prev,today,next dayGridMonth,timeGridWeek,timeGridDay',
   },
   height: '680px',
-  slotDuration: '00:15',
+  allDaySlot: false,
+  slotDuration: '00:10',
   slotLabelInterval: '01:00',
-  slotMinTime: '08:00',
-  slotMaxTime: '20:00',
+  // slotMinTime: '08:00',
+  // slotMaxTime: '20:00',
   slotLabelFormat: {
     hour: 'numeric',
     minute: '2-digit',
