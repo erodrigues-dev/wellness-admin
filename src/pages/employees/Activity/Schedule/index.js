@@ -18,58 +18,51 @@ function Schedule() {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState(null);
 
-  const [newId, setNewId] = useState(0);
-
   useEffect(() => {
     get(id).then(({ data }) => setActivity(data));
   }, [id]);
 
-  function getNewFormData() {
-    const model = new ScheduleFormModel();
-    model.title = activity.name;
-    return model;
-  }
-
   function handleSelect({ start, end }) {
-    const newFormData = getNewFormData();
-    newFormData.start = new Date(start);
-    newFormData.end = new Date(end);
+    const newFormData = new ScheduleFormModel({
+      activityId: id,
+      title: activity.name,
+      date: start,
+      start,
+      end,
+    });
+
     setFormData(newFormData);
     setShowForm(true);
   }
 
   function handleClickEvent({ event }) {
-    console.log('click in event', event);
-    const eventFormData = ScheduleFormModel.fromEvent(event);
+    const data = new ScheduleFormModel(event.extendedProps);
 
     setShowForm(true);
-    setFormData(eventFormData);
+    setFormData(data);
   }
 
-  function handleUpdateEvent({ event, relatedEvents }) {
-    console.log('update event');
+  function handleResizeEvent({ event }) {
+    const model = new ScheduleFormModel(event.extendedProps);
+    model.updateDuration(event.start, event.end);
+    updateInEventList(model.toEvent());
+  }
 
-    const updated = {
-      id: Number(event.id),
-      groupId: Number(event.groupId),
-      title: event.title,
-      start: event.start,
-      end: event.end,
-    };
+  function handleDragEvent({
+    event: { start, end, extendedProps },
+    delta,
+    revert,
+  }) {
+    const model = new ScheduleFormModel(extendedProps);
+    if (delta.days !== 0 && model.recurrent) {
+      revert();
+      return;
+    }
 
-    const relateds = relatedEvents.map((related) => ({
-      id: Number(related.id),
-      groupId: Number(related.groupId),
-      title: related.title,
-      start: related.start,
-      end: related.end,
-    }));
+    if (model.recurrent) model.updateDuration(start, end);
+    else model.updateRange(start, end);
 
-    const others = events.filter(
-      (x) => x.id !== updated.id && !relateds.some((y) => y.id === x.id)
-    );
-
-    setEvents([...others, updated, ...relateds]);
+    updateInEventList(model.toEvent());
   }
 
   /**
@@ -81,13 +74,7 @@ function Schedule() {
     setShowForm(false);
 
     if (role === 'save') {
-      const event = model.toEvent();
-      if (!event.id) {
-        event.id = newId + 1;
-        setNewId((_id) => _id + 1);
-      }
-      const others = events.filter((x) => Number(x.id) !== Number(event.id));
-      setEvents([...others, event]);
+      updateInEventList(model.toEvent());
     }
   }
 
@@ -99,6 +86,11 @@ function Schedule() {
     }
   }
 
+  function updateInEventList(event) {
+    const others = events.filter((x) => Number(x.id) !== Number(event.id));
+    setEvents([...others, event]);
+  }
+
   return (
     <Container className="schedule-activity-container">
       <Card body>
@@ -108,8 +100,8 @@ function Schedule() {
           {...FULLCALENDAR_CONFIG}
           events={handleFetchEvents}
           select={handleSelect}
-          eventDrop={handleUpdateEvent}
-          eventResize={handleUpdateEvent}
+          eventDrop={handleDragEvent}
+          eventResize={handleResizeEvent}
           eventClick={handleClickEvent}
         />
         <ScheduleForm

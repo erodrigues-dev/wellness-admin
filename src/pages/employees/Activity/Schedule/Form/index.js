@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { Modal, Form, Col, Button } from 'react-bootstrap';
+import { Button, Col, Form, Modal } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
 import InputDatePicker from '~/components/InputDatePicker';
-import InputDateTimePicker from '~/components/InputDateTimePicker';
+import InputTimePicker from '~/components/InputTimePicker';
 
-import { WEEKDAYS, FREQUENCY, RECURRENCE_ENDSIN } from './consts';
+import { FREQUENCY, RECURRENCE_ENDSIN, WEEKDAYS } from './consts';
 import ScheduleFormModel from './model';
 import schema from './schema';
 
@@ -18,10 +18,11 @@ function ScheduleForm({ show, data, onClose }) {
   });
 
   useEffect(() => {
-    // console.log('receive form value -> ', data);
-    const values = data || new ScheduleFormModel();
+    const model =
+      data instanceof ScheduleFormModel ? data : new ScheduleFormModel(data);
+
     formik.resetForm();
-    formik.setValues(values);
+    formik.setValues(model);
   }, [data]);
 
   function handleSubmit(values) {
@@ -81,9 +82,21 @@ function ScheduleForm({ show, data, onClose }) {
             </Form.Group>
           </Form.Row>
           <Form.Row>
-            <Form.Group as={Col} lg="6">
+            <Form.Group as={Col} sm={12} lg={4}>
+              <Form.Label>Date</Form.Label>
+              <InputDatePicker
+                name="date"
+                value={formik.values.date}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isValid={isValid('date')}
+                isInvalid={isInvalid('date')}
+                feedback={formik.errors.date}
+              />
+            </Form.Group>
+            <Form.Group as={Col} sm={6} lg={4}>
               <Form.Label>Start</Form.Label>
-              <InputDateTimePicker
+              <InputTimePicker
                 name="start"
                 value={formik.values.start}
                 onChange={formik.handleChange}
@@ -93,9 +106,9 @@ function ScheduleForm({ show, data, onClose }) {
                 feedback={formik.errors.start}
               />
             </Form.Group>
-            <Form.Group as={Col} lg="6">
+            <Form.Group as={Col} sm={6} lg={4}>
               <Form.Label>End</Form.Label>
-              <InputDateTimePicker
+              <InputTimePicker
                 name="end"
                 value={formik.values.end}
                 onChange={formik.handleChange}
