@@ -1,5 +1,7 @@
 import * as yup from 'yup';
 
+import { timeIsBefore } from '~/helpers/date';
+
 const schema = yup.object().shape({
   id: yup.number(),
 
@@ -9,19 +11,21 @@ const schema = yup.object().shape({
 
   color: yup.string().max(7).required(),
 
-  start: yup.date().required(),
+  date: yup.date().required(),
+
+  start: yup.string().required().nullable(),
 
   end: yup
-    .date()
-    .when('start', (value, mix) => {
-      if (value) {
-        const date = new Date(value);
-        date.setMinutes(date.getMinutes() + 1);
-        return mix.min(date, 'end must be later than "start" field');
-      }
-      return mix;
-    })
-    .required(),
+    .string()
+    .required()
+    .nullable()
+    .when('start', (start, mix) =>
+      mix.test(
+        'end-after-start',
+        'end must be later than start',
+        (end) => !start || !end || timeIsBefore(start, end)
+      )
+    ),
 
   repeatEvery: yup
     .number()
@@ -41,14 +45,14 @@ const schema = yup.object().shape({
 
   endsIn: yup.string().required(),
 
-  until: yup.date().when(['endsIn', 'end'], (endsIn, end, mix) => {
+  until: yup.date().when(['endsIn', 'date'], (endsIn, date, mix) => {
     let expirationMix = mix;
     if (endsIn === 'IN') {
       expirationMix = expirationMix.required();
-      if (end) {
-        const date = new Date(end);
-        date.setMinutes(date.getMinutes() + 1);
-        expirationMix = expirationMix.min(date);
+      if (date) {
+        const mindate = new Date(date);
+        mindate.setMinutes(mindate.getMinutes() + 1);
+        expirationMix = expirationMix.min(mindate);
       }
     }
     return expirationMix;
