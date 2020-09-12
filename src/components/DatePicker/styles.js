@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   position: absolute;
   z-index: 2;
+  min-width: 320px;
 
   .react-calendar {
     * {
