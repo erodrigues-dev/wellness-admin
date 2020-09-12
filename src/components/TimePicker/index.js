@@ -1,43 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import Fit from 'react-fit';
+import OutsideClickHandler from 'react-outside-click-handler';
 import TimeKeeper from 'react-timekeeper';
-
-import { format } from 'date-fns';
 
 import { Container } from './styles';
 
 const TimePicker = ({ value, onChange, onClose }) => {
-  const [time, setTime] = useState(null);
-  const componentRef = useRef(null);
-
-  useEffect(() => {
-    const handleOutsideClick = (event) => {
-      if (!componentRef?.current?.contains(event.target)) onClose();
-    };
-    document.addEventListener('click', handleOutsideClick);
-    return () => document.removeEventListener('click', handleOutsideClick);
-  }, []);
-
-  useEffect(() => {
-    const date = value || new Date();
-
-    // setTime({
-    //   hour: date.getHours(),
-    //   minute: date.getMinutes(),
-    // });
-    setTime(format(date, 'h:mm a').toLowerCase());
-  }, [value]);
-
   return (
     <Fit>
-      <Container ref={componentRef}>
-        <TimeKeeper
-          switchToMinuteOnHourSelect
-          closeOnMinuteSelect
-          time={time}
-          onChange={onChange}
-          onDoneClick={onClose}
-        />
+      <Container>
+        <OutsideClickHandler onOutsideClick={onClose}>
+          <TimeKeeper
+            switchToMinuteOnHourSelect
+            time={value}
+            onDoneClick={onClose}
+            coarseMinutes={10}
+            forceCoarseMinutes
+            onChange={({ formatted12 }) => onChange(formatted12)}
+          />
+        </OutsideClickHandler>
       </Container>
     </Fit>
   );
