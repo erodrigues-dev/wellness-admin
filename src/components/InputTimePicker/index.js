@@ -19,6 +19,10 @@ const InputTimePicker = ({
   const [openTimePicker, setOpenTimePicker] = useState(false);
 
   useEffect(() => {
+    setTime(value);
+  }, [value]);
+
+  useEffect(() => {
     setInputValue(time || '');
     onChange({ target: { name, value: time } });
   }, [time]);
