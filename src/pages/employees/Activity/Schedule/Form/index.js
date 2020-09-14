@@ -33,6 +33,10 @@ function ScheduleForm({ show, data, onClose }) {
     onClose('cancel');
   }
 
+  function handleDelete() {
+    onClose('delete', formik.values);
+  }
+
   function isValid(field) {
     return formik.touched[field] && !formik.errors[field];
   }
@@ -260,6 +264,11 @@ function ScheduleForm({ show, data, onClose }) {
         </Form>
       </Modal.Body>
       <Modal.Footer>
+        {formik.values.id && (
+          <Button variant="danger" onClick={handleDelete}>
+            Delete
+          </Button>
+        )}
         <Button variant="secondary" onClick={handleCancel}>
           Cancel
         </Button>

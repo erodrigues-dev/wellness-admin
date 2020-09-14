@@ -76,6 +76,12 @@ function Schedule() {
     if (role === 'save') {
       updateInEventList(model.toEvent());
     }
+
+    if (role === 'delete') {
+      setEvents((list) =>
+        list.filter((x) => Number(x.id) !== Number(model.id))
+      );
+    }
   }
 
   function handleFetchEvents(info, resolve, reject) {
