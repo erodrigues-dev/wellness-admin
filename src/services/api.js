@@ -6,19 +6,19 @@ const api = axios.create({
   baseURL: process.env.REACT_APP_API_URL,
 });
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use((req) => {
   const token = localStorage.getItem(TOKEN_KEY);
   if (token) {
     return {
-      ...config,
+      ...req,
       headers: {
-        ...config.headers,
+        ...req.headers,
         Authorization: `Bearer ${token}`,
       },
     };
   }
 
-  return config;
+  return req;
 });
 
 api.interceptors.response.use(

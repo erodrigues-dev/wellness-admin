@@ -12,10 +12,7 @@ const PrivateRoute = ({
   const { hasPermission, user } = useAuth();
 
   const allowed = (paramId) => {
-    if (
-      ['employees', 'customers'].includes(functionality) &&
-      Number(paramId) === Number(user.id)
-    ) {
+    if (functionality === 'employees' && Number(paramId) === Number(user.id)) {
       return true;
     }
 

@@ -11,7 +11,7 @@ import {
   ActivityForm,
   Package,
   PackageForm,
-} from '~/pages/employees';
+} from '~/pages';
 
 const routes = [
   {

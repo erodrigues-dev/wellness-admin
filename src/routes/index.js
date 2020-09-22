@@ -1,23 +1,19 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
 
-import CustomersRoutes from './customers.routes';
-import EmployeesRoutes from './Employees';
+import PrivateRoutes from './private.routes';
 import PublicRoutes from './public.routes';
 
 const Routes = () => {
-  const { signed, isEmployee } = useAuth();
+  const { signed } = useAuth();
 
-  if (signed && isEmployee) {
-    return <EmployeesRoutes />;
-  }
-
-  if (signed && !isEmployee) {
-    return <CustomersRoutes />;
-  }
-
-  return <PublicRoutes />;
+  return (
+    <BrowserRouter>
+      {signed ? <PrivateRoutes /> : <PublicRoutes />}
+    </BrowserRouter>
+  );
 };
 
 export default Routes;

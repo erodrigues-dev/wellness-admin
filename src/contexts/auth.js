@@ -39,7 +39,6 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider
       value={{
         signed: !!user,
-        isEmployee: user?.type === 'employee',
         user,
         signIn,
         signOut,

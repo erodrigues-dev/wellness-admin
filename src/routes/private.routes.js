@@ -3,13 +3,13 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 
 import MainLayout from '~/components/layouts/MainLayout';
 import useAuth, { ACTIONS } from '~/contexts/auth';
-import { Home, ActivitySchedule } from '~/pages/employees';
+import { Home, ActivitySchedule } from '~/pages';
 import NotAuthorized from '~/pages/NotAuthorized';
 
-import PrivateRoute from '../PrivateRoute';
 import routes from './config';
+import PrivateRoute from './PrivateRoute';
 
-const EmployeesRoutes = () => {
+const PrivateRoutes = () => {
   const { hasPermission } = useAuth();
 
   const filteredRoutes = routes.filter((x) =>
@@ -65,4 +65,4 @@ const EmployeesRoutes = () => {
   );
 };
 
-export default EmployeesRoutes;
+export default PrivateRoutes;
