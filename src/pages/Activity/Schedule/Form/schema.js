@@ -36,7 +36,7 @@ const schema = yup.object().shape({
 
   frequency: yup.string().required(),
 
-  weekDays: yup
+  weekdays: yup
     .array()
     .label('week days')
     .when('frequency', (value, mix) =>

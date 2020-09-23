@@ -184,24 +184,24 @@ function ScheduleForm({ show, data, onClose }) {
                           key={day.value}
                           id={day.value}
                           label={day.name}
-                          name="weekDays"
+                          name="weekdays"
                           value={day.value}
-                          checked={formik.values.weekDays.includes(day.value)}
+                          checked={formik.values.weekdays.includes(day.value)}
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          isValid={isValid('weekDays')}
-                          isInvalid={isInvalid('weekDays')}
+                          isValid={isValid('weekdays')}
+                          isInvalid={isInvalid('weekdays')}
                           custom
                           inline
                         />
                       ))}
                     </Form.Group>
-                    {isInvalid('weekDays') && (
+                    {isInvalid('weekdays') && (
                       <Form.Control.Feedback
                         type="invalid"
                         style={{ display: 'block' }}
                       >
-                        {formik.errors.weekDays}
+                        {formik.errors.weekdays}
                       </Form.Control.Feedback>
                     )}
                   </Form.Group>
@@ -274,8 +274,8 @@ function ScheduleForm({ show, data, onClose }) {
         </Button>
         <Button onClick={formik.handleSubmit}>Save</Button>
       </Modal.Footer>
-      <pre>{JSON.stringify(formik.values, null, 2)}</pre>
-      <pre>{JSON.stringify(formik.errors, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(formik.values, null, 2)}</pre>
+      <pre>{JSON.stringify(formik.errors, null, 2)}</pre> */}
     </Modal>
   );
 }

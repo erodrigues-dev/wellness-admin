@@ -1,30 +1,40 @@
-import { formatToTime, createDateTime, clearTime } from '~/helpers/date';
+import {
+  formatToTime,
+  createDateTime,
+  clearTime,
+  transformIn24h,
+  toDate,
+} from '~/helpers/date';
 
 import { FREQUENCY, RECURRENCE_ENDSIN } from './consts';
 
 const [{ value: frequencyDefault }] = FREQUENCY;
 const [{ value: endsInDefault }] = RECURRENCE_ENDSIN;
 
-function randomId() {
-  return new Date().getTime();
-}
+// function randomId() {
+//   return new Date().getTime();
+// }
 
 export default class ScheduleFormModel {
   constructor(obj) {
-    this.id = obj?.id || randomId();
+    this.id = obj?.id;
     this.activityId = obj?.activityId;
-    this.title = obj?.title;
+    this.title = obj?.title || '';
     this.color = obj?.color || '#b0d04c';
-    this.date = clearTime(obj?.date);
-    this.start = formatToTime(obj?.start);
-    this.end = formatToTime(obj?.end);
+    this.date = obj?.date ? clearTime(obj?.date) : '';
+    this.start = obj?.start ? formatToTime(obj?.start) : '';
+    this.end = obj?.end ? formatToTime(obj?.end) : '';
     this.recurrent = obj?.recurrent || false;
     this.repeatEvery = obj?.repeatEvery || 1;
     this.frequency = obj?.frequency || frequencyDefault;
-    this.weekDays = obj?.weekDays || [];
+    this.weekdays = obj?.weekdays || [];
     this.endsIn = obj?.endsIn || endsInDefault;
-    this.until = obj?.until;
-    this.ocurrences = obj?.ocurrences;
+    this.until = obj?.until || '';
+    this.ocurrences = obj?.ocurrences || '';
+  }
+
+  setId(id) {
+    this.id = id;
   }
 
   toEvent() {
@@ -45,7 +55,7 @@ export default class ScheduleFormModel {
       };
 
       if (this.frequency === 'WEEKLY') {
-        rrule.byweekday = this.weekDays;
+        rrule.byweekday = this.weekdays;
       }
 
       if (this.endsIn === 'IN') {
@@ -81,5 +91,34 @@ export default class ScheduleFormModel {
     this.date = clearTime(start);
     this.start = formatToTime(start);
     this.end = formatToTime(end);
+  }
+
+  toApi() {
+    return {
+      id: this.id ?? undefined,
+      activityId: this.activityId,
+      title: this.title,
+      color: this.color,
+      date: this.date.toISOString(),
+      start: this.start,
+      end: this.end,
+      recurrent: this.recurrent,
+      repeatEvery: this.repeatEvery || undefined,
+      frequency: this.frequency || undefined,
+      weekdays: this.weekdays?.join(',') || undefined,
+      endsIn: this.endsIn || undefined,
+      until: this.until instanceof Date ? this.until.toISOString() : undefined,
+      ocurrences: this.ocurrences || undefined,
+    };
+  }
+
+  static fromApi({ date, start, end, weekdays, ...rest }) {
+    return new ScheduleFormModel({
+      date: toDate(date),
+      start: transformIn24h(start),
+      end: transformIn24h(end),
+      weekdays: weekdays?.split(','),
+      ...rest,
+    });
   }
 }
