@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -81,12 +80,6 @@ const SignIn = () => {
           >
             Sign In
           </ButtonLoading>
-          <p className="m-0">
-            No account?
-            <Link to="/sign-up" className="ml-1">
-              Create one
-            </Link>
-          </p>
         </Form>
       </Box>
     </Container>
