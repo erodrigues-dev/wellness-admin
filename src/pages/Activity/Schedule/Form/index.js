@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Button, Col, Form, Modal } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
 
 import { useFormik } from 'formik';
 
@@ -33,8 +34,9 @@ function ScheduleForm({ show, data, onClose }) {
     onClose('cancel');
   }
 
-  function handleDelete() {
-    onClose('delete', formik.values);
+  async function handleDelete() {
+    const confirmed = await confirmDelete();
+    if (confirmed) onClose('delete', formik.values);
   }
 
   function isValid(field) {
@@ -43,6 +45,26 @@ function ScheduleForm({ show, data, onClose }) {
 
   function isInvalid(field) {
     return formik.touched[field] && formik.errors[field];
+  }
+
+  function confirmDelete() {
+    return new Promise((resolve) =>
+      confirmAlert({
+        title: 'Confirm Delete',
+        message: 'Are you sure to do this?',
+        onClickOutside: () => resolve(false),
+        buttons: [
+          {
+            label: 'YES',
+            onClick: () => resolve(true),
+          },
+          {
+            label: 'NO',
+            onClick: () => resolve(false),
+          },
+        ],
+      })
+    );
   }
 
   return (
