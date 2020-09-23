@@ -1,4 +1,11 @@
-import { parseJSON, formatDistanceToNow, format } from 'date-fns';
+import {
+  parseJSON,
+  formatDistanceToNow,
+  format,
+  parseISO,
+  startOfDay,
+  isValid,
+} from 'date-fns';
 
 const TIMEZONE = /\((.*)\)/.exec(new Date().toString())[1];
 
@@ -8,6 +15,8 @@ export function formatToList(value) {
 }
 
 export function formatToDisplay(date) {
+  if (!isValid(date)) return '';
+
   return format(date, 'MM/dd/y');
 }
 
@@ -51,16 +60,7 @@ export function createDateTime(date, time) {
 }
 
 export function clearTime(date) {
-  if (!(date instanceof Date)) return date;
-
-  const dateClear = new Date(date);
-
-  dateClear.setHours(0);
-  dateClear.setMinutes(0);
-  dateClear.setSeconds(0);
-  dateClear.setMilliseconds(0);
-
-  return dateClear;
+  return startOfDay(date);
 }
 
 /**
@@ -78,4 +78,15 @@ export function timeIsBefore(timeA, timeB) {
   if (Number(minA) < Number(minB)) return true;
 
   return false;
+}
+
+export function transformIn24h(time) {
+  const [, hour, min] = /^(\d?\d):(\d\d)/.exec(time);
+  const isAm = +hour < 12;
+
+  return `${isAm ? +hour : +hour - 12}:${min} ${isAm ? 'am' : 'pm'}`;
+}
+
+export function toDate(date) {
+  return parseISO(date);
 }
