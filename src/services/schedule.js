@@ -1,6 +1,6 @@
 import api from './api';
 
-const route = '/activities-schedules';
+const route = '/activities/schedules';
 
 /**
  * schedule list
@@ -12,10 +12,9 @@ export function list(start, end, activityId) {
   const params = {
     start: start.toISOString(),
     end: end.toISOString(),
-    activityId,
   };
 
-  return api.get(route, { params });
+  return api.get(`/activities/${activityId}/schedules`, { params });
 }
 
 export function create(data) {
