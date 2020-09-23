@@ -103,12 +103,18 @@ export default class ScheduleFormModel {
       start: this.start,
       end: this.end,
       recurrent: this.recurrent,
-      repeatEvery: this.repeatEvery || undefined,
-      frequency: this.frequency || undefined,
-      weekdays: this.weekdays?.join(',') || undefined,
-      endsIn: this.endsIn || undefined,
-      until: this.until instanceof Date ? this.until.toISOString() : undefined,
-      ocurrences: this.ocurrences || undefined,
+      repeatEvery: this.recurrent ? this.repeatEvery || undefined : undefined,
+      frequency: this.recurrent ? this.frequency || undefined : undefined,
+      weekdays: this.recurrent
+        ? this.weekdays?.join(',') || undefined
+        : undefined,
+      endsIn: this.recurrent ? this.endsIn || undefined : undefined,
+      until: this.recurrent
+        ? this.until instanceof Date
+          ? this.until.toISOString()
+          : undefined
+        : undefined,
+      ocurrences: this.recurrent ? this.ocurrences || undefined : undefined,
     };
   }
 
