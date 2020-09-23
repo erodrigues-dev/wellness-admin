@@ -12,3 +12,7 @@
   color: $danger;
   font-size: 0.8em;
 }
+
+.react-confirm-alert-overlay {
+  z-index: 9999;
+}
