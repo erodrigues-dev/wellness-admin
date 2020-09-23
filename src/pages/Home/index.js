@@ -5,9 +5,9 @@ import { Card } from 'react-bootstrap';
 
 const Home = () => (
   <Card body>
-    <h3>Home employee</h3>
+    <h3>Admin</h3>
     <hr />
-    <p>Work in process...</p>
+    <p>Welcome to Elite Wellness</p>
   </Card>
 );
 
