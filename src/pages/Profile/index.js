@@ -10,8 +10,8 @@ import List from './List';
 
 function Profile() {
   const { hasPermission, ACTIONS } = useAuth();
-  const hasPermissionToCreate = hasPermission('activities', ACTIONS.CREATE);
-  const hasPermissionToUpdate = hasPermission('activities', ACTIONS.UPDATE);
+  const hasPermissionToCreate = hasPermission('profiles', ACTIONS.CREATE);
+  const hasPermissionToUpdate = hasPermission('profiles', ACTIONS.UPDATE);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
