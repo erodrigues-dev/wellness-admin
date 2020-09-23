@@ -55,7 +55,8 @@
     "no-restricted-globals": "off",
     "no-template-curly-in-string": "off",
     "no-bitwise": "off",
-    "prettier/prettier": ["error"]
+    "prettier/prettier": ["error"],
+    "no-nested-ternary": "off"
   },
   "settings": {
     "import/resolver": {
