@@ -18,24 +18,24 @@ export const FULLCALENDAR_CONFIG = {
   slotLabelFormat: {
     hour: 'numeric',
     minute: '2-digit',
-    meridiem: false,
-    hour12: false,
+    meridiem: true,
+    hour12: true,
   },
   navLinks: true,
   editable: true,
   eventResizableFromStart: true,
   selectable: true,
   nowIndicator: true,
-  businessHours: [
-    {
-      daysOfWeek: [1, 2, 3, 4, 5],
-      startTime: '11:00',
-      endTime: '19:00',
-    },
-    {
-      daysOfWeek: [0, 6],
-      startTime: '10:00',
-      endTime: '15:00',
-    },
-  ],
+  // businessHours: [
+  //   {
+  //     daysOfWeek: [1, 2, 3, 4, 5],
+  //     startTime: '11:00',
+  //     endTime: '19:00',
+  //   },
+  //   {
+  //     daysOfWeek: [0, 6],
+  //     startTime: '10:00',
+  //     endTime: '15:00',
+  //   },
+  // ],
 };
