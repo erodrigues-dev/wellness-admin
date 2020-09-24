@@ -9,16 +9,22 @@ export const LoadingProvider = ({ children }) => {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    api.interceptors.request.use((req) => {
-      setShow(true);
-      return req;
-    });
-    api.interceptors.response.use((res) => {
-      setTimeout(() => {
-        setShow(false);
-      }, 200);
-      return res;
-    });
+    api.interceptors.request.use(
+      (req) => {
+        setShow(true);
+        return req;
+      },
+      () => setShow(false)
+    );
+    api.interceptors.response.use(
+      (res) => {
+        setTimeout(() => {
+          setShow(false);
+        }, 200);
+        return res;
+      },
+      () => setShow(false)
+    );
   }, []);
 
   /**
