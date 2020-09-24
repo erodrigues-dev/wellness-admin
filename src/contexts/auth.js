@@ -14,6 +14,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     buildMenu();
+    // eslint-disable-next-line
   }, [user]);
 
   async function signIn({ email, password }) {

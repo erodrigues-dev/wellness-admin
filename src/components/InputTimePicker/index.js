@@ -20,11 +20,13 @@ const InputTimePicker = ({
 
   useEffect(() => {
     setTime(value);
+    // eslint-disable-next-line
   }, [value]);
 
   useEffect(() => {
     setInputValue(time || '');
     onChange({ target: { name, value: time } });
+    // eslint-disable-next-line
   }, [time]);
 
   const handleToggle = () => {

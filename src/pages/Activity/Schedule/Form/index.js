@@ -24,6 +24,7 @@ function ScheduleForm({ show, data, onClose }) {
 
     formik.resetForm();
     formik.setValues(model);
+    // eslint-disable-next-line
   }, [data]);
 
   function handleSubmit(values) {

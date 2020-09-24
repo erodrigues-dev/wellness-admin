@@ -23,6 +23,7 @@ function Schedule() {
 
   useEffect(() => {
     get(id).then(({ data }) => setActivity(data));
+    // eslint-disable-next-line
   }, [id]);
 
   const handleFetchEvents = useCallback(
@@ -38,6 +39,7 @@ function Schedule() {
         reject(error);
       }
     },
+    // eslint-disable-next-line
     [id]
   );
 
