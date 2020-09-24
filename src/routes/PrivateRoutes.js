@@ -13,6 +13,7 @@ import {
   Customer,
   CustomerForm,
   CustomerPackage,
+  CustomerPackageForm,
   Employee,
   EmployeeForm,
   Package,
@@ -84,6 +85,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.CUSTOMERS}
           path="/customers/:id/packages"
           component={CustomerPackage}
+        />
+        <PrivateRoute
+          exact
+          action={ACTIONS.UPDATE}
+          functionality={FUNCTIONALITIES.CUSTOMERS}
+          path="/customers/:id/packages/:packageId"
+          component={CustomerPackageForm}
         />
 
         <PrivateRoute
