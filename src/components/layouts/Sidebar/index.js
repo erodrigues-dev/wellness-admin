@@ -16,12 +16,12 @@ import {
   Item,
 } from './styles';
 
-const Sidebar = ({ open, routes, handleClose }) => {
+const Sidebar = ({ open, handleClose }) => {
   const location = useLocation();
-  const { signOut, user } = useAuth();
+  const { signOut, user, menu } = useAuth();
 
-  const isActive = (route) => {
-    return location.pathname.includes(route.path);
+  const isActive = (path) => {
+    return location.pathname.includes(path);
   };
 
   return (
@@ -35,15 +35,11 @@ const Sidebar = ({ open, routes, handleClose }) => {
           <AvatarProfile>{user.profile?.name}</AvatarProfile>
         </AvatarContainer>
         <Menu>
-          {routes.map((route) => (
-            <Item
-              key={route.path}
-              active={isActive(route)}
-              onClick={handleClose}
-            >
-              <Link to={route.path}>
-                <route.Icon size={24} />
-                {route.title}
+          {menu.map(({ path, title, Icon }) => (
+            <Item key={path} active={isActive(path)} onClick={handleClose}>
+              <Link to={path}>
+                <Icon size={24} />
+                {title}
               </Link>
             </Item>
           ))}

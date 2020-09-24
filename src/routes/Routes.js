@@ -3,8 +3,8 @@ import { BrowserRouter } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
 
-import PrivateRoutes from './private.routes';
-import PublicRoutes from './public.routes';
+import PrivateRoutes from './PrivateRoutes';
+import PublicRoutes from './PublicRoutes';
 
 const Routes = () => {
   const { signed } = useAuth();

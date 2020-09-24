@@ -4,7 +4,7 @@ import { AuthProvider } from '~/contexts/auth';
 import { LoadingProvider } from '~/contexts/loading';
 import { NotificationProvider } from '~/contexts/notification';
 
-import Routes from './routes';
+import Routes from './routes/Routes';
 
 import 'react-confirm-alert/src/react-confirm-alert.css';
 

@@ -1,19 +1,20 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, { createContext, useState, useContext, useEffect } from 'react';
 
+import { ACTIONS } from '~/consts/actions';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
+import { MENU } from '~/consts/menu';
 import * as auth from '~/services/auth';
-
-export const ACTIONS = {
-  LIST: 1,
-  GET: 1,
-  CREATE: 2,
-  UPDATE: 4,
-};
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const userStoraged = auth.getUserFromStorage();
   const [user, setUser] = useState(userStoraged);
+  const [menu, setMenu] = useState([]);
+
+  useEffect(() => {
+    buildMenu();
+  }, [user]);
 
   async function signIn({ email, password }) {
     const userAuthenticated = await auth.signIn({ email, password });
@@ -35,6 +36,14 @@ export const AuthProvider = ({ children }) => {
     return allowed;
   }
 
+  function buildMenu() {
+    const menuHasPermission = MENU.filter((itemMenu) =>
+      hasPermission(itemMenu.functionality, ACTIONS.LIST)
+    );
+
+    setMenu(menuHasPermission);
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -43,7 +52,9 @@ export const AuthProvider = ({ children }) => {
         signIn,
         signOut,
         hasPermission,
+        menu,
         ACTIONS,
+        FUNCTIONALITIES,
       }}
     >
       {children}
