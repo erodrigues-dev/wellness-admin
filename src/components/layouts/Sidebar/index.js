@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiLogOut } from 'react-icons/fi';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, matchPath, useLocation } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
 
@@ -17,11 +17,11 @@ import {
 } from './styles';
 
 const Sidebar = ({ open, handleClose }) => {
-  const location = useLocation();
   const { signOut, user, menu } = useAuth();
+  const { pathname } = useLocation();
 
   const isActive = (path) => {
-    return location.pathname.includes(path);
+    return matchPath(pathname, { path });
   };
 
   return (
