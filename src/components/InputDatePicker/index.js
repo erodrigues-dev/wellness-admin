@@ -7,7 +7,15 @@ import { formatToDisplay } from '~/helpers/date';
 import DatePicker from '../DatePicker';
 import { Container } from './styles';
 
-function InputDatePicker({ min, max, value, feedback, onChange, ...props }) {
+function InputDatePicker({
+  min,
+  max,
+  value,
+  feedback,
+  onChange,
+  onBlur,
+  ...props
+}) {
   const [open, setOpen] = useState(false);
   const [date, setDate] = useState(null);
   const [formated, setFormated] = useState('');
@@ -41,6 +49,7 @@ function InputDatePicker({ min, max, value, feedback, onChange, ...props }) {
           {...props}
           value={formated}
           onChange={() => {}}
+          onBlur={onBlur}
           placeholder="mm/dd/yyyy"
           autoComplete="off"
         />
