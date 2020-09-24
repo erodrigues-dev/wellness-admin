@@ -1,7 +1,7 @@
 import React from 'react';
-import { Table, Button, Form } from 'react-bootstrap';
-import { FiX } from 'react-icons/fi';
+import { Table, Form } from 'react-bootstrap';
 
+import ButtonDelete from '~/components/List/ButtonDelete';
 import { currency } from '~/helpers/intl';
 
 const List = ({ list, onRemove, formik }) => {
@@ -42,13 +42,7 @@ const List = ({ list, onRemove, formik }) => {
         {list.map((item, i) => (
           <tr key={item.id}>
             <td className="text-center">
-              <Button
-                variant="outline-danger"
-                size="sm"
-                onClick={() => onRemove(item.id)}
-              >
-                <FiX size="22" />
-              </Button>
+              <ButtonDelete onClick={() => onRemove(item.id)} />
             </td>
             <td>{item.name}</td>
             <td>{currency.format(item.price)}</td>
