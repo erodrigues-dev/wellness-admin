@@ -5,10 +5,12 @@ import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
 import * as service from '~/services/activity';
 
+import useNotification from '../../contexts/notification';
 import Filter from './Filter';
 import List from './List';
 
 const Activity = () => {
+  const { sendNotification } = useNotification();
   const { hasPermission, ACTIONS } = useAuth();
   const hasPermissionToCreate = hasPermission('activities', ACTIONS.CREATE);
   const hasPermissionToUpdate = hasPermission('activities', ACTIONS.UPDATE);
@@ -19,10 +21,14 @@ const Activity = () => {
   const [filter, setFilter] = useState({ name: '' });
 
   useEffect(() => {
-    service.list(page, filter).then((response) => {
-      setList(response.data);
-      setTotal(parseInt(response.headers['x-total-count']));
-    });
+    service
+      .list(page, filter)
+      .then((response) => {
+        setList(response.data);
+        setTotal(parseInt(response.headers['x-total-count']));
+      })
+      .catch(({ message }) => sendNotification(message, false));
+    // eslint-disable-next-line
   }, [page, filter]);
 
   async function handleFilter(filterValues) {

@@ -25,7 +25,7 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     let message = 'Has ocurred an unexpected error, please try again';
-    if (error.response.status === 400) message = error.response.data.message;
+    if (error.response?.status === 400) message = error.response.data.message;
 
     redirectToAuth(error);
 
@@ -35,7 +35,7 @@ api.interceptors.response.use(
 
 function redirectToAuth(error) {
   const token = localStorage.getItem(TOKEN_KEY);
-  if (error.response.status === 401 && token) {
+  if (error.response?.status === 401 && token) {
     localStorage.removeItem(TOKEN_KEY);
     window.location = '/';
   }
