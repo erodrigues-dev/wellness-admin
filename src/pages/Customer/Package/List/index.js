@@ -27,7 +27,7 @@ function List({ list, allowEdit }) {
             <tr key={item.id}>
               {allowEdit && (
                 <td className="text-center">
-                  <Link to={`/packages/${item.id}`}>
+                  <Link to={`packages/${item.id}`}>
                     <FiEdit size="18" />
                   </Link>
                 </td>
