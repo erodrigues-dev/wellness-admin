@@ -12,8 +12,8 @@ import {
   ActivitySchedule,
   Customer,
   CustomerForm,
-  CustomerPackage,
-  CustomerPackageForm,
+  CustomPackage,
+  CustomPackageForm,
   Employee,
   EmployeeForm,
   Package,
@@ -82,16 +82,23 @@ const PrivateRoutes = () => {
         <PrivateRoute
           exact
           action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.CUSTOMERS}
-          path="/customers/:id/packages"
-          component={CustomerPackage}
+          functionality={FUNCTIONALITIES.PACKAGES}
+          path="/customers/:id/custom-packages"
+          component={CustomPackage}
+        />
+        <PrivateRoute
+          exact
+          action={ACTIONS.CREATE}
+          functionality={FUNCTIONALITIES.PACKAGES}
+          path="/customers/:id/custom-packages/create"
+          component={CustomPackageForm}
         />
         <PrivateRoute
           exact
           action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.CUSTOMERS}
-          path="/customers/:id/packages/:packageId"
-          component={CustomerPackageForm}
+          functionality={FUNCTIONALITIES.PACKAGES}
+          path="/customers/:id/custom-packages/:packageId"
+          component={CustomPackageForm}
         />
 
         <PrivateRoute

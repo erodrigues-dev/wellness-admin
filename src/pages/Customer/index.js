@@ -3,7 +3,7 @@ import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
-import api from '~/services/api';
+import { index } from '~/services/customer';
 
 import Filter from './Filter';
 import List from './List';
@@ -18,18 +18,10 @@ const Customer = () => {
   const [filter, setFilter] = useState({ name: '', email: '' });
 
   useEffect(() => {
-    api
-      .get('/customers', {
-        params: {
-          ...filter,
-          page,
-          limit: 10,
-        },
-      })
-      .then((response) => {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
-      });
+    index(page, filter).then((response) => {
+      setList(response.data);
+      setTotal(parseInt(response.headers['x-total-count']));
+    });
   }, [page, filter]);
 
   async function handleFilter(filterValues) {

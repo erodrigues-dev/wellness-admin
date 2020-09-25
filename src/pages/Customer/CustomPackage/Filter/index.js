@@ -39,11 +39,11 @@ function Filter({ onFilter, allowCreate }) {
             {allowCreate && (
               <Button
                 as={Link}
-                to="/packages/create"
+                to="custom-packages/create"
                 variant="secondary"
                 className="ml-2"
               >
-                Add Package
+                Add Custom Package
               </Button>
             )}
           </Col>

@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
   const [menu, setMenu] = useState([]);
 
   useEffect(() => {
-    buildMenu();
+    if (user) buildMenu();
     // eslint-disable-next-line
   }, [user]);
 

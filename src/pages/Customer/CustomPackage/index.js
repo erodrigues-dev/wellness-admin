@@ -5,14 +5,14 @@ import { useParams } from 'react-router-dom';
 import Avatar from '~/components/Avatar';
 import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
-import * as customerService from '~/services/customer';
-import service from '~/services/package';
+import service from '~/services/custom-package';
+import customerService from '~/services/customer';
 
 import useNotification from '../../../contexts/notification';
 import Filter from './Filter';
 import List from './List';
 
-const CustomerPackage = () => {
+const CustomPackage = () => {
   const { id } = useParams();
   const { hasPermission, ACTIONS } = useAuth();
   const { sendNotification } = useNotification();
@@ -41,11 +41,11 @@ const CustomerPackage = () => {
   }, [id]);
 
   useEffect(() => {
-    service.index(page, filter).then((response) => {
+    service.index(id, page, filter).then((response) => {
       setList(response.data);
       setTotal(parseInt(response.headers['x-total-count']));
     });
-  }, [page, filter]);
+  }, [id, page, filter]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -76,4 +76,4 @@ const CustomerPackage = () => {
   );
 };
 
-export default CustomerPackage;
+export default CustomPackage;

@@ -1,6 +1,17 @@
 import api from './api';
 
 const ENDPOINT = '/customers';
+const LIMIT = 10;
+
+export function index(page, filter) {
+  return api.get(ENDPOINT, {
+    params: {
+      ...filter,
+      page,
+      limit: LIMIT,
+    },
+  });
+}
 
 export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
@@ -28,3 +39,10 @@ export function update({ id, name, email, password, file }) {
 
   return api.put(ENDPOINT, data);
 }
+
+export default {
+  index,
+  get,
+  create,
+  update,
+};

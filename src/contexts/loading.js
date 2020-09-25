@@ -14,7 +14,10 @@ export const LoadingProvider = ({ children }) => {
         setShow(true);
         return req;
       },
-      () => setShow(false)
+      (error) => {
+        setShow(false);
+        return Promise.reject(error);
+      }
     );
     api.interceptors.response.use(
       (res) => {
@@ -23,7 +26,10 @@ export const LoadingProvider = ({ children }) => {
         }, 200);
         return res;
       },
-      () => setShow(false)
+      (error) => {
+        setShow(false);
+        return Promise.reject(error);
+      }
     );
   }, []);
 

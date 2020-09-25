@@ -56,7 +56,8 @@
     "no-template-curly-in-string": "off",
     "no-bitwise": "off",
     "prettier/prettier": ["error"],
-    "no-nested-ternary": "off"
+    "no-nested-ternary": "off",
+    "import/no-named-as-default-member": "off"
   },
   "settings": {
     "import/resolver": {

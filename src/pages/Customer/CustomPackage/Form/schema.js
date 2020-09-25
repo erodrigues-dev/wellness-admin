@@ -1,3 +1,4 @@
+import { startOfTomorrow, format } from 'date-fns';
 import * as yup from 'yup';
 
 import { sanitize } from '~/helpers/sanitize';
@@ -6,6 +7,16 @@ const schema = yup.object().shape({
   id: yup.number(),
   name: yup.string().min(3).max(50).required(),
   description: yup.string().required(),
+  expiration: yup
+    .date()
+    .nullable()
+    .min(
+      startOfTomorrow(),
+      `expiration field must be later than ${format(
+        startOfTomorrow(),
+        'MM/dd/y'
+      )}`
+    ),
   price: yup
     .number()
     .positive()

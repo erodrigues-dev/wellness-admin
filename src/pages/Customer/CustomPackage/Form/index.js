@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
+import { startOfTomorrow, parseISO } from 'date-fns';
 import { useFormik } from 'formik';
 
 import Avatar from '~/components/Avatar';
@@ -9,8 +10,8 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
+import service from '~/services/custom-package';
 import { get as getCustomer } from '~/services/customer';
-import service from '~/services/package';
 
 import Activities from './Activities';
 import schema from './schema';
@@ -19,7 +20,6 @@ function FormComponent() {
   const history = useHistory();
   const { id, packageId } = useParams();
   const { sendNotification } = useNotification();
-  const [minDate] = useState(new Date());
   const [customer, setCustomer] = useState(null);
   const action = packageId ? 'Edit Custom Package' : 'Add Custom Package';
   const formik = useFormik({
@@ -31,46 +31,45 @@ function FormComponent() {
       price: '',
       description: '',
       expiration: null,
-      showInApp: true,
-      showInWeb: true,
       activities: [],
     },
   });
 
   useEffect(() => {
-    if (!packageId) return;
-    service
-      .get(packageId)
-      .then(({ data }) => {
-        formik.setValues({
-          id: data.id,
-          customerId: data.costumerId,
-          name: data.name,
-          price: decimal.format(data.price),
-          description: data.description,
-          expiration: data.expiration ? new Date(data.expiration) : null,
-          activities: data.activities,
-        });
-      })
-      .catch(({ message }) => sendNotification(message, false));
+    if (id && packageId) {
+      service
+        .get(id, packageId)
+        .then(({ data }) => {
+          formik.setValues({
+            id: data.id,
+            customerId: data.costumerId,
+            name: data.name,
+            price: decimal.format(data.price),
+            description: data.description,
+            expiration: data.expiration ? parseISO(data.expiration) : null,
+            activities: data.activities,
+          });
 
-    // eslint-disable-next-line
-  }, [packageId]);
+          setCustomer(data.customer);
+        })
+        .catch(({ message }) => sendNotification(message, false));
+    }
 
-  useEffect(() => {
-    if (id) {
+    if (!packageId) {
       getCustomer(id).then(({ data }) => setCustomer(data));
     }
-  }, [id]);
+
+    // eslint-disable-next-line
+  }, [id, packageId]);
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
-      if (id === undefined) {
-        await service.create({ ...values });
-        sendNotification('Package created with success.');
+      if (packageId === undefined) {
+        await service.create(id, { ...values });
+        sendNotification('Custom Package created with success.');
       } else {
-        await service.update({ ...values });
-        sendNotification('Package updated with success.');
+        await service.update(id, { ...values });
+        sendNotification('Custom Package updated with success.');
       }
 
       history.goBack();
@@ -145,13 +144,14 @@ function FormComponent() {
           <Form.Group as={Col} md="6" lg="4">
             <Form.Label>Expiration Date</Form.Label>
             <InputDatePicker
-              min={minDate}
+              min={startOfTomorrow()}
               name="expiration"
               value={formik.values.expiration}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.expiration && formik.errors.expiration}
               isValid={formik.touched.expiration && !formik.errors.expiration}
+              feedback={formik.errors.expiration}
             />
           </Form.Group>
         </Form.Row>

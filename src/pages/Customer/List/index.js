@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit, FiPackage } from 'react-icons/fi';
+import { FiEdit, FiGrid } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import * as dateHelper from '~/helpers/date';
@@ -27,8 +27,11 @@ function List({ list, allowEdit }) {
                   <Link to={`/customers/${item.id}`}>
                     <FiEdit size="18" />
                   </Link>
-                  <Link to={`/customers/${item.id}/packages`} className="ml-2">
-                    <FiPackage size="18" />
+                  <Link
+                    to={`/customers/${item.id}/custom-packages`}
+                    className="ml-2"
+                  >
+                    <FiGrid size="18" />
                   </Link>
                 </td>
               )}
