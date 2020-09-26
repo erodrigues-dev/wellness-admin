@@ -17,6 +17,7 @@ export { default as EmployeeDisplay } from './Employee/Display';
 
 export { default as Package } from './Package';
 export { default as PackageForm } from './Package/Form';
+export { default as PackageDisplay } from './Package/Display';
 
 export { default as Profile } from './Profile';
 export { default as ProfileForm } from './Profile/Form';
