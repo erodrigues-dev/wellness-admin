@@ -7,11 +7,19 @@ import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import * as service from '~/services/activity';
 
+import useAuth from '../../../contexts/auth';
+
 function DisplayComponent() {
-  const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
+  const { hasPermission, FUNCTIONALITIES, ACTIONS } = useAuth();
+  const { sendNotification } = useNotification();
   const [view, setView] = useState({});
+
+  const hasEditPermission = hasPermission(
+    FUNCTIONALITIES.ACTVITIES,
+    ACTIONS.UPDATE
+  );
 
   useEffect(() => {
     if (!id) return;
@@ -79,9 +87,11 @@ function DisplayComponent() {
           <Button variant="secondary" className="mr-2" onClick={handleCancel}>
             Back
           </Button>
-          <Link to={`/activities/${id}`}>
-            <Button>Edit</Button>
-          </Link>
+          {hasEditPermission && (
+            <Link to={`/activities/${id}`}>
+              <Button>Edit</Button>
+            </Link>
+          )}
         </Col>
       </Row>
     </Card>
