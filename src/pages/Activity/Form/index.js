@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Card, Form, Col, Button } from 'react-bootstrap';
+import { Card, Form, Col, Button, Image } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
@@ -11,7 +11,6 @@ import * as service from '~/services/activity';
 import * as employeeService from '~/services/employee';
 
 import schema from './schema';
-import { ImageContainer } from './styles';
 
 function FormComponent() {
   const [image, setImage] = useState({ file: null, url: null });
@@ -60,8 +59,6 @@ function FormComponent() {
       })
       .catch(({ message }) => sendNotification(message, false));
 
-    // TODO
-    // React Hook useEffect has missing dependencies
     // eslint-disable-next-line
   }, [id]);
 
@@ -224,11 +221,16 @@ function FormComponent() {
         <Form.Group>
           <Form.Label>Image</Form.Label>
           <Form.Control type="file" onChange={handleImage} />
-          <ImageContainer>
-            {image.url && (
-              <img src={image.url} alt="cover" accept=".jpg,.jpeg,.png" />
-            )}
-          </ImageContainer>
+          {image.url && (
+            <Image
+              className="mt-2"
+              src={image.url}
+              alt="cover"
+              rounded
+              fluid
+              style={{ maxWidth: 400, maxHeight: 400 }}
+            />
+          )}
         </Form.Group>
 
         <Form.Row className="d-flex justify-content-end">
