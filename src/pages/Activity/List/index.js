@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit, FiCalendar } from 'react-icons/fi';
+import { FiEye, FiEdit, FiCalendar } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import * as dateHelper from '~/helpers/date';
@@ -16,7 +16,7 @@ function List({ list, allowEdit }) {
       <Table style={{ minWidth: 800 }} striped hover responsive>
         <thead>
           <tr>
-            {allowEdit && <th className="text-center">Actions</th>}
+            <th className="text-center">Actions</th>
             <th>Name</th>
             <th>Price</th>
             <th>Duration</th>
@@ -27,16 +27,25 @@ function List({ list, allowEdit }) {
         <tbody>
           {list.map((item) => (
             <tr key={item.id}>
-              {allowEdit && (
-                <td className="text-center actions">
-                  <Link to={`/activities/${item.id}`} title="Edit">
-                    <FiEdit size="18" />
-                  </Link>
-                  <Link to={`/activities/${item.id}/schedule`} title="Schedule">
-                    <FiCalendar size="18" />
-                  </Link>
-                </td>
-              )}
+              <td className="text-center actions">
+                <Link to={`/activities/${item.id}/view`} title="View">
+                  <FiEye size="18" />
+                </Link>
+                {allowEdit && (
+                  <>
+                    <Link to={`/activities/${item.id}`} title="Edit">
+                      <FiEdit size="18" />
+                    </Link>
+                    <Link
+                      to={`/activities/${item.id}/schedule`}
+                      title="Schedule"
+                    >
+                      <FiCalendar size="18" />
+                    </Link>
+                  </>
+                )}
+              </td>
+
               <td>{item.name}</td>
               <td>{formatCurrency(item.price)}</td>
               <td>{`${item.duration}min`}</td>

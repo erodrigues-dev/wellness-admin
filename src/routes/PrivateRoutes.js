@@ -9,6 +9,7 @@ import {
   Home,
   Activity,
   ActivityForm,
+  ActivityDisplay,
   ActivitySchedule,
   Customer,
   CustomerForm,
@@ -49,6 +50,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.ACTIVITIES}
           path="/activities/:id"
           component={ActivityForm}
+        />
+        <PrivateRoute
+          exact
+          action={ACTIONS.LIST}
+          functionality={FUNCTIONALITIES.ACTIVITIES}
+          path="/activities/:id/view"
+          component={ActivityDisplay}
         />
         <PrivateRoute
           exact
