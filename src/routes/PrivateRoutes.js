@@ -24,6 +24,7 @@ import {
   PackageDisplay,
   Profile,
   ProfileForm,
+  ProfileDisplay,
   NotAuthorized,
 } from '~/pages';
 
@@ -197,6 +198,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.PROFILES}
           path="/profiles/:id"
           component={ProfileForm}
+        />
+        <PrivateRoute
+          exact
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.PROFILES}
+          path="/profiles/:id/display"
+          component={ProfileDisplay}
         />
 
         <Route path="/404" component={NotAuthorized} />

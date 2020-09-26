@@ -21,5 +21,6 @@ export { default as PackageDisplay } from './Package/Display';
 
 export { default as Profile } from './Profile';
 export { default as ProfileForm } from './Profile/Form';
+export { default as ProfileDisplay } from './Profile/Display';
 
 export { default as NotAuthorized } from './NotAuthorized';

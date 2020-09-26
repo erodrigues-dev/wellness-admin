@@ -40,14 +40,3 @@ export function update({ id, name, description, enabled, functionalities }) {
     functionalities,
   });
 }
-
-export function listFunctionalities() {
-  return [
-    'Activities',
-    'Customers',
-    'Employees',
-    'Packages',
-    'Profiles',
-    'Schedules',
-  ];
-}
