@@ -9,26 +9,20 @@ const PrivateRoute = ({
   component: Component,
   ...rest
 }) => {
-  const { hasPermission, user } = useAuth();
+  const { hasPermission } = useAuth();
 
-  const allowed = (paramId) => {
-    if (functionality === 'employees' && Number(paramId) === Number(user.id)) {
-      return true;
-    }
-
-    return hasPermission(functionality, action);
-  };
-
-  const render = (routeProps) => {
-    const { match } = routeProps;
-    const { id } = match.params;
-
-    if (allowed(id)) return <Component {...routeProps} />;
-
-    return <Redirect to="/404" />;
-  };
-
-  return <Route {...rest} render={render} />;
+  return (
+    <Route
+      {...rest}
+      render={(routeProps) =>
+        hasPermission(functionality, action) ? (
+          <Component {...routeProps} />
+        ) : (
+          <Redirect to="/404" />
+        )
+      }
+    />
+  );
 };
 
 export default PrivateRoute;
