@@ -13,6 +13,7 @@ export { default as CustomPackageForm } from './Customer/CustomPackage/Form';
 
 export { default as Employee } from './Employee';
 export { default as EmployeeForm } from './Employee/Form';
+export { default as EmployeeDisplay } from './Employee/Display';
 
 export { default as Package } from './Package';
 export { default as PackageForm } from './Package/Form';
