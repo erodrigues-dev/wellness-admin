@@ -16,6 +16,7 @@ import {
   CustomerDisplay,
   CustomPackage,
   CustomPackageForm,
+  CustomPackageDisplay,
   Employee,
   EmployeeForm,
   EmployeeDisplay,
@@ -118,6 +119,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.PACKAGES}
           path="/customers/:id/custom-packages/:packageId"
           component={CustomPackageForm}
+        />
+        <PrivateRoute
+          exact
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.PACKAGES}
+          path="/customers/:id/custom-packages/:packageId/display"
+          component={CustomPackageDisplay}
         />
 
         <PrivateRoute
