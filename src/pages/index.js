@@ -7,6 +7,7 @@ export { default as ActivitySchedule } from './Activity/Schedule';
 
 export { default as Customer } from './Customer';
 export { default as CustomerForm } from './Customer/Form';
+export { default as CustomerDisplay } from './Customer/Display';
 export { default as CustomPackage } from './Customer/CustomPackage';
 export { default as CustomPackageForm } from './Customer/CustomPackage/Form';
 

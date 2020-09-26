@@ -13,6 +13,7 @@ import {
   ActivitySchedule,
   Customer,
   CustomerForm,
+  CustomerDisplay,
   CustomPackage,
   CustomPackageForm,
   Employee,
@@ -53,9 +54,9 @@ const PrivateRoutes = () => {
         />
         <PrivateRoute
           exact
-          action={ACTIONS.LIST}
+          action={ACTIONS.GET}
           functionality={FUNCTIONALITIES.ACTIVITIES}
-          path="/activities/:id/view"
+          path="/activities/:id/display"
           component={ActivityDisplay}
         />
         <PrivateRoute
@@ -86,6 +87,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.CUSTOMERS}
           path="/customers/:id"
           component={CustomerForm}
+        />
+        <PrivateRoute
+          exact
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.CUSTOMERS}
+          path="/customers/:id/display"
+          component={CustomerDisplay}
         />
         <PrivateRoute
           exact
