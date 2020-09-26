@@ -17,7 +17,7 @@ function DisplayComponent() {
   const [view, setView] = useState({});
 
   const hasEditPermission = hasPermission(
-    FUNCTIONALITIES.ACTVITIES,
+    FUNCTIONALITIES.ACTIVITIES,
     ACTIONS.UPDATE
   );
 

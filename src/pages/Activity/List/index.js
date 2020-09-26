@@ -28,7 +28,7 @@ function List({ list, allowEdit }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center actions">
-                <Link to={`/activities/${item.id}/view`} title="View">
+                <Link to={`/activities/${item.id}/display`} title="View">
                   <FiEye size="18" />
                 </Link>
                 {allowEdit && (
