@@ -4,4 +4,5 @@ export const FUNCTIONALITIES = {
   EMPLOYEES: 'employees',
   PACKAGES: 'packages',
   PROFILES: 'profiles',
+  ACCOUNT: 'account',
 };
