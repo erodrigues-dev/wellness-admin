@@ -11,9 +11,15 @@ import List from './List';
 
 const Activity = () => {
   const { sendNotification } = useNotification();
-  const { hasPermission, ACTIONS } = useAuth();
-  const hasPermissionToCreate = hasPermission('activities', ACTIONS.CREATE);
-  const hasPermissionToUpdate = hasPermission('activities', ACTIONS.UPDATE);
+  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
+  const hasPermissionToCreate = hasPermission(
+    FUNCTIONALITIES.ACTIVITIES,
+    ACTIONS.CREATE
+  );
+  const hasPermissionToUpdate = hasPermission(
+    FUNCTIONALITIES.ACTIVITIES,
+    ACTIONS.UPDATE
+  );
 
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);

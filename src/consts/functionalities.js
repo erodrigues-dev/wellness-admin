@@ -6,3 +6,19 @@ export const FUNCTIONALITIES = {
   PROFILES: 'profiles',
   ACCOUNT: 'account',
 };
+
+export function listAll() {
+  return Object.values(FUNCTIONALITIES).map((value) => ({
+    id: value,
+    name: capitalize(value),
+  }));
+}
+
+/**
+ *
+ * @param {string} value
+ */
+function capitalize(value) {
+  const firstLetter = value[0];
+  return `${firstLetter.toUpperCase()}${value.substring(1)}`;
+}

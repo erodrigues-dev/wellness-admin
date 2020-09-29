@@ -17,6 +17,7 @@ import {
   CustomerDisplay,
   CustomPackage,
   CustomPackageForm,
+  CustomPackageDisplay,
   Employee,
   EmployeeForm,
   EmployeeDisplay,
@@ -25,6 +26,7 @@ import {
   PackageDisplay,
   Profile,
   ProfileForm,
+  ProfileDisplay,
   NotAuthorized,
 } from '~/pages';
 
@@ -119,6 +121,13 @@ const PrivateRoutes = () => {
           path="/customers/:id/custom-packages/:packageId"
           component={CustomPackageForm}
         />
+        <PrivateRoute
+          exact
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.PACKAGES}
+          path="/customers/:id/custom-packages/:packageId/display"
+          component={CustomPackageDisplay}
+        />
 
         <PrivateRoute
           exact
@@ -205,6 +214,13 @@ const PrivateRoutes = () => {
           action={ACTIONS.UPDATE}
           functionality={FUNCTIONALITIES.PROFILES}
           component={Account}
+        />
+
+        <PrivateRoute
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.PROFILES}
+          path="/profiles/:id/display"
+          component={ProfileDisplay}
         />
 
         <Route path="/404" component={NotAuthorized} />

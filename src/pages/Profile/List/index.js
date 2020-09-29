@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit } from 'react-icons/fi';
+import { FiEdit, FiEye } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -17,7 +17,7 @@ function List({ list, allowEdit }) {
       <Table style={{ minWidth: 800 }} striped hover responsive>
         <thead>
           <tr>
-            {allowEdit && <th className="text-center">Actions</th>}
+            <th className="text-center">Actions</th>
             <th>Name</th>
             <th>Description</th>
             <th>Created At</th>
@@ -26,13 +26,24 @@ function List({ list, allowEdit }) {
         <tbody>
           {list.map((item) => (
             <tr key={item.id}>
-              {allowEdit && (
-                <td className="text-center">
-                  <Link to={`/profiles/${item.id}`}>
+              <td className="text-center">
+                <Link
+                  to={`/profiles/${item.id}/display`}
+                  className="mr-2"
+                  title="Display"
+                >
+                  <FiEye size="18" />
+                </Link>
+                {allowEdit && (
+                  <Link
+                    to={`/profiles/${item.id}`}
+                    className="mr-2"
+                    title="Edit"
+                  >
                     <FiEdit size="18" />
                   </Link>
-                </td>
-              )}
+                )}
+              </td>
               <td>{item.name}</td>
               <td>{item.description}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
@@ -40,7 +51,7 @@ function List({ list, allowEdit }) {
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan={allowEdit ? 4 : 3}>No record found</td>
+              <td colSpan={4}>No record found</td>
             </tr>
           )}
         </tbody>

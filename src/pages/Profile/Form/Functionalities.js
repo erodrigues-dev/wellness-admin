@@ -44,16 +44,16 @@ function Functionalities({ list, formik }) {
         </thead>
         <tbody>
           {list.map((functionality) => (
-            <tr key={functionality}>
-              <td>{functionality}</td>
+            <tr key={functionality.id}>
+              <td>{functionality.name}</td>
               <td className="text-center">
                 <Form.Check
                   custom
                   label=" "
-                  id={`list-${functionality}`}
-                  checked={isChecked(functionality, 1)}
+                  id={`list-${functionality.id}`}
+                  checked={isChecked(functionality.id, 1)}
                   onChange={(e) => {
-                    handleCheck(functionality, 1, e.target.checked);
+                    handleCheck(functionality.id, 1, e.target.checked);
                   }}
                 />
               </td>
@@ -61,10 +61,10 @@ function Functionalities({ list, formik }) {
                 <Form.Check
                   custom
                   label=" "
-                  id={`create-${functionality}`}
-                  checked={isChecked(functionality, 2)}
+                  id={`create-${functionality.id}`}
+                  checked={isChecked(functionality.id, 2)}
                   onChange={(e) => {
-                    handleCheck(functionality, 2, e.target.checked);
+                    handleCheck(functionality.id, 2, e.target.checked);
                   }}
                 />
               </td>
@@ -72,10 +72,10 @@ function Functionalities({ list, formik }) {
                 <Form.Check
                   custom
                   label=" "
-                  id={`update-${functionality}`}
-                  checked={isChecked(functionality, 4)}
+                  id={`update-${functionality.id}`}
+                  checked={isChecked(functionality.id, 4)}
                   onChange={(e) => {
-                    handleCheck(functionality, 4, e.target.checked);
+                    handleCheck(functionality.id, 4, e.target.checked);
                   }}
                 />
               </td>
