@@ -1,4 +1,10 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from 'react';
 
 import Loading from '~/components/Loading';
 import api from '~/services/api';
@@ -8,7 +14,7 @@ const LoadingContext = createContext({});
 export const LoadingProvider = ({ children }) => {
   const [show, setShow] = useState(false);
 
-  useEffect(() => {
+  const loadingInterceptor = useCallback(() => {
     api.interceptors.request.use(
       (req) => {
         setShow(true);
@@ -32,6 +38,10 @@ export const LoadingProvider = ({ children }) => {
       }
     );
   }, []);
+
+  useEffect(() => {
+    loadingInterceptor();
+  }, [loadingInterceptor]);
 
   /**
    * handle loading

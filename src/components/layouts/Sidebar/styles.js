@@ -40,7 +40,6 @@ export const Avatar = styled.div`
   background: url(${avatarBgImg});
   background-size: cover;
   overflow: hidden;
-  cursor: pointer;
 `;
 
 export const AvatarImage = styled.img`
@@ -53,7 +52,12 @@ export const AvatarName = styled.p`
   color: #fff;
   font-size: 14px;
   margin: 0;
-  cursor: pointer;
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-right: 5px;
+  }
 `;
 export const AvatarProfile = styled.p`
   color: #666;

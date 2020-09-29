@@ -1,5 +1,7 @@
 export { default as Home } from './Home';
 
+export { default as Account } from './Account';
+
 export { default as Activity } from './Activity';
 export { default as ActivityForm } from './Activity/Form';
 export { default as ActivityDisplay } from './Activity/Display';

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -36,7 +36,7 @@ function EmployeeForm() {
     initialValues,
   });
 
-  useEffect(() => {
+  const getEmployee = useCallback(() => {
     if (!id) return;
     employeeService
       .get(id)
@@ -55,11 +55,11 @@ function EmployeeForm() {
         });
       })
       .catch(({ message }) => sendNotification(message, false));
+  }, [formik, id, sendNotification]);
 
-    // TODO
-    // React Hook useEffect has missing dependencies
-    // eslint-disable-next-line
-  }, [id]);
+  useEffect(() => {
+    getEmployee();
+  }, [getEmployee]);
 
   useEffect(() => {
     profileService.listAll().then((response) => setProfiles(response.data));

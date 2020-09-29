@@ -7,6 +7,7 @@ import { ACTIONS } from '~/consts/actions';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import {
   Home,
+  Account,
   Activity,
   ActivityForm,
   ActivityDisplay,
@@ -197,6 +198,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.PROFILES}
           path="/profiles/:id"
           component={ProfileForm}
+        />
+        <PrivateRoute
+          exact
+          path="/account"
+          action={ACTIONS.UPDATE}
+          functionality={FUNCTIONALITIES.PROFILES}
+          component={Account}
         />
 
         <Route path="/404" component={NotAuthorized} />
