@@ -22,15 +22,19 @@ export const AuthProvider = ({ children }) => {
 
   const hasPermission = useCallback(
     (functionality, action) => {
-      const { actions } = user.profile.functionalities.find(
-        (x) => x.name.toLowerCase() === functionality.toLowerCase()
-      );
+      if (user !== undefined) {
+        const { actions } = user.profile.functionalities.find(
+          (x) => x.name.toLowerCase() === functionality.toLowerCase()
+        );
 
-      const allowed = (action & actions) === action;
+        const allowed = (action & actions) === action;
 
-      return allowed;
+        return allowed;
+      }
+
+      return null;
     },
-    [user.profile.functionalities]
+    [user]
   );
 
   const buildMenu = useCallback(() => {

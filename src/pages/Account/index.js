@@ -24,7 +24,7 @@ const Account = () => {
       email: user.email,
       password: '',
       confirmPassword: '',
-      specialty: user.specialty,
+      specialty: '',
       imageUrl: user.imageUrl,
     },
   });
@@ -39,7 +39,7 @@ const Account = () => {
 
       sendNotification('Account updated.');
     } catch (error) {
-      sendNotification(error.response.message, false);
+      sendNotification(error.message, false);
     }
   }
 
@@ -89,7 +89,7 @@ const Account = () => {
             <Form.Label>Specialty</Form.Label>
             <Form.Control
               placeholder="Speciality"
-              name="speciality"
+              name="specialty"
               value={formik.values.specialty}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
