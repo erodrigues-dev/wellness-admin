@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Form } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
@@ -12,7 +12,6 @@ import schema from './schema';
 import { Container } from './styles';
 
 const Account = () => {
-  const formRef = useRef();
   const { user, updateUserFromToken } = useAuth();
   const { sendNotification } = useNotification();
   const formik = useFormik({
@@ -24,7 +23,7 @@ const Account = () => {
       email: user.email,
       password: '',
       confirmPassword: '',
-      specialty: '',
+      specialty: user.specialty,
       imageUrl: user.imageUrl,
     },
   });
@@ -48,7 +47,7 @@ const Account = () => {
       <Card.Title>Account</Card.Title>
       <hr />
       <Container>
-        <Form ref={formRef} onSubmit={formik.handleSubmit}>
+        <Form onSubmit={formik.handleSubmit}>
           <AvatarUpload
             imageUrl={formik.values.imageUrl}
             handleFile={setImage}
@@ -145,12 +144,17 @@ const Account = () => {
           <div className="buttons">
             <Button
               type="reset"
-              onClick={() => formRef.current.reset()}
+              onClick={() => formik.resetForm()}
               disabled={formik.isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" variant="secondary" className="ml-2">
+            <Button
+              type="submit"
+              variant="secondary"
+              className="ml-2"
+              disabled={formik.isSubmitting}
+            >
               Save
             </Button>
           </div>
