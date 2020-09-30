@@ -29,6 +29,7 @@ import {
   ProfileDisplay,
   NotAuthorized,
 } from '~/pages';
+import Category from '~/pages/Category';
 
 const PrivateRoutes = () => {
   return (
@@ -221,6 +222,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.PROFILES}
           path="/profiles/:id/display"
           component={ProfileDisplay}
+        />
+
+        <PrivateRoute
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.CATEGORY}
+          path="/category"
+          component={Category}
         />
 
         <Route path="/404" component={NotAuthorized} />

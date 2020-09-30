@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Card, Form, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -30,17 +30,16 @@ function FormComponent() {
     },
   });
 
-  const getProfileId = useCallback(() => {
+  useEffect(() => {
     if (!id) return;
     service
       .get(id)
       .then((response) => formik.setValues({ ...response.data }))
       .catch(({ message }) => sendNotification(message, false));
-  }, [id, formik, sendNotification]);
-
-  useEffect(() => {
-    getProfileId();
-  }, [getProfileId]);
+    // TODO
+    // React Hook useEffect has missing dependencies
+    // eslint-disable-next-line
+  }, [id]);
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
