@@ -4,7 +4,7 @@ import api from './api';
 
 const KEY_TOKEN = '@auth:token';
 
-function setStorage(token) {
+export function setStorage(token) {
   localStorage.setItem(KEY_TOKEN, token);
 }
 

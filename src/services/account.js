@@ -7,7 +7,7 @@ export function update({ image, name, email, password, specialty }) {
 
   formData.append('name', name);
   formData.append('email', email);
-  formData.append('password', password);
+  if (password && !!password.trim()) formData.append('password', password);
   formData.append('specialty', specialty);
   if (image) formData.append('image', image);
 

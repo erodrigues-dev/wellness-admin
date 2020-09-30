@@ -40,7 +40,7 @@ function FormComponent() {
 
   useEffect(() => {
     getProfileId();
-  }, [id]);
+  }, [getProfileId]);
 
   async function handleSubmit(values, { setSubmitting }) {
     try {

@@ -1,4 +1,12 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from 'react';
+
+import JwtDecode from 'jwt-decode';
 
 import { ACTIONS } from '~/consts/actions';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
@@ -12,10 +20,32 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(userStoraged);
   const [menu, setMenu] = useState([]);
 
+  const hasPermission = useCallback(
+    (functionality, action) => {
+      const { actions } = user.profile.functionalities.find(
+        (x) => x.name.toLowerCase() === functionality.toLowerCase()
+      );
+
+      const allowed = (action & actions) === action;
+
+      return allowed;
+    },
+    [user.profile.functionalities]
+  );
+
+  const buildMenu = useCallback(() => {
+    if (user) {
+      const menuHasPermission = MENU.filter((itemMenu) =>
+        hasPermission(itemMenu.functionality, ACTIONS.LIST)
+      );
+
+      setMenu(menuHasPermission);
+    }
+  }, [user, hasPermission]);
+
   useEffect(() => {
-    if (user) buildMenu();
-    // eslint-disable-next-line
-  }, [user]);
+    buildMenu();
+  }, [buildMenu]);
 
   async function signIn({ email, password }) {
     const userAuthenticated = await auth.signIn({ email, password });
@@ -27,22 +57,12 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   }
 
-  function hasPermission(functionality, action) {
-    const { actions } = user.profile.functionalities.find(
-      (x) => x.name.toLowerCase() === functionality.toLowerCase()
-    );
+  function updateUserFromToken(token) {
+    const decoded = JwtDecode(token);
 
-    const allowed = (action & actions) === action;
+    auth.setStorage(token);
 
-    return allowed;
-  }
-
-  function buildMenu() {
-    const menuHasPermission = MENU.filter((itemMenu) =>
-      hasPermission(itemMenu.functionality, ACTIONS.LIST)
-    );
-
-    setMenu(menuHasPermission);
+    setUser(decoded);
   }
 
   return (
@@ -56,6 +76,7 @@ export const AuthProvider = ({ children }) => {
         menu,
         ACTIONS,
         FUNCTIONALITIES,
+        updateUserFromToken,
       }}
     >
       {children}

@@ -13,7 +13,7 @@ import { Container } from './styles';
 
 const Account = () => {
   const formRef = useRef();
-  const { user } = useAuth();
+  const { user, updateUserFromToken } = useAuth();
   const { sendNotification } = useNotification();
   const formik = useFormik({
     validationSchema: schema,
@@ -33,7 +33,10 @@ const Account = () => {
 
   async function handleSubmit(data) {
     try {
-      account.update({ ...data, image });
+      const response = await account.update({ ...data, image });
+
+      updateUserFromToken(response.data.token);
+
       sendNotification('Account updated.');
     } catch (error) {
       sendNotification(error.response.message, false);
