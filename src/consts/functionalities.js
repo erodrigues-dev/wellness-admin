@@ -4,8 +4,7 @@ export const FUNCTIONALITIES = {
   EMPLOYEES: 'employees',
   PACKAGES: 'packages',
   PROFILES: 'profiles',
-  ACCOUNT: 'account',
-  CATEGORY: 'category',
+  CATEGORIES: 'categories',
 };
 
 export function listAll() {

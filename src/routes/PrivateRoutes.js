@@ -226,8 +226,8 @@ const PrivateRoutes = () => {
 
         <PrivateRoute
           action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.CATEGORY}
-          path="/category"
+          functionality={FUNCTIONALITIES.CATEGORIES}
+          path="/categories"
           component={Category}
         />
 
