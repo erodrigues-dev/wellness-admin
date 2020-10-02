@@ -6,11 +6,17 @@ import { useFormik } from 'formik';
 import useNotification from '~/contexts/notification';
 import service from '~/services/category';
 
-const ModalCategory = ({ handleOpenAdd, loadCategories }) => {
+const ModalCategory = ({
+  handleOpenModal,
+  loadCategories,
+  selectedCategory,
+}) => {
+  const isEdit = !!selectedCategory;
   const { sendNotification } = useNotification();
   const formik = useFormik({
     initialValues: {
-      name: '',
+      id: isEdit ? selectedCategory.id : 0,
+      name: isEdit ? selectedCategory.name : '',
     },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
@@ -18,7 +24,11 @@ const ModalCategory = ({ handleOpenAdd, loadCategories }) => {
 
   async function handleSubmit(values) {
     try {
-      await service.create(values.name);
+      if (isEdit) {
+        await service.update(values.id, values.name);
+      } else {
+        await service.create(values.name);
+      }
 
       sendNotification('Add category successfuly.');
 
@@ -31,7 +41,7 @@ const ModalCategory = ({ handleOpenAdd, loadCategories }) => {
   return (
     <>
       <Modal.Header close>
-        <Modal.Title>Add Category</Modal.Title>
+        <Modal.Title>{`${isEdit ? 'Edit' : 'Add'} Category`}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
@@ -48,7 +58,7 @@ const ModalCategory = ({ handleOpenAdd, loadCategories }) => {
               <Button
                 type="reset"
                 className="ml-2"
-                onClick={() => handleOpenAdd(false)}
+                onClick={() => handleOpenModal(false)}
               >
                 Cancel
               </Button>
@@ -57,7 +67,7 @@ const ModalCategory = ({ handleOpenAdd, loadCategories }) => {
                 className="ml-2"
                 onClick={formik.handleSubmit}
               >
-                Add Category
+                {`${isEdit ? 'Edit' : 'Add'} Category`}
               </Button>
             </Col>
           </Row>

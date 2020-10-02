@@ -20,6 +20,8 @@ const Category = () => {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '' });
   const [openAdd, setOpenAdd] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState();
 
   function handleOpenAdd(state) {
     setOpenAdd(state);
@@ -55,11 +57,23 @@ const Category = () => {
       />
       <Modal show={openAdd} onHide={() => setOpenAdd(false)}>
         <ModalCategory
-          handleOpenAdd={handleOpenAdd}
+          handleOpenModal={handleOpenAdd}
           loadCategories={loadCategories}
         />
       </Modal>
-      <List list={list} allowEdit={hasPermissionToUpdate} />
+      <Modal show={openEdit} onHide={() => setOpenEdit(false)}>
+        <ModalCategory
+          handleOpenModal={setOpenEdit}
+          loadCategories={loadCategories}
+          selectedCategory={selectedCategory}
+        />
+      </Modal>
+      <List
+        list={list}
+        allowEdit={hasPermissionToUpdate}
+        setOpenEdit={setOpenEdit}
+        setSelectedCategory={setSelectedCategory}
+      />
       <Paginate
         activePage={page}
         itemsCountPerPage={10}

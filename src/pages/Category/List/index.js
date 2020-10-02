@@ -7,7 +7,7 @@ import * as dateHelper from '~/helpers/date';
 
 import { Container } from './styles';
 
-function List({ list, allowEdit }) {
+function List({ list, allowEdit, setOpenEdit, setSelectedCategory }) {
   return (
     <Container>
       <Table striped hover responsive>
@@ -23,9 +23,14 @@ function List({ list, allowEdit }) {
             <tr key={item.id}>
               <td className="text-center">
                 {allowEdit && (
-                  <Link to="/categories" className="ml-2" title="Edit">
-                    <FiEdit size="18" />
-                  </Link>
+                  <FiEdit
+                    size="18"
+                    cursor="pointer"
+                    onClick={() => {
+                      setOpenEdit(true);
+                      setSelectedCategory(item);
+                    }}
+                  />
                 )}
               </td>
               <td>{item.name}</td>
