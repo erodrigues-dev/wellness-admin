@@ -21,6 +21,7 @@ function List({ list, allowEdit }) {
             <th>Price</th>
             <th>Duration</th>
             <th>Employee</th>
+            <th>Category</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -50,6 +51,7 @@ function List({ list, allowEdit }) {
               <td>{formatCurrency(item.price)}</td>
               <td>{`${item.duration}min`}</td>
               <td>{item.employee.name}</td>
+              <td>{item.category.name}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}

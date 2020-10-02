@@ -33,6 +33,7 @@ export function create({
   price,
   duration,
   employeeId,
+  categoryId,
   image,
 }) {
   const data = new FormData();
@@ -42,6 +43,7 @@ export function create({
   data.append('price', sanitize.number(price));
   data.append('duration', sanitize.number(duration));
   data.append('employeeId', employeeId);
+  data.append('categoryId', categoryId);
   if (image) data.append('image', image);
 
   return api.post(ENDPOINT, data);
@@ -54,6 +56,7 @@ export function update({
   price,
   duration,
   employeeId,
+  categoryId,
   image,
 }) {
   const data = new FormData();
@@ -64,6 +67,7 @@ export function update({
   data.append('price', sanitize.number(price));
   data.append('duration', sanitize.number(duration));
   data.append('employeeId', employeeId);
+  data.append('categoryId', categoryId);
   if (image) data.append('image', image);
 
   return api.put(ENDPOINT, data);

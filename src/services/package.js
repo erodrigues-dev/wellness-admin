@@ -28,6 +28,7 @@ function create({
   showInWeb,
   activities,
   image,
+  categoryId,
 }) {
   const data = new FormData();
   data.append('name', name);
@@ -36,6 +37,7 @@ function create({
   data.append('showInApp', showInApp);
   data.append('showInWeb', showInWeb);
   data.append('price', sanitize.number(price));
+  data.append('categoryId', categoryId);
 
   activities.map((item) =>
     data.append(
@@ -62,6 +64,7 @@ function update({
   showInWeb,
   activities,
   image,
+  categoryId,
 }) {
   const data = new FormData();
   data.append('id', id);
@@ -71,6 +74,7 @@ function update({
   data.append('showInApp', showInApp);
   data.append('showInWeb', showInWeb);
   data.append('price', sanitize.number(price));
+  data.append('categoryId', categoryId);
 
   activities.map((item) =>
     data.append(

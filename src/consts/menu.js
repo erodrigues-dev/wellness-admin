@@ -1,4 +1,10 @@
-import { FiUsers, FiSettings, FiActivity, FiPackage } from 'react-icons/fi';
+import {
+  FiUsers,
+  FiSettings,
+  FiActivity,
+  FiPackage,
+  FiPenTool,
+} from 'react-icons/fi';
 
 import { FUNCTIONALITIES } from './functionalities';
 
@@ -32,5 +38,11 @@ export const MENU = [
     path: '/profiles',
     Icon: FiSettings,
     functionality: FUNCTIONALITIES.PROFILES,
+  },
+  {
+    title: 'Categories',
+    path: '/categories',
+    Icon: FiPenTool,
+    functionality: FUNCTIONALITIES.CATEGORIES,
   },
 ];

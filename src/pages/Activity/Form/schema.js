@@ -15,6 +15,8 @@ const schema = yup.object().shape({
     .required()
     .transform((_value, originalValue) => sanitize.number(originalValue)),
   employeeId: yup.number().label('employee').required(),
+  category: yup.string().required(),
+  categoryId: yup.number(),
 });
 
 export default schema;

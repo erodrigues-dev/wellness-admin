@@ -19,6 +19,7 @@ function List({ list, allowEdit }) {
             <th className="text-center">Actions</th>
             <th>Name</th>
             <th>Price</th>
+            <th>Category</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -45,6 +46,7 @@ function List({ list, allowEdit }) {
               </td>
               <td>{item.name}</td>
               <td>{formatCurrency(item.price)}</td>
+              <td>{item.category.name}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}
