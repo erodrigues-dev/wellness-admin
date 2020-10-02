@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Card } from 'react-bootstrap';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Card, Modal } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
@@ -7,6 +7,7 @@ import * as service from '~/services/category';
 
 import Filter from './Filter';
 import List from './List';
+import ModalCategory from './Modal';
 
 const Category = () => {
   const { hasPermission, ACTIONS } = useAuth();
@@ -18,13 +19,22 @@ const Category = () => {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '' });
+  const [openAdd, setOpenAdd] = useState(false);
+
+  function handleOpenAdd(state) {
+    setOpenAdd(state);
+  }
+
+  const loadCategories = useCallback(() => {
+    service.index(page, filter).then((response) => {
+      setList(response.data);
+      setTotal(parseInt(response.headers['x-total-count']));
+    });
+  }, []);
 
   useEffect(() => {
-    // service.index(page, filter).then((response) => {
-    //   setList(response.data);
-    //   setTotal(parseInt(response.headers['x-total-count']));
-    // });
-  }, [page, filter]);
+    loadCategories();
+  }, [loadCategories]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -38,7 +48,17 @@ const Category = () => {
     <Card body>
       <Card.Title>Categories</Card.Title>
       <hr />
-      <Filter onFilter={handleFilter} allowCreate={hasPermissionToCreate} />
+      <Filter
+        handleOpenAdd={handleOpenAdd}
+        onFilter={handleFilter}
+        allowCreate={hasPermissionToCreate}
+      />
+      <Modal show={openAdd} onHide={() => setOpenAdd(false)}>
+        <ModalCategory
+          handleOpenAdd={handleOpenAdd}
+          loadCategories={loadCategories}
+        />
+      </Modal>
       <List list={list} allowEdit={hasPermissionToUpdate} />
       <Paginate
         activePage={page}

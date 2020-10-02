@@ -25,12 +25,8 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function create({ name }) {
-  const formData = new FormData();
-
-  formData.append('name', name);
-
-  return api.post(ENDPOINT, formData);
+export function create(name) {
+  return api.post(ENDPOINT, { name });
 }
 
 export function update({ id, name }) {

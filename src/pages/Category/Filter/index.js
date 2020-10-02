@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Col, Form, Row, Button } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
-import Modal from '~/components/Modal';
-
 import { Container } from './styles';
 
-const Filter = ({ onFilter, allowCreate }) => {
-  const [openAdd, setOpenAdd] = useState(false);
-
+const Filter = ({ onFilter, allowCreate, handleOpenAdd }) => {
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -43,7 +39,7 @@ const Filter = ({ onFilter, allowCreate }) => {
               <Button
                 variant="secondary"
                 className="ml-2"
-                onClick={() => setOpenAdd(true)}
+                onClick={handleOpenAdd}
               >
                 Add Category
               </Button>
@@ -51,7 +47,6 @@ const Filter = ({ onFilter, allowCreate }) => {
           </Col>
         </Row>
       </Form>
-      {openAdd && <Modal title="Add Category" setClose={setOpenAdd} />}
     </Container>
   );
 };
