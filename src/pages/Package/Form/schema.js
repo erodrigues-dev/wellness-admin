@@ -25,6 +25,8 @@ const schema = yup.object().shape({
       })
     )
     .required('must have at least one activity'),
+  category: yup.string().required(),
+  categoryId: yup.number(),
 });
 
 export default schema;

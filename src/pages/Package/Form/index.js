@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Form, Col, Button } from 'react-bootstrap';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Card, Form, Col, Button, InputGroup } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
@@ -8,6 +9,7 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
+import * as categoryService from '~/services/category';
 import service from '~/services/package';
 
 import Activities from './Activities';
@@ -17,6 +19,7 @@ import { ImageContainer } from './styles';
 function FormComponent() {
   const [minDate] = useState(new Date());
   const [image, setImage] = useState({ file: null, url: null });
+  const [categories, setCategories] = useState();
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
@@ -33,8 +36,32 @@ function FormComponent() {
       showInApp: true,
       showInWeb: true,
       activities: [],
+      category: '',
+      categoryId: 0,
     },
   });
+
+  const loadCategories = useCallback(async () => {
+    try {
+      const { data } = await categoryService.listAll();
+
+      setCategories(data);
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+  }, []);
+
+  function findCategory(query) {
+    const selectedCategory = categories.filter(
+      (category) => query.toLowerCase() === category.name.toLowerCase()
+    );
+
+    return selectedCategory;
+  }
 
   useEffect(() => {
     if (!id) return;
@@ -52,6 +79,8 @@ function FormComponent() {
           showInApp: response.data.showInApp ?? true,
           showInWeb: response.data.showInWeb ?? true,
           activities: response.data.activities,
+          categoryId: response.data.category.id,
+          category: response.data.category.name,
         });
 
         setImage({ file: null, url: response.data.imageUrl });
@@ -64,12 +93,22 @@ function FormComponent() {
   }, [id]);
 
   async function handleSubmit(values, { setSubmitting }) {
+    const selectedCategory = findCategory(values.category);
+
     try {
       if (id === undefined) {
-        await service.create({ ...values, image: image.file });
+        await service.create({
+          ...values,
+          categoryId: selectedCategory[0].id,
+          image: image.file,
+        });
         sendNotification('Package created with success.');
       } else {
-        await service.update({ ...values, image: image.file });
+        await service.update({
+          ...values,
+          categoryId: selectedCategory[0].id,
+          image: image.file,
+        });
         sendNotification('Package updated with success.');
       }
 
@@ -109,6 +148,26 @@ function FormComponent() {
     const url = URL.createObjectURL(file);
 
     setImage({ file, url });
+  }
+
+  async function handleAddCategory(values) {
+    const selectedCategory = findCategory(values);
+
+    if (selectedCategory.length > 0) {
+      toast.error('Category already created.');
+
+      return;
+    }
+
+    try {
+      const { data } = await categoryService.create(values);
+
+      setCategories([...categories, data]);
+
+      toast.success('Category created with success.');
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
   }
 
   return (
@@ -217,6 +276,38 @@ function FormComponent() {
             </Form.Group>
           </Col>
         </Form.Row>
+        <Form.Group>
+          <Form.Label>Category</Form.Label>
+          <InputGroup>
+            <Form.Control
+              placeholder="Category"
+              name="category"
+              list="category"
+              value={formik.values.category}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.category && formik.errors.category}
+              isValid={formik.touched.category && !formik.errors.category}
+            />
+            <datalist id="category">
+              {categories &&
+                categories.map((category) => (
+                  <option key={category.id}>{category.name}</option>
+                ))}
+            </datalist>
+            <InputGroup.Append>
+              <Button
+                variant="outline-secondary"
+                onClick={() => handleAddCategory(formik.values.category)}
+              >
+                Add
+              </Button>
+            </InputGroup.Append>
+          </InputGroup>
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.category}
+          </Form.Control.Feedback>
+        </Form.Group>
         <Activities formik={formik} />
 
         <Form.Row className="d-flex justify-content-end">
