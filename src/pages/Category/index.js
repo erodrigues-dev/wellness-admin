@@ -32,7 +32,7 @@ const Category = () => {
       setList(response.data);
       setTotal(parseInt(response.headers['x-total-count']));
     });
-  }, []);
+  }, [page, filter]);
 
   useEffect(() => {
     loadCategories();

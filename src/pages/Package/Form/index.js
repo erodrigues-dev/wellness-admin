@@ -49,11 +49,11 @@ function FormComponent() {
     } catch (error) {
       sendNotification(error.message, false);
     }
-  }, []);
+  }, [sendNotification]);
 
   useEffect(() => {
     loadCategories();
-  }, []);
+  }, [loadCategories]);
 
   function findCategory(query) {
     const selectedCategory = categories.filter(
