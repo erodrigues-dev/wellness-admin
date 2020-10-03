@@ -49,7 +49,11 @@ const Activity = () => {
     <Card body>
       <Card.Title>Activities</Card.Title>
       <hr />
-      <Filter onFilter={handleFilter} allowCreate={hasPermissionToCreate} />
+      <Filter
+        onFilter={handleFilter}
+        allowCreate={hasPermissionToCreate}
+        list={list}
+      />
       <List list={list} allowEdit={hasPermissionToUpdate} />
       <Paginate
         activePage={page}
