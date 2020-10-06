@@ -25,12 +25,12 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function create(name) {
-  return api.post(ENDPOINT, { name });
+export function create(name, type) {
+  return api.post(ENDPOINT, { name, type });
 }
 
-export function update(id, name) {
-  return api.put(ENDPOINT, { id, name });
+export function update(id, name, type) {
+  return api.put(ENDPOINT, { id, name, type });
 }
 
 const service = {

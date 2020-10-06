@@ -9,6 +9,7 @@ const Filter = ({ onFilter, allowCreate, handleOpenAdd }) => {
   const formik = useFormik({
     initialValues: {
       name: '',
+      type: '',
     },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
@@ -22,7 +23,7 @@ const Filter = ({ onFilter, allowCreate, handleOpenAdd }) => {
     <Container>
       <Form onSubmit={formik.handleSubmit}>
         <Row>
-          <Form.Group as={Col} md="8">
+          <Form.Group as={Col}>
             <Form.Control
               placeholder="Name"
               name="name"
@@ -30,22 +31,35 @@ const Filter = ({ onFilter, allowCreate, handleOpenAdd }) => {
               onChange={formik.handleChange}
             />
           </Form.Group>
-          <Col className="d-flex justify-content-end align-items-start">
-            <Button type="submit">Filter</Button>
-            <Button type="reset" className="ml-2" onClick={formik.handleReset}>
-              Clear Filters
-            </Button>
-            {allowCreate && (
-              <Button
-                variant="secondary"
-                className="ml-2"
-                onClick={handleOpenAdd}
-              >
-                Add Category
-              </Button>
-            )}
-          </Col>
+          <Form.Group as={Col}>
+            <Form.Control
+              as="select"
+              custom
+              placeholder="Type"
+              name="type"
+              value={formik.values.type}
+              onChange={formik.handleChange}
+            >
+              <option value="activity">Activity</option>
+              <option value="package">Package</option>
+            </Form.Control>
+          </Form.Group>
         </Row>
+        <Col className="d-flex justify-content-end align-items-start">
+          <Button type="submit">Filter</Button>
+          <Button type="reset" className="ml-2" onClick={formik.handleReset}>
+            Clear Filters
+          </Button>
+          {allowCreate && (
+            <Button
+              variant="secondary"
+              className="ml-2"
+              onClick={() => handleOpenAdd(true)}
+            >
+              Add Category
+            </Button>
+          )}
+        </Col>
       </Form>
     </Container>
   );

@@ -1,7 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Form, Col, Button, InputGroup } from 'react-bootstrap';
+import {
+  Card,
+  Form,
+  Col,
+  Button,
+  InputGroup,
+  Modal,
+  Row,
+} from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
@@ -20,6 +27,8 @@ function FormComponent() {
   const [minDate] = useState(new Date());
   const [image, setImage] = useState({ file: null, url: null });
   const [categories, setCategories] = useState();
+  const [openAdd, setOpenAdd] = useState(false);
+  const [category, setCategory] = useState();
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
@@ -57,7 +66,8 @@ function FormComponent() {
 
   function findCategory(query) {
     const selectedCategory = categories.filter(
-      (category) => query.toLowerCase() === category.name.toLowerCase()
+      (loadedCategory) =>
+        query.toLowerCase() === loadedCategory.name.toLowerCase()
     );
 
     return selectedCategory;
@@ -150,21 +160,17 @@ function FormComponent() {
     setImage({ file, url });
   }
 
-  async function handleAddCategory(values) {
-    const selectedCategory = findCategory(values);
-
-    if (selectedCategory.length > 0) {
-      toast.error('Category already created.');
-
-      return;
-    }
-
+  async function createCategory() {
     try {
-      const { data } = await categoryService.create(values);
+      const { data } = await categoryService.create(category, 'package');
 
-      setCategories([...categories, data]);
+      sendNotification('Add category successfuly.');
 
-      toast.success('Category created with success.');
+      loadCategories();
+
+      formik.setFieldValue('categoryId', data.id);
+
+      setCategory(data);
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -276,38 +282,42 @@ function FormComponent() {
             </Form.Group>
           </Col>
         </Form.Row>
-        <Form.Group>
-          <Form.Label>Category</Form.Label>
-          <InputGroup>
-            <Form.Control
-              placeholder="Category"
-              name="category"
-              list="category"
-              value={formik.values.category}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.category && formik.errors.category}
-              isValid={formik.touched.category && !formik.errors.category}
-            />
-            <datalist id="category">
-              {categories &&
-                categories.map((category) => (
-                  <option key={category.id}>{category.name}</option>
-                ))}
-            </datalist>
-            <InputGroup.Append>
-              <Button
-                variant="outline-secondary"
-                onClick={() => handleAddCategory(formik.values.category)}
+
+        <Form.Row>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Category</Form.Label>
+            <InputGroup>
+              <Form.Control
+                as="select"
+                custom
+                placeholder="Category"
+                name="category"
+                list="category"
+                value={formik.values.category}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.category && formik.errors.category}
+                isValid={formik.touched.category && !formik.errors.category}
               >
-                Add
-              </Button>
-            </InputGroup.Append>
-          </InputGroup>
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.category}
-          </Form.Control.Feedback>
-        </Form.Group>
+                {categories &&
+                  categories.map((loadedCategory) => (
+                    <option key={loadedCategory.id}>
+                      {loadedCategory.name}
+                    </option>
+                  ))}
+              </Form.Control>
+              <InputGroup.Append>
+                <Button variant="primary" onClick={() => setOpenAdd(true)}>
+                  Add
+                </Button>
+              </InputGroup.Append>
+            </InputGroup>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.category}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+
         <Activities formik={formik} />
 
         <Form.Row className="d-flex justify-content-end">
@@ -324,6 +334,46 @@ function FormComponent() {
           </ButtonLoading>
         </Form.Row>
       </Form>
+
+      <Modal show={openAdd} onHide={() => setOpenAdd(false)}>
+        <Modal.Header close>
+          <Modal.Title>Add Category</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form onSubmit={formik.handleSubmit}>
+            <Row>
+              <Form.Group as={Col} md="12">
+                <Form.Control
+                  placeholder="Name"
+                  name="name"
+                  value={
+                    category !== undefined && category.id
+                      ? category.name
+                      : category
+                  }
+                  onChange={(e) => setCategory(e.target.value)}
+                />
+              </Form.Group>
+              <Col className="d-flex justify-content-end align-items-start">
+                <Button
+                  type="reset"
+                  className="ml-2"
+                  onClick={() => setOpenAdd(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  variant="secondary"
+                  className="ml-2"
+                  onClick={createCategory}
+                >
+                  Add Category
+                </Button>
+              </Col>
+            </Row>
+          </Form>
+        </Modal.Body>
+      </Modal>
     </Card>
   );
 }

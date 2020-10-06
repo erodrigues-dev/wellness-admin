@@ -17,6 +17,7 @@ const ModalCategory = ({
     initialValues: {
       id: isEdit ? selectedCategory.id : 0,
       name: isEdit ? selectedCategory.name : '',
+      type: isEdit ? selectedCategory.type : 'activity',
     },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
@@ -25,9 +26,9 @@ const ModalCategory = ({
   async function handleSubmit(values) {
     try {
       if (isEdit) {
-        await service.update(values.id, values.name);
+        await service.update(values.id, values.name, values.type);
       } else {
-        await service.create(values.name);
+        await service.create(values.name, values.type);
       }
 
       sendNotification('Add category successfuly.');
@@ -46,7 +47,7 @@ const ModalCategory = ({
       <Modal.Body>
         <Form onSubmit={formik.handleSubmit}>
           <Row>
-            <Form.Group as={Col} md="12">
+            <Form.Group as={Col}>
               <Form.Control
                 placeholder="Name"
                 name="name"
@@ -54,6 +55,23 @@ const ModalCategory = ({
                 onChange={formik.handleChange}
               />
             </Form.Group>
+          </Row>
+          <Row>
+            <Form.Group as={Col}>
+              <Form.Control
+                as="select"
+                custom
+                placeholder="Type"
+                name="type"
+                value={formik.values.type}
+                onChange={(e) => formik.setFieldValue('type', e.target.value)}
+              >
+                <option value="activity">Activity</option>
+                <option value="package">Package</option>
+              </Form.Control>
+            </Form.Group>
+          </Row>
+          <Row>
             <Col className="d-flex justify-content-end align-items-start">
               <Button
                 type="reset"

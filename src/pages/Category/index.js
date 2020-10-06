@@ -55,13 +55,13 @@ const Category = () => {
         onFilter={handleFilter}
         allowCreate={hasPermissionToCreate}
       />
-      <Modal show={openAdd} onHide={() => setOpenAdd(false)}>
+      <Modal show={openAdd} onHide={setOpenAdd}>
         <ModalCategory
           handleOpenModal={handleOpenAdd}
           loadCategories={loadCategories}
         />
       </Modal>
-      <Modal show={openEdit} onHide={() => setOpenEdit(false)}>
+      <Modal show={openEdit} onHide={setOpenEdit}>
         <ModalCategory
           handleOpenModal={setOpenEdit}
           loadCategories={loadCategories}
