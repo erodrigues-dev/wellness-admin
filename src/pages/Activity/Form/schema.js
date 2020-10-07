@@ -16,6 +16,9 @@ const schema = yup.object().shape({
     .transform((_value, originalValue) => sanitize.number(originalValue)),
   employeeId: yup.number().label('employee').required(),
   categoryId: yup.number(),
+  showInApp: yup.boolean(),
+  showInWeb: yup.boolean(),
+  maxPeople: yup.number(),
 });
 
 export default schema;

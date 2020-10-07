@@ -43,6 +43,9 @@ function FormComponent() {
       description: '',
       employeeId: '',
       categoryId: category !== undefined && category.id ? category.id : 1,
+      showInApp: false,
+      showInWeb: false,
+      maxPeople: 0,
     },
   });
 
@@ -74,6 +77,9 @@ function FormComponent() {
           imageUrl,
           categoryId,
           type,
+          showInApp,
+          showInWeb,
+          maxPeople,
         } = response.data;
 
         formik.setValues({
@@ -85,6 +91,9 @@ function FormComponent() {
           employeeId,
           categoryId,
           type,
+          showInApp,
+          showInWeb,
+          maxPeople,
         });
 
         setImage({ url: imageUrl });
@@ -289,6 +298,40 @@ function FormComponent() {
             <Form.Control.Feedback type="invalid">
               {formik.errors.categoryId}
             </Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col}>
+            <Form.Label>Options</Form.Label>
+            <Form.Check
+              type="checkbox"
+              name="showInApp"
+              id="showInApp"
+              checked={formik.values.showInApp}
+              onChange={formik.handleChange}
+              label="Show in App"
+            />
+            <Form.Check
+              type="checkbox"
+              name="showInWeb"
+              id="showInWeb"
+              checked={formik.values.showInWeb}
+              onChange={formik.handleChange}
+              label="Show in Web"
+            />
+          </Form.Group>
+          <Form.Group as={Col}>
+            <Form.Label>Max Number of People</Form.Label>
+            <Form.Control
+              type="number"
+              name="maxPeople"
+              value={formik.values.maxPeople}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.maxPeople && formik.errors.maxPeople}
+              isValid={formik.touched.maxPeople && !formik.errors.maxPeople}
+            />
           </Form.Group>
         </Form.Row>
 
