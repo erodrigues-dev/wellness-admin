@@ -21,9 +21,9 @@ const Activities = ({ formik }) => {
   };
 
   const addItem = () => {
-    const id = Number(activityRef.current.value);
-    if (id) {
-      const item = activities.find((x) => x.id === id);
+    const name = activityRef.current.value;
+    if (name) {
+      const item = activities.find((x) => x.name === name);
       const newList = [{ ...item, quantity: 1 }, ...formik.values.activities];
       formik.setFieldValue('activities', newList);
       formik.setFieldTouched('activities', true);
@@ -56,14 +56,14 @@ const Activities = ({ formik }) => {
       <Form.Row>
         <Form.Group as={Col} md="6">
           <Form.Label>Activity</Form.Label>
-          <Form.Control as="select" custom ref={activityRef}>
-            <option value="">Selecione</option>
+          <Form.Control type="text" list="activities" ref={activityRef} />
+          <datalist id="activities" name="activities">
             {getItens().map((item) => (
-              <option key={item.id} value={item.id}>
+              <option key={item.id} value={item.name}>
                 {item.name}
               </option>
             ))}
-          </Form.Control>
+          </datalist>
         </Form.Group>
         <Form.Group as={Col} className="d-flex align-items-end">
           <Button onClick={addItem}>Add</Button>

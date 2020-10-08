@@ -29,6 +29,9 @@ function create({
   activities,
   image,
   categoryId,
+  recurrencyPay,
+  type,
+  total,
 }) {
   const data = new FormData();
   data.append('name', name);
@@ -38,6 +41,9 @@ function create({
   data.append('showInWeb', showInWeb);
   data.append('price', sanitize.number(price));
   data.append('categoryId', categoryId);
+  data.append('recurrencyPay', recurrencyPay);
+  data.append('type', type);
+  data.append('total', total);
 
   activities.map((item) =>
     data.append(
@@ -65,6 +71,9 @@ function update({
   activities,
   image,
   categoryId,
+  recurrencyPay,
+  type,
+  total,
 }) {
   const data = new FormData();
   data.append('id', id);
@@ -75,6 +84,9 @@ function update({
   data.append('showInWeb', showInWeb);
   data.append('price', sanitize.number(price));
   data.append('categoryId', categoryId);
+  data.append('recurrencyPay', recurrencyPay);
+  data.append('type', type);
+  data.append('total', total);
 
   activities.map((item) =>
     data.append(

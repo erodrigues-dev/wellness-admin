@@ -80,11 +80,7 @@ export function update({
   if (image) data.append('image', image);
   data.append('showInApp', showInApp);
   data.append('showInWeb', showInWeb);
-  if (maxPeople > 0) {
-    data.append('maxPeople', maxPeople);
-  } else {
-    data.append('maxPeople', null);
-  }
+  if (maxPeople) data.append('maxPeople', maxPeople);
 
   return api.put(ENDPOINT, data);
 }

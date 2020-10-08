@@ -7,6 +7,8 @@ import {
   InputGroup,
   Modal,
   Row,
+  Dropdown,
+  DropdownButton,
 } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -47,6 +49,10 @@ function FormComponent() {
       activities: [],
       category: '',
       categoryId: 0,
+      recurrencyPay: '',
+      recurrencyPayType: '',
+      type: '',
+      total: '',
     },
   });
 
@@ -91,6 +97,9 @@ function FormComponent() {
           activities: response.data.activities,
           categoryId: response.data.category.id,
           category: response.data.category.name,
+          recurrencyPay: response.data.recurrencyPay,
+          type: response.data.type,
+          total: response.data.total,
         });
 
         setImage({ file: null, url: response.data.imageUrl });
@@ -291,17 +300,20 @@ function FormComponent() {
                 as="select"
                 custom
                 placeholder="Category"
-                name="category"
-                list="category"
-                value={formik.values.category}
-                onChange={formik.handleChange}
+                name="categoryId"
+                value={formik.values.categoryId}
+                onChange={(e) => {
+                  formik.setFieldValue('categoryId', e.target.value);
+                }}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.category && formik.errors.category}
-                isValid={formik.touched.category && !formik.errors.category}
+                isInvalid={
+                  formik.touched.categoryId && formik.errors.categoryId
+                }
+                isValid={formik.touched.categoryId && !formik.errors.categoryId}
               >
                 {categories &&
                   categories.map((loadedCategory) => (
-                    <option key={loadedCategory.id}>
+                    <option key={loadedCategory.id} value={loadedCategory.id}>
                       {loadedCategory.name}
                     </option>
                   ))}
@@ -314,6 +326,74 @@ function FormComponent() {
             </InputGroup>
             <Form.Control.Feedback type="invalid">
               {formik.errors.category}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Recurrency Pay</Form.Label>
+            <InputGroup>
+              <Form.Control
+                placeholder="Recurrency Pay"
+                name="recurrencyPay"
+                value={formik.values.recurrencyPay}
+                onChange={maskPrice}
+                onBlur={formik.handleBlur}
+                isInvalid={
+                  formik.touched.recurrencyPay && formik.errors.recurrencyPay
+                }
+                isValid={
+                  formik.touched.recurrencyPay && !formik.errors.recurrencyPay
+                }
+              />
+              <DropdownButton
+                as={InputGroup.Append}
+                variant="outline-primary"
+                title="Recurrency"
+                id="input-group-dropdown-2"
+              >
+                <Dropdown.Item>One Time</Dropdown.Item>
+                <Dropdown.Item>Weekly</Dropdown.Item>
+                <Dropdown.Item>Monthly</Dropdown.Item>
+              </DropdownButton>
+            </InputGroup>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.recurrencyPay}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </Form.Row>
+
+        <Form.Row>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Package Type</Form.Label>
+            <InputGroup>
+              <Form.Control
+                placeholder="Package Type"
+                name="type"
+                value={formik.values.type}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.type && formik.errors.type}
+                isValid={formik.touched.type && !formik.errors.type}
+              />
+            </InputGroup>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.type}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group as={Col} md="6">
+            <Form.Label>Total of Minutes - Amount</Form.Label>
+            <InputGroup>
+              <Form.Control
+                placeholder="Total of Minutes - Amount"
+                name="total"
+                value={formik.values.total}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.total && formik.errors.total}
+                isValid={formik.touched.total && !formik.errors.total}
+              />
+            </InputGroup>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.total}
             </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>
@@ -336,7 +416,7 @@ function FormComponent() {
       </Form>
 
       <Modal show={openAdd} onHide={() => setOpenAdd(false)}>
-        <Modal.Header close>
+        <Modal.Header>
           <Modal.Title>Add Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
