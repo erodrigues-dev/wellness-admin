@@ -16,6 +16,7 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
+import masks from '~/helpers/masks';
 import * as service from '~/services/activity';
 import * as categoryService from '~/services/category';
 import * as employeeService from '~/services/employee';
@@ -133,27 +134,6 @@ function FormComponent() {
     history.goBack();
   }
 
-  function maskPrice(e) {
-    let value = e.target.value.replace(/[^0-9]/g, '').replace(/^0*/, '');
-    if (value) {
-      if (value.length < 3) {
-        value = value.padStart(3, '0');
-      }
-      const chars = value.split('');
-      chars.splice(-2, 0, '.');
-      value = chars.join('');
-      value = decimal.format(value);
-    }
-    e.target.value = value;
-    formik.handleChange(e);
-  }
-
-  function maskDuration(e) {
-    e.target.value = e.target.value.replace(/\D/g, '');
-
-    formik.handleChange(e);
-  }
-
   function handleImage(e) {
     if (e.target.files.length === 0) {
       setImage({ file: null, url: null });
@@ -210,7 +190,7 @@ function FormComponent() {
               placeholder="Price"
               name="price"
               value={formik.values.price}
-              onChange={maskPrice}
+              onChange={(e) => formik.setFieldValue('price', masks.price(e))}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.price && formik.errors.price}
               isValid={formik.touched.price && !formik.errors.price}
@@ -225,7 +205,7 @@ function FormComponent() {
               placeholder="Duration"
               name="duration"
               value={formik.values.duration}
-              onChange={maskDuration}
+              onChange={(e) => formik.setFieldValue('price', masks.duration(e))}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.duration && formik.errors.duration}
               isValid={formik.touched.duration && !formik.errors.duration}

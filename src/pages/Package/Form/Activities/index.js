@@ -6,7 +6,7 @@ import { listAll } from '~/services/activity';
 
 import List from './List';
 
-const Activities = ({ formik }) => {
+const Activities = ({ formik, packageType }) => {
   const { sendNotification } = useNotification();
   const activityRef = useRef(null);
   const [activities, setActivities] = useState([]);
@@ -74,6 +74,7 @@ const Activities = ({ formik }) => {
         list={formik.values.activities}
         formik={formik}
         onRemove={removeItem}
+        packageType={packageType}
       />
 
       <p className="text-error">{getError()}</p>

@@ -10,6 +10,7 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
+import masks from '~/helpers/masks';
 import service from '~/services/custom-package';
 import { get as getCustomer } from '~/services/customer';
 
@@ -83,21 +84,6 @@ function FormComponent() {
     history.goBack();
   }
 
-  function maskPrice(e) {
-    let value = e.target.value.replace(/[^0-9]/g, '').replace(/^0*/, '');
-    if (value) {
-      if (value.length < 3) {
-        value = value.padStart(3, '0');
-      }
-      const chars = value.split('');
-      chars.splice(-2, 0, '.');
-      value = chars.join('');
-      value = decimal.format(value);
-    }
-    e.target.value = value;
-    formik.handleChange(e);
-  }
-
   return (
     <Card body>
       <Card.Title>{action}</Card.Title>
@@ -132,7 +118,7 @@ function FormComponent() {
               placeholder="Price"
               name="price"
               value={formik.values.price}
-              onChange={maskPrice}
+              onChange={(e) => formik.setFieldValue('price', masks.price(e))}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.price && formik.errors.price}
               isValid={formik.touched.price && !formik.errors.price}

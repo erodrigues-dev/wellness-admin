@@ -7,8 +7,6 @@ import {
   InputGroup,
   Modal,
   Row,
-  Dropdown,
-  DropdownButton,
 } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
@@ -18,6 +16,7 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
+import masks from '~/helpers/masks';
 import * as categoryService from '~/services/category';
 import service from '~/services/package';
 
@@ -49,35 +48,11 @@ function FormComponent() {
       activities: [],
       category: '',
       categoryId: 0,
-      recurrencyPay: '',
-      recurrencyPayType: '',
-      type: '',
+      recurrencyPay: 'one-time',
+      type: 'minutes',
       total: '',
     },
   });
-
-  const loadCategories = useCallback(async () => {
-    try {
-      const { data } = await categoryService.listAll();
-
-      setCategories(data);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }, [sendNotification]);
-
-  useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
-
-  function findCategory(query) {
-    const selectedCategory = categories.filter(
-      (loadedCategory) =>
-        query.toLowerCase() === loadedCategory.name.toLowerCase()
-    );
-
-    return selectedCategory;
-  }
 
   useEffect(() => {
     if (!id) return;
@@ -111,8 +86,29 @@ function FormComponent() {
     // eslint-disable-next-line
   }, [id]);
 
+  const loadCategories = useCallback(async () => {
+    try {
+      const { data } = await categoryService.listAll();
+
+      setCategories(data);
+
+      formik.setFieldValue('category', data[0].name);
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+    // TODO
+    // React Hook useEffect has missing dependencies
+    // eslint-disable-next-line
+  }, [sendNotification]);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
+
   async function handleSubmit(values, { setSubmitting }) {
-    const selectedCategory = findCategory(values.category);
+    const selectedCategory = categories.filter(
+      (loadedCategory) => loadedCategory.name === values.category
+    );
 
     try {
       if (id === undefined) {
@@ -142,21 +138,6 @@ function FormComponent() {
     history.goBack();
   }
 
-  function maskPrice(e) {
-    let value = e.target.value.replace(/[^0-9]/g, '').replace(/^0*/, '');
-    if (value) {
-      if (value.length < 3) {
-        value = value.padStart(3, '0');
-      }
-      const chars = value.split('');
-      chars.splice(-2, 0, '.');
-      value = chars.join('');
-      value = decimal.format(value);
-    }
-    e.target.value = value;
-    formik.handleChange(e);
-  }
-
   function handleImage(e) {
     if (e.target.files.length === 0) {
       setImage({ file: null, url: null });
@@ -177,7 +158,11 @@ function FormComponent() {
 
       loadCategories();
 
-      formik.setFieldValue('categoryId', data.id);
+      formik.setFieldValue('category', data.name);
+
+      if (!id) {
+        formik.setFieldValue('categoryId', data.id);
+      }
 
       setCategory(data);
     } catch (error) {
@@ -219,7 +204,7 @@ function FormComponent() {
               placeholder="Price"
               name="price"
               value={formik.values.price}
-              onChange={maskPrice}
+              onChange={(e) => formik.setFieldValue('price', masks.price(e))}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.price && formik.errors.price}
               isValid={formik.touched.price && !formik.errors.price}
@@ -300,20 +285,18 @@ function FormComponent() {
                 as="select"
                 custom
                 placeholder="Category"
-                name="categoryId"
-                value={formik.values.categoryId}
+                name="category"
+                value={formik.values.category}
                 onChange={(e) => {
-                  formik.setFieldValue('categoryId', e.target.value);
+                  formik.setFieldValue('category', e.target.value);
                 }}
                 onBlur={formik.handleBlur}
-                isInvalid={
-                  formik.touched.categoryId && formik.errors.categoryId
-                }
-                isValid={formik.touched.categoryId && !formik.errors.categoryId}
+                isInvalid={formik.touched.category && formik.errors.category}
+                isValid={formik.touched.category && !formik.errors.category}
               >
                 {categories &&
                   categories.map((loadedCategory) => (
-                    <option key={loadedCategory.id} value={loadedCategory.id}>
+                    <option key={loadedCategory.id} value={loadedCategory.name}>
                       {loadedCategory.name}
                     </option>
                   ))}
@@ -333,9 +316,11 @@ function FormComponent() {
             <InputGroup>
               <Form.Control
                 placeholder="Recurrency Pay"
+                as="select"
+                custom
                 name="recurrencyPay"
                 value={formik.values.recurrencyPay}
-                onChange={maskPrice}
+                onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 isInvalid={
                   formik.touched.recurrencyPay && formik.errors.recurrencyPay
@@ -343,17 +328,11 @@ function FormComponent() {
                 isValid={
                   formik.touched.recurrencyPay && !formik.errors.recurrencyPay
                 }
-              />
-              <DropdownButton
-                as={InputGroup.Append}
-                variant="outline-primary"
-                title="Recurrency"
-                id="input-group-dropdown-2"
               >
-                <Dropdown.Item>One Time</Dropdown.Item>
-                <Dropdown.Item>Weekly</Dropdown.Item>
-                <Dropdown.Item>Monthly</Dropdown.Item>
-              </DropdownButton>
+                <option value="one-time">One Time</option>
+                <option value="weekly">Weekly</option>
+                <option value="monthly">Monthly</option>
+              </Form.Control>
             </InputGroup>
             <Form.Control.Feedback type="invalid">
               {formik.errors.recurrencyPay}
@@ -367,38 +346,56 @@ function FormComponent() {
             <InputGroup>
               <Form.Control
                 placeholder="Package Type"
+                as="select"
+                custom
                 name="type"
                 value={formik.values.type}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 isInvalid={formik.touched.type && formik.errors.type}
                 isValid={formik.touched.type && !formik.errors.type}
-              />
+              >
+                <option value="minutes">Minutes</option>
+                <option value="amount">Amount</option>
+                <option value="unlimited">Unlimited</option>
+                <option value="appointments">Appointments</option>
+              </Form.Control>
             </InputGroup>
             <Form.Control.Feedback type="invalid">
               {formik.errors.type}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Total of Minutes - Amount</Form.Label>
-            <InputGroup>
-              <Form.Control
-                placeholder="Total of Minutes - Amount"
-                name="total"
-                value={formik.values.total}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.total && formik.errors.total}
-                isValid={formik.touched.total && !formik.errors.total}
-              />
-            </InputGroup>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.total}
-            </Form.Control.Feedback>
-          </Form.Group>
+
+          {(formik.values.type === 'minutes' ||
+            formik.values.type === 'amount') && (
+            <Form.Group as={Col} md="6">
+              <Form.Label>{`Total of ${formik.values.type}`}</Form.Label>
+              <InputGroup>
+                <Form.Control
+                  placeholder={`Total of ${formik.values.type}`}
+                  name="total"
+                  value={formik.values.total}
+                  onChange={(e) =>
+                    formik.setFieldValue(
+                      'total',
+                      formik.values.type === 'minutes'
+                        ? masks.duration(e)
+                        : masks.price(e)
+                    )
+                  }
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.total && formik.errors.total}
+                  isValid={formik.touched.total && !formik.errors.total}
+                />
+              </InputGroup>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.total}
+              </Form.Control.Feedback>
+            </Form.Group>
+          )}
         </Form.Row>
 
-        <Activities formik={formik} />
+        <Activities formik={formik} packageType={formik.values.type} />
 
         <Form.Row className="d-flex justify-content-end">
           <Button

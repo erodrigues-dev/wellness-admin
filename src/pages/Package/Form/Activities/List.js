@@ -4,7 +4,7 @@ import { Table, Form } from 'react-bootstrap';
 import ButtonDelete from '~/components/List/ButtonDelete';
 import { currency } from '~/helpers/intl';
 
-const List = ({ list, onRemove, formik }) => {
+const List = ({ list, onRemove, formik, packageType }) => {
   const hasTouched = (index) => {
     const { activities } = formik.touched;
     if (activities && activities.length > index)
@@ -35,7 +35,7 @@ const List = ({ list, onRemove, formik }) => {
           <th>Activity</th>
           <th>Price</th>
           <th>Duration</th>
-          <th>Quantity</th>
+          {packageType === 'appointments' && <th>Quantity</th>}
         </tr>
       </thead>
       <tbody>
@@ -47,18 +47,20 @@ const List = ({ list, onRemove, formik }) => {
             <td>{item.name}</td>
             <td>{currency.format(item.price)}</td>
             <td>{`${item.duration}min`}</td>
-            <td>
-              <Form.Control
-                style={{ width: 80 }}
-                name={`activities[${i}].quantity`}
-                value={item.quantity}
-                onChange={handleChange}
-                onBlur={formik.handleBlur}
-                maxLength={3}
-                isInvalid={hasTouched(i) && hasError(i)}
-                isValid={hasTouched(i) && !hasError(i)}
-              />
-            </td>
+            {packageType === 'appointments' && (
+              <td>
+                <Form.Control
+                  style={{ width: 80 }}
+                  name={`activities[${i}].quantity`}
+                  value={item.quantity}
+                  onChange={handleChange}
+                  onBlur={formik.handleBlur}
+                  maxLength={3}
+                  isInvalid={hasTouched(i) && hasError(i)}
+                  isValid={hasTouched(i) && !hasError(i)}
+                />
+              </td>
+            )}
           </tr>
         ))}
         {list.length === 0 && (

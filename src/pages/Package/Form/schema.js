@@ -27,16 +27,13 @@ const schema = yup.object().shape({
     .required('must have at least one activity'),
   category: yup.string().required(),
   categoryId: yup.number(),
-  recurrencyPay: yup
-    .number()
-    .positive()
-    .min(0.01)
-    .max(999999999.99)
-    .required()
-    .transform((_value, originalValue) => sanitize.number(originalValue)),
-  recurrencyPayType: yup.string().required(),
+  recurrencyPay: yup.string().required(),
   type: yup.string().required(),
-  total: yup.string().required(),
+  total: yup.string().when('type', {
+    is: (val) => val === 'minutes' || val === 'amount',
+    then: yup.string().required(),
+    otherwise: yup.string().optional(),
+  }),
 });
 
 export default schema;

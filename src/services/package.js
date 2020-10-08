@@ -48,10 +48,14 @@ function create({
   activities.map((item) =>
     data.append(
       'activities[]',
-      JSON.stringify({
-        id: item.id,
-        quantity: item.quantity,
-      })
+      type === 'appointments'
+        ? JSON.stringify({
+            id: item.id,
+            quantity: item.quantity,
+          })
+        : JSON.stringify({
+            id: item.id,
+          })
     )
   );
 
@@ -91,10 +95,14 @@ function update({
   activities.map((item) =>
     data.append(
       'activities[]',
-      JSON.stringify({
-        id: item.id,
-        quantity: item.quantity,
-      })
+      type === 'appointments'
+        ? JSON.stringify({
+            id: item.id,
+            quantity: item.quantity,
+          })
+        : JSON.stringify({
+            id: item.id,
+          })
     )
   );
 
