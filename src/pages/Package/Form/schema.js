@@ -13,27 +13,42 @@ const schema = yup.object().shape({
     .max(999999999.99)
     .required()
     .transform((_value, originalValue) => sanitize.number(originalValue)),
-  activities: yup
-    .array()
-    .of(
-      yup.object({
-        id: yup.number(),
-        quantity: yup
-          .number()
-          .min(1, 'quantity must be greater than or equal to 1')
-          .required('quantity must be required'),
-      })
-    )
-    .required('must have at least one activity'),
+  activities: yup.array().when('type', {
+    is: 'appointments',
+    then: yup
+      .array()
+      .of(
+        yup.object({
+          id: yup.number(),
+          quantity: yup
+            .number()
+            .min(1, 'quantity must be greater than or equal to 1')
+            .required('quantity must be required'),
+        })
+      )
+      .required('must have at least one activity'),
+    otherwise: yup
+      .array()
+      .of(
+        yup.object({
+          id: yup.number(),
+        })
+      )
+      .required('must have at least one activity'),
+  }),
+
   category: yup.string().required(),
   categoryId: yup.number(),
   recurrencyPay: yup.string().required(),
   type: yup.string().required(),
-  total: yup.string().when('type', {
-    is: (val) => val === 'minutes' || val === 'amount',
-    then: yup.string().required(),
-    otherwise: yup.string().optional(),
-  }),
+  total: yup
+    .string()
+    .when('type', {
+      is: (val) => val === 'minutes' || val === 'amount',
+      then: yup.string().required(),
+      otherwise: yup.string().optional(),
+    })
+    .nullable(),
 });
 
 export default schema;

@@ -43,7 +43,8 @@ function create({
   data.append('categoryId', categoryId);
   data.append('recurrencyPay', recurrencyPay);
   data.append('type', type);
-  data.append('total', total);
+  if ((total && type === 'minutes') || type === 'amount')
+    data.append('total', total);
 
   activities.map((item) =>
     data.append(
@@ -90,7 +91,7 @@ function update({
   data.append('categoryId', categoryId);
   data.append('recurrencyPay', recurrencyPay);
   data.append('type', type);
-  data.append('total', total);
+  if (type === 'minutes' || type === 'amount') data.append('total', total);
 
   activities.map((item) =>
     data.append(

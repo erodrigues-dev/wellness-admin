@@ -30,6 +30,7 @@ import {
   NotAuthorized,
 } from '~/pages';
 import Category from '~/pages/Category';
+import Dashboard from '~/pages/Dashboard';
 
 const PrivateRoutes = () => {
   return (
@@ -229,6 +230,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.CATEGORIES}
           path="/categories"
           component={Category}
+        />
+
+        <PrivateRoute
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.PROFILES}
+          path="/dashboard"
+          component={Dashboard}
         />
 
         <Route path="/404" component={NotAuthorized} />

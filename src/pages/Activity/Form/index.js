@@ -44,25 +44,11 @@ function FormComponent() {
       description: '',
       employeeId: '',
       categoryId: category !== undefined && category.id ? category.id : 1,
-      showInApp: false,
-      showInWeb: false,
+      showInApp: true,
+      showInWeb: true,
       maxPeople: 0,
     },
   });
-
-  const loadCategories = useCallback(async () => {
-    try {
-      const { data } = await categoryService.listAll();
-
-      setCategories(data);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }, [sendNotification]);
-
-  useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
 
   useEffect(() => {
     if (!id) return;
@@ -103,6 +89,22 @@ function FormComponent() {
 
     // eslint-disable-next-line
   }, [id]);
+
+  const loadCategories = useCallback(async () => {
+    try {
+      const { data } = await categoryService.listAll();
+
+      if (!id) formik.setFieldValue('categoryId', data[0].id);
+
+      setCategories(data);
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [sendNotification]);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
 
   useEffect(() => {
     employeeService.listAll().then((response) => setEmployees(response.data));
@@ -205,7 +207,9 @@ function FormComponent() {
               placeholder="Duration"
               name="duration"
               value={formik.values.duration}
-              onChange={(e) => formik.setFieldValue('price', masks.duration(e))}
+              onChange={(e) =>
+                formik.setFieldValue('duration', masks.duration(e))
+              }
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.duration && formik.errors.duration}
               isValid={formik.touched.duration && !formik.errors.duration}
@@ -288,7 +292,8 @@ function FormComponent() {
               type="checkbox"
               name="showInApp"
               id="showInApp"
-              checked={formik.values.showInApp}
+              custom
+              defaultChecked={formik.values.showInApp}
               onChange={formik.handleChange}
               label="Show in App"
             />
@@ -296,7 +301,8 @@ function FormComponent() {
               type="checkbox"
               name="showInWeb"
               id="showInWeb"
-              checked={formik.values.showInWeb}
+              custom
+              defaultChecked={formik.values.showInWeb}
               onChange={formik.handleChange}
               label="Show in Web"
             />
