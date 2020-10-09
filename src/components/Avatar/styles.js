@@ -4,8 +4,8 @@ import avatarImg from '~/assets/images/avatar.svg';
 
 export const Container = styled.div`
   display: flex;
-  align-items: center;
-  margin-bottom: 16px;
+  flex-direction: column;
+  justify-content: center;
 `;
 
 export const ImageWrapper = styled.div`
