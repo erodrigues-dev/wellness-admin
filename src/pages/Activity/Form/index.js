@@ -100,7 +100,8 @@ function FormComponent() {
     } catch (error) {
       sendNotification(error.message, false);
     }
-  }, [sendNotification]);
+    // eslint-disable-next-line
+  }, [sendNotification, id]);
 
   useEffect(() => {
     loadCategories();

@@ -7,7 +7,7 @@ import Orders from './Orders';
 import PrivateAnnotations from './PrivateAnnotations';
 import PublicAnnotations from './PublicAnnotations';
 import Waivers from './Waivers';
-import WorkoutLogs from './WorkoutLogs';
+import WorkoutLog from './WorkoutLog';
 import WorkoutProfile from './WorkoutProfile';
 
 const Cards = () => {
@@ -19,7 +19,7 @@ const Cards = () => {
       </CardDeck>
       <CardDeck>
         <WorkoutProfile />
-        <WorkoutLogs />
+        <WorkoutLog />
       </CardDeck>
       <CardDeck>
         <Discounts />

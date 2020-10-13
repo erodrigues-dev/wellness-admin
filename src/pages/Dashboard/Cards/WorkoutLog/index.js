@@ -1,16 +1,16 @@
 import React from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 
-const Discounts = () => {
+const WorkoutLog = () => {
   return (
     <Card>
       <Card.Header>
         <Row>
           <Col>
-            <span>Discounts</span>
+            <span>Workout Profile</span>
           </Col>
           <Col>
-            <Button variant="outline-primary">Add</Button>
+            <Button variant="outline-primary">Book now</Button>
             <Button variant="outline-primary">See More</Button>
           </Col>
         </Row>
@@ -19,4 +19,4 @@ const Discounts = () => {
   );
 };
 
-export default Discounts;
+export default WorkoutLog;

@@ -1,8 +1,22 @@
 import React from 'react';
-import { Card } from 'react-bootstrap';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 
 const Waivers = () => {
-  return <Card>Waivers</Card>;
+  return (
+    <Card>
+      <Card.Header>
+        <Row>
+          <Col>
+            <span>Waivers</span>
+          </Col>
+          <Col>
+            <Button variant="outline-primary">Add</Button>
+            <Button variant="outline-primary">See More</Button>
+          </Col>
+        </Row>
+      </Card.Header>
+    </Card>
+  );
 };
 
 export default Waivers;
