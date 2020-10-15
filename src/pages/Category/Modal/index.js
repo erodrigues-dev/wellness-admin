@@ -17,7 +17,7 @@ const ModalCategory = ({
     initialValues: {
       id: isEdit ? selectedCategory.id : 0,
       name: isEdit ? selectedCategory.name : '',
-      type: isEdit ? selectedCategory.type : 'activity',
+      type: isEdit ? selectedCategory.type : '',
     },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
@@ -34,6 +34,7 @@ const ModalCategory = ({
       sendNotification('Add category successfuly.');
 
       loadCategories();
+      handleOpenModal(false);
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -56,21 +57,26 @@ const ModalCategory = ({
               />
             </Form.Group>
           </Row>
-          <Row>
-            <Form.Group as={Col}>
-              <Form.Control
-                as="select"
-                custom
-                placeholder="Type"
-                name="type"
-                value={formik.values.type}
-                onChange={(e) => formik.setFieldValue('type', e.target.value)}
-              >
-                <option value="activity">Activity</option>
-                <option value="package">Package</option>
-              </Form.Control>
-            </Form.Group>
-          </Row>
+          {!isEdit && (
+            <Row>
+              <Form.Group as={Col}>
+                <Form.Control
+                  as="select"
+                  custom
+                  placeholder="Type"
+                  name="type"
+                  value={formik.values.type}
+                  onChange={(e) => formik.setFieldValue('type', e.target.value)}
+                >
+                  <option value="" disabled selected>
+                    Select type
+                  </option>
+                  <option value="activity">Activity</option>
+                  <option value="package">Package</option>
+                </Form.Control>
+              </Form.Group>
+            </Row>
+          )}
           <Row>
             <Col className="d-flex justify-content-end align-items-start">
               <Button

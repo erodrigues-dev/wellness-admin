@@ -29,8 +29,8 @@ export function create(name, type) {
   return api.post(ENDPOINT, { name, type });
 }
 
-export function update(id, name, type) {
-  return api.put(ENDPOINT, { id, name, type });
+export function update(id, name) {
+  return api.put(ENDPOINT, { id, name });
 }
 
 const service = {
