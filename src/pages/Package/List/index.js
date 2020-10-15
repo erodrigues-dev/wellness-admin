@@ -20,6 +20,9 @@ function List({ list, allowEdit }) {
             <th>Name</th>
             <th>Price</th>
             <th>Category</th>
+            <th>Recurrency Pay</th>
+            <th>Package Type</th>
+            <th>Total of </th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -47,6 +50,9 @@ function List({ list, allowEdit }) {
               <td>{item.name}</td>
               <td>{formatCurrency(item.price)}</td>
               <td>{item.category.name}</td>
+              <td>{item.recurrencyPay}</td>
+              <td>{item.type}</td>
+              <td>{item.total || '-'}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}

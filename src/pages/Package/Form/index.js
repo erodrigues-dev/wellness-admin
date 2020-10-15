@@ -165,6 +165,7 @@ function FormComponent() {
       }
 
       setCategory(data);
+      setOpenAdd(false);
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -350,7 +351,10 @@ function FormComponent() {
                 custom
                 name="type"
                 value={formik.values.type}
-                onChange={formik.handleChange}
+                onChange={(e) => {
+                  formik.setFieldValue('type', e.target.value);
+                  formik.setFieldValue('total', '');
+                }}
                 onBlur={formik.handleBlur}
                 isInvalid={formik.touched.type && formik.errors.type}
                 isValid={formik.touched.type && !formik.errors.type}
@@ -374,7 +378,7 @@ function FormComponent() {
                 <Form.Control
                   placeholder={`Total of ${formik.values.type}`}
                   name="total"
-                  value={formik.values.total}
+                  value={formik.values.total || ''}
                   onChange={(e) =>
                     formik.setFieldValue(
                       'total',
@@ -387,10 +391,10 @@ function FormComponent() {
                   isInvalid={formik.touched.total && formik.errors.total}
                   isValid={formik.touched.total && !formik.errors.total}
                 />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.total}
+                </Form.Control.Feedback>
               </InputGroup>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.total}
-              </Form.Control.Feedback>
             </Form.Group>
           )}
         </Form.Row>

@@ -13,29 +13,26 @@ const schema = yup.object().shape({
     .max(999999999.99)
     .required()
     .transform((_value, originalValue) => sanitize.number(originalValue)),
-  activities: yup.array().when('type', {
-    is: 'appointments',
-    then: yup
-      .array()
-      .of(
+  activities: yup
+    .array()
+    .when('type', {
+      is: 'appointments',
+      then: yup.array().of(
         yup.object({
           id: yup.number(),
           quantity: yup
             .number()
             .min(1, 'quantity must be greater than or equal to 1')
-            .required('quantity must be required'),
+            .required('quantity is required'),
         })
-      )
-      .required('must have at least one activity'),
-    otherwise: yup
-      .array()
-      .of(
+      ),
+      otherwise: yup.array().of(
         yup.object({
           id: yup.number(),
         })
-      )
-      .required('must have at least one activity'),
-  }),
+      ),
+    })
+    .required('must have at least one activity'),
 
   category: yup.string().required(),
   categoryId: yup.number(),
