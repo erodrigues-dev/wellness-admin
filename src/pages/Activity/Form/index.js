@@ -46,7 +46,7 @@ function FormComponent() {
       categoryId: category !== undefined && category.id ? category.id : 1,
       showInApp: true,
       showInWeb: true,
-      maxPeople: 0,
+      maxPeople: '',
     },
   });
 
@@ -160,6 +160,7 @@ function FormComponent() {
       formik.setFieldValue('categoryId', data.id);
 
       setCategory(data);
+      setOpenAdd(false);
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -311,14 +312,23 @@ function FormComponent() {
           <Form.Group as={Col}>
             <Form.Label>Max Number of People</Form.Label>
             <Form.Control
-              type="number"
+              type="text"
               name="maxPeople"
               value={formik.values.maxPeople}
-              onChange={formik.handleChange}
+              onChange={(e) => {
+                const regex = /^[0-9]*$/g;
+                if (!regex.test(e.target.value)) {
+                  return;
+                }
+                formik.setFieldValue('maxPeople', e.target.value);
+              }}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.maxPeople && formik.errors.maxPeople}
               isValid={formik.touched.maxPeople && !formik.errors.maxPeople}
             />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.maxPeople}
+            </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>
 

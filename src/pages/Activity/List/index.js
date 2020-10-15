@@ -22,6 +22,7 @@ function List({ list, allowEdit }) {
             <th>Duration</th>
             <th>Employee</th>
             <th>Category</th>
+            <th>Max Number of People</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -52,6 +53,7 @@ function List({ list, allowEdit }) {
               <td>{`${item.duration}min`}</td>
               <td>{item.employee.name}</td>
               <td>{item.category.name}</td>
+              <td>{item.maxPeople || '-'}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}

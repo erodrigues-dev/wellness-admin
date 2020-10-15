@@ -42,7 +42,7 @@ const ModalCategory = ({
 
   return (
     <>
-      <Modal.Header close>
+      <Modal.Header closeButton>
         <Modal.Title>{`${isEdit ? 'Edit' : 'Add'} Category`}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -68,7 +68,7 @@ const ModalCategory = ({
                   value={formik.values.type}
                   onChange={(e) => formik.setFieldValue('type', e.target.value)}
                 >
-                  <option value="" disabled selected>
+                  <option value="" disabled>
                     Select type
                   </option>
                   <option value="activity">Activity</option>
