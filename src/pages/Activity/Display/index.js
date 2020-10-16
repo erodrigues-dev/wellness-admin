@@ -58,6 +58,12 @@ function DisplayComponent() {
         <DisplayInfo
           md="6"
           lg="4"
+          label="Category"
+          value={view.category?.name}
+        />
+        <DisplayInfo
+          md="6"
+          lg="4"
           label="Employee"
           value={view.employee?.name}
         />
@@ -67,14 +73,6 @@ function DisplayComponent() {
           label="Max Number of People"
           value={view.maxPeople || '-'}
         />
-        <Col md="6" lg="3" className="mb-3">
-          <p style={{ margin: 0 }}>
-            <DisplayCheck checked={view.showInApp} /> Show in App
-          </p>
-          <p style={{ margin: 0 }}>
-            <DisplayCheck checked={view.showInWeb} /> Show in Web
-          </p>
-        </Col>
       </Row>
 
       <Row>
@@ -84,6 +82,14 @@ function DisplayComponent() {
           label="Description"
           value={view.description}
         />
+        <Col md="6" lg="4" className="mb-3">
+          <p style={{ margin: 0 }}>
+            <DisplayCheck checked={view.showInApp} /> Show in App
+          </p>
+          <p style={{ margin: 0 }}>
+            <DisplayCheck checked={view.showInWeb} /> Show in Web
+          </p>
+        </Col>
       </Row>
 
       {view.imageUrl && (
