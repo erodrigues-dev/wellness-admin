@@ -6,6 +6,8 @@ import { useFormik } from 'formik';
 import useNotification from '~/contexts/notification';
 import service from '~/services/category';
 
+import schema from './schema';
+
 const ModalCategory = ({
   handleOpenModal,
   loadCategories,
@@ -14,6 +16,7 @@ const ModalCategory = ({
   const isEdit = !!selectedCategory;
   const { sendNotification } = useNotification();
   const formik = useFormik({
+    validationSchema: schema,
     initialValues: {
       id: isEdit ? selectedCategory.id : 0,
       name: isEdit ? selectedCategory.name : '',
@@ -49,12 +52,19 @@ const ModalCategory = ({
         <Form onSubmit={formik.handleSubmit}>
           <Row>
             <Form.Group as={Col}>
+              <Form.Label>Name</Form.Label>
               <Form.Control
                 placeholder="Name"
                 name="name"
                 value={formik.values.name}
                 onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.name && formik.errors.name}
+                isValid={formik.touched.name && !formik.errors.name}
               />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.name}
+              </Form.Control.Feedback>
             </Form.Group>
           </Row>
           {!isEdit && (
@@ -67,6 +77,9 @@ const ModalCategory = ({
                   name="type"
                   value={formik.values.type}
                   onChange={(e) => formik.setFieldValue('type', e.target.value)}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.type && formik.errors.type}
+                  isValid={formik.touched.type && !formik.errors.type}
                 >
                   <option value="" disabled>
                     Select type
@@ -74,6 +87,9 @@ const ModalCategory = ({
                   <option value="activity">Activity</option>
                   <option value="package">Package</option>
                 </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.type}
+                </Form.Control.Feedback>
               </Form.Group>
             </Row>
           )}
