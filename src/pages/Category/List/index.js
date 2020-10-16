@@ -13,7 +13,6 @@ function List({ list, allowEdit, setOpenEdit, setSelectedCategory }) {
         <thead>
           <tr>
             <th className="text-center">Actions</th>
-            <th>id</th>
             <th>Name</th>
             <th>Type</th>
             <th>Created At</th>
@@ -34,7 +33,6 @@ function List({ list, allowEdit, setOpenEdit, setSelectedCategory }) {
                   />
                 )}
               </td>
-              <td>{item.id}</td>
               <td>{item.name}</td>
               <td>{item.type}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>

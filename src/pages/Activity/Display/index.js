@@ -62,6 +62,22 @@ function DisplayComponent() {
         />
         <DisplayInfo
           md="6"
+          lg="4"
+          label="Max Number of People"
+          value={view.maxPeople || '-'}
+        />
+        <DisplayInfo
+          md="6"
+          lg="4"
+          label="Show In"
+          value={view.showInApp && 'App'}
+          secondValue={view.showInWeb && 'Web'}
+        />
+      </Row>
+
+      <Row>
+        <DisplayInfo
+          md="6"
           lg="8"
           label="Description"
           value={view.description}

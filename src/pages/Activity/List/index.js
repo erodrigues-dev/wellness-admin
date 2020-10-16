@@ -17,12 +17,11 @@ function List({ list, allowEdit }) {
         <thead>
           <tr>
             <th className="text-center">Actions</th>
+            <th>Category</th>
             <th>Name</th>
             <th>Price</th>
             <th>Duration</th>
             <th>Employee</th>
-            <th>Category</th>
-            <th>Max Number of People</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -48,12 +47,11 @@ function List({ list, allowEdit }) {
                 )}
               </td>
 
+              <td>{item.category.name}</td>
               <td>{item.name}</td>
               <td>{formatCurrency(item.price)}</td>
               <td>{`${item.duration}min`}</td>
               <td>{item.employee.name}</td>
-              <td>{item.category.name}</td>
-              <td>{item.maxPeople || '-'}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}

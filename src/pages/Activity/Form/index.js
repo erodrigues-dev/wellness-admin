@@ -295,7 +295,7 @@ function FormComponent() {
               name="showInApp"
               id="showInApp"
               custom
-              defaultChecked={formik.values.showInApp}
+              checked={formik.values.showInApp}
               onChange={formik.handleChange}
               label="Show in App"
             />
@@ -304,7 +304,7 @@ function FormComponent() {
               name="showInWeb"
               id="showInWeb"
               custom
-              defaultChecked={formik.values.showInWeb}
+              checked={formik.values.showInWeb}
               onChange={formik.handleChange}
               label="Show in Web"
             />
