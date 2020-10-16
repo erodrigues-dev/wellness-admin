@@ -9,7 +9,7 @@ const Modal = ({ children, title, setClose }) => {
       <Content>
         <header>
           <h1>{title}</h1>
-          <RiCloseLine onClick={() => setClose(false)} />
+          <RiCloseLine onClick={() => setClose(false)} title="Close" />
         </header>
         <main>{children}</main>
       </Content>

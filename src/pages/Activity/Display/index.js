@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, Row, Col, Button, Image } from 'react-bootstrap';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
+import DisplayCheck from '~/components/DisplayCheck';
 import DisplayInfo from '~/components/DisplayInfo';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
@@ -66,13 +67,14 @@ function DisplayComponent() {
           label="Max Number of People"
           value={view.maxPeople || '-'}
         />
-        <DisplayInfo
-          md="6"
-          lg="4"
-          label="Show In"
-          value={view.showInApp && 'App'}
-          secondValue={view.showInWeb && 'Web'}
-        />
+        <Col md="6" lg="3" className="mb-3">
+          <p style={{ margin: 0 }}>
+            <DisplayCheck checked={view.showInApp} /> Show in App
+          </p>
+          <p style={{ margin: 0 }}>
+            <DisplayCheck checked={view.showInWeb} /> Show in Web
+          </p>
+        </Col>
       </Row>
 
       <Row>

@@ -69,7 +69,6 @@ const ModalCategory = ({
               <Form.Control
                 as="select"
                 custom
-                placeholder="Type"
                 name="type"
                 value={formik.values.type}
                 onChange={(e) => formik.setFieldValue('type', e.target.value)}

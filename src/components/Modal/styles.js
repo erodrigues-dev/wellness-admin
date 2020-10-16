@@ -16,7 +16,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   background-color: #fff;
   max-height: 90%;
-  width: 800px;
+  width: ${(props) => (props.width ? 'props.width' : '500px')};
   max-width: 90%;
 
   header {

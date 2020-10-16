@@ -44,7 +44,7 @@ function FormComponent() {
       duration: '',
       description: '',
       employeeId: '',
-      categoryId: category !== undefined && category.id ? category.id : 1,
+      categoryId: category !== undefined && category.id ? category.id : 0,
       showInApp: true,
       showInWeb: true,
       maxPeople: '',
@@ -94,8 +94,6 @@ function FormComponent() {
   const loadCategories = useCallback(async () => {
     try {
       const { data } = await categoryService.listAll();
-
-      if (!id) formik.setFieldValue('categoryId', data[0].id);
 
       setCategories(data);
     } catch (error) {
@@ -160,7 +158,7 @@ function FormComponent() {
 
       formik.setFieldValue('categoryId', data.id);
 
-      setCategory(data);
+      setCategory('');
       setOpenAdd(false);
     } catch (error) {
       sendNotification(error.message, false);
@@ -255,7 +253,6 @@ function FormComponent() {
                 <Form.Control
                   as="select"
                   custom
-                  placeholder="Category"
                   name="categoryId"
                   value={formik.values.categoryId}
                   onChange={(e) => {
@@ -269,6 +266,9 @@ function FormComponent() {
                     formik.touched.categoryId && !formik.errors.categoryId
                   }
                 >
+                  <option value={0} disabled>
+                    Select a Category
+                  </option>
                   {categories.map((loadedCategory) => (
                     <option key={loadedCategory.id} value={loadedCategory.id}>
                       {loadedCategory.name}
@@ -280,11 +280,13 @@ function FormComponent() {
                     Add
                   </Button>
                 </InputGroup.Append>
+                {formik.errors && formik.errors.categoryId && (
+                  <Form.Control.Feedback type="invalid">
+                    {formik.errors.categoryId}
+                  </Form.Control.Feedback>
+                )}
               </InputGroup>
             )}
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.categoryId}
-            </Form.Control.Feedback>
           </Form.Group>
         </Form.Row>
 
