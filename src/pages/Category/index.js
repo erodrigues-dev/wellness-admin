@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Modal } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 
+import Modal from '~/components/Modal';
 import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
 import * as service from '~/services/category';
@@ -55,19 +56,23 @@ const Category = () => {
         onFilter={handleFilter}
         allowCreate={hasPermissionToCreate}
       />
-      <Modal show={openAdd} onHide={setOpenAdd}>
-        <ModalCategory
-          handleOpenModal={handleOpenAdd}
-          loadCategories={loadCategories}
-        />
-      </Modal>
-      <Modal show={openEdit} onHide={setOpenEdit}>
-        <ModalCategory
-          handleOpenModal={setOpenEdit}
-          loadCategories={loadCategories}
-          selectedCategory={selectedCategory}
-        />
-      </Modal>
+      {openAdd && (
+        <Modal setClose={setOpenAdd} title="Add Category">
+          <ModalCategory
+            handleOpenModal={handleOpenAdd}
+            loadCategories={loadCategories}
+          />
+        </Modal>
+      )}
+      {openEdit && (
+        <Modal setClose={setOpenEdit} title="Edit Category">
+          <ModalCategory
+            handleOpenModal={setOpenEdit}
+            loadCategories={loadCategories}
+            selectedCategory={selectedCategory}
+          />
+        </Modal>
+      )}
       <List
         list={list}
         allowEdit={hasPermissionToUpdate}

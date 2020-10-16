@@ -16,6 +16,7 @@ const Filter = ({ onFilter, allowCreate, handleOpenAdd }) => {
   });
 
   function handleSubmit(values) {
+    if (!values.name && !values.type) return;
     onFilter(values);
   }
 
@@ -40,6 +41,9 @@ const Filter = ({ onFilter, allowCreate, handleOpenAdd }) => {
               value={formik.values.type}
               onChange={formik.handleChange}
             >
+              <option value="" disabled>
+                Type
+              </option>
               <option value="activity">Activity</option>
               <option value="package">Package</option>
             </Form.Control>

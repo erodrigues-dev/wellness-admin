@@ -6,7 +6,7 @@ import {
   Button,
   Image,
   InputGroup,
-  Modal,
+  ModalBody,
   Row,
 } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
+import ModalComponent from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import masks from '~/helpers/masks';
@@ -379,45 +380,44 @@ function FormComponent() {
           </ButtonLoading>
         </Form.Row>
       </Form>
-      <Modal show={openAdd} onHide={() => setOpenAdd(false)}>
-        <Modal.Header close>
-          <Modal.Title>Add Category</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={formik.handleSubmit}>
-            <Row>
-              <Form.Group as={Col} md="12">
-                <Form.Control
-                  placeholder="Name"
-                  name="name"
-                  value={
-                    category !== undefined && category.id
-                      ? category.name
-                      : category
-                  }
-                  onChange={(e) => setCategory(e.target.value)}
-                />
-              </Form.Group>
-              <Col className="d-flex justify-content-end align-items-start">
-                <Button
-                  type="reset"
-                  className="ml-2"
-                  onClick={() => setOpenAdd(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="secondary"
-                  className="ml-2"
-                  onClick={createCategory}
-                >
-                  Add Category
-                </Button>
-              </Col>
-            </Row>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      {openAdd && (
+        <ModalComponent setClose={() => setOpenAdd(false)} title="Add Category">
+          <ModalBody>
+            <Form onSubmit={formik.handleSubmit}>
+              <Row>
+                <Form.Group as={Col} md="12">
+                  <Form.Control
+                    placeholder="Name"
+                    name="name"
+                    value={
+                      category !== undefined && category.id
+                        ? category.name
+                        : category
+                    }
+                    onChange={(e) => setCategory(e.target.value)}
+                  />
+                </Form.Group>
+                <Col className="d-flex justify-content-end align-items-start">
+                  <Button
+                    type="reset"
+                    className="ml-2"
+                    onClick={() => setOpenAdd(false)}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    className="ml-2"
+                    onClick={createCategory}
+                  >
+                    Add Category
+                  </Button>
+                </Col>
+              </Row>
+            </Form>
+          </ModalBody>
+        </ModalComponent>
+      )}
     </Card>
   );
 }
