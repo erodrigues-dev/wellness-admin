@@ -317,7 +317,8 @@ function FormComponent() {
             <Form.Control
               type="text"
               name="maxPeople"
-              value={formik.values.maxPeople}
+              // MaxPeople can come null, thats why the conditional
+              value={formik.values.maxPeople || ''}
               onChange={(e) => {
                 const regex = /^[0-9]*$/g;
                 if (!regex.test(e.target.value)) {

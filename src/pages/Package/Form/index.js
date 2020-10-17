@@ -49,8 +49,8 @@ function FormComponent() {
       activities: [],
       category: '',
       categoryId: 0,
-      recurrencyPay: 'one-time',
-      type: 'minutes',
+      recurrencyPay: '',
+      type: '',
       total: '',
     },
   });
@@ -296,6 +296,9 @@ function FormComponent() {
                 isInvalid={formik.touched.category && formik.errors.category}
                 isValid={formik.touched.category && !formik.errors.category}
               >
+                <option value="" disabled>
+                  Select a Category
+                </option>
                 {categories &&
                   categories.map((loadedCategory) => (
                     <option key={loadedCategory.id} value={loadedCategory.name}>
@@ -308,34 +311,37 @@ function FormComponent() {
                   Add
                 </Button>
               </InputGroup.Append>
+              {formik.errors.category && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.category}
+                </Form.Control.Feedback>
+              )}
             </InputGroup>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.category}
-            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group as={Col} md="6">
             <Form.Label>Recurrency Pay</Form.Label>
-            <InputGroup>
-              <Form.Control
-                placeholder="Recurrency Pay"
-                as="select"
-                custom
-                name="recurrencyPay"
-                value={formik.values.recurrencyPay}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={
-                  formik.touched.recurrencyPay && formik.errors.recurrencyPay
-                }
-                isValid={
-                  formik.touched.recurrencyPay && !formik.errors.recurrencyPay
-                }
-              >
-                <option value="one-time">One Time</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-              </Form.Control>
-            </InputGroup>
+            <Form.Control
+              placeholder="Recurrency Pay"
+              as="select"
+              custom
+              name="recurrencyPay"
+              value={formik.values.recurrencyPay}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={
+                formik.touched.recurrencyPay && formik.errors.recurrencyPay
+              }
+              isValid={
+                formik.touched.recurrencyPay && !formik.errors.recurrencyPay
+              }
+            >
+              <option value="" disabled>
+                Select a Recurrency Pay
+              </option>
+              <option value="one-time">One Time</option>
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </Form.Control>
             <Form.Control.Feedback type="invalid">
               {formik.errors.recurrencyPay}
             </Form.Control.Feedback>
@@ -345,27 +351,28 @@ function FormComponent() {
         <Form.Row>
           <Form.Group as={Col} md="6">
             <Form.Label>Package Type</Form.Label>
-            <InputGroup>
-              <Form.Control
-                placeholder="Package Type"
-                as="select"
-                custom
-                name="type"
-                value={formik.values.type}
-                onChange={(e) => {
-                  formik.setFieldValue('type', e.target.value);
-                  formik.setFieldValue('total', '');
-                }}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.type && formik.errors.type}
-                isValid={formik.touched.type && !formik.errors.type}
-              >
-                <option value="minutes">Minutes</option>
-                <option value="amount">Amount</option>
-                <option value="unlimited">Unlimited</option>
-                <option value="appointments">Appointments</option>
-              </Form.Control>
-            </InputGroup>
+            <Form.Control
+              placeholder="Package Type"
+              as="select"
+              custom
+              name="type"
+              value={formik.values.type}
+              onChange={(e) => {
+                formik.setFieldValue('type', e.target.value);
+                formik.setFieldValue('total', '');
+              }}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.type && formik.errors.type}
+              isValid={formik.touched.type && !formik.errors.type}
+            >
+              <option value="" disabled>
+                Select a Package Type
+              </option>
+              <option value="minutes">Minutes</option>
+              <option value="amount">Amount</option>
+              <option value="unlimited">Unlimited</option>
+              <option value="appointments">Appointments</option>
+            </Form.Control>
             <Form.Control.Feedback type="invalid">
               {formik.errors.type}
             </Form.Control.Feedback>
@@ -426,11 +433,7 @@ function FormComponent() {
                   <Form.Control
                     placeholder="Name"
                     name="name"
-                    value={
-                      category !== undefined && category.id
-                        ? category.name
-                        : category
-                    }
+                    defaultValue=""
                     onChange={(e) => setCategory(e.target.value)}
                   />
                 </Form.Group>

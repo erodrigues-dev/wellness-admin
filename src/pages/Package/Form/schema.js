@@ -35,7 +35,7 @@ const schema = yup.object().shape({
     .required('must have at least one activity'),
 
   category: yup.string().required(),
-  categoryId: yup.number(),
+  categoryId: yup.number().required(),
   recurrencyPay: yup.string().required(),
   type: yup.string().required(),
   total: yup
