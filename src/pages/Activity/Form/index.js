@@ -1,14 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Card,
-  Form,
-  Col,
-  Button,
-  Image,
-  InputGroup,
-  ModalBody,
-  Row,
-} from 'react-bootstrap';
+import { Card, Form, Col, Button, Image, InputGroup } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
@@ -18,6 +9,7 @@ import ModalComponent from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import masks from '~/helpers/masks';
+import ModalCategory from '~/pages/Category/Modal';
 import * as service from '~/services/activity';
 import * as categoryService from '~/services/category';
 import * as employeeService from '~/services/employee';
@@ -28,7 +20,6 @@ function FormComponent() {
   const [image, setImage] = useState({ file: null, url: null });
   const [employees, setEmployees] = useState([]);
   const [categories, setCategories] = useState();
-  const [category, setCategory] = useState();
   const [openAdd, setOpenAdd] = useState(false);
   const { sendNotification } = useNotification();
   const { id } = useParams();
@@ -44,7 +35,7 @@ function FormComponent() {
       duration: '',
       description: '',
       employeeId: '',
-      categoryId: category !== undefined && category.id ? category.id : 0,
+      categoryId: 0,
       showInApp: true,
       showInWeb: true,
       maxPeople: '',
@@ -146,23 +137,6 @@ function FormComponent() {
     const url = URL.createObjectURL(file);
 
     setImage({ file, url });
-  }
-
-  async function createCategory() {
-    try {
-      const { data } = await categoryService.create(category, 'activity');
-
-      sendNotification('Add category successfuly.');
-
-      loadCategories();
-
-      formik.setFieldValue('categoryId', data.id);
-
-      setCategory('');
-      setOpenAdd(false);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
   }
 
   return (
@@ -385,40 +359,12 @@ function FormComponent() {
       </Form>
       {openAdd && (
         <ModalComponent setClose={() => setOpenAdd(false)} title="Add Category">
-          <ModalBody>
-            <Form onSubmit={formik.handleSubmit}>
-              <Row>
-                <Form.Group as={Col} md="12">
-                  <Form.Control
-                    placeholder="Name"
-                    name="name"
-                    value={
-                      category !== undefined && category.id
-                        ? category.name
-                        : category
-                    }
-                    onChange={(e) => setCategory(e.target.value)}
-                  />
-                </Form.Group>
-                <Col className="d-flex justify-content-end align-items-start">
-                  <Button
-                    type="reset"
-                    className="ml-2"
-                    onClick={() => setOpenAdd(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="ml-2"
-                    onClick={createCategory}
-                  >
-                    Add Category
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          </ModalBody>
+          <ModalCategory
+            handleOpenModal={setOpenAdd}
+            handleValue={(e) => formik.setFieldValue('categoryId', e)}
+            addComponent="activity"
+            loadCategories={loadCategories}
+          />
         </ModalComponent>
       )}
     </Card>

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Col, Form, Row, Button, Modal } from 'react-bootstrap';
+import React, { useEffect } from 'react';
+import { Col, Form, Row, Button, ModalBody } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
@@ -12,6 +12,8 @@ const ModalCategory = ({
   handleOpenModal,
   loadCategories,
   selectedCategory,
+  addComponent,
+  handleValue,
 }) => {
   const isEdit = !!selectedCategory;
   const { sendNotification } = useNotification();
@@ -26,15 +28,21 @@ const ModalCategory = ({
     onReset: handleSubmit,
   });
 
+  useEffect(() => {
+    if (addComponent) formik.setFieldValue('type', addComponent);
+  }, [addComponent]);
+
   async function handleSubmit(values) {
     try {
       if (isEdit) {
-        await service.update(values.id, values.name, values.type);
+        await service.update(values.id, values.name);
       } else {
-        await service.create(values.name, values.type);
+        const { data } = await service.create(values.name, values.type);
+
+        if (addComponent) handleValue(data.id);
       }
 
-      sendNotification('Add category successfuly.');
+      sendNotification('Category created successfuly.');
 
       loadCategories();
       handleOpenModal(false);
@@ -44,7 +52,7 @@ const ModalCategory = ({
   }
 
   return (
-    <Modal.Body>
+    <ModalBody>
       <Form onSubmit={formik.handleSubmit}>
         <Row>
           <Form.Group as={Col}>
@@ -63,31 +71,32 @@ const ModalCategory = ({
             </Form.Control.Feedback>
           </Form.Group>
         </Row>
-        {!isEdit && (
-          <Row>
-            <Form.Group as={Col}>
-              <Form.Control
-                as="select"
-                custom
-                name="type"
-                value={formik.values.type}
-                onChange={(e) => formik.setFieldValue('type', e.target.value)}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.type && formik.errors.type}
-                isValid={formik.touched.type && !formik.errors.type}
-              >
-                <option value="" disabled>
-                  Select type
-                </option>
-                <option value="activity">Activity</option>
-                <option value="package">Package</option>
-              </Form.Control>
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.type}
-              </Form.Control.Feedback>
-            </Form.Group>
-          </Row>
-        )}
+        {!isEdit ||
+          (addComponent && (
+            <Row>
+              <Form.Group as={Col}>
+                <Form.Control
+                  as="select"
+                  custom
+                  name="type"
+                  value={formik.values.type}
+                  onChange={(e) => formik.setFieldValue('type', e.target.value)}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.type && formik.errors.type}
+                  isValid={formik.touched.type && !formik.errors.type}
+                >
+                  <option value="" disabled>
+                    Select type
+                  </option>
+                  <option value="activity">Activity</option>
+                  <option value="package">Package</option>
+                </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.type}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Row>
+          ))}
         <Row>
           <Col className="d-flex justify-content-end align-items-start">
             <Button
@@ -107,7 +116,7 @@ const ModalCategory = ({
           </Col>
         </Row>
       </Form>
-    </Modal.Body>
+    </ModalBody>
   );
 };
 

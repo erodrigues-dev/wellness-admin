@@ -1,13 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import {
-  Card,
-  Form,
-  Col,
-  Button,
-  InputGroup,
-  ModalBody,
-  Row,
-} from 'react-bootstrap';
+import { Card, Form, Col, Button, InputGroup } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
@@ -18,6 +10,7 @@ import ModalComponent from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import masks from '~/helpers/masks';
+import ModalCategory from '~/pages/Category/Modal';
 import * as categoryService from '~/services/category';
 import service from '~/services/package';
 
@@ -30,7 +23,6 @@ function FormComponent() {
   const [image, setImage] = useState({ file: null, url: null });
   const [categories, setCategories] = useState();
   const [openAdd, setOpenAdd] = useState(false);
-  const [category, setCategory] = useState();
   const { sendNotification } = useNotification();
   const { id } = useParams();
   const history = useHistory();
@@ -47,7 +39,6 @@ function FormComponent() {
       showInApp: true,
       showInWeb: true,
       activities: [],
-      category: '',
       categoryId: 0,
       recurrencyPay: '',
       type: '',
@@ -72,7 +63,6 @@ function FormComponent() {
           showInWeb: response.data.showInWeb ?? true,
           activities: response.data.activities,
           categoryId: response.data.category.id,
-          category: response.data.category.name,
           recurrencyPay: response.data.recurrencyPay,
           type: response.data.type,
           total: response.data.total,
@@ -92,8 +82,6 @@ function FormComponent() {
       const { data } = await categoryService.listAll();
 
       setCategories(data);
-
-      formik.setFieldValue('category', data[0].name);
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -107,22 +95,16 @@ function FormComponent() {
   }, [loadCategories]);
 
   async function handleSubmit(values, { setSubmitting }) {
-    const selectedCategory = categories.filter(
-      (loadedCategory) => loadedCategory.name === values.category
-    );
-
     try {
       if (id === undefined) {
         await service.create({
           ...values,
-          categoryId: selectedCategory[0].id,
           image: image.file,
         });
         sendNotification('Package created with success.');
       } else {
         await service.update({
           ...values,
-          categoryId: selectedCategory[0].id,
           image: image.file,
         });
         sendNotification('Package updated with success.');
@@ -149,27 +131,6 @@ function FormComponent() {
     const url = URL.createObjectURL(file);
 
     setImage({ file, url });
-  }
-
-  async function createCategory() {
-    try {
-      const { data } = await categoryService.create(category, 'package');
-
-      sendNotification('Add category successfuly.');
-
-      loadCategories();
-
-      formik.setFieldValue('category', data.name);
-
-      if (!id) {
-        formik.setFieldValue('categoryId', data.id);
-      }
-
-      setCategory(data);
-      setOpenAdd(false);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
   }
 
   return (
@@ -287,21 +248,23 @@ function FormComponent() {
                 as="select"
                 custom
                 placeholder="Category"
-                name="category"
-                value={formik.values.category}
+                name="categoryId"
+                value={formik.values.categoryId}
                 onChange={(e) => {
-                  formik.setFieldValue('category', e.target.value);
+                  formik.setFieldValue('categoryId', e.target.value);
                 }}
                 onBlur={formik.handleBlur}
-                isInvalid={formik.touched.category && formik.errors.category}
-                isValid={formik.touched.category && !formik.errors.category}
+                isInvalid={
+                  formik.touched.categoryId && formik.errors.categoryId
+                }
+                isValid={formik.touched.categoryId && !formik.errors.categoryId}
               >
-                <option value="" disabled>
+                <option value={0} disabled>
                   Select a Category
                 </option>
                 {categories &&
                   categories.map((loadedCategory) => (
-                    <option key={loadedCategory.id} value={loadedCategory.name}>
+                    <option key={loadedCategory.id} value={loadedCategory.id}>
                       {loadedCategory.name}
                     </option>
                   ))}
@@ -311,9 +274,9 @@ function FormComponent() {
                   Add
                 </Button>
               </InputGroup.Append>
-              {formik.errors.category && (
+              {formik.errors.categoryId && (
                 <Form.Control.Feedback type="invalid">
-                  {formik.errors.category}
+                  {formik.errors.categoryId}
                 </Form.Control.Feedback>
               )}
             </InputGroup>
@@ -426,36 +389,12 @@ function FormComponent() {
 
       {openAdd && (
         <ModalComponent setClose={() => setOpenAdd(false)} title="Add Category">
-          <ModalBody>
-            <Form onSubmit={formik.handleSubmit}>
-              <Row>
-                <Form.Group as={Col} md="12">
-                  <Form.Control
-                    placeholder="Name"
-                    name="name"
-                    defaultValue=""
-                    onChange={(e) => setCategory(e.target.value)}
-                  />
-                </Form.Group>
-                <Col className="d-flex justify-content-end align-items-start">
-                  <Button
-                    type="reset"
-                    className="ml-2"
-                    onClick={() => setOpenAdd(false)}
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="secondary"
-                    className="ml-2"
-                    onClick={createCategory}
-                  >
-                    Add Category
-                  </Button>
-                </Col>
-              </Row>
-            </Form>
-          </ModalBody>
+          <ModalCategory
+            handleOpenModal={setOpenAdd}
+            handleValue={(e) => formik.setFieldValue('categoryId', e)}
+            addComponent="package"
+            loadCategories={loadCategories}
+          />
         </ModalComponent>
       )}
     </Card>
