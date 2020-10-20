@@ -27,6 +27,7 @@ const Activities = ({ formik, packageType }) => {
       const newList = [{ ...item, quantity: 1 }, ...formik.values.activities];
       formik.setFieldValue('activities', newList);
       formik.setFieldTouched('activities', true);
+      activityRef.current.value = '';
     } else sendNotification('Select an activity', false);
   };
 

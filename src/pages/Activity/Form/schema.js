@@ -18,7 +18,7 @@ const schema = yup.object().shape({
   categoryId: yup.number().min(1, 'Select a Category').required(),
   showInApp: yup.boolean(),
   showInWeb: yup.boolean(),
-  maxPeople: yup.number().min(1),
+  maxPeople: yup.number().min(1).nullable(),
 });
 
 export default schema;
