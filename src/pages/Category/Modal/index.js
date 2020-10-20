@@ -15,7 +15,7 @@ const ModalCategory = ({
   addComponent,
   handleValue,
 }) => {
-  const isEdit = !!selectedCategory;
+  const isEdit = selectedCategory !== undefined;
   const { sendNotification } = useNotification();
   const formik = useFormik({
     validationSchema: schema,
@@ -30,6 +30,7 @@ const ModalCategory = ({
 
   useEffect(() => {
     if (addComponent) formik.setFieldValue('type', addComponent);
+    // eslint-disable-next-line
   }, [addComponent]);
 
   async function handleSubmit(values) {
@@ -71,32 +72,31 @@ const ModalCategory = ({
             </Form.Control.Feedback>
           </Form.Group>
         </Row>
-        {!isEdit ||
-          (addComponent && (
-            <Row>
-              <Form.Group as={Col}>
-                <Form.Control
-                  as="select"
-                  custom
-                  name="type"
-                  value={formik.values.type}
-                  onChange={(e) => formik.setFieldValue('type', e.target.value)}
-                  onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.type && formik.errors.type}
-                  isValid={formik.touched.type && !formik.errors.type}
-                >
-                  <option value="" disabled>
-                    Select type
-                  </option>
-                  <option value="activity">Activity</option>
-                  <option value="package">Package</option>
-                </Form.Control>
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.type}
-                </Form.Control.Feedback>
-              </Form.Group>
-            </Row>
-          ))}
+        {!isEdit && addComponent === undefined && (
+          <Row>
+            <Form.Group as={Col}>
+              <Form.Control
+                as="select"
+                custom
+                name="type"
+                value={formik.values.type}
+                onChange={(e) => formik.setFieldValue('type', e.target.value)}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.type && formik.errors.type}
+                isValid={formik.touched.type && !formik.errors.type}
+              >
+                <option value="" disabled>
+                  Select type
+                </option>
+                <option value="activity">Activity</option>
+                <option value="package">Package</option>
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.type}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Row>
+        )}
         <Row>
           <Col className="d-flex justify-content-end align-items-start">
             <Button

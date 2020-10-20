@@ -7,12 +7,11 @@ export { default as ActivityForm } from './Activity/Form';
 export { default as ActivityDisplay } from './Activity/Display';
 export { default as ActivitySchedule } from './Activity/Schedule';
 
+export { default as Category } from './Category';
 export { default as Customer } from './Customer';
 export { default as CustomerForm } from './Customer/Form';
 export { default as CustomerDisplay } from './Customer/Display';
-export { default as CustomPackage } from './Customer/CustomPackage';
-export { default as CustomPackageForm } from './Customer/CustomPackage/Form';
-export { default as CustomPackageDisplay } from './Customer/CustomPackage/Display';
+export { default as CustomerDashboard } from './Dashboard';
 
 export { default as Employee } from './Employee';
 export { default as EmployeeForm } from './Employee/Form';

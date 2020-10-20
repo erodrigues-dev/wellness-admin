@@ -58,7 +58,7 @@ function List({ list, allowEdit }) {
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan={4}>No record found</td>
+              <td colSpan={8}>No record found</td>
             </tr>
           )}
         </tbody>

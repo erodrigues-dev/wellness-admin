@@ -12,12 +12,11 @@ import {
   ActivityForm,
   ActivityDisplay,
   ActivitySchedule,
+  Category,
   Customer,
   CustomerForm,
   CustomerDisplay,
-  CustomPackage,
-  CustomPackageForm,
-  CustomPackageDisplay,
+  CustomerDashboard,
   Employee,
   EmployeeForm,
   EmployeeDisplay,
@@ -29,8 +28,6 @@ import {
   ProfileDisplay,
   NotAuthorized,
 } from '~/pages';
-import Category from '~/pages/Category';
-import Dashboard from '~/pages/Dashboard';
 
 const PrivateRoutes = () => {
   return (
@@ -106,29 +103,8 @@ const PrivateRoutes = () => {
           exact
           action={ACTIONS.UPDATE}
           functionality={FUNCTIONALITIES.PACKAGES}
-          path="/customers/:id/custom-packages"
-          component={CustomPackage}
-        />
-        <PrivateRoute
-          exact
-          action={ACTIONS.CREATE}
-          functionality={FUNCTIONALITIES.PACKAGES}
-          path="/customers/:id/custom-packages/create"
-          component={CustomPackageForm}
-        />
-        <PrivateRoute
-          exact
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.PACKAGES}
-          path="/customers/:id/custom-packages/:packageId"
-          component={CustomPackageForm}
-        />
-        <PrivateRoute
-          exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.PACKAGES}
-          path="/customers/:id/custom-packages/:packageId/display"
-          component={CustomPackageDisplay}
+          path="/customers/:id/dashboard"
+          component={CustomerDashboard}
         />
 
         <PrivateRoute
@@ -230,13 +206,6 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.CATEGORIES}
           path="/categories"
           component={Category}
-        />
-
-        <PrivateRoute
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.PROFILES}
-          path="/dashboard"
-          component={Dashboard}
         />
 
         <Route path="/404" component={NotAuthorized} />

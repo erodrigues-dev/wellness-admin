@@ -49,7 +49,7 @@ function Filter({ onFilter, allowCreate, list }) {
               value={formik.values.employeeId}
               onChange={formik.handleChange}
             >
-              <option value="">Selecione</option>
+              <option value="">All Employees</option>
               {employees.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.name}

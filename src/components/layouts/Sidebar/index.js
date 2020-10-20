@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiLogOut, FiEdit, FiSettings } from 'react-icons/fi';
+import { FiLogOut, FiEdit } from 'react-icons/fi';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
@@ -51,12 +51,6 @@ const Sidebar = ({ open, handleClose }) => {
               </Link>
             </Item>
           ))}
-          <Item onClick={handleClose}>
-            <Link to="dashboard">
-              <FiSettings size={24} />
-              Dashboard
-            </Link>
-          </Item>
 
           <Item onClick={signOut}>
             <div>
