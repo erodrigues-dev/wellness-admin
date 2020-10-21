@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiLogOut, FiEdit } from 'react-icons/fi';
+import { FiLogOut, FiEdit, FiSettings } from 'react-icons/fi';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
@@ -19,6 +19,8 @@ import {
 const Sidebar = ({ open, handleClose }) => {
   const { signOut, user, menu } = useAuth();
   const { pathname } = useLocation();
+  const menuItems = menu.filter((item) => item.subgroup === undefined);
+  const settingsItems = menu.filter((item) => item.subgroup === 'settings');
 
   const isActive = (path) => {
     return matchPath(pathname, { path });
@@ -43,12 +45,30 @@ const Sidebar = ({ open, handleClose }) => {
           <AvatarProfile>{user.profile?.name}</AvatarProfile>
         </AvatarContainer>
         <Menu>
-          {menu.map(({ path, title, Icon }) => (
+          {menuItems.map(({ path, title, Icon }) => (
             <Item key={path} active={isActive(path)} onClick={handleClose}>
               <Link to={path}>
                 <Icon size={24} />
                 {title}
               </Link>
+            </Item>
+          ))}
+
+          <Item onClick={handleClose} className="settings">
+            <Link to={settingsItems[0]?.path}>
+              <FiSettings size={24} />
+              Settings
+            </Link>
+          </Item>
+
+          {settingsItems.map(({ path, title }) => (
+            <Item
+              key={path}
+              active={isActive(path)}
+              subgroup="settings"
+              onClick={handleClose}
+            >
+              <Link to={path}>{title}</Link>
             </Item>
           ))}
 

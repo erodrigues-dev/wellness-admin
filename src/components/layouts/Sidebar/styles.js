@@ -67,11 +67,15 @@ export const AvatarProfile = styled.p`
 
 export const Menu = styled.ul`
   margin-top: 24px;
+
+  .settings {
+    margin-bottom: 0;
+  }
 `;
 export const Item = styled.li`
   cursor: pointer;
   color: #fff;
-  margin: 8px 16px;
+  margin: ${(props) => (props.subgroup === 'settings' ? '0' : '16px')};
   font-size: 12px;
   font-weight: 600;
   height: 50px;
@@ -89,6 +93,7 @@ export const Item = styled.li`
     text-decoration: none;
     color: #fff;
     flex: 1;
+    ${(props) => props.subgroup === 'settings' && 'margin-left: 65px;'}
   }
 
   svg {
