@@ -84,7 +84,7 @@ function FormComponent() {
 
   const loadCategories = useCallback(async () => {
     try {
-      const { data } = await categoryService.listAll();
+      const { data } = await categoryService.listByType('activity');
 
       setCategories(data);
     } catch (error) {

@@ -21,6 +21,10 @@ export function listAll(filters) {
   });
 }
 
+export function listByType(type) {
+  return api.get(`${ENDPOINT}?type=${type}`);
+}
+
 export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }

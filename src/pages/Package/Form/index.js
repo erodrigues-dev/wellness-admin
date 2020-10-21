@@ -79,7 +79,7 @@ function FormComponent() {
 
   const loadCategories = useCallback(async () => {
     try {
-      const { data } = await categoryService.listAll();
+      const { data } = await categoryService.listByType('package');
 
       setCategories(data);
     } catch (error) {
