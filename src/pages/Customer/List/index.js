@@ -40,7 +40,7 @@ function List({ list, allowEdit }) {
                       <FiEdit size="18" />
                     </Link>
                     <Link
-                      to={`/customers/${item.id}/custom-packages`}
+                      to={`/customers/${item.id}/dashboard`}
                       className="mr-2"
                       title="Custom Packages"
                     >

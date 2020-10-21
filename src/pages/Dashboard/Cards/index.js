@@ -1,34 +1,34 @@
 import React from 'react';
 import { Card, CardDeck } from 'react-bootstrap';
 
-import Appointments from './Appointments';
 import Discounts from './Discounts';
-import Orders from './Orders';
-import PrivateAnnotations from './PrivateAnnotations';
-import PublicAnnotations from './PublicAnnotations';
-import Waivers from './Waivers';
-import WorkoutLog from './WorkoutLog';
-import WorkoutProfile from './WorkoutProfile';
+// import Appointments from './Appointments';
+// import Orders from './Orders';
+// import PrivateAnnotations from './PrivateAnnotations';
+// import PublicAnnotations from './PublicAnnotations';
+// import Waivers from './Waivers';
+// import WorkoutLog from './WorkoutLog';
+// import WorkoutProfile from './WorkoutProfile';
 
 const Cards = () => {
   return (
     <Card>
-      <CardDeck>
+      {/* <CardDeck>
         <Appointments />
         <Orders />
       </CardDeck>
       <CardDeck>
         <WorkoutProfile />
         <WorkoutLog />
-      </CardDeck>
+      </CardDeck> */}
       <CardDeck>
         <Discounts />
-        <Waivers />
+        {/* <Waivers /> */}
       </CardDeck>
-      <CardDeck>
+      {/* <CardDeck>
         <PrivateAnnotations />
         <PublicAnnotations />
-      </CardDeck>
+      </CardDeck> */}
     </Card>
   );
 };

@@ -36,4 +36,8 @@ export const Content = styled.div`
       cursor: pointer;
     }
   }
+
+  main {
+    padding: 25px;
+  }
 `;

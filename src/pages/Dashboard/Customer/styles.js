@@ -4,6 +4,7 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  margin-bottom: 25px;
 
   .counters {
     display: flex;

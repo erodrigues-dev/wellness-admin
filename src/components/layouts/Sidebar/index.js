@@ -55,7 +55,7 @@ const Sidebar = ({ open, handleClose }) => {
           ))}
 
           <Item onClick={handleClose} className="settings">
-            <Link to={settingsItems[0]?.path}>
+            <Link to={settingsItems[0]?.path || '/'}>
               <FiSettings size={24} />
               Settings
             </Link>
