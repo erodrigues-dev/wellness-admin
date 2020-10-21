@@ -22,8 +22,8 @@ const Activities = ({ formik, packageType }) => {
 
   const addItem = () => {
     const name = activityRef.current.value;
-    if (name) {
-      const item = activities.find((x) => x.name === name);
+    const item = activities.find((x) => x.name === name);
+    if (name && item !== undefined) {
       const newList = [{ ...item, quantity: 1 }, ...formik.values.activities];
       formik.setFieldValue('activities', newList);
       formik.setFieldTouched('activities', true);
