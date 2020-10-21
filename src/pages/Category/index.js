@@ -41,6 +41,7 @@ const Category = () => {
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
+    setPage(1);
   }
 
   function handlePagination(current) {
