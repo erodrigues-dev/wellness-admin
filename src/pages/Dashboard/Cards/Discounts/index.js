@@ -1,11 +1,31 @@
-import React, { useState } from 'react';
-import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Card, Col, Row } from 'react-bootstrap';
 
-import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
+import useNotification from '~/contexts/notification';
+import * as service from '~/services/discount';
+
+import ModalForm from '../../../Discount/Form';
+import List from './List';
 
 const Discounts = () => {
+  const { sendNotification } = useNotification();
   const [openAdd, setOpenAdd] = useState(false);
+  const [discounts, setDiscounts] = useState();
+
+  const listDiscounts = useCallback(async () => {
+    try {
+      const { data } = await service.listAll();
+
+      setDiscounts(data);
+    } catch (error) {
+      sendNotification(error.message);
+    }
+  }, [sendNotification]);
+
+  useEffect(() => {
+    listDiscounts();
+  }, [listDiscounts]);
 
   return (
     <Card>
@@ -16,7 +36,7 @@ const Discounts = () => {
           </Col>
           <Col className="d-flex justify-content-end">
             <Button
-              variant="outline-primary"
+              variant="outline-secondary"
               className="ml-2"
               onClick={() => setOpenAdd(true)}
             >
@@ -28,64 +48,12 @@ const Discounts = () => {
           </Col>
         </Row>
       </Card.Header>
+      <Card.Body>
+        <List list={discounts} />
+      </Card.Body>
       {openAdd && (
         <Modal title="Add Discount" setClose={setOpenAdd}>
-          <Form>
-            <Form.Group>
-              <Form.Check
-                custom
-                inline
-                type="radio"
-                label="Package"
-                id="Package"
-                name="package-activity"
-              />
-              <Form.Check
-                custom
-                inline
-                type="radio"
-                label="Activity"
-                id="Activity"
-                name="package-activity"
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Package/Activity</Form.Label>
-              <Form.Control placeholder="Package/Activity" name="duration" />
-            </Form.Group>
-            <Form.Group>
-              <Form.Check
-                custom
-                inline
-                type="radio"
-                label="Percent"
-                id="Percent"
-                name="amount-percent"
-              />
-              <Form.Check
-                custom
-                inline
-                type="radio"
-                label="Amount"
-                id="Amount"
-                name="amount-percent"
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Percent/Amount</Form.Label>
-              <Form.Control placeholder="Percent/Amount" name="duration" />
-            </Form.Group>
-            <Form.Row className="d-flex justify-content-end">
-              <Button
-                variant="secondary"
-                className="mr-2"
-                onClick={() => setOpenAdd(false)}
-              >
-                Cancel
-              </Button>
-              <ButtonLoading type="submit">Save</ButtonLoading>
-            </Form.Row>
-          </Form>
+          <ModalForm setClose={setOpenAdd} />
         </Modal>
       )}
     </Card>

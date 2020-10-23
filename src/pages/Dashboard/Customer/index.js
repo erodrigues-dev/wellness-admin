@@ -8,7 +8,7 @@ const Customer = ({ user }) => {
   return (
     <Container>
       <Avatar name={user.name} imageUrl={user.imageUrl} />
-      <div className="counters">
+      {/* <div className="counters">
         <div className="counter">
           <p>200</p>
           <span>counter</span>
@@ -33,7 +33,7 @@ const Customer = ({ user }) => {
           <p>200</p>
           <span>counter</span>
         </div>
-      </div>
+      </div> */}
     </Container>
   );
 };

@@ -5,6 +5,7 @@ export const FUNCTIONALITIES = {
   PACKAGES: 'packages',
   PROFILES: 'profiles',
   CATEGORIES: 'categories',
+  DISCOUNTS: 'discounts',
 };
 
 export function listAll() {

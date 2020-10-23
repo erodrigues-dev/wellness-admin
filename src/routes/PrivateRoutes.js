@@ -28,6 +28,7 @@ import {
   ProfileDisplay,
   NotAuthorized,
 } from '~/pages';
+import Discount from '~/pages/Discount';
 
 const PrivateRoutes = () => {
   return (
@@ -206,6 +207,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.CATEGORIES}
           path="/categories"
           component={Category}
+        />
+
+        <PrivateRoute
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.DISCOUNTS}
+          path="/discounts"
+          component={Discount}
         />
 
         <Route path="/404" component={NotAuthorized} />

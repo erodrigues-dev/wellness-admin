@@ -48,4 +48,11 @@ export const MENU = [
     functionality: FUNCTIONALITIES.CATEGORIES,
     subgroup: 'settings',
   },
+  {
+    title: 'Discounts',
+    path: '/discounts',
+    Icon: FiPenTool,
+    functionality: FUNCTIONALITIES.DISCOUNTS,
+    subgroup: 'settings',
+  },
 ];
