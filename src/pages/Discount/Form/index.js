@@ -35,7 +35,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
       relationType: isAdd ? '' : selected.relationType,
       relationId: isAdd ? 0 : selected.relationId,
       type: isAdd ? '' : selected.type,
-      value: isAdd ? 0 : selected.value,
+      value: isAdd ? '' : selected.value,
     },
   });
 
@@ -98,6 +98,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
   function handleRelationType(e) {
     const { id: inputId } = e.target;
     formik.setFieldValue('relationType', inputId);
+    formik.setFieldValue('relationId', 0);
 
     if (inputId === 'package' && packages === undefined) {
       listPackages();
@@ -111,6 +112,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
   function handleType(e) {
     const { id: inputId } = e.target;
     formik.setFieldValue('type', inputId);
+    formik.setFieldValue('value', '');
   }
 
   function handleValue(e) {
