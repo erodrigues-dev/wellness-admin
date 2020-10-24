@@ -26,15 +26,13 @@ export function get(id) {
 }
 
 export function create({ customerId, type, value, relationType, relationId }) {
-  const formData = new FormData();
-
-  formData.append('customerId', customerId);
-  formData.append('type', type);
-  formData.append('value', value);
-  formData.append('relationType', relationType);
-  formData.append('relationId', relationId);
-
-  return api.post(ENDPOINT, formData);
+  return api.post(ENDPOINT, {
+    customerId,
+    type,
+    value,
+    relationType,
+    relationId,
+  });
 }
 
 export function update({
@@ -45,16 +43,18 @@ export function update({
   relationType,
   relationId,
 }) {
-  const formData = new FormData();
+  return api.put(ENDPOINT, {
+    id,
+    customerId,
+    type,
+    value,
+    relationType,
+    relationId,
+  });
+}
 
-  formData.append('id', id);
-  formData.append('customerId', customerId);
-  formData.append('type', type);
-  formData.append('value', value);
-  formData.append('relationType', relationType);
-  formData.append('relationId', relationId);
-
-  return api.put(ENDPOINT, formData);
+export function destroy(id) {
+  return api.delete(`${ENDPOINT}/${id}`);
 }
 
 const service = {

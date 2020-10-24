@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
@@ -7,6 +7,7 @@ import useNotification from '~/contexts/notification';
 import * as service from '~/services/discount';
 
 import Filter from './Filter';
+import ModalForm from './Form';
 import List from './List';
 
 const Discount = () => {
@@ -24,19 +25,23 @@ const Discount = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
-  // const [filter, setFilter] = useState({ customer: '' });
-  const [filter, setFilter] = useState('');
+  const [filter, setFilter] = useState({ customerId: '', relationName: '' });
+  const [openAdd, setOpenAdd] = useState(false);
+
+  const listDiscounts = useCallback(async () => {
+    try {
+      const { data, headers } = await service.list(page, filter);
+
+      setList(data);
+      setTotal(parseInt(headers['x-total-count']));
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [page, filter, sendNotification]);
 
   useEffect(() => {
-    service
-      .list(page, filter)
-      .then((response) => {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
-      })
-      .catch(({ message }) => sendNotification(message, false));
-    // eslint-disable-next-line
-  }, [page, filter]);
+    listDiscounts();
+  }, [listDiscounts]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -47,23 +52,45 @@ const Discount = () => {
     setPage(current);
   }
 
+  async function handleDelete(id) {
+    try {
+      await service.destroy(id);
+
+      sendNotification('Discount deleted.');
+      listDiscounts();
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }
+
   return (
-    <Card body>
-      <Card.Title>Discounts</Card.Title>
-      <hr />
-      <Filter
-        onFilter={handleFilter}
-        allowCreate={hasPermissionToCreate}
-        list={list}
-      />
-      <List list={list} allowEdit={hasPermissionToUpdate} />
-      <Paginate
-        activePage={page}
-        itemsCountPerPage={10}
-        totalItemsCount={total}
-        onChange={handlePagination}
-      />
-    </Card>
+    <>
+      <Card body>
+        <Card.Title>Discounts</Card.Title>
+        <hr />
+        <Filter
+          onFilter={handleFilter}
+          allowCreate={hasPermissionToCreate}
+          list={list}
+          setOpenAdd={setOpenAdd}
+        />
+        <List
+          list={list}
+          allowEdit={hasPermissionToUpdate}
+          reloadList={listDiscounts}
+          handleDelete={handleDelete}
+        />
+        <Paginate
+          activePage={page}
+          itemsCountPerPage={10}
+          totalItemsCount={total}
+          onChange={handlePagination}
+        />
+      </Card>
+      {openAdd && (
+        <ModalForm setClose={setOpenAdd} reloadList={listDiscounts} />
+      )}
+    </>
   );
 };
 

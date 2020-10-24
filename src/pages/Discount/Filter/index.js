@@ -3,15 +3,12 @@ import { Form, Col, Row, Button } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
-import Modal from '~/components/Modal';
 import * as customerService from '~/services/customer';
 
-import ModalForm from '../Form';
 import { Container } from './styles';
 
-function Filter({ onFilter, allowCreate }) {
+function Filter({ onFilter, allowCreate, setOpenAdd }) {
   const [customers, setCustomers] = useState([]);
-  const [openAdd, setOpenAdd] = useState(false);
   const formik = useFormik({
     initialValues: { customerId: 0, relationName: '' },
     onSubmit: handleSubmit,
@@ -69,17 +66,12 @@ function Filter({ onFilter, allowCreate }) {
                 className="ml-2"
                 onClick={() => setOpenAdd(true)}
               >
-                Add Activity
+                Add Discount
               </Button>
             )}
           </Col>
         </Row>
       </Form>
-      {openAdd && (
-        <Modal setClose={setOpenAdd} title="Add Discount">
-          <ModalForm setClose={setOpenAdd} />
-        </Modal>
-      )}
     </Container>
   );
 }

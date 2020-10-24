@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
 import {
   FiActivity,
@@ -9,9 +9,19 @@ import {
   FiTrash,
 } from 'react-icons/fi';
 
+import ModalForm from '~/pages/Discount/Form';
+
 import { Container } from './styles';
 
-const List = ({ list }) => {
+const List = ({ list, reloadList, handleDelete, allowEdit }) => {
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selected, setSelected] = useState();
+
+  function handleEdit(item) {
+    setOpenEdit(true);
+    setSelected(item);
+  }
+
   return (
     <Container>
       {list?.map((item) => (
@@ -23,19 +33,34 @@ const List = ({ list }) => {
             </div>
             <div className="value">
               {item.type === 'percent' ? <FiPercent /> : <FiDollarSign />}
-              <span>{item.value}</span>
+              <span>
+                {item.type === 'amount' ? item.value.toFixed(2) : item.value}
+              </span>
             </div>
           </div>
-          <div className="buttons">
-            <Button variant="secondary" className="mr-2">
-              <FiEdit2 color="white" />
-            </Button>
-            <Button variant="danger">
-              <FiTrash />
-            </Button>
-          </div>
+          {allowEdit && (
+            <div className="buttons">
+              <Button
+                variant="secondary"
+                className="mr-2"
+                onClick={() => handleEdit(item)}
+              >
+                <FiEdit2 color="white" />
+              </Button>
+              <Button variant="danger" onClick={() => handleDelete(item.id)}>
+                <FiTrash />
+              </Button>
+            </div>
+          )}
         </li>
       ))}
+      {openEdit && (
+        <ModalForm
+          setClose={setOpenEdit}
+          reloadList={reloadList}
+          selected={selected}
+        />
+      )}
     </Container>
   );
 };
