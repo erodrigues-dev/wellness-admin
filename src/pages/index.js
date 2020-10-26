@@ -11,7 +11,7 @@ export { default as Category } from './Category';
 export { default as Customer } from './Customer';
 export { default as CustomerForm } from './Customer/Form';
 export { default as CustomerDisplay } from './Customer/Display';
-export { default as CustomerDashboard } from './Dashboard';
+export { default as CustomerDashboard } from './Customer/Dashboard';
 
 export { default as Employee } from './Employee';
 export { default as EmployeeForm } from './Employee/Form';

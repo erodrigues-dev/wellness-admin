@@ -8,4 +8,8 @@ export const Container = styled.div`
       margin-left: 8px;
     }
   }
+
+  .relation-name svg {
+    margin-right: 5px;
+  }
 `;

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from 'react-bootstrap';
+import { confirmAlert } from 'react-confirm-alert';
 import {
   FiActivity,
   FiDollarSign,
@@ -20,6 +21,23 @@ const List = ({ list, reloadList, handleDelete, allowEdit }) => {
   function handleEdit(item) {
     setOpenEdit(true);
     setSelected(item);
+  }
+
+  function confirmDelete(item) {
+    return confirmAlert({
+      title: 'Delete Discount',
+      message: 'Are you sure that you want to delete this discount?',
+      buttons: [
+        {
+          label: 'Cancel',
+          onClick: () => {},
+        },
+        {
+          label: 'Confirm',
+          onClick: () => handleDelete(item.id),
+        },
+      ],
+    });
   }
 
   return (
@@ -47,7 +65,7 @@ const List = ({ list, reloadList, handleDelete, allowEdit }) => {
               >
                 <FiEdit2 color="white" />
               </Button>
-              <Button variant="danger" onClick={() => handleDelete(item.id)}>
+              <Button variant="danger" onClick={() => confirmDelete(item)}>
                 <FiTrash />
               </Button>
             </div>

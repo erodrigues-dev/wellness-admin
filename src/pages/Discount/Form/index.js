@@ -139,7 +139,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
               isInvalid={formik.touched.customerId && formik.errors.customerId}
               isValid={formik.touched.customerId && !formik.errors.customerId}
             >
-              <option value={0} disabled>
+              <option value="" disabled>
                 Select an option
               </option>
               {customers?.map((customer) => (

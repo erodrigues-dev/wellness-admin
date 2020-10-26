@@ -43,7 +43,9 @@ const ModalCategory = ({
         if (addComponent) handleValue(data.id);
       }
 
-      sendNotification('Category created successfuly.');
+      sendNotification(
+        `Category ${isEdit ? 'edited' : 'created'} successfuly.`
+      );
 
       loadCategories();
       handleOpenModal(false);
