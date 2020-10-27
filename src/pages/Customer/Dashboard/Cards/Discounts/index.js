@@ -55,7 +55,7 @@ const Discounts = () => {
     <Card>
       <Card.Header>
         <Row>
-          <Col md="10" className="d-flex align-items-center">
+          <Col className="d-flex align-items-center">
             <span>Discounts</span>
           </Col>
           <Col className="d-flex justify-content-end">

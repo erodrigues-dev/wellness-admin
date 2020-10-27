@@ -1,65 +1,45 @@
 import React from 'react';
-import { Button, ButtonGroup, Card, ListGroup } from 'react-bootstrap';
-import { RiPencilLine, RiUserAddLine, RiDeleteBin2Line } from 'react-icons/ri';
+import { Button, Card, Col, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
-import Image from '~assets/images/avatar.svg';
+import useAuth from '~/contexts/auth';
+
+import List from './List';
 
 const Orders = () => {
+  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
+  const hasPermissionToCreate = hasPermission(
+    FUNCTIONALITIES.ACTIVITIES,
+    ACTIONS.CREATE
+  );
+
   return (
     <Card>
       <Card.Header>
-        <Card.Title>Orders</Card.Title>
-        <Button variant="outline-primary">Checkout</Button>
-        <Button variant="outline-primary">See More</Button>
+        <Row>
+          <Col className="d-flex align-items-center">
+            <span>Orders</span>
+          </Col>
+          <Col className="d-flex justify-content-end">
+            {hasPermissionToCreate && (
+              <Button
+                variant="outline-secondary"
+                className="ml-2"
+                onClick={() => {}}
+              >
+                Checkout
+              </Button>
+            )}
+            <Link to="/discounts">
+              <Button variant="outline-primary" className="ml-2">
+                See More
+              </Button>
+            </Link>
+          </Col>
+        </Row>
       </Card.Header>
       <Card.Body>
-        <ListGroup>
-          <ListGroup.Item>
-            <img src={Image} height="50" alt="profile" />
-            <span>Activity Name</span>
-            <ButtonGroup>
-              <Button variant="secondary">
-                <RiPencilLine />
-              </Button>
-              <Button variant="success">
-                <RiUserAddLine />
-              </Button>
-              <Button variant="danger">
-                <RiDeleteBin2Line />
-              </Button>
-            </ButtonGroup>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <img src={Image} height="50" alt="profile" />
-            <span>Activity Name</span>
-            <ButtonGroup>
-              <Button variant="secondary">
-                <RiPencilLine />
-              </Button>
-              <Button variant="success">
-                <RiUserAddLine />
-              </Button>
-              <Button variant="danger">
-                <RiDeleteBin2Line />
-              </Button>
-            </ButtonGroup>
-          </ListGroup.Item>
-          <ListGroup.Item>
-            <img src={Image} height="50" alt="profile" />
-            <span>Activity Name</span>
-            <ButtonGroup>
-              <Button variant="secondary">
-                <RiPencilLine />
-              </Button>
-              <Button variant="success">
-                <RiUserAddLine />
-              </Button>
-              <Button variant="danger">
-                <RiDeleteBin2Line />
-              </Button>
-            </ButtonGroup>
-          </ListGroup.Item>
-        </ListGroup>
+        <List />
       </Card.Body>
     </Card>
   );

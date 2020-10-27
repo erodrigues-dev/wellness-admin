@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardDeck } from 'react-bootstrap';
 
+import Appointments from './Appointments';
 import Discounts from './Discounts';
-// import Appointments from './Appointments';
-// import Orders from './Orders';
+import Orders from './Orders';
 // import PrivateAnnotations from './PrivateAnnotations';
 // import PublicAnnotations from './PublicAnnotations';
 // import Waivers from './Waivers';
@@ -13,11 +13,11 @@ import Discounts from './Discounts';
 const Cards = () => {
   return (
     <Card>
-      {/* <CardDeck>
+      <CardDeck>
         <Appointments />
         <Orders />
       </CardDeck>
-      <CardDeck>
+      {/* <CardDeck>
         <WorkoutProfile />
         <WorkoutLog />
       </CardDeck> */}
