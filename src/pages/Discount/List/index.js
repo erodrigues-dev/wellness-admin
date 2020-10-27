@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
-import { FiDollarSign, FiEdit, FiPercent, FiTrash } from 'react-icons/fi';
+import { FiPackage, FiEdit, FiActivity, FiTrash } from 'react-icons/fi';
 
 import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import * as dateHelper from '~/helpers/date';
@@ -64,13 +64,17 @@ function List({ list, allowEdit, reloadList, handleDelete }) {
 
               <td>{item.customerName}</td>
               <td className="relation-name">
-                {item.type === 'percent' ? <FiPercent /> : <FiDollarSign />}
+                {item.relationType === 'package' ? (
+                  <FiPackage />
+                ) : (
+                  <FiActivity />
+                )}
                 {item.relationName}
               </td>
               <td>{`${
                 item.type === 'amount'
                   ? formatCurrency(item.value)
-                  : `${item.value} %`
+                  : `${item.value}%`
               }`}</td>
               <td>{item.type}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
