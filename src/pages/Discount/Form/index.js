@@ -76,12 +76,20 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
   }, [listCustomers]);
 
   useEffect(() => {
-    if (formik.values.relationType && formik.values.relationType === 'activity')
+    if (
+      formik.values.relationType &&
+      formik.values.relationType === 'activity' &&
+      activities === undefined
+    )
       listActivities();
   }, [formik.values.relationType, listActivities]);
 
   useEffect(() => {
-    if (formik.values.relationType && formik.values.relationType === 'package')
+    if (
+      formik.values.relationType &&
+      formik.values.relationType === 'package' &&
+      packages === undefined
+    )
       listPackages();
   }, [formik.values.relationType, listPackages]);
 
