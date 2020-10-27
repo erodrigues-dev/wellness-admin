@@ -28,7 +28,6 @@ function List({ list, allowEdit, reloadList, handleDelete }) {
             <th>Customer</th>
             <th>Activity/Package</th>
             <th>Discount</th>
-            <th>Type</th>
             <th>Created At</th>
             <th>Created By</th>
           </tr>
@@ -76,14 +75,13 @@ function List({ list, allowEdit, reloadList, handleDelete }) {
                   ? formatCurrency(item.value)
                   : `${item.value}%`
               }`}</td>
-              <td>{item.type}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
               <td>{item.userName}</td>
             </tr>
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan={10}>No record found</td>
+              <td colSpan={9}>No record found</td>
             </tr>
           )}
         </tbody>
