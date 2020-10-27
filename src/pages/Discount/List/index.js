@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Table } from 'react-bootstrap';
-import { confirmAlert } from 'react-confirm-alert';
 import { FiDollarSign, FiEdit, FiPercent, FiTrash } from 'react-icons/fi';
 
+import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import * as dateHelper from '~/helpers/date';
 import { currency } from '~/helpers/intl';
 
@@ -17,23 +17,6 @@ function List({ list, allowEdit, reloadList, handleDelete }) {
   function handleEdit(item) {
     setOpenEdit(true);
     setSelected(item);
-  }
-
-  function confirmDelete(item) {
-    return confirmAlert({
-      title: 'Delete Discount',
-      message: 'Are you sure that you want to delete this discount?',
-      buttons: [
-        {
-          label: 'Cancel',
-          onClick: () => {},
-        },
-        {
-          label: 'Confirm',
-          onClick: () => handleDelete(item.id),
-        },
-      ],
-    });
   }
 
   return (
@@ -67,7 +50,13 @@ function List({ list, allowEdit, reloadList, handleDelete }) {
                       title="Delete"
                       size="18"
                       style={{ cursor: 'pointer' }}
-                      onClick={() => confirmDelete(item)}
+                      onClick={() =>
+                        confirmHandler(
+                          'Delete Discount',
+                          'Are you sure you want to delete this discount?',
+                          () => handleDelete(item.id)
+                        )
+                      }
                     />
                   </>
                 )}

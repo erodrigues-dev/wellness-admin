@@ -1,6 +1,28 @@
 import React from 'react';
-import { confirmAlert } from 'react-confirm-alert';
+import { Button } from 'react-bootstrap';
 
-const ConfirmAlert = ({ title, message, confirmFunction }) => {};
+import { Container } from './styles';
+
+const ConfirmAlert = ({ title, message, close, action }) => {
+  function handleConfirm() {
+    action();
+    close();
+  }
+
+  return (
+    <Container>
+      <h1>{title}</h1>
+      <p>{message}</p>
+      <div className="buttons">
+        <Button variant="primary" className="mr-2" onClick={close}>
+          Cancel
+        </Button>
+        <Button variant="danger" onClick={handleConfirm}>
+          Confirm
+        </Button>
+      </div>
+    </Container>
+  );
+};
 
 export default ConfirmAlert;
