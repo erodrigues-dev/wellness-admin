@@ -5,4 +5,10 @@ export const Container = styled.div`
   box-shadow: 0px 1px 1px 1px rgba(0, 0, 0, 0.2);
   padding: 25px;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+
+  .buttons {
+    align-self: flex-end;
+  }
 `;
