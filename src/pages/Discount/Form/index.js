@@ -105,14 +105,6 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
     const { id: inputId } = e.target;
     formik.setFieldValue('relationType', inputId);
     formik.setFieldValue('relationId', 0);
-
-    if (inputId === 'package' && packages === undefined) {
-      listPackages();
-    }
-
-    if (inputId === 'activity' && activities === undefined) {
-      listActivities();
-    }
   }
 
   function handleType(e) {
