@@ -13,6 +13,14 @@ export function index(page, filter) {
   });
 }
 
+export function listAll(filters) {
+  return api.get(ENDPOINT, {
+    params: {
+      ...filters,
+    },
+  });
+}
+
 export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }

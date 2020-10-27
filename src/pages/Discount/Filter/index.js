@@ -16,7 +16,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
   });
 
   useEffect(() => {
-    customerService.index().then((response) => setCustomers(response.data));
+    customerService.listAll().then((response) => setCustomers(response.data));
   }, []);
 
   function handleSubmit(values) {

@@ -40,14 +40,16 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
   });
 
   const listCustomers = useCallback(async () => {
-    try {
-      const { data } = await customerService.index();
+    if (!id) {
+      try {
+        const { data } = await customerService.listAll();
 
-      setCustomers(data);
-    } catch (error) {
-      sendNotification(error.message, false);
+        setCustomers(data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
     }
-  }, [sendNotification]);
+  }, [id, sendNotification]);
 
   const listActivities = useCallback(async () => {
     try {
@@ -61,7 +63,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
 
   const listPackages = useCallback(async () => {
     try {
-      const { data } = await packageService.default.index();
+      const { data } = await packageService.listAll();
 
       setPackages(data);
     } catch (error) {
@@ -72,11 +74,15 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
   useEffect(() => {
     listCustomers();
   }, [listCustomers]);
+
   useEffect(() => {
-    if (formik.values.relationType === 'activity') listActivities();
+    if (formik.values.relationType && formik.values.relationType === 'activity')
+      listActivities();
   }, [formik.values.relationType, listActivities]);
+
   useEffect(() => {
-    if (formik.values.relationType === 'package') listPackages();
+    if (formik.values.relationType && formik.values.relationType === 'package')
+      listPackages();
   }, [formik.values.relationType, listPackages]);
 
   async function handleSubmit(data) {
