@@ -1,15 +1,4 @@
-import React, { useState } from 'react';
-import { Button } from 'react-bootstrap';
-import {
-  FiActivity,
-  FiDollarSign,
-  FiEdit2,
-  FiPackage,
-  FiPercent,
-  FiTrash,
-} from 'react-icons/fi';
-
-import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
+import React from 'react';
 
 import { Container } from './styles';
 
