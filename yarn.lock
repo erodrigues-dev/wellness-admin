@@ -9721,6 +9721,11 @@ react-spring@^8.0.25:
     "@babel/runtime" "^7.3.1"
     prop-types "^15.5.8"
 
+react-step-wizard@^5.3.5:
+  version "5.3.5"
+  resolved "https://registry.yarnpkg.com/react-step-wizard/-/react-step-wizard-5.3.5.tgz#eabed30bad156f72f9ec99081613c171a15f914b"
+  integrity sha512-43xbYuovqGKIJ/bNBVDHWNpxYYJvgS0nNUlPTc170xwxXxiQOw9DytvljIJiXShZ3NHhlx+KMshj8w1GWgphFw==
+
 react-timekeeper@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/react-timekeeper/-/react-timekeeper-2.1.1.tgz#babe5a2f968b3003b25d5a4a9d6aba25ab34936a"

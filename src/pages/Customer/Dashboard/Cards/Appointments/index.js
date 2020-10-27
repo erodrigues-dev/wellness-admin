@@ -28,14 +28,14 @@ const Appointments = () => {
             {hasPermissionToCreate && (
               <Button
                 variant="outline-secondary"
-                className="ml-2"
+                className="ml-2 text-nowrap"
                 onClick={() => {}}
               >
                 Book Now
               </Button>
             )}
             <Link to="/discounts">
-              <Button variant="outline-primary" className="ml-2">
+              <Button variant="outline-primary" className="ml-2 text-nowrap">
                 See More
               </Button>
             </Link>

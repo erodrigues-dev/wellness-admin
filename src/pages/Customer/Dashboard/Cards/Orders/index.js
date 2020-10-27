@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
+import Modal from '~/components/Modal';
 import useAuth from '~/contexts/auth';
 
 import List from './List';
+import OrderWizard from './OrderWizard';
 
 const Orders = () => {
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
@@ -12,6 +14,7 @@ const Orders = () => {
     FUNCTIONALITIES.ACTIVITIES,
     ACTIONS.CREATE
   );
+  const [openCheckout, setOpenCheckout] = useState(false);
 
   return (
     <Card>
@@ -20,18 +23,18 @@ const Orders = () => {
           <Col className="d-flex align-items-center">
             <span>Orders</span>
           </Col>
-          <Col className="d-flex justify-content-end">
+          <Col className="d-flex justify-content-end align-items-center">
             {hasPermissionToCreate && (
               <Button
                 variant="outline-secondary"
                 className="ml-2"
-                onClick={() => {}}
+                onClick={() => setOpenCheckout(true)}
               >
                 Checkout
               </Button>
             )}
             <Link to="/discounts">
-              <Button variant="outline-primary" className="ml-2">
+              <Button variant="outline-primary" className="ml-2 text-nowrap">
                 See More
               </Button>
             </Link>
@@ -41,6 +44,11 @@ const Orders = () => {
       <Card.Body>
         <List />
       </Card.Body>
+      {openCheckout && (
+        <Modal title="Create Order" setClose={setOpenCheckout}>
+          <OrderWizard setClose={setOpenCheckout} />
+        </Modal>
+      )}
     </Card>
   );
 };

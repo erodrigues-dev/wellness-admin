@@ -197,7 +197,11 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
 
         <Form.Group>
           <Form.Label>
-            {formik.values.relationType === 'activity' ? 'Activity' : 'Package'}
+            {formik.values.relationType === 'activity'
+              ? 'Activity'
+              : formik.values.relationType === 'package'
+              ? 'Package'
+              : 'Activity/Package'}
           </Form.Label>
           <Form.Control
             as="select"
@@ -267,10 +271,20 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
 
         <Form.Group>
           <Form.Label>
-            {formik.values.type === 'amount' ? 'Amount' : 'Percent'}
+            {formik.values.type === 'amount'
+              ? 'Amount'
+              : formik.values.type === 'percent'
+              ? 'Percent'
+              : 'Amount/Percent'}
           </Form.Label>
           <Form.Control
-            placeholder={formik.values.type === 'amount' ? 'Amount' : 'Percent'}
+            placeholder={
+              formik.values.type === 'amount'
+                ? 'Amount'
+                : formik.values.type === 'percent'
+                ? 'Percent'
+                : 'Amount/Percent'
+            }
             name="value"
             value={formik.values.value}
             onChange={handleValue}
