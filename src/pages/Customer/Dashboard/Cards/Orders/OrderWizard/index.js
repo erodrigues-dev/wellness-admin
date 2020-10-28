@@ -1,5 +1,4 @@
-import React from 'react';
-import StepWizard from 'react-step-wizard';
+import React, { useState } from 'react';
 
 import CreateOrder from './CreateOrder';
 import PayCreditCard from './PayCreditCard';
@@ -7,13 +6,13 @@ import PayMoney from './PayMoney';
 import { Container } from './styles';
 
 const OrderWizard = ({ setClose }) => {
+  const [page, setPage] = useState(1);
+
   return (
     <Container>
-      <StepWizard>
-        <CreateOrder setClose={setClose} />
-        <PayCreditCard setClose={setClose} />
-        <PayMoney setClose={setClose} />
-      </StepWizard>
+      {page === 1 && <CreateOrder setClose={setClose} setPage={setPage} />}
+      {page === 2 && <PayCreditCard setClose={setClose} />}
+      {page === 3 && <PayMoney setClose={setClose} />}
     </Container>
   );
 };

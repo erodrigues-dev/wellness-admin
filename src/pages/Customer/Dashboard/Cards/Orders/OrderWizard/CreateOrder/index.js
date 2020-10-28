@@ -9,7 +9,7 @@ import InputDatePicker from '~/components/InputDatePicker';
 
 import schema from './schema';
 
-const CreateOrder = ({ setClose, goToStep }) => {
+const CreateOrder = ({ setClose, setPage }) => {
   const [minDate] = useState(new Date());
   const formik = useFormik({
     validationSchema: schema,
@@ -107,14 +107,14 @@ const CreateOrder = ({ setClose, goToStep }) => {
           type="submit"
           className="mr-2"
           loading={formik.isSubmitting}
-          onClick={() => goToStep(2)}
+          onClick={() => setPage(2)}
         >
           Pay With Credit Card
         </ButtonLoading>
         <ButtonLoading
           type="submit"
           loading={formik.isSubmitting}
-          onClick={() => goToStep(3)}
+          onClick={() => setPage(3)}
         >
           Pay With Money
         </ButtonLoading>
