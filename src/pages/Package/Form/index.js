@@ -133,6 +133,19 @@ function FormComponent() {
     setImage({ file, url });
   }
 
+  function handlePackageTypeChange(e) {
+    formik.setFieldValue('type', e.target.value);
+    formik.setFieldValue('total', '');
+    if (
+      e.target.value === 'appointments' &&
+      formik.values.activities.length > 0
+    ) {
+      formik.values.activities.map((activity, index) =>
+        formik.setFieldValue(`activities[${index}].quantity`, 1)
+      );
+    }
+  }
+
   return (
     <Card body>
       <Card.Title>{action}</Card.Title>
@@ -320,10 +333,7 @@ function FormComponent() {
               custom
               name="type"
               value={formik.values.type}
-              onChange={(e) => {
-                formik.setFieldValue('type', e.target.value);
-                formik.setFieldValue('total', '');
-              }}
+              onChange={handlePackageTypeChange}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.type && formik.errors.type}
               isValid={formik.touched.type && !formik.errors.type}

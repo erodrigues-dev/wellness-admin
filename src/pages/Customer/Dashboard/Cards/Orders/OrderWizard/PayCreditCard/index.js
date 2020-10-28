@@ -1,7 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
+
+import PaymentForm from './PaymentForm';
 
 const PayCreditCard = () => {
-  return <div>PayCreditCard</div>;
+  const [loaded, setLoaded] = useState(false);
+  const sqPaymentScript = document.createElement('script');
+  sqPaymentScript.src = 'https://js.squareup.com/v2/paymentform';
+  sqPaymentScript.type = 'text/javascript';
+  sqPaymentScript.async = false;
+  sqPaymentScript.onload = () => {
+    setLoaded(true);
+  };
+  document.getElementsByTagName('head')[0].appendChild(sqPaymentScript);
+  return <>{loaded && <PaymentForm paymentForm={window.SqPaymentForm} />}</>;
 };
 
 export default PayCreditCard;

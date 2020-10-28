@@ -82,7 +82,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
       activities === undefined
     )
       listActivities();
-  }, [formik.values.relationType, listActivities]);
+  }, [formik.values.relationType, listActivities, activities]);
 
   useEffect(() => {
     if (
@@ -91,7 +91,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
       packages === undefined
     )
       listPackages();
-  }, [formik.values.relationType, listPackages]);
+  }, [formik.values.relationType, listPackages, packages]);
 
   async function handleSubmit(data) {
     try {
