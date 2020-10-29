@@ -12,7 +12,7 @@ const PayCreditCard = () => {
     setLoaded(true);
   };
   document.getElementsByTagName('head')[0].appendChild(sqPaymentScript);
-  return <>{loaded && <PaymentForm paymentForm={window.SqPaymentForm} />}</>;
+  return <>{loaded && <PaymentForm Payment={window.SqPaymentForm} />}</>;
 };
 
 export default PayCreditCard;
