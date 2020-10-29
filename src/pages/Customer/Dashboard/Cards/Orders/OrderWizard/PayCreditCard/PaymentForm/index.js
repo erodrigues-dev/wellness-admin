@@ -1,57 +1,32 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
-import Feedback from 'react-bootstrap/esm/Feedback';
 
-import { useFormik } from 'formik';
-
-import schema from './schema';
 import { Container } from './styles';
 
-const PaymentForm = ({ Payment }) => {
+const PaymentForm = ({ SqPaymentForm }) => {
   const [paymentInfo, setPaymentInfo] = useState({
     cardBrand: '',
     nonce: undefined,
-  });
-  const formik = useFormik({
-    validationSchema: schema,
-    onSubmit: handleSubmit,
-    initialValues: {},
   });
 
   useEffect(() => {
     const config = {
       applicationId: process.env.REACT_APP_SQUARE_APP_ID,
-      locationId: 'GMT96A77XABR1',
+      locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
+      token: process.env.REACT_APP_SQUARE_TOKEN,
       inputClass: 'sq-input',
       autoBuild: false,
-      inputStyles: [
-        {
-          fontSize: '16px',
-          fontFamily: 'Helvetica Neue',
-          padding: '16px',
-          color: '#373F4A',
-          backgroundColor: 'transparent',
-          lineHeight: '1.15em',
-          placeholderColor: '#000',
-          _webkitFontSmoothing: 'antialiased',
-          _mozOsxFontSmoothing: 'grayscale',
-        },
-      ],
       cardNumber: {
         elementId: 'sq-card-number',
-        placeholder: '• • • •  • • • •  • • • •  • • • •',
       },
       cvv: {
         elementId: 'sq-cvv',
-        placeholder: 'CVV',
       },
       expirationDate: {
         elementId: 'sq-expiration-date',
-        placeholder: 'MM/YY',
       },
       postalCode: {
         elementId: 'sq-postal-code',
-        placeholder: 'Zip',
       },
       callbacks: {
         createPaymentRequest: () => {
@@ -124,114 +99,48 @@ const PaymentForm = ({ Payment }) => {
         },
       },
     };
-    const paymentForm = new Payment(config);
+    const paymentForm = new SqPaymentForm(config);
     paymentForm.build();
-  }, []);
-
-  function handleSubmit() {}
+  }, [SqPaymentForm]);
 
   return (
     <Container>
-      {/* payment form */}
-      {console.log(paymentInfo.cardBrand)}
-
-      <div id="sq-ccbox">
-        <p>
-          <span>Enter Card Info Below </span>
-          <span>
-            {paymentInfo.cardBrand !== undefined &&
-              paymentInfo.cardBrand.toUpperCase()}
-          </span>
-        </p>
-        <div id="cc-field-wrapper">
-          <div id="sq-card-number" />
-          <input type="hidden" id="card-nonce" name="nonce" />
-          <div id="sq-expiration-date" />
-          <div id="sq-cvv" />
-        </div>
-        <input id="name" type="text" placeholder="Name" />
-        <div id="sq-postal-code" />
-      </div>
-      {/* <Form>
+      <Form id="form-container">
         <Form.Label>New Card</Form.Label>
         <Form.Group>
           <Form.Label>Card holder name</Form.Label>
-          <Form.Control
-            placeholder="Name"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.name && formik.errors.name}
-            isValid={formik.touched.name && !formik.errors.name}
-          />
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.name}
-          </Form.Control.Feedback>
+          <Form.Control id="name" placeholder="Name" name="name" />
         </Form.Group>
         <Form.Group>
           <Form.Label>Card Number</Form.Label>
           <Form.Control
-            placeholder="Name"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.name && formik.errors.name}
-            isValid={formik.touched.name && !formik.errors.name}
+            id="sq-card-number"
+            placeholder="ex: xxxx xxxx xxxx xxxx"
+            name="sq-card-number"
           />
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.name}
-          </Form.Control.Feedback>
         </Form.Group>
 
         <Row className="d-flex ">
           <Col md="3">
             <Form.Group>
-              <Form.Label>MM</Form.Label>
+              <Form.Label>Expiration Date</Form.Label>
               <Form.Control
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.name && formik.errors.name}
-                isValid={formik.touched.name && !formik.errors.name}
+                placeholder="ex: 01/20"
+                id="sq-expiration-date"
+                name="sq-expiration-date"
               />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
-              </Form.Control.Feedback>
             </Form.Group>
           </Col>
           <Col md="3">
             <Form.Group>
-              <Form.Label>MM</Form.Label>
-              <Form.Control
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.name && formik.errors.name}
-                isValid={formik.touched.name && !formik.errors.name}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
-              </Form.Control.Feedback>
+              <Form.Label>Security Code</Form.Label>
+              <Form.Control id="sq-cvv" placeholder="ex: 000" name="sq-cvv" />
             </Form.Group>
           </Col>
           <Col md="6">
             <Form.Group>
-              <Form.Label>CVV</Form.Label>
-              <Form.Control
-                name="name"
-                value={formik.values.name}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.name && formik.errors.name}
-                isValid={formik.touched.name && !formik.errors.name}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.name}
-              </Form.Control.Feedback>
+              <Form.Label>Zip Code</Form.Label>
+              <Form.Control id="sq-postal-code" name="sq-postal-code" />
             </Form.Group>
           </Col>
         </Row>
@@ -245,17 +154,9 @@ const PaymentForm = ({ Payment }) => {
             label="Save card"
             id="package"
             name="relationType"
-            value={formik.values.relationType}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={
-              formik.touched.relationType && formik.errors.relationType
-            }
-            isValid={formik.touched.relationType && !formik.errors.relationType}
           />
-          <Feedback type="invalid">{formik.errors.relationType}</Feedback>
         </Form.Group>
-      </Form> */}
+      </Form>
     </Container>
   );
 };
