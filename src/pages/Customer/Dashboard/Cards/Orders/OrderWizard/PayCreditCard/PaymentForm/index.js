@@ -1,120 +1,94 @@
-// // /* eslint-disable jsx-a11y/control-has-associated-label */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+
+import useNotification from '~/contexts/notification';
 
 import { Container } from './styles';
 
-const PaymentForm = ({ SqPaymentForm, applicationId, locationId }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [paymentInfo, setPaymentInfo] = useState({
-    cardBrand: '',
-    nonce: undefined,
-  });
-  const [paymentForm, setPaymentForm] = useState();
-
-  useEffect(() => {
-    const config = {
-      applicationId,
-      locationId,
-      inputClass: 'sq-input',
-      autoBuild: false,
-      cardNumber: {
-        elementId: 'sq-card-number',
-        placeholder: 'ex: xxxx xxxx xxxx xxxx',
-      },
-      cvv: {
-        elementId: 'sq-cvv',
-        placeholder: 'ex: 000',
-      },
-      expirationDate: {
-        elementId: 'sq-expiration-date',
-        placeholder: 'ex: 12/21',
-      },
-      postalCode: {
-        elementId: 'sq-postal-code',
-        placeholder: 'ex: 1111111',
-      },
-      callbacks: {
-        createPaymentRequest: () => {
-          return {
-            requestShippingAddress: false,
-            requestBillingInfo: true,
-            currencyCode: 'USD',
-            countryCode: 'US',
-            total: {
-              label: 'MERCHANT NAME',
+const PaymentForm = ({ SqPaymentForm }) => {
+  const { sendNotification } = useNotification();
+  const config = {
+    applicationId: 'sq0idp-rARHLPiahkGtp6mMz2OeCA',
+    locationId: 'GMT96A77XABR1',
+    inputClass: 'sq-input',
+    autoBuild: false,
+    cardNumber: {
+      elementId: 'sq-card-number',
+      placeholder: 'ex: xxxx xxxx xxxx xxxx',
+    },
+    cvv: {
+      elementId: 'sq-cvv',
+      placeholder: 'ex: 000',
+    },
+    expirationDate: {
+      elementId: 'sq-expiration-date',
+      placeholder: 'ex: 12/21',
+    },
+    postalCode: {
+      elementId: 'sq-postal-code',
+      placeholder: 'ex: 1111111',
+    },
+    callbacks: {
+      createPaymentRequest: () => {
+        return {
+          requestShippingAddress: false,
+          requestBillingInfo: true,
+          currencyCode: 'USD',
+          countryCode: 'US',
+          total: {
+            label: 'MERCHANT NAME',
+            amount: '100',
+            pending: false,
+          },
+          lineItems: [
+            {
+              label: 'Subtotal',
               amount: '100',
               pending: false,
             },
-            lineItems: [
-              {
-                label: 'Subtotal',
-                amount: '100',
-                pending: false,
-              },
-            ],
-          };
-        },
-        cardNonceResponseReceived: (errors, nonce) => {
-          if (errors) {
-            // Log errors from nonce generation to the Javascript console
-            console.log('Encountered errors:');
-            errors.forEach((error) => {
-              console.log(`  ${error.message}`);
-            });
-
-            return;
-          }
-          console.log(nonce);
-          setPaymentInfo({
-            nonce,
-          });
-        },
-        unsupportedBrowserDetected: () => {},
-        inputEventReceived: (inputEvent) => {
-          switch (inputEvent.eventType) {
-            case 'focusClassAdded':
-              break;
-            case 'focusClassRemoved':
-              break;
-            case 'errorClassAdded':
-              document.getElementById('error').innerHTML =
-                'Please fix card information errors before continuing.';
-              break;
-            case 'errorClassRemoved':
-              document.getElementById('error').style.display = 'none';
-              break;
-            case 'cardBrandChanged':
-              if (inputEvent.cardBrand !== 'unknown') {
-                setPaymentInfo({
-                  cardBrand: inputEvent.cardBrand,
-                });
-              } else {
-                setPaymentInfo({
-                  cardBrand: '',
-                });
-              }
-              break;
-            case 'postalCodeChanged':
-              break;
-            default:
-              break;
-          }
-        },
-        paymentFormLoaded: () => {
-          document.getElementById('name').style.display = 'inline-flex';
-        },
+          ],
+        };
       },
-    };
-    const newForm = new SqPaymentForm(config);
-    setPaymentForm(newForm);
-    newForm.build();
-    // eslint-disable-next-line
-  }, []);
+      cardNonceResponseReceived: (errors) => {
+        if (errors) {
+          errors.forEach((error) => {
+            sendNotification(`  ${error.message}`, false);
+          });
+        }
+      },
+      unsupportedBrowserDetected: () => {},
+      inputEventReceived: (inputEvent) => {
+        switch (inputEvent.eventType) {
+          case 'focusClassAdded':
+            break;
+          case 'focusClassRemoved':
+            break;
+          case 'errorClassAdded':
+            document.getElementById('error').innerHTML =
+              'Please fix card information errors before continuing.';
+            break;
+          case 'errorClassRemoved':
+            document.getElementById('error').style.display = 'none';
+            break;
+          case 'cardBrandChanged':
+            break;
+          case 'postalCodeChanged':
+            break;
+          default:
+            break;
+        }
+      },
+      paymentFormLoaded: () => {
+        document.getElementById('name').style.display = 'inline-flex';
+      },
+    },
+  };
+  const paymentForm = new SqPaymentForm(config);
+  paymentForm.build();
 
-  useEffect(() => {
-    console.log(paymentForm);
-  }, [paymentForm]);
+  const requestCardNonce = () => {
+    paymentForm.requestCardNonce();
+  };
 
   return (
     <Container>
@@ -176,10 +150,7 @@ const PaymentForm = ({ SqPaymentForm, applicationId, locationId }) => {
           <Button
             variant="secondary"
             className="mr-2 button-credit-card"
-            // onClick={() => {
-            //   console.log(paymentForm.cardNonceResponseReceived());
-            // }}
-            onClick={paymentForm?.requestCardNonce}
+            onClick={requestCardNonce}
           >
             Request
           </Button>

@@ -23,8 +23,6 @@ const PayCreditCard = () => {
         <PaymentForm
           SqPaymentForm={window.SqPaymentForm}
           // paymentForm={window.SqPaymentForm}
-          applicationId="sq0idp-rARHLPiahkGtp6mMz2OeCA"
-          locationId="GMT96A77XABR1"
         />
       )}
     </>
