@@ -6,6 +6,7 @@ export const FUNCTIONALITIES = {
   PROFILES: 'profiles',
   CATEGORIES: 'categories',
   DISCOUNTS: 'discounts',
+  ORDERS: 'orders',
 };
 
 export function listAll() {

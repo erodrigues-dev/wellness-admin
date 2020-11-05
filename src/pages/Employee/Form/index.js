@@ -41,13 +41,13 @@ function EmployeeForm() {
     employeeService
       .get(id)
       .then((response) => {
-        const { name, email, profileId, specialty, imageUrl } = response.data;
+        const { name, email, profile, specialty, imageUrl } = response.data;
 
         formik.setValues({
           id,
           name,
           email,
-          profileId,
+          profileId: profile.id,
           specialty: specialty || '',
           imageUrl: imageUrl || '',
           password: '',
@@ -58,7 +58,7 @@ function EmployeeForm() {
     // TODO
     // React Hook useEffect has missing dependencies
     // eslint-disable-next-line
-  }, [id]);
+  }, [id, sendNotification]);
 
   useEffect(() => {
     profileService.listAll().then((response) => setProfiles(response.data));

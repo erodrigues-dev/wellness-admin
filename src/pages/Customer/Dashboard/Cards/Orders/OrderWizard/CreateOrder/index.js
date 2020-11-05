@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
+import { currency } from '~/helpers/intl';
 import * as activityService from '~/services/activity';
 import * as packageService from '~/services/package';
 
@@ -17,6 +18,9 @@ const CreateOrder = ({ setClose, setPage }) => {
   const [activities, setActivities] = useState();
   const [packages, setPackages] = useState();
   const [selectedRelation, setSelectedRelation] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [discount, setDiscount] = useState(0);
+  const [selectedPage, setSelectedPage] = useState(0);
   const [minDate] = useState(new Date());
   const formik = useFormik({
     validationSchema: schema,
@@ -26,6 +30,7 @@ const CreateOrder = ({ setClose, setPage }) => {
       relationType: '',
       relationId: '',
       quantity: 1,
+      date: '',
     },
   });
 
@@ -73,7 +78,16 @@ const CreateOrder = ({ setClose, setPage }) => {
     formik.setFieldValue('relationId', '');
   }
 
-  function handleSubmit() {}
+  function handleSubmit(data) {
+    console.log(data);
+    setPage(selectedPage);
+  }
+
+  function subtotalCalc() {
+    const subtotal =
+      (selectedRelation?.price + discount) * formik.values.quantity;
+    return currency.format(subtotal || 0);
+  }
 
   return (
     <Form onSubmit={formik.handleSubmit}>
@@ -176,14 +190,25 @@ const CreateOrder = ({ setClose, setPage }) => {
           <Form.Label>Due Date</Form.Label>
           <InputDatePicker
             min={minDate}
-            name="expiration"
-            value={formik.values.expiration}
+            name="date"
+            value={formik.values.date}
             onChange={formik.handleChange}
-            isInvalid={formik.touched.expiration && formik.errors.expiration}
-            isValid={formik.touched.expiration && !formik.errors.expiration}
+            isInvalid={formik.touched.date && formik.errors.date}
+            isValid={formik.touched.date && !formik.errors.date}
           />
         </Form.Group>
       )}
+      <ul>
+        <li>
+          Price: <span>{currency.format(selectedRelation?.price || 0)}</span>
+        </li>
+        <li>
+          Discount: <span>10% ou $10.00</span>
+        </li>
+        <li>
+          Subtotal: <span>{subtotalCalc()}</span>
+        </li>
+      </ul>
 
       <Form.Group className="d-flex justify-content-end mt-5">
         <Button
@@ -198,14 +223,20 @@ const CreateOrder = ({ setClose, setPage }) => {
           type="submit"
           className="mr-2"
           loading={formik.isSubmitting}
-          onClick={() => setPage(2)}
+          onClick={() => {
+            formik.handleSubmit();
+            setSelectedPage(2);
+          }}
         >
           Pay With Credit Card
         </ButtonLoading>
         <ButtonLoading
           type="submit"
           loading={formik.isSubmitting}
-          onClick={() => setPage(3)}
+          onClick={() => {
+            formik.handleSubmit();
+            setSelectedPage(3);
+          }}
         >
           Pay With Money
         </ButtonLoading>
