@@ -49,7 +49,9 @@ const PaymentForm = ({ SqPaymentForm }) => {
           ],
         };
       },
-      cardNonceResponseReceived: (errors) => {
+      cardNonceResponseReceived: (errors, nonce, cardData) => {
+        // console.log(nonce);
+        // console.log(cardData);
         if (errors) {
           errors.forEach((error) => {
             sendNotification(`  ${error.message}`, false);
@@ -100,28 +102,20 @@ const PaymentForm = ({ SqPaymentForm }) => {
         </Form.Group>
         <Form.Group>
           <Form.Label>Card Number</Form.Label>
-          <Form.Control
-            id="sq-card-number"
-            placeholder="ex: xxxx xxxx xxxx xxxx"
-            name="sq-card-number"
-          />
+          <Form.Control id="sq-card-number" name="sq-card-number" />
         </Form.Group>
 
         <Row className="d-flex ">
           <Col md="3">
             <Form.Group>
               <Form.Label>Expiration Date</Form.Label>
-              <Form.Control
-                placeholder="ex: 01/20"
-                id="sq-expiration-date"
-                name="sq-expiration-date"
-              />
+              <Form.Control id="sq-expiration-date" name="sq-expiration-date" />
             </Form.Group>
           </Col>
           <Col md="3">
             <Form.Group>
               <Form.Label>Security Code</Form.Label>
-              <Form.Control id="sq-cvv" placeholder="ex: 000" name="sq-cvv" />
+              <Form.Control id="sq-cvv" name="sq-cvv" />
             </Form.Group>
           </Col>
           <Col md="6">

@@ -17,16 +17,16 @@ const PayCreditCard = () => {
     document.getElementsByTagName('head')[0].appendChild(sqPaymentScript);
   }, []);
 
-  return (
-    <>
-      {loaded && (
-        <PaymentForm
-          SqPaymentForm={window.SqPaymentForm}
-          // paymentForm={window.SqPaymentForm}
-        />
-      )}
-    </>
-  );
+  if (loaded) {
+    return (
+      <PaymentForm
+        SqPaymentForm={window.SqPaymentForm}
+        // paymentForm={window.SqPaymentForm}
+      />
+    );
+  }
+
+  return null;
 };
 
 export default PayCreditCard;
