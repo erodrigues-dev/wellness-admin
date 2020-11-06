@@ -12,8 +12,10 @@ import * as activityService from '~/services/activity';
 import * as packageService from '~/services/package';
 
 import schema from './schema';
+import { useParams } from 'react-router-dom';
 
-const CreateOrder = ({ setClose, setPage }) => {
+const CreateOrder = ({ setClose, setPage, setOrder }) => {
+  const { id } = useParams();
   const { sendNotification } = useNotification();
   const [activities, setActivities] = useState();
   const [packages, setPackages] = useState();
@@ -26,11 +28,11 @@ const CreateOrder = ({ setClose, setPage }) => {
     validationSchema: schema,
     onSubmit: handleSubmit,
     initialValues: {
-      customerId: 0,
       relationType: '',
-      relationId: '',
+      relation: '',
       quantity: 1,
       date: '',
+      customerId: id,
     },
   });
 
@@ -75,11 +77,11 @@ const CreateOrder = ({ setClose, setPage }) => {
   function handleRelationType(e) {
     const { id: inputId } = e.target;
     formik.setFieldValue('relationType', inputId);
-    formik.setFieldValue('relationId', '');
+    formik.setFieldValue('relation', '');
   }
 
   function handleSubmit(data) {
-    console.log(data);
+    setOrder({ ...data, relation: selectedRelation });
     setPage(selectedPage);
   }
 
@@ -133,12 +135,12 @@ const CreateOrder = ({ setClose, setPage }) => {
         <Form.Control
           as="select"
           custom
-          name="relationId"
-          value={formik.values.relationId}
+          name="relation"
+          value={formik.values.relation}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          isInvalid={formik.touched.relationId && formik.errors.relationId}
-          isValid={formik.touched.relationId && !formik.errors.relationId}
+          isInvalid={formik.touched.relation && formik.errors.relation}
+          isValid={formik.touched.relation && !formik.errors.relation}
           disabled={!formik.values.relationType}
         >
           <option value="" disabled>
@@ -165,7 +167,7 @@ const CreateOrder = ({ setClose, setPage }) => {
               ))}
         </Form.Control>
         <Form.Control.Feedback type="invalid">
-          {formik.errors.relationId}
+          {formik.errors.relation}
         </Form.Control.Feedback>
       </Form.Group>
 

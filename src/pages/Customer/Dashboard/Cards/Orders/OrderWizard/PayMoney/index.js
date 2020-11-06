@@ -2,27 +2,51 @@ import React from 'react';
 import { Button } from 'react-bootstrap';
 
 import ButtonLoading from '~/components/ButtonLoading';
+import useNotification from '~/contexts/notification';
+import { currency } from '~/helpers/intl';
+import * as orderService from '~/services/order';
 
 import { Container } from './styles';
 
-const PayMoney = ({ setClose }) => {
+const PayMoney = ({ setClose, order }) => {
+  const { sendNotification } = useNotification();
+  console.log(order);
+  function subtotalCalc() {
+    const discount = 0;
+    const subtotal = (order.relation?.price + discount) * order.quantity;
+    return currency.format(subtotal || 0);
+  }
+
+  async function handleSubmit() {
+    try {
+      await orderService.payWithMoney({
+        itemType: order.relationType,
+        itemId: order.relation.id,
+        customerId: order.customerId,
+        quantity: order.quantity,
+      });
+    } catch (error) {
+      sendNotification(error, false);
+    }
+  }
+
   return (
     <Container>
       <h2>Package/Activity Name</h2>
       <ul>
         <li>
-          Valor (Mensal ou Semanal)*: <span>$99.99</span>
+          Price*: <span>{currency.format(order.relation.price || 0)}</span>
         </li>
         <li>
           Discount: <span>10% ou $10.00</span>
         </li>
         <li>
-          Subtotal: <span>$99.99</span>
+          Quantity: <span>{order.quantity}</span>
+        </li>
+        <li>
+          Subtotal: <span>{subtotalCalc()}</span>
         </li>
       </ul>
-      {/* <p>Valor (Mensal ou Semanal)*: $99.99</p>
-      <p>Discount: 10% ou $10.00</p>
-      <p>Subtotal: $99.00</p> */}
       <div className="d-flex justify-content-end mt-5">
         <Button
           variant="secondary"
@@ -31,7 +55,7 @@ const PayMoney = ({ setClose }) => {
         >
           Cancel
         </Button>
-        <ButtonLoading type="submit" onClick={() => {}}>
+        <ButtonLoading type="submit" onClick={handleSubmit}>
           Confirm Order
         </ButtonLoading>
       </div>
