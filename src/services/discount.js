@@ -21,6 +21,12 @@ export function listAll(filters) {
   });
 }
 
+export function find(customerId, relationType, relationId) {
+  return api.get(
+    `${ENDPOINT}/find/${customerId}/${relationType}/${relationId}`
+  );
+}
+
 export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
@@ -60,6 +66,7 @@ export function destroy(id) {
 const service = {
   listAll,
   get,
+  find,
   create,
   update,
 };

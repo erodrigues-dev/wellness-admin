@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import Feedback from 'react-bootstrap/esm/Feedback';
+import { useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
@@ -8,11 +9,12 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
 import { currency } from '~/helpers/intl';
+// import subtotal from '~/helpers/subtotal';
 import * as activityService from '~/services/activity';
+import * as discountService from '~/services/discount';
 import * as packageService from '~/services/package';
 
 import schema from './schema';
-import { useParams } from 'react-router-dom';
 
 const CreateOrder = ({ setClose, setPage, setOrder }) => {
   const { id } = useParams();
@@ -20,8 +22,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
   const [activities, setActivities] = useState();
   const [packages, setPackages] = useState();
   const [selectedRelation, setSelectedRelation] = useState(null);
-  // eslint-disable-next-line no-unused-vars
-  const [discount, setDiscount] = useState(0);
+  const [discount, setDiscount] = useState(null);
   const [selectedPage, setSelectedPage] = useState(0);
   const [minDate] = useState(new Date());
   const formik = useFormik({
@@ -35,6 +36,30 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
       customerId: id,
     },
   });
+
+  const findDiscount = useCallback(
+    async (relationType, relationId) => {
+      if (!relationType || !relationId) return;
+      try {
+        const { data } = await discountService.find(
+          id,
+          relationType,
+          relationId
+        );
+
+        setDiscount(data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification, id]
+  );
+
+  useEffect(() => {
+    findDiscount(formik.values.relationType, formik.values.relation);
+  }, [formik.values.relation, formik.values.relationType, findDiscount]);
+
+  // console.log(discount);
 
   const listActivities = useCallback(async () => {
     try {
@@ -76,6 +101,8 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
 
   function handleRelationType(e) {
     const { id: inputId } = e.target;
+    setDiscount(null);
+    setSelectedRelation(null);
     formik.setFieldValue('relationType', inputId);
     formik.setFieldValue('relation', '');
   }
@@ -86,9 +113,35 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
   }
 
   function subtotalCalc() {
-    const subtotal =
-      (selectedRelation?.price + discount) * formik.values.quantity;
-    return currency.format(subtotal || 0);
+    let subtotal;
+
+    if (selectedRelation?.price === undefined) {
+      subtotal = 0;
+    } else if (discount === null) {
+      subtotal = selectedRelation?.price * formik.values.quantity;
+    } else if (discount.type === 'amount') {
+      subtotal =
+        (selectedRelation?.price - discount.value) * formik.values.quantity;
+    } else if (discount.type === 'percent') {
+      subtotal =
+        (selectedRelation?.price -
+          (discount.value / 100) * selectedRelation?.price) *
+        formik.values.quantity;
+    }
+
+    return currency.format(subtotal);
+  }
+
+  function handleDiscount() {
+    let discountFormat = `$0.00`;
+
+    if (discount?.type === 'percent') {
+      discountFormat = `${discount.value}%`;
+    } else if (discount?.type === 'amount') {
+      discountFormat = `${currency.format(discount.value)}`;
+    }
+
+    return discountFormat;
   }
 
   return (
@@ -202,10 +255,15 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
       )}
       <ul>
         <li>
-          Price: <span>{currency.format(selectedRelation?.price || 0)}</span>
+          Price:{' '}
+          <span>
+            {currency.format(
+              selectedRelation?.price * formik.values.quantity || 0
+            )}
+          </span>
         </li>
         <li>
-          Discount: <span>10% ou $10.00</span>
+          Discount: <span>{handleDiscount()}</span>
         </li>
         <li>
           Subtotal: <span>{subtotalCalc()}</span>
