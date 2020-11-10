@@ -4,11 +4,10 @@ import { useParams } from 'react-router-dom';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
-import { currency } from '~/helpers/intl';
-import { subtotalCalc, handleDiscount } from '~/helpers/subtotal';
 import * as discountService from '~/services/discount';
 import * as orderService from '~/services/order';
 
+import OrderSummary from '../OrderSummary';
 import { Container } from './styles';
 
 const PayMoney = ({ setClose, order }) => {
@@ -50,29 +49,12 @@ const PayMoney = ({ setClose, order }) => {
   return (
     <Container>
       <h2>Package/Activity Name</h2>
-      <ul>
-        <li>
-          Price*: <span>{currency.format(order.relation.price || 0)}</span>
-        </li>
-        <li>
-          Discount:{' '}
-          <span>{handleDiscount(discount?.type, discount?.value)}</span>
-        </li>
-        <li>
-          Quantity: <span>{order.quantity}</span>
-        </li>
-        <li>
-          Subtotal:{' '}
-          <span>
-            {subtotalCalc(
-              order.relation.price,
-              discount?.type,
-              discount?.value,
-              order.quantity
-            )}
-          </span>
-        </li>
-      </ul>
+      <OrderSummary
+        price={order.relation.price}
+        discountType={discount?.type}
+        discountValue={discount?.value}
+        quantity={order.quantity}
+      />
       <div className="d-flex justify-content-end mt-5">
         <Button
           variant="secondary"

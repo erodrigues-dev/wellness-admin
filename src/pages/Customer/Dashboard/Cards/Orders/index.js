@@ -45,7 +45,7 @@ const Orders = () => {
         <List />
       </Card.Body>
       {openCheckout && (
-        <Modal title="Create Order" setClose={setOpenCheckout}>
+        <Modal width="800px" title="Create Order" setClose={setOpenCheckout}>
           <OrderWizard setClose={setOpenCheckout} />
         </Modal>
       )}

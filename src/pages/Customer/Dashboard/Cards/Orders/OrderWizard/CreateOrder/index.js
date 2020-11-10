@@ -8,12 +8,11 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
-import { currency } from '~/helpers/intl';
-import { subtotalCalc, handleDiscount } from '~/helpers/subtotal';
 import * as activityService from '~/services/activity';
 import * as discountService from '~/services/discount';
 import * as packageService from '~/services/package';
 
+import OrderSummary from '../OrderSummary';
 import schema from './schema';
 
 const CreateOrder = ({ setClose, setPage, setOrder }) => {
@@ -220,31 +219,12 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
         </Form.Group>
       )}
       {selectedRelation?.price !== undefined && (
-        <ul>
-          <li>
-            Price:{' '}
-            <span>
-              {currency.format(
-                selectedRelation?.price * formik.values.quantity || 0
-              )}
-            </span>
-          </li>
-          <li>
-            Discount:{' '}
-            <span>{handleDiscount(discount?.type, discount?.value)}</span>
-          </li>
-          <li>
-            Subtotal:{' '}
-            <span>
-              {subtotalCalc(
-                selectedRelation?.price,
-                discount?.type,
-                discount?.value,
-                formik.values.quantity
-              )}
-            </span>
-          </li>
-        </ul>
+        <OrderSummary
+          price={selectedRelation?.price}
+          discountType={discount?.type}
+          discountValue={discount?.value}
+          quantity={formik.values.quantity}
+        />
       )}
 
       <Form.Group className="d-flex justify-content-end mt-5">

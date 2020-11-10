@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
 import useNotification from '~/contexts/notification';
+import * as discountService from '~/services/discount';
 
-import { Container } from './styles';
+import OrderSummary from '../../OrderSummary';
+import CardSelection from '../CardSelection';
+import { Container, Line } from './styles';
 
-const PaymentForm = ({ SqPaymentForm }) => {
+const PaymentForm = ({ SqPaymentForm, order }) => {
+  const { id } = useParams();
   const { sendNotification } = useNotification();
+  const [discount, setDiscount] = useState(0);
+
   const config = {
     applicationId: 'sq0idp-rARHLPiahkGtp6mMz2OeCA',
     locationId: 'GMT96A77XABR1',
@@ -93,63 +100,107 @@ const PaymentForm = ({ SqPaymentForm }) => {
     paymentForm.requestCardNonce();
   };
 
+  const findDiscount = useCallback(async () => {
+    try {
+      const { data } = await discountService.find(
+        id,
+        order.relationType,
+        order.relation.id
+      );
+
+      setDiscount(data);
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [sendNotification, id, order.relationType, order.relation.id]);
+
+  useEffect(() => {
+    findDiscount();
+  }, [findDiscount]);
+
   return (
     <Container>
-      <Form id="form-container">
-        <Form.Label>New Card</Form.Label>
-        <Form.Group>
-          <Form.Label>Card holder name</Form.Label>
-          <Form.Control id="name" placeholder="Name" name="name" />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>Card Number</Form.Label>
-          <Form.Control id="sq-card-number" name="sq-card-number" />
-        </Form.Group>
+      <Form id="form-container" className="d-flex">
+        <Col md="7">
+          <CardSelection />
+          <Form.Label>
+            <h3>New Card</h3>
+          </Form.Label>
+          <Form.Group>
+            <Form.Label>Card holder name</Form.Label>
+            <Form.Control id="name" placeholder="Name" name="name" />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Card Number</Form.Label>
+            <Form.Control id="sq-card-number" name="sq-card-number" />
+          </Form.Group>
 
-        <Row className="d-flex ">
-          <Col md="3">
-            <Form.Group>
-              <Form.Label>Expiration Date</Form.Label>
-              <Form.Control id="sq-expiration-date" name="sq-expiration-date" />
-            </Form.Group>
-          </Col>
-          <Col md="3">
-            <Form.Group>
-              <Form.Label>Security Code</Form.Label>
-              <Form.Control id="sq-cvv" name="sq-cvv" />
-            </Form.Group>
-          </Col>
-          <Col md="6">
-            <Form.Group>
-              <Form.Label>Zip Code</Form.Label>
-              <Form.Control id="sq-postal-code" name="sq-postal-code" />
-            </Form.Group>
-          </Col>
-        </Row>
+          <Row className="d-flex ">
+            <Col md="3">
+              <Form.Group>
+                <Form.Label>Expiration Date</Form.Label>
+                <Form.Control
+                  id="sq-expiration-date"
+                  name="sq-expiration-date"
+                />
+              </Form.Group>
+            </Col>
+            <Col md="3">
+              <Form.Group>
+                <Form.Label>Security Code</Form.Label>
+                <Form.Control id="sq-cvv" name="sq-cvv" />
+              </Form.Group>
+            </Col>
+            <Col md="6">
+              <Form.Group>
+                <Form.Label>Zip Code</Form.Label>
+                <Form.Control id="sq-postal-code" name="sq-postal-code" />
+              </Form.Group>
+            </Col>
+          </Row>
 
-        <p id="error" />
+          <p id="error" />
 
-        <Form.Group>
-          <Form.Check
-            custom
-            inline
-            className="text-nowrap"
-            type="checkbox"
-            label="Save card"
-            id="package"
-            name="relationType"
-          />
-        </Form.Group>
+          <Form.Group>
+            <Form.Check
+              custom
+              inline
+              className="text-nowrap"
+              type="checkbox"
+              label="Save card"
+              id="package"
+              name="relationType"
+            />
+          </Form.Group>
+        </Col>
 
-        <Form.Row className="d-flex justify-content-end">
-          <Button
-            variant="secondary"
-            className="mr-2 button-credit-card"
-            onClick={requestCardNonce}
+        <Col
+          md="1"
+          className="d-flex align-items-center justify-content-center"
+        >
+          <Line />
+        </Col>
+
+        <Col md="4" className="d-flex flex-column justify-content-center">
+          <h3>Order Summary</h3>
+          <OrderSummary
+            price={order.relation.price}
+            discountType={discount?.type}
+            discountValue={discount?.value}
+            quantity={order.quantity}
           >
-            Request
-          </Button>
-        </Form.Row>
+            Tips
+          </OrderSummary>
+          <Form.Row className="d-flex justify-content-end">
+            <Button
+              variant="primary"
+              className="mr-2 button-credit-card"
+              onClick={requestCardNonce}
+            >
+              Confirm Order
+            </Button>
+          </Form.Row>
+        </Col>
       </Form>
     </Container>
   );
