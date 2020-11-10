@@ -49,6 +49,7 @@ const PaymentForm = ({ SqPaymentForm }) => {
           ],
         };
       },
+      // eslint-disable-next-line no-unused-vars
       cardNonceResponseReceived: (errors, nonce, cardData) => {
         // console.log(nonce);
         // console.log(cardData);

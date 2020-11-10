@@ -9,7 +9,7 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
 import { currency } from '~/helpers/intl';
-// import subtotal from '~/helpers/subtotal';
+import { subtotalCalc, handleDiscount } from '~/helpers/subtotal';
 import * as activityService from '~/services/activity';
 import * as discountService from '~/services/discount';
 import * as packageService from '~/services/package';
@@ -58,8 +58,6 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
   useEffect(() => {
     findDiscount(formik.values.relationType, formik.values.relation);
   }, [formik.values.relation, formik.values.relationType, findDiscount]);
-
-  // console.log(discount);
 
   const listActivities = useCallback(async () => {
     try {
@@ -110,38 +108,6 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
   function handleSubmit(data) {
     setOrder({ ...data, relation: selectedRelation });
     setPage(selectedPage);
-  }
-
-  function subtotalCalc() {
-    let subtotal;
-
-    if (selectedRelation?.price === undefined) {
-      subtotal = 0;
-    } else if (discount === null) {
-      subtotal = selectedRelation?.price * formik.values.quantity;
-    } else if (discount.type === 'amount') {
-      subtotal =
-        (selectedRelation?.price - discount.value) * formik.values.quantity;
-    } else if (discount.type === 'percent') {
-      subtotal =
-        (selectedRelation?.price -
-          (discount.value / 100) * selectedRelation?.price) *
-        formik.values.quantity;
-    }
-
-    return currency.format(subtotal);
-  }
-
-  function handleDiscount() {
-    let discountFormat = `$0.00`;
-
-    if (discount?.type === 'percent') {
-      discountFormat = `${discount.value}%`;
-    } else if (discount?.type === 'amount') {
-      discountFormat = `${currency.format(discount.value)}`;
-    }
-
-    return discountFormat;
   }
 
   return (
@@ -253,22 +219,33 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
           />
         </Form.Group>
       )}
-      <ul>
-        <li>
-          Price:{' '}
-          <span>
-            {currency.format(
-              selectedRelation?.price * formik.values.quantity || 0
-            )}
-          </span>
-        </li>
-        <li>
-          Discount: <span>{handleDiscount()}</span>
-        </li>
-        <li>
-          Subtotal: <span>{subtotalCalc()}</span>
-        </li>
-      </ul>
+      {selectedRelation?.price !== undefined && (
+        <ul>
+          <li>
+            Price:{' '}
+            <span>
+              {currency.format(
+                selectedRelation?.price * formik.values.quantity || 0
+              )}
+            </span>
+          </li>
+          <li>
+            Discount:{' '}
+            <span>{handleDiscount(discount?.type, discount?.value)}</span>
+          </li>
+          <li>
+            Subtotal:{' '}
+            <span>
+              {subtotalCalc(
+                selectedRelation?.price,
+                discount?.type,
+                discount?.value,
+                formik.values.quantity
+              )}
+            </span>
+          </li>
+        </ul>
+      )}
 
       <Form.Group className="d-flex justify-content-end mt-5">
         <Button

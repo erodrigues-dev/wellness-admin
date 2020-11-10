@@ -1,18 +1,29 @@
 import { currency } from './intl';
 
-export default function subtotal(price, discount, quantity) {
-  // ALGO ERRADO, CORRIGIR DEPOIS
-  let finalValue;
+export function subtotalCalc(price, discountType, discountValue, quantity) {
+  let subtotal;
 
   if (price === undefined) {
-    finalValue = 0;
-  } else if (discount === null) {
-    finalValue = price * quantity;
-  } else if (discount === 'amount') {
-    finalValue = (price - discount) * quantity;
-  } else if (discount === 'percent') {
-    finalValue = (price - (discount / 100) * price) * quantity;
+    subtotal = 0;
+  } else if (discountType === undefined) {
+    subtotal = price * quantity;
+  } else if (discountType === 'amount') {
+    subtotal = (price - discountValue) * quantity;
+  } else if (discountType === 'percent') {
+    subtotal = (price - (discountValue / 100) * price) * quantity;
   }
 
-  return currency.format(finalValue);
+  return currency.format(subtotal);
+}
+
+export function handleDiscount(type, value) {
+  let discount = `$0.00`;
+
+  if (type === 'percent') {
+    discount = `${value}%`;
+  } else if (type === 'amount') {
+    discount = `${currency.format(value)}`;
+  }
+
+  return discount;
 }
