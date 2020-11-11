@@ -5,8 +5,8 @@ import { Link } from 'react-router-dom';
 import Modal from '~/components/Modal';
 import useAuth from '~/contexts/auth';
 
+import OrderWizard from '../../../../Order/Form';
 import List from './List';
-import OrderWizard from './OrderWizard';
 
 const Orders = () => {
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();

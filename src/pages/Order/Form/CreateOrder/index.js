@@ -9,6 +9,7 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import useNotification from '~/contexts/notification';
 import * as activityService from '~/services/activity';
+import * as customerService from '~/services/customer';
 import * as discountService from '~/services/discount';
 import * as packageService from '~/services/package';
 
@@ -20,7 +21,8 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
   const { sendNotification } = useNotification();
   const [activities, setActivities] = useState();
   const [packages, setPackages] = useState();
-  const [selectedRelation, setSelectedRelation] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [customers, setCustomers] = useState();
   const [discount, setDiscount] = useState(null);
   const [selectedPage, setSelectedPage] = useState(0);
   const [minDate] = useState(new Date());
@@ -28,22 +30,22 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
     validationSchema: schema,
     onSubmit: handleSubmit,
     initialValues: {
-      relationType: '',
-      relation: '',
+      customerId: id || '',
+      itemType: '',
+      item: '',
       quantity: 1,
       date: '',
-      customerId: id,
     },
   });
 
   const findDiscount = useCallback(
-    async (relationType, relationId) => {
-      if (!relationType || !relationId) return;
+    async (customerId, itemType, itemId) => {
+      if (!itemType || !itemId || !customerId) return;
       try {
         const { data } = await discountService.find(
-          id,
-          relationType,
-          relationId
+          customerId,
+          itemType,
+          itemId
         );
 
         setDiscount(data);
@@ -51,12 +53,33 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
         sendNotification(error.message, false);
       }
     },
-    [sendNotification, id]
+    [sendNotification]
   );
 
   useEffect(() => {
-    findDiscount(formik.values.relationType, formik.values.relation);
-  }, [formik.values.relation, formik.values.relationType, findDiscount]);
+    findDiscount(
+      formik.values.customerId,
+      formik.values.itemType,
+      formik.values.item
+    );
+  }, [
+    formik.values.item,
+    formik.values.itemType,
+    formik.values.customerId,
+    findDiscount,
+  ]);
+
+  const listCustomers = useCallback(async () => {
+    if (!id) {
+      try {
+        const { data } = await customerService.listAll();
+
+        setCustomers(data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    }
+  }, [id, sendNotification]);
 
   const listActivities = useCallback(async () => {
     try {
@@ -79,38 +102,71 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
   }, [sendNotification]);
 
   useEffect(() => {
-    if (
-      formik.values.relationType &&
-      formik.values.relationType === 'activity' &&
-      activities === undefined
-    )
-      listActivities();
-  }, [formik.values.relationType, listActivities, activities]);
+    listCustomers();
+  }, [listCustomers]);
 
   useEffect(() => {
     if (
-      formik.values.relationType &&
-      formik.values.relationType === 'package' &&
+      formik.values.itemType &&
+      formik.values.itemType === 'activity' &&
+      activities === undefined
+    )
+      listActivities();
+  }, [formik.values.itemType, listActivities, activities]);
+
+  useEffect(() => {
+    if (
+      formik.values.itemType &&
+      formik.values.itemType === 'package' &&
       packages === undefined
     )
       listPackages();
-  }, [formik.values.relationType, listPackages, packages]);
+  }, [formik.values.itemType, listPackages, packages]);
 
-  function handleRelationType(e) {
+  function handleitemType(e) {
     const { id: inputId } = e.target;
     setDiscount(null);
-    setSelectedRelation(null);
-    formik.setFieldValue('relationType', inputId);
-    formik.setFieldValue('relation', '');
+    setSelectedItem(null);
+    formik.setFieldValue('itemType', inputId);
+    formik.setFieldValue('item', '');
   }
 
   function handleSubmit(data) {
-    setOrder({ ...data, relation: selectedRelation });
+    setOrder({ ...data, item: selectedItem });
     setPage(selectedPage);
   }
 
   return (
     <Form onSubmit={formik.handleSubmit}>
+      {id === undefined && (
+        <Form.Group>
+          <Form.Label>Customer</Form.Label>
+          <Form.Control
+            as="select"
+            custom
+            name="customerId"
+            value={formik.values.customerId}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.customerId && formik.errors.customerId}
+            isValid={formik.touched.customerId && !formik.errors.customerId}
+          >
+            <option value="" disabled>
+              Select an option
+            </option>
+            {customers?.map((customer) => {
+              return (
+                <option value={customer.id} key={customer.id}>
+                  {customer.name}
+                </option>
+              );
+            })}
+          </Form.Control>
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.customerId}
+          </Form.Control.Feedback>
+        </Form.Group>
+      )}
       <Form.Group>
         <Form.Check
           custom
@@ -118,13 +174,13 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
           type="radio"
           label="Package"
           id="package"
-          name="relationType"
-          checked={formik.values.relationType === 'package'}
-          value={formik.values.relationType}
-          onChange={(e) => handleRelationType(e)}
+          name="itemType"
+          checked={formik.values.itemType === 'package'}
+          value={formik.values.itemType}
+          onChange={(e) => handleitemType(e)}
           onBlur={formik.handleBlur}
-          isInvalid={formik.touched.relationType && formik.errors.relationType}
-          isValid={formik.touched.relationType && !formik.errors.relationType}
+          isInvalid={formik.touched.itemType && formik.errors.itemType}
+          isValid={formik.touched.itemType && !formik.errors.itemType}
         />
         <Form.Check
           custom
@@ -132,44 +188,44 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
           type="radio"
           label="Activity"
           id="activity"
-          name="relationType"
-          checked={formik.values.relationType === 'activity'}
-          value={formik.values.relationType}
-          onChange={(e) => handleRelationType(e)}
+          name="itemType"
+          checked={formik.values.itemType === 'activity'}
+          value={formik.values.itemType}
+          onChange={(e) => handleitemType(e)}
           onBlur={formik.handleBlur}
-          isInvalid={formik.touched.relationType && formik.errors.relationType}
-          isValid={formik.touched.relationType && !formik.errors.relationType}
+          isInvalid={formik.touched.itemType && formik.errors.itemType}
+          isValid={formik.touched.itemType && !formik.errors.itemType}
         />
-        <Feedback type="invalid">{formik.errors.relationType}</Feedback>
+        <Feedback type="invalid">{formik.errors.itemType}</Feedback>
       </Form.Group>
       <Form.Group>
         <Form.Label>
-          {formik.values.relationType === 'activity'
+          {formik.values.itemType === 'activity'
             ? 'Activity'
-            : formik.values.relationType === 'package'
+            : formik.values.itemType === 'package'
             ? 'Package'
             : 'Activity/Package'}
         </Form.Label>
         <Form.Control
           as="select"
           custom
-          name="relation"
-          value={formik.values.relation}
+          name="item"
+          value={formik.values.item}
           onChange={formik.handleChange}
           onBlur={formik.handleBlur}
-          isInvalid={formik.touched.relation && formik.errors.relation}
-          isValid={formik.touched.relation && !formik.errors.relation}
-          disabled={!formik.values.relationType}
+          isInvalid={formik.touched.item && formik.errors.item}
+          isValid={formik.touched.item && !formik.errors.item}
+          disabled={!formik.values.itemType}
         >
           <option value="" disabled>
             Select an option
           </option>
-          {formik.values.relationType === 'activity'
+          {formik.values.itemType === 'activity'
             ? activities?.map((activity) => (
                 <option
                   key={activity.id}
                   value={activity.id}
-                  onClick={() => setSelectedRelation(activity)}
+                  onClick={() => setSelectedItem(activity)}
                 >
                   {activity.name}
                 </option>
@@ -178,14 +234,14 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
                 <option
                   key={item.id}
                   value={item.id}
-                  onClick={() => setSelectedRelation(item)}
+                  onClick={() => setSelectedItem(item)}
                 >
                   {item.name}
                 </option>
               ))}
         </Form.Control>
         <Form.Control.Feedback type="invalid">
-          {formik.errors.relation}
+          {formik.errors.item}
         </Form.Control.Feedback>
       </Form.Group>
 
@@ -205,7 +261,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
           {formik.errors.quantity}
         </Form.Control.Feedback>
       </Form.Group>
-      {selectedRelation?.recurrencyPay && (
+      {selectedItem?.recurrencyPay && (
         <Form.Group>
           <Form.Label>Due Date</Form.Label>
           <InputDatePicker
@@ -218,9 +274,9 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
           />
         </Form.Group>
       )}
-      {selectedRelation?.price !== undefined && (
+      {selectedItem?.price !== undefined && (
         <OrderSummary
-          price={selectedRelation?.price}
+          price={selectedItem?.price}
           discountType={discount?.type}
           discountValue={discount?.value}
           quantity={formik.values.quantity}

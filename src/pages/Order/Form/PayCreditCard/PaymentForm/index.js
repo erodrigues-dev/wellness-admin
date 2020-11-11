@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
 
 import useNotification from '~/contexts/notification';
 import * as discountService from '~/services/discount';
@@ -10,13 +9,12 @@ import CardSelection from '../CardSelection';
 import { Container, Line } from './styles';
 
 const PaymentForm = ({ SqPaymentForm, order }) => {
-  const { id } = useParams();
   const { sendNotification } = useNotification();
   const [discount, setDiscount] = useState(0);
 
   const config = {
-    applicationId: 'sq0idp-rARHLPiahkGtp6mMz2OeCA',
-    locationId: 'GMT96A77XABR1',
+    applicationId: process.env.REACT_APP_SQUARE_APP_ID,
+    locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
     inputClass: 'sq-input',
     autoBuild: false,
     cardNumber: {
@@ -103,16 +101,16 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
   const findDiscount = useCallback(async () => {
     try {
       const { data } = await discountService.find(
-        id,
-        order.relationType,
-        order.relation.id
+        order.customerId,
+        order.itemType,
+        order.item.id
       );
 
       setDiscount(data);
     } catch (error) {
       sendNotification(error.message, false);
     }
-  }, [sendNotification, id, order.relationType, order.relation.id]);
+  }, [sendNotification, order.customerId, order.itemType, order.item.id]);
 
   useEffect(() => {
     findDiscount();
@@ -184,7 +182,7 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
         <Col md="4" className="d-flex flex-column justify-content-center">
           <h3>Order Summary</h3>
           <OrderSummary
-            price={order.relation.price}
+            price={order.item.price}
             discountType={discount?.type}
             discountValue={discount?.value}
             quantity={order.quantity}

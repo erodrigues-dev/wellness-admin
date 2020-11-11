@@ -17,9 +17,11 @@ import {
   CustomerForm,
   CustomerDisplay,
   CustomerDashboard,
+  Discount,
   Employee,
   EmployeeForm,
   EmployeeDisplay,
+  Order,
   Package,
   PackageForm,
   PackageDisplay,
@@ -28,7 +30,6 @@ import {
   ProfileDisplay,
   NotAuthorized,
 } from '~/pages';
-import Discount from '~/pages/Discount';
 
 const PrivateRoutes = () => {
   return (
@@ -214,6 +215,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.DISCOUNTS}
           path="/discounts"
           component={Discount}
+        />
+
+        <PrivateRoute
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.ORDERS}
+          path="/orders"
+          component={Order}
         />
 
         <Route path="/404" component={NotAuthorized} />

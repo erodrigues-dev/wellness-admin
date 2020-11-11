@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 
 const schema = yup.object().shape({
-  id: yup.number(),
-  relationType: yup.string().required(),
-  relation: yup
+  customerId: yup.number().min(1).required('Select a Customer'),
+  itemType: yup.string().required(),
+  item: yup
     .number()
     .min(1, 'Select a Package/Type')
     .required('Select a Package/Type'),

@@ -55,4 +55,11 @@ export const MENU = [
     functionality: FUNCTIONALITIES.DISCOUNTS,
     subgroup: 'settings',
   },
+  {
+    title: 'Orders',
+    path: '/orders',
+    Icon: FiPenTool,
+    functionality: FUNCTIONALITIES.ORDERS,
+    subgroup: 'settings',
+  },
 ];

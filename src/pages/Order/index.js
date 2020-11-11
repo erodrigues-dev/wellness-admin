@@ -1,47 +1,46 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 
+import Modal from '~/components/Modal';
 import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
-import * as service from '~/services/discount';
+import * as service from '~/services/order';
 
 import Filter from './Filter';
-import ModalForm from './Form';
+import OrderWizard from './Form';
 import List from './List';
 
-const Discount = () => {
+const Order = () => {
   const { sendNotification } = useNotification();
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
   const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.DISCOUNTS,
+    FUNCTIONALITIES.CHECKOUT,
     ACTIONS.CREATE
-  );
-  const hasPermissionToUpdate = hasPermission(
-    FUNCTIONALITIES.DISCOUNTS,
-    ACTIONS.UPDATE
   );
 
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
-  const [filter, setFilter] = useState({ customerId: '', relationName: '' });
+  const [filter, setFilter] = useState({ customerId: '' });
   const [openAdd, setOpenAdd] = useState(false);
 
-  const listDiscounts = useCallback(async () => {
+  const listOrders = useCallback(async () => {
     try {
-      const { data, headers } = await service.list(page, filter);
+      let response;
+      if (filter.customerId) response = await service.list(page, filter);
+      else response = await service.list(page);
 
-      setList(data);
-      setTotal(parseInt(headers['x-total-count']));
+      setList(response.data);
+      setTotal(parseInt(response.headers['x-total-count']));
     } catch (error) {
       sendNotification(error.message, false);
     }
   }, [page, filter, sendNotification]);
 
   useEffect(() => {
-    listDiscounts();
-  }, [listDiscounts]);
+    listOrders();
+  }, [listOrders]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -52,21 +51,10 @@ const Discount = () => {
     setPage(current);
   }
 
-  async function handleDelete(id) {
-    try {
-      await service.destroy(id);
-
-      sendNotification('Discount deleted.');
-      listDiscounts();
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }
-
   return (
     <>
       <Card body>
-        <Card.Title>Discounts</Card.Title>
+        <Card.Title>Orders</Card.Title>
         <hr />
         <Filter
           onFilter={handleFilter}
@@ -74,12 +62,7 @@ const Discount = () => {
           list={list}
           setOpenAdd={setOpenAdd}
         />
-        <List
-          list={list}
-          allowEdit={hasPermissionToUpdate}
-          reloadList={listDiscounts}
-          handleDelete={handleDelete}
-        />
+        <List list={list} />
         <Paginate
           activePage={page}
           itemsCountPerPage={10}
@@ -88,10 +71,12 @@ const Discount = () => {
         />
       </Card>
       {openAdd && (
-        <ModalForm setClose={setOpenAdd} reloadList={listDiscounts} />
+        <Modal title="Create Order" setClose={setOpenAdd}>
+          <OrderWizard reloadOrders={listOrders} setClose={setOpenAdd} />
+        </Modal>
       )}
     </>
   );
 };
 
-export default Discount;
+export default Order;

@@ -5,7 +5,7 @@ import PayCreditCard from './PayCreditCard';
 import PayMoney from './PayMoney';
 import { Container } from './styles';
 
-const OrderWizard = ({ setClose }) => {
+const OrderWizard = ({ setClose, reloadOrders }) => {
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState(null);
 
@@ -18,8 +18,20 @@ const OrderWizard = ({ setClose }) => {
           setPage={setPage}
         />
       )}
-      {page === 2 && <PayCreditCard order={order} setClose={setClose} />}
-      {page === 3 && <PayMoney order={order} setClose={setClose} />}
+      {page === 2 && (
+        <PayCreditCard
+          order={order}
+          setClose={setClose}
+          reloadOrders={reloadOrders}
+        />
+      )}
+      {page === 3 && (
+        <PayMoney
+          order={order}
+          setClose={setClose}
+          reloadOrders={reloadOrders}
+        />
+      )}
     </Container>
   );
 };

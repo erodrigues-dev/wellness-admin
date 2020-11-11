@@ -7,6 +7,7 @@ export const FUNCTIONALITIES = {
   CATEGORIES: 'categories',
   DISCOUNTS: 'discounts',
   ORDERS: 'orders',
+  CHECKOUT: 'checkout',
 };
 
 export function listAll() {
