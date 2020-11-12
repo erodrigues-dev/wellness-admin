@@ -1,20 +1,44 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 import Modal from '~/components/Modal';
 import useAuth from '~/contexts/auth';
+import useNotification from '~/contexts/notification';
+import * as service from '~/services/order';
 
 import OrderWizard from '../../../../Order/Form';
 import List from './List';
 
 const Orders = () => {
+  const { id } = useParams();
+  const { sendNotification } = useNotification();
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.ACTIVITIES,
     ACTIONS.CREATE
   );
   const [openCheckout, setOpenCheckout] = useState(false);
+  const [filter] = useState({
+    customerId: id,
+    page: 1,
+    limit: 3,
+  });
+  const [list, setList] = useState([]);
+
+  const listOrders = useCallback(async () => {
+    try {
+      const { data } = await service.list(1, filter);
+
+      setList(data);
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [filter, sendNotification]);
+
+  useEffect(() => {
+    listOrders();
+  }, [listOrders]);
 
   return (
     <Card>
@@ -42,11 +66,11 @@ const Orders = () => {
         </Row>
       </Card.Header>
       <Card.Body>
-        <List />
+        <List list={list} />
       </Card.Body>
       {openCheckout && (
-        <Modal width="800px" title="Create Order" setClose={setOpenCheckout}>
-          <OrderWizard setClose={setOpenCheckout} />
+        <Modal title="Create Order" setClose={setOpenCheckout}>
+          <OrderWizard reloadOrders={listOrders} setClose={setOpenCheckout} />
         </Modal>
       )}
     </Card>

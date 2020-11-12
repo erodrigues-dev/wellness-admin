@@ -19,6 +19,7 @@ export const Content = styled.div`
   min-width: 300px;
   max-height: 90%;
   max-width: 90%;
+  overflow-y: auto;
 
   header {
     display: flex;

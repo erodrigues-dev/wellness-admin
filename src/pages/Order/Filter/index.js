@@ -49,13 +49,17 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
         <Row>
           <Col className="d-flex justify-content-end">
             <Button type="submit">Filter</Button>
-            <Button type="reset" className="ml-2" onClick={formik.handleReset}>
+            <Button
+              type="reset"
+              className="ml-2 text-nowrap"
+              onClick={formik.handleReset}
+            >
               Clear Filters
             </Button>
             {allowCreate && (
               <Button
                 variant="secondary"
-                className="ml-2"
+                className="ml-2 text-nowrap"
                 onClick={() => setOpenAdd(true)}
               >
                 Add Order

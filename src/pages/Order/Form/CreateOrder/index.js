@@ -286,7 +286,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
       <Form.Group className="d-flex justify-content-end mt-5">
         <Button
           variant="secondary"
-          className="mr-2"
+          className="mr-2 text-nowrap"
           disabled={formik.isSubmitting}
           onClick={() => setClose(false)}
         >
@@ -294,7 +294,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
         </Button>
         <ButtonLoading
           type="submit"
-          className="mr-2"
+          className="mr-2 text-nowrap"
           loading={formik.isSubmitting}
           onClick={() => {
             formik.handleSubmit();
@@ -305,6 +305,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
         </ButtonLoading>
         <ButtonLoading
           type="submit"
+          className="text-nowrap"
           loading={formik.isSubmitting}
           onClick={() => {
             formik.handleSubmit();
