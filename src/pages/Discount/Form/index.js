@@ -131,183 +131,192 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
 
   return (
     <Modal setClose={setClose} title={`${isAdd ? 'Add' : 'Edit'} Discount`}>
-      <Form onSubmit={formik.handleSubmit}>
-        {!id && (
+      <Form onSubmit={formik.handleSubmit} className="modal-form">
+        <div className="form-wrapper">
+          {!id && (
+            <Form.Group>
+              <Form.Label>Customer</Form.Label>
+              <Form.Control
+                as="select"
+                custom
+                name="customerId"
+                value={formik.values.customerId}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={
+                  formik.touched.customerId && formik.errors.customerId
+                }
+                isValid={formik.touched.customerId && !formik.errors.customerId}
+              >
+                <option value="" disabled>
+                  Select an option
+                </option>
+                {customers?.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.name}
+                  </option>
+                ))}
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.customerId}
+              </Form.Control.Feedback>
+            </Form.Group>
+          )}
           <Form.Group>
-            <Form.Label>Customer</Form.Label>
+            <Form.Check
+              custom
+              inline
+              type="radio"
+              label="Package"
+              id="package"
+              name="relationType"
+              checked={formik.values.relationType === 'package'}
+              value={formik.values.relationType}
+              onChange={handleRelationType}
+              onBlur={formik.handleBlur}
+              isInvalid={
+                formik.touched.relationType && formik.errors.relationType
+              }
+              isValid={
+                formik.touched.relationType && !formik.errors.relationType
+              }
+            />
+            <Form.Check
+              custom
+              inline
+              type="radio"
+              label="Activity"
+              id="activity"
+              name="relationType"
+              checked={formik.values.relationType === 'activity'}
+              value={formik.values.relationType}
+              onChange={handleRelationType}
+              onBlur={formik.handleBlur}
+              isInvalid={
+                formik.touched.relationType && formik.errors.relationType
+              }
+              isValid={
+                formik.touched.relationType && !formik.errors.relationType
+              }
+            />
+            <Feedback type="invalid">{formik.errors.relationType}</Feedback>
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label>
+              {formik.values.relationType === 'activity'
+                ? 'Activity'
+                : formik.values.relationType === 'package'
+                ? 'Package'
+                : 'Activity/Package'}
+            </Form.Label>
             <Form.Control
               as="select"
               custom
-              name="customerId"
-              value={formik.values.customerId}
+              name="relationId"
+              value={formik.values.relationId}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              isInvalid={formik.touched.customerId && formik.errors.customerId}
-              isValid={formik.touched.customerId && !formik.errors.customerId}
+              isInvalid={formik.touched.relationId && formik.errors.relationId}
+              isValid={formik.touched.relationId && !formik.errors.relationId}
+              disabled={
+                !formik.values.relationType &&
+                (activities === undefined || packages === undefined)
+              }
             >
-              <option value="" disabled>
+              <option value={0} disabled>
                 Select an option
               </option>
-              {customers?.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
-                </option>
-              ))}
+              {formik.values.relationType === 'activity'
+                ? activities?.map((activity) => (
+                    <option key={activity.id} value={activity.id}>
+                      {activity.name}
+                    </option>
+                  ))
+                : packages?.map((item) => (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  ))}
             </Form.Control>
             <Form.Control.Feedback type="invalid">
-              {formik.errors.customerId}
+              {formik.errors.relationId}
             </Form.Control.Feedback>
           </Form.Group>
-        )}
-        <Form.Group>
-          <Form.Check
-            custom
-            inline
-            type="radio"
-            label="Package"
-            id="package"
-            name="relationType"
-            checked={formik.values.relationType === 'package'}
-            value={formik.values.relationType}
-            onChange={handleRelationType}
-            onBlur={formik.handleBlur}
-            isInvalid={
-              formik.touched.relationType && formik.errors.relationType
-            }
-            isValid={formik.touched.relationType && !formik.errors.relationType}
-          />
-          <Form.Check
-            custom
-            inline
-            type="radio"
-            label="Activity"
-            id="activity"
-            name="relationType"
-            checked={formik.values.relationType === 'activity'}
-            value={formik.values.relationType}
-            onChange={handleRelationType}
-            onBlur={formik.handleBlur}
-            isInvalid={
-              formik.touched.relationType && formik.errors.relationType
-            }
-            isValid={formik.touched.relationType && !formik.errors.relationType}
-          />
-          <Feedback type="invalid">{formik.errors.relationType}</Feedback>
-        </Form.Group>
 
-        <Form.Group>
-          <Form.Label>
-            {formik.values.relationType === 'activity'
-              ? 'Activity'
-              : formik.values.relationType === 'package'
-              ? 'Package'
-              : 'Activity/Package'}
-          </Form.Label>
-          <Form.Control
-            as="select"
-            custom
-            name="relationId"
-            value={formik.values.relationId}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.relationId && formik.errors.relationId}
-            isValid={formik.touched.relationId && !formik.errors.relationId}
-            disabled={
-              !formik.values.relationType &&
-              (activities === undefined || packages === undefined)
-            }
-          >
-            <option value={0} disabled>
-              Select an option
-            </option>
-            {formik.values.relationType === 'activity'
-              ? activities?.map((activity) => (
-                  <option key={activity.id} value={activity.id}>
-                    {activity.name}
-                  </option>
-                ))
-              : packages?.map((item) => (
-                  <option key={item.id} value={item.id}>
-                    {item.name}
-                  </option>
-                ))}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.relationId}
-          </Form.Control.Feedback>
-        </Form.Group>
+          <Form.Group>
+            <Form.Check
+              custom
+              inline
+              type="radio"
+              label="Percent"
+              id="percent"
+              name="type"
+              checked={formik.values.type === 'percent'}
+              value={formik.values.type}
+              onChange={handleType}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.type && formik.errors.type}
+              isValid={formik.touched.type && !formik.errors.type}
+            />
+            <Form.Check
+              custom
+              inline
+              type="radio"
+              label="Amount"
+              id="amount"
+              name="type"
+              checked={formik.values.type === 'amount'}
+              value={formik.values.type}
+              onChange={handleType}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.type && formik.errors.type}
+              isValid={formik.touched.type && !formik.errors.type}
+            />
+            <Feedback type="invalid">{formik.errors.type}</Feedback>
+          </Form.Group>
 
-        <Form.Group>
-          <Form.Check
-            custom
-            inline
-            type="radio"
-            label="Percent"
-            id="percent"
-            name="type"
-            checked={formik.values.type === 'percent'}
-            value={formik.values.type}
-            onChange={handleType}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.type && formik.errors.type}
-            isValid={formik.touched.type && !formik.errors.type}
-          />
-          <Form.Check
-            custom
-            inline
-            type="radio"
-            label="Amount"
-            id="amount"
-            name="type"
-            checked={formik.values.type === 'amount'}
-            value={formik.values.type}
-            onChange={handleType}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.type && formik.errors.type}
-            isValid={formik.touched.type && !formik.errors.type}
-          />
-          <Feedback type="invalid">{formik.errors.type}</Feedback>
-        </Form.Group>
-
-        <Form.Group>
-          <Form.Label>
-            {formik.values.type === 'amount'
-              ? 'Amount'
-              : formik.values.type === 'percent'
-              ? 'Percent'
-              : 'Amount/Percent'}
-          </Form.Label>
-          <Form.Control
-            placeholder={
-              formik.values.type === 'amount'
+          <Form.Group>
+            <Form.Label>
+              {formik.values.type === 'amount'
                 ? 'Amount'
                 : formik.values.type === 'percent'
                 ? 'Percent'
-                : 'Amount/Percent'
-            }
-            name="value"
-            value={formik.values.value}
-            onChange={handleValue}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.value && formik.errors.value}
-            isValid={formik.touched.value && !formik.errors.value}
-            disabled={!formik.values.type}
-          />
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.value}
-          </Form.Control.Feedback>
-        </Form.Group>
-
-        <Form.Row className="d-flex justify-content-end">
-          <Button
-            variant="secondary"
-            className="mr-2"
-            onClick={() => setClose(false)}
-          >
-            Cancel
-          </Button>
-          <ButtonLoading type="submit">Save</ButtonLoading>
-        </Form.Row>
+                : 'Amount/Percent'}
+            </Form.Label>
+            <Form.Control
+              placeholder={
+                formik.values.type === 'amount'
+                  ? 'Amount'
+                  : formik.values.type === 'percent'
+                  ? 'Percent'
+                  : 'Amount/Percent'
+              }
+              name="value"
+              value={formik.values.value}
+              onChange={handleValue}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.value && formik.errors.value}
+              isValid={formik.touched.value && !formik.errors.value}
+              disabled={!formik.values.type}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.value}
+            </Form.Control.Feedback>
+          </Form.Group>
+        </div>
+        <div className="buttons">
+          <Form.Row className="d-flex justify-content-end">
+            <Button
+              variant="secondary"
+              className="mr-2"
+              onClick={() => setClose(false)}
+            >
+              Cancel
+            </Button>
+            <ButtonLoading type="submit">Save</ButtonLoading>
+          </Form.Row>
+        </div>
       </Form>
     </Modal>
   );

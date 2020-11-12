@@ -57,7 +57,7 @@ const Orders = () => {
                 Checkout
               </Button>
             )}
-            <Link to="/discounts">
+            <Link to="/orders">
               <Button variant="outline-primary" className="ml-2 text-nowrap">
                 See More
               </Button>

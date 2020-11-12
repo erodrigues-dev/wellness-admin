@@ -11,26 +11,24 @@ export const Container = styled.ul`
     padding: 5px;
     margin-bottom: 5px;
 
-    .items {
+    .name {
+      font-weight: 600;
       display: flex;
-      flex-direction: column;
+      align-items: center;
 
-      .name {
-        font-weight: 600;
-
-        svg {
-          margin-right: 5px;
-        }
+      svg {
+        font-size: 2rem;
+        margin-right: 5px;
       }
+    }
 
-      .value {
-        font-size: 0.9rem;
-        display: flex;
-        align-items: center;
+    .value {
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
 
-        svg {
-          margin-right: 5px;
-        }
+      svg {
+        margin-right: 5px;
       }
     }
   }

@@ -1,4 +1,7 @@
 import React from 'react';
+import { RiBankCardLine, RiMoneyDollarBoxLine } from 'react-icons/ri';
+
+import { currency } from '~/helpers/intl';
 
 import { Container } from './styles';
 
@@ -7,15 +10,16 @@ const List = ({ list }) => {
     <Container>
       {list?.map((item) => (
         <li key={item.id}>
-          <div className="items">
-            <div className="name">
-              <span className="relationName">{item.name}</span>
-            </div>
-            <div className="value">
-              <span>
-                {item.type === 'amount' ? item.value.toFixed(2) : item.value}
-              </span>
-            </div>
+          <div className="name">
+            {item.status === 'paid-with-money' ? (
+              <RiMoneyDollarBoxLine />
+            ) : (
+              <RiBankCardLine />
+            )}
+            <span className="relationName">{item.name}</span>
+          </div>
+          <div className="value">
+            <span>{currency.format(item.subtotal)}</span>
           </div>
         </li>
       ))}

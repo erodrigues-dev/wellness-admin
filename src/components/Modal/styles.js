@@ -15,13 +15,21 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   background-color: #fff;
-  /* width: ${(props) => (props.width ? props.width : '600px')}; */
   min-width: 300px;
   max-height: 90%;
   max-width: 90%;
-  overflow-y: auto;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: 80px 1fr;
+  grid-template-areas: 'header' 'main';
+
+  @media (min-width: 1280px) {
+    width: 600px;
+  }
 
   header {
+    grid-area: header;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -40,6 +48,34 @@ export const Content = styled.div`
   }
 
   main {
-    padding: 25px;
+    grid-area: main;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+
+    .modal-form {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: auto;
+
+      h2 {
+        font-size: 1.2rem;
+        font-weight: bold;
+      }
+
+      .form-wrapper {
+        padding: 25px;
+        overflow: auto;
+      }
+
+      .buttons {
+        padding: 10px 0;
+        margin-right: 25px;
+        align-self: flex-end;
+      }
+    }
   }
 `;

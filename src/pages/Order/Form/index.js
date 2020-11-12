@@ -3,14 +3,13 @@ import React, { useState } from 'react';
 import CreateOrder from './CreateOrder';
 import PayCreditCard from './PayCreditCard';
 import PayMoney from './PayMoney';
-import { Container } from './styles';
 
 const OrderWizard = ({ setClose, reloadOrders }) => {
   const [page, setPage] = useState(1);
   const [order, setOrder] = useState(null);
 
   return (
-    <Container>
+    <>
       {page === 1 && (
         <CreateOrder
           setOrder={setOrder}
@@ -32,7 +31,7 @@ const OrderWizard = ({ setClose, reloadOrders }) => {
           reloadOrders={reloadOrders}
         />
       )}
-    </Container>
+    </>
   );
 };
 

@@ -137,184 +137,184 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
   }
 
   return (
-    <Form onSubmit={formik.handleSubmit}>
-      {id === undefined && (
+    <Form onSubmit={formik.handleSubmit} className="modal-form">
+      <div className="form-wrapper">
+        {id === undefined && (
+          <Form.Group>
+            <Form.Label>Customer</Form.Label>
+            <Form.Control
+              as="select"
+              custom
+              name="customerId"
+              value={formik.values.customerId}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.customerId && formik.errors.customerId}
+              isValid={formik.touched.customerId && !formik.errors.customerId}
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              {customers?.map((customer) => {
+                return (
+                  <option value={customer.id} key={customer.id}>
+                    {customer.name}
+                  </option>
+                );
+              })}
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.customerId}
+            </Form.Control.Feedback>
+          </Form.Group>
+        )}
         <Form.Group>
-          <Form.Label>Customer</Form.Label>
+          <Form.Check
+            custom
+            inline
+            type="radio"
+            label="Package"
+            id="package"
+            name="itemType"
+            checked={formik.values.itemType === 'package'}
+            value={formik.values.itemType}
+            onChange={(e) => handleitemType(e)}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.itemType && formik.errors.itemType}
+            isValid={formik.touched.itemType && !formik.errors.itemType}
+          />
+          <Form.Check
+            custom
+            inline
+            type="radio"
+            label="Activity"
+            id="activity"
+            name="itemType"
+            checked={formik.values.itemType === 'activity'}
+            value={formik.values.itemType}
+            onChange={(e) => handleitemType(e)}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.itemType && formik.errors.itemType}
+            isValid={formik.touched.itemType && !formik.errors.itemType}
+          />
+          <Feedback type="invalid">{formik.errors.itemType}</Feedback>
+        </Form.Group>
+        <Form.Group>
+          <Form.Label>
+            {formik.values.itemType === 'activity'
+              ? 'Activity'
+              : formik.values.itemType === 'package'
+              ? 'Package'
+              : 'Activity/Package'}
+          </Form.Label>
           <Form.Control
             as="select"
             custom
-            name="customerId"
-            value={formik.values.customerId}
+            name="item"
+            value={formik.values.item}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isInvalid={formik.touched.customerId && formik.errors.customerId}
-            isValid={formik.touched.customerId && !formik.errors.customerId}
+            isInvalid={formik.touched.item && formik.errors.item}
+            isValid={formik.touched.item && !formik.errors.item}
+            disabled={!formik.values.itemType}
           >
             <option value="" disabled>
               Select an option
             </option>
-            {customers?.map((customer) => {
-              return (
-                <option value={customer.id} key={customer.id}>
-                  {customer.name}
-                </option>
-              );
-            })}
+            {formik.values.itemType === 'activity'
+              ? activities?.map((activity) => (
+                  <option
+                    key={activity.id}
+                    value={activity.id}
+                    onClick={() => setSelectedItem(activity)}
+                  >
+                    {activity.name}
+                  </option>
+                ))
+              : packages?.map((item) => (
+                  <option
+                    key={item.id}
+                    value={item.id}
+                    onClick={() => setSelectedItem(item)}
+                  >
+                    {item.name}
+                  </option>
+                ))}
           </Form.Control>
           <Form.Control.Feedback type="invalid">
-            {formik.errors.customerId}
+            {formik.errors.item}
           </Form.Control.Feedback>
         </Form.Group>
-      )}
-      <Form.Group>
-        <Form.Check
-          custom
-          inline
-          type="radio"
-          label="Package"
-          id="package"
-          name="itemType"
-          checked={formik.values.itemType === 'package'}
-          value={formik.values.itemType}
-          onChange={(e) => handleitemType(e)}
-          onBlur={formik.handleBlur}
-          isInvalid={formik.touched.itemType && formik.errors.itemType}
-          isValid={formik.touched.itemType && !formik.errors.itemType}
-        />
-        <Form.Check
-          custom
-          inline
-          type="radio"
-          label="Activity"
-          id="activity"
-          name="itemType"
-          checked={formik.values.itemType === 'activity'}
-          value={formik.values.itemType}
-          onChange={(e) => handleitemType(e)}
-          onBlur={formik.handleBlur}
-          isInvalid={formik.touched.itemType && formik.errors.itemType}
-          isValid={formik.touched.itemType && !formik.errors.itemType}
-        />
-        <Feedback type="invalid">{formik.errors.itemType}</Feedback>
-      </Form.Group>
-      <Form.Group>
-        <Form.Label>
-          {formik.values.itemType === 'activity'
-            ? 'Activity'
-            : formik.values.itemType === 'package'
-            ? 'Package'
-            : 'Activity/Package'}
-        </Form.Label>
-        <Form.Control
-          as="select"
-          custom
-          name="item"
-          value={formik.values.item}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          isInvalid={formik.touched.item && formik.errors.item}
-          isValid={formik.touched.item && !formik.errors.item}
-          disabled={!formik.values.itemType}
-        >
-          <option value="" disabled>
-            Select an option
-          </option>
-          {formik.values.itemType === 'activity'
-            ? activities?.map((activity) => (
-                <option
-                  key={activity.id}
-                  value={activity.id}
-                  onClick={() => setSelectedItem(activity)}
-                >
-                  {activity.name}
-                </option>
-              ))
-            : packages?.map((item) => (
-                <option
-                  key={item.id}
-                  value={item.id}
-                  onClick={() => setSelectedItem(item)}
-                >
-                  {item.name}
-                </option>
-              ))}
-        </Form.Control>
-        <Form.Control.Feedback type="invalid">
-          {formik.errors.item}
-        </Form.Control.Feedback>
-      </Form.Group>
 
-      <Form.Group>
-        <Form.Label>Quantity</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Quantity"
-          name="quantity"
-          value={formik.values.quantity}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          isInvalid={formik.touched.quantity && formik.errors.quantity}
-          isValid={formik.touched.quantity && !formik.errors.quantity}
-        />
-        <Form.Control.Feedback type="invalid">
-          {formik.errors.quantity}
-        </Form.Control.Feedback>
-      </Form.Group>
-      {selectedItem?.recurrencyPay && (
         <Form.Group>
-          <Form.Label>Due Date</Form.Label>
-          <InputDatePicker
-            min={minDate}
-            name="date"
-            value={formik.values.date}
+          <Form.Label>Quantity</Form.Label>
+          <Form.Control
+            type="number"
+            placeholder="Quantity"
+            name="quantity"
+            value={formik.values.quantity}
             onChange={formik.handleChange}
-            isInvalid={formik.touched.date && formik.errors.date}
-            isValid={formik.touched.date && !formik.errors.date}
+            onBlur={formik.handleBlur}
+            isInvalid={formik.touched.quantity && formik.errors.quantity}
+            isValid={formik.touched.quantity && !formik.errors.quantity}
           />
+          <Form.Control.Feedback type="invalid">
+            {formik.errors.quantity}
+          </Form.Control.Feedback>
         </Form.Group>
-      )}
-      {selectedItem?.price !== undefined && (
-        <OrderSummary
-          price={selectedItem?.price}
-          discountType={discount?.type}
-          discountValue={discount?.value}
-          quantity={formik.values.quantity}
-        />
-      )}
-
-      <Form.Group className="d-flex justify-content-end mt-5">
-        <Button
-          variant="secondary"
-          className="mr-2 text-nowrap"
-          disabled={formik.isSubmitting}
-          onClick={() => setClose(false)}
-        >
-          Cancel
-        </Button>
-        <ButtonLoading
-          type="submit"
-          className="mr-2 text-nowrap"
-          loading={formik.isSubmitting}
-          onClick={() => {
-            formik.handleSubmit();
-            setSelectedPage(2);
-          }}
-        >
-          Pay With Credit Card
-        </ButtonLoading>
-        <ButtonLoading
-          type="submit"
-          className="text-nowrap"
-          loading={formik.isSubmitting}
-          onClick={() => {
-            formik.handleSubmit();
-            setSelectedPage(3);
-          }}
-        >
-          Pay With Money
-        </ButtonLoading>
-      </Form.Group>
+        {selectedItem?.recurrencyPay && (
+          <Form.Group>
+            <Form.Label>Due Date</Form.Label>
+            <InputDatePicker
+              min={minDate}
+              name="date"
+              value={formik.values.date}
+              onChange={formik.handleChange}
+              isInvalid={formik.touched.date && formik.errors.date}
+              isValid={formik.touched.date && !formik.errors.date}
+            />
+          </Form.Group>
+        )}
+        {selectedItem?.price !== undefined && (
+          <OrderSummary
+            price={selectedItem?.price}
+            discountType={discount?.type}
+            discountValue={discount?.value}
+            quantity={formik.values.quantity}
+          />
+        )}
+      </div>
+      <div className="buttons">
+        <Form.Group className="d-flex justify-content-end">
+          <Button
+            variant="secondary"
+            className="mr-2 text-nowrap"
+            disabled={formik.isSubmitting}
+            onClick={() => setClose(false)}
+          >
+            Cancel
+          </Button>
+          <ButtonLoading
+            type="submit"
+            className="mr-2 text-nowrap"
+            loading={formik.isSubmitting}
+            onClick={() => {
+              formik.handleSubmit();
+              setSelectedPage(2);
+            }}
+          >
+            Pay With Credit Card
+          </ButtonLoading>
+          <ButtonLoading
+            type="submit"
+            className="text-nowrap"
+            loading={formik.isSubmitting}
+            onClick={() => setSelectedPage(3)}
+          >
+            Pay With Money
+          </ButtonLoading>
+        </Form.Group>
+      </div>
     </Form>
   );
 };

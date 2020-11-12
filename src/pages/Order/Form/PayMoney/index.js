@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import { Button, Form } from 'react-bootstrap';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import useNotification from '~/contexts/notification';
@@ -7,7 +7,6 @@ import * as checkoutService from '~/services/checkout';
 import * as discountService from '~/services/discount';
 
 import OrderSummary from '../OrderSummary';
-import { Container } from './styles';
 
 const PayMoney = ({ setClose, order, reloadOrders }) => {
   const { sendNotification } = useNotification();
@@ -49,15 +48,17 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
   }
 
   return (
-    <Container>
-      <h2>Package/Activity Name</h2>
-      <OrderSummary
-        price={order.item.price}
-        discountType={discount?.type}
-        discountValue={discount?.value}
-        quantity={order.quantity}
-      />
-      <div className="d-flex justify-content-end mt-5">
+    <Form className="modal-form">
+      <div className="form-wrapper">
+        <h2>Package/Activity Name</h2>
+        <OrderSummary
+          price={order.item.price}
+          discountType={discount?.type}
+          discountValue={discount?.value}
+          quantity={order.quantity}
+        />
+      </div>
+      <div className="buttons">
         <Button
           variant="secondary"
           className="mr-2"
@@ -69,7 +70,7 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
           Confirm Order
         </ButtonLoading>
       </div>
-    </Container>
+    </Form>
   );
 };
 
