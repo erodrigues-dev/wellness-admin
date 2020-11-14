@@ -72,7 +72,6 @@ export const Content = styled.div`
       }
 
       .buttons {
-        padding: 20px 0;
         align-self: flex-end;
         padding: 20px;
       }

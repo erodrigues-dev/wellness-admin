@@ -19,7 +19,7 @@ const List = ({ list }) => {
             <span className="relationName">{item.name}</span>
           </div>
           <div className="value">
-            <span>{currency.format(item.subtotal)}</span>
+            <span>{currency.format(item.total)}</span>
           </div>
         </li>
       ))}

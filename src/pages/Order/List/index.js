@@ -30,7 +30,7 @@ function List({ list }) {
                 {item.type === 'package' ? <FiPackage /> : <FiActivity />}
                 {item.name}
               </td>
-              <td>{formatCurrency(item.subtotal)}</td>
+              <td>{formatCurrency(item.total)}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
               <td>{item.user.name}</td>
             </tr>

@@ -133,12 +133,9 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
 
   function handleItemSelect(e) {
     formik.setFieldValue('item', e.target.value);
+    const item = formik.values.itemType === 'activity' ? activities : packages;
 
-    setSelectedItem(
-      formik.values.itemType === 'activity'
-        ? activities.find((item) => item.id === Number(e.target.value))
-        : packages.find((item) => item.id === Number(e.target.value))
-    );
+    setSelectedItem(item.find((el) => el.id === Number(e.target.value)));
   }
 
   function handleSubmit(data) {
@@ -217,13 +214,11 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
               ? 'Package'
               : 'Activity/Package'}
           </Form.Label>
-          {/* {console.log(formik.values.item)} */}
           <Form.Control
             as="select"
             custom
             name="item"
             value={formik.values.item}
-            // onChange={formik.handleChange}
             onChange={handleItemSelect}
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.item && formik.errors.item}
