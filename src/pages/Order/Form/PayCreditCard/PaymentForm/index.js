@@ -6,7 +6,7 @@ import * as discountService from '~/services/discount';
 
 import OrderSummary from '../../OrderSummary';
 import CardSelection from '../CardSelection';
-import { Container, Line } from './styles';
+import { Container } from './styles';
 
 const PaymentForm = ({ SqPaymentForm, order }) => {
   const { sendNotification } = useNotification();
@@ -118,8 +118,8 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
 
   return (
     <Container>
-      <Form id="form-container" className="d-flex">
-        <Col md="7">
+      <Form id="form-container">
+        <Col md="7" className="card-form">
           <CardSelection />
           <Form.Label>
             <h3>New Card</h3>
@@ -172,14 +172,7 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
           </Form.Group>
         </Col>
 
-        <Col
-          md="1"
-          className="d-flex align-items-center justify-content-center"
-        >
-          <Line />
-        </Col>
-
-        <Col md="4" className="d-flex flex-column justify-content-center">
+        <Col md="4" className="confirmOrder">
           <h3>Order Summary</h3>
           <OrderSummary
             price={order.item.price}
@@ -189,7 +182,7 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
           >
             Tips
           </OrderSummary>
-          <Form.Row className="d-flex justify-content-end">
+          <Form.Row className="button-request">
             <Button
               variant="primary"
               className="mr-2 button-credit-card"

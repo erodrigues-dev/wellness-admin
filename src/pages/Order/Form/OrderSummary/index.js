@@ -10,6 +10,8 @@ const OrderSummary = ({
   discountType,
   discountValue,
   quantity,
+  recurrency,
+  createOrder,
   children,
 }) => {
   return (
@@ -20,9 +22,16 @@ const OrderSummary = ({
       <li>
         Discount: <span>{handleDiscount(discountType, discountValue)}</span>
       </li>
-      <li>
-        Quantity: <span>{quantity}</span>
-      </li>
+      {recurrency !== undefined && (
+        <li>
+          Recurrency Pay: <span>{recurrency}</span>
+        </li>
+      )}
+      {(createOrder === undefined || !createOrder) && (
+        <li>
+          Quantity: <span>{quantity}</span>
+        </li>
+      )}
       {children && <li>{children}</li>}
       <li className="subtotal">
         Subtotal:{' '}

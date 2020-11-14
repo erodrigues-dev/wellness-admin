@@ -17,14 +17,14 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
       const { data } = await discountService.find(
         order.customerId,
         order.itemType,
-        order.item.id
+        order.item?.id
       );
 
       setDiscount(data);
     } catch (error) {
       sendNotification(error.message, false);
     }
-  }, [sendNotification, order.customerId, order.itemType, order.item.id]);
+  }, [sendNotification, order]);
 
   useEffect(() => {
     findDiscount();
@@ -34,7 +34,7 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
     try {
       await checkoutService.payWithMoney({
         itemType: order.itemType,
-        itemId: order.item.id,
+        itemId: order.item?.id,
         customerId: order.customerId,
         quantity: order.quantity,
       });
@@ -55,7 +55,9 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
           price={order.item.price}
           discountType={discount?.type}
           discountValue={discount?.value}
+          recurrency={order.item.recurrencyPay}
           quantity={order.quantity}
+          showQuantity
         />
       </div>
       <div className="buttons">
@@ -66,7 +68,7 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
         >
           Cancel
         </Button>
-        <ButtonLoading type="submit" onClick={handleSubmit}>
+        <ButtonLoading type="button" onClick={handleSubmit}>
           Confirm Order
         </ButtonLoading>
       </div>

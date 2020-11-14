@@ -15,7 +15,7 @@ export const Container = styled.div`
 
 export const Content = styled.div`
   background-color: #fff;
-  min-width: 300px;
+  min-width: 600px;
   max-height: 90%;
   max-width: 90%;
   overflow: hidden;
@@ -24,8 +24,8 @@ export const Content = styled.div`
   grid-template-rows: 80px 1fr;
   grid-template-areas: 'header' 'main';
 
-  @media (min-width: 1280px) {
-    width: 600px;
+  @media (max-width: 1024px) {
+    min-width: 300px;
   }
 
   header {
@@ -72,9 +72,9 @@ export const Content = styled.div`
       }
 
       .buttons {
-        padding: 10px 0;
-        margin-right: 25px;
+        padding: 20px 0;
         align-self: flex-end;
+        padding: 20px;
       }
     }
   }

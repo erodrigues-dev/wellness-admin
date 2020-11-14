@@ -123,12 +123,22 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
       listPackages();
   }, [formik.values.itemType, listPackages, packages]);
 
-  function handleitemType(e) {
+  function handleItemType(e) {
     const { id: inputId } = e.target;
     setDiscount(null);
     setSelectedItem(null);
     formik.setFieldValue('itemType', inputId);
     formik.setFieldValue('item', '');
+  }
+
+  function handleItemSelect(e) {
+    formik.setFieldValue('item', e.target.value);
+
+    setSelectedItem(
+      formik.values.itemType === 'activity'
+        ? activities.find((item) => item.id === Number(e.target.value))
+        : packages.find((item) => item.id === Number(e.target.value))
+    );
   }
 
   function handleSubmit(data) {
@@ -178,7 +188,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
             name="itemType"
             checked={formik.values.itemType === 'package'}
             value={formik.values.itemType}
-            onChange={(e) => handleitemType(e)}
+            onChange={(e) => handleItemType(e)}
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.itemType && formik.errors.itemType}
             isValid={formik.touched.itemType && !formik.errors.itemType}
@@ -192,7 +202,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
             name="itemType"
             checked={formik.values.itemType === 'activity'}
             value={formik.values.itemType}
-            onChange={(e) => handleitemType(e)}
+            onChange={(e) => handleItemType(e)}
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.itemType && formik.errors.itemType}
             isValid={formik.touched.itemType && !formik.errors.itemType}
@@ -207,12 +217,14 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
               ? 'Package'
               : 'Activity/Package'}
           </Form.Label>
+          {/* {console.log(formik.values.item)} */}
           <Form.Control
             as="select"
             custom
             name="item"
             value={formik.values.item}
-            onChange={formik.handleChange}
+            // onChange={formik.handleChange}
+            onChange={handleItemSelect}
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.item && formik.errors.item}
             isValid={formik.touched.item && !formik.errors.item}
@@ -223,20 +235,12 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
             </option>
             {formik.values.itemType === 'activity'
               ? activities?.map((activity) => (
-                  <option
-                    key={activity.id}
-                    value={activity.id}
-                    onClick={() => setSelectedItem(activity)}
-                  >
+                  <option key={activity.id} value={activity.id}>
                     {activity.name}
                   </option>
                 ))
               : packages?.map((item) => (
-                  <option
-                    key={item.id}
-                    value={item.id}
-                    onClick={() => setSelectedItem(item)}
-                  >
+                  <option key={item.id} value={item.id}>
                     {item.name}
                   </option>
                 ))}
@@ -262,7 +266,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
             {formik.errors.quantity}
           </Form.Control.Feedback>
         </Form.Group>
-        {selectedItem?.recurrencyPay && (
+        {selectedItem?.recurrencyPay !== 'one-time' && (
           <Form.Group>
             <Form.Label>Due Date</Form.Label>
             <InputDatePicker
@@ -280,7 +284,9 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
             price={selectedItem?.price}
             discountType={discount?.type}
             discountValue={discount?.value}
+            recurrency={selectedItem?.recurrencyPay}
             quantity={formik.values.quantity}
+            createOrder
           />
         )}
       </div>
@@ -305,14 +311,17 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
           >
             Pay With Credit Card
           </ButtonLoading>
-          <ButtonLoading
-            type="submit"
-            className="text-nowrap"
-            loading={formik.isSubmitting}
-            onClick={() => setSelectedPage(3)}
-          >
-            Pay With Money
-          </ButtonLoading>
+          {selectedItem?.recurrencyPay !== 'weekly' &&
+            selectedItem?.recurrencyPay !== 'monthly' && (
+              <ButtonLoading
+                type="submit"
+                className="text-nowrap"
+                loading={formik.isSubmitting}
+                onClick={() => setSelectedPage(3)}
+              >
+                Pay With Money
+              </ButtonLoading>
+            )}
         </Form.Group>
       </div>
     </Form>
