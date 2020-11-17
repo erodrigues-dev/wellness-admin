@@ -21,7 +21,6 @@ const Orders = () => {
   const [openCheckout, setOpenCheckout] = useState(false);
   const [filter] = useState({
     customerId: id,
-    page: 1,
     limit: 3,
   });
   const [list, setList] = useState([]);

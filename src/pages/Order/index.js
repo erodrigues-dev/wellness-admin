@@ -28,7 +28,7 @@ const Order = () => {
   const listOrders = useCallback(async () => {
     try {
       let response;
-      if (filter.customerId) response = await service.list(page, filter);
+      if (filter.customerId) response = await service.list(page, 10, filter);
       else response = await service.list(page);
 
       setList(response.data);

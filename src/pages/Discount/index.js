@@ -26,7 +26,7 @@ const Discount = () => {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ customerId: '', relationName: '' });
-  const [openAdd, setOpenAdd] = useState(false);
+  const [openAdd, setOpenAdd] = useState(true);
 
   const listDiscounts = useCallback(async () => {
     try {
