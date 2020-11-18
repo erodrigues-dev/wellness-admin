@@ -9,7 +9,9 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
+import { currency } from '~/helpers/intl';
 import masks from '~/helpers/masks';
+import { sanitize } from '~/helpers/sanitize';
 import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
 import * as service from '~/services/discount';
@@ -25,7 +27,6 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
   const [packages, setPackages] = useState();
-  const [selectedRelation, setSelectedRelation] = useState(null);
 
   const formik = useFormik({
     validationSchema: schema,
@@ -37,6 +38,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
       relationId: isAdd ? 0 : selected.relationId,
       type: isAdd ? '' : selected.type,
       value: isAdd ? '' : selected.value,
+      relationPrice: isAdd ? '' : selected.relationPrice,
     },
   });
 
@@ -94,27 +96,14 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
       listPackages();
   }, [formik.values.relationType, listPackages, packages]);
 
-  function compareSelectedValue() {
-    return (
-      selectedRelation?.price < parseFloat(formik.values.value.replace(',', ''))
-    );
-  }
-
   async function handleSubmit(data) {
-    if (data.type === 'amount' && compareSelectedValue()) {
-      sendNotification(
-        "Discount can't be greater than the selected relation value.",
-        false
-      );
-      formik.setFieldValue('value', '');
-      return;
-    }
+    const submitValue = { ...data, value: sanitize.number(data.value) };
 
     try {
       if (isAdd) {
-        await service.create(data);
+        await service.create(submitValue);
       } else {
-        await service.update(data);
+        await service.update(submitValue);
       }
 
       reloadList();
@@ -150,10 +139,36 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
     const { value } = e.target;
     formik.setFieldValue('relationId', value);
 
-    const relation =
+    const relationType =
       formik.values.relationType === 'package' ? packages : activities;
 
-    setSelectedRelation(relation?.find((item) => item.id === Number(value)));
+    const relation = relationType?.find((item) => item.id === Number(value));
+
+    formik.setFieldValue('relationPrice', relation?.price);
+  }
+
+  function relationTypeName(type) {
+    let name = 'Activity/Package';
+
+    if (type === 'activity') {
+      name = 'Activity';
+    } else if (type === 'package') {
+      name = 'Package';
+    }
+
+    return name;
+  }
+
+  function typeName(type) {
+    let name = 'Amount/Percent';
+
+    if (type === 'amount') {
+      name = 'Amount ($)';
+    } else if (type === 'percent') {
+      name = 'Percent (%)';
+    }
+
+    return name;
   }
 
   return (
@@ -226,16 +241,16 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
                 formik.touched.relationType && !formik.errors.relationType
               }
             />
-            <Feedback type="invalid">{formik.errors.relationType}</Feedback>
+            {formik.touched.relationType && formik.errors.relationType && (
+              <Feedback type="invalid" style={{ display: 'block' }}>
+                {formik.errors.relationType}
+              </Feedback>
+            )}
           </Form.Group>
 
           <Form.Group>
             <Form.Label>
-              {formik.values.relationType === 'activity'
-                ? 'Activity'
-                : formik.values.relationType === 'package'
-                ? 'Package'
-                : 'Activity/Package'}
+              {relationTypeName(formik.values.relationType)}
             </Form.Label>
             <Form.Control
               as="select"
@@ -300,25 +315,17 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
               isInvalid={formik.touched.type && formik.errors.type}
               isValid={formik.touched.type && !formik.errors.type}
             />
-            <Feedback type="invalid">{formik.errors.type}</Feedback>
+            {formik.touched.type && formik.errors.type && !formik.values.type && (
+              <Feedback type="invalid" style={{ display: 'block' }}>
+                {formik.errors.type}
+              </Feedback>
+            )}
           </Form.Group>
 
           <Form.Group>
-            <Form.Label>
-              {formik.values.type === 'amount'
-                ? 'Amount'
-                : formik.values.type === 'percent'
-                ? 'Percent'
-                : 'Amount/Percent'}
-            </Form.Label>
+            <Form.Label>{typeName(formik.values.type)}</Form.Label>
             <Form.Control
-              placeholder={
-                formik.values.type === 'amount'
-                  ? 'Must be less than the Relation Price selected'
-                  : formik.values.type === 'percent'
-                  ? 'Must be a number in a range of 1-100'
-                  : 'Amount/Percent'
-              }
+              placeholder={typeName(formik.values.type)}
               name="value"
               value={formik.values.value}
               onChange={handleValue}
@@ -330,6 +337,12 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
             <Form.Control.Feedback type="invalid">
               {formik.errors.value}
             </Form.Control.Feedback>
+            {formik.values.relationType && formik.values.type && (
+              <p className="mt-1">
+                {relationTypeName(formik.values.relationType)} Price:{' '}
+                {currency.format(formik.values.relationPrice)}
+              </p>
+            )}
           </Form.Group>
         </div>
         <div className="buttons">

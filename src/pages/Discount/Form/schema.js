@@ -5,9 +5,10 @@ import { sanitize } from '~/helpers/sanitize';
 const schema = yup.object().shape({
   id: yup.number(),
   customerId: yup.number().min(1, 'Select a Customer').required(),
-  relationType: yup.string().required(),
+  relationType: yup.string().required('Select an option'),
   relationId: yup.number().min(1, 'Select a Package/Type').required(),
-  type: yup.string().required(),
+  relationPrice: yup.string(),
+  type: yup.string().required('Select an option'),
   value: yup
     .number()
     .when('type', {
@@ -16,7 +17,10 @@ const schema = yup.object().shape({
       otherwise: yup
         .number()
         .min(0.1)
-        .max(999999999.99)
+        .max(
+          yup.ref('relationPrice'),
+          'Discount must be less than the relation value.'
+        )
         .transform((_value, originalValue) => sanitize.number(originalValue)),
     })
     .required(),

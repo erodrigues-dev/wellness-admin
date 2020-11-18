@@ -24,6 +24,7 @@ const Order = () => {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ customerId: '' });
   const [openAdd, setOpenAdd] = useState(false);
+  // const [openAdd, setOpenAdd] = useState(true);
 
   const listOrders = useCallback(async () => {
     try {

@@ -204,7 +204,11 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
             isInvalid={formik.touched.itemType && formik.errors.itemType}
             isValid={formik.touched.itemType && !formik.errors.itemType}
           />
-          <Feedback type="invalid">{formik.errors.itemType}</Feedback>
+          {formik.touched.itemType && formik.errors.itemType && (
+            <Feedback type="invalid" style={{ display: 'block' }}>
+              {formik.errors.itemType}
+            </Feedback>
+          )}
         </Form.Group>
         <Form.Group>
           <Form.Label>

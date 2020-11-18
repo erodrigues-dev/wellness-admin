@@ -21,13 +21,12 @@ const Orders = () => {
   const [openCheckout, setOpenCheckout] = useState(false);
   const [filter] = useState({
     customerId: id,
-    limit: 3,
   });
   const [list, setList] = useState([]);
 
   const listOrders = useCallback(async () => {
     try {
-      const { data } = await service.list(1, filter);
+      const { data } = await service.list(1, 3, filter);
 
       setList(data);
     } catch (error) {
