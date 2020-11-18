@@ -23,7 +23,7 @@ const Order = () => {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ customerId: '' });
-  const [openAdd, setOpenAdd] = useState(false);
+  const [openAdd, setOpenAdd] = useState(true);
   // const [openAdd, setOpenAdd] = useState(true);
 
   const listOrders = useCallback(async () => {
