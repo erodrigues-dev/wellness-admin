@@ -14,6 +14,10 @@ export function payWithCard(data) {
   return api.post(`${ENDPOINT}/pay-with-card`, data);
 }
 
+export function listCards(id) {
+  return api.get(`${ENDPOINT}/customers/${id}/cards`);
+}
+
 export default {
   payWithMoney,
 };

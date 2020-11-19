@@ -120,7 +120,7 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
     <Container>
       <Form id="form-container">
         <Col md="7" className="card-form">
-          <CardSelection />
+          <CardSelection customerId={order.customerId} />
           <Form.Label>
             <h3>New Card</h3>
           </Form.Label>
