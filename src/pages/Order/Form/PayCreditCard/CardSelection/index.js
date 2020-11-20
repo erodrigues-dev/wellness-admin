@@ -25,11 +25,11 @@ export const Menu = (cards, selected) =>
     return <MenuItem text={card.last_4} key={card.id} selected={selected} />;
   });
 
-const CardSelection = ({ customerId, setCardId }) => {
+const CardSelection = ({ customerId, setCardId, setFormikCard }) => {
   const { sendNotification } = useNotification();
   const [selected, setSelected] = useState('');
   const [menuItems, setMenuItems] = useState();
-  const [cards, setCards] = useState([{ last_4: 'New', id: 'new' }]);
+  const [cards, setCards] = useState([{ last_4: 'New', id: '' }]);
 
   const listCards = useCallback(async () => {
     if (customerId === undefined) return;
@@ -54,8 +54,9 @@ const CardSelection = ({ customerId, setCardId }) => {
   }, [cards, selected]);
 
   function onSelect(key) {
-    setCardId(key !== 'new' ? key : '');
-    setSelected(key !== 'new' ? key : '');
+    setCardId(key === '' ? '' : key);
+    setSelected(key === '' ? '' : key);
+    setFormikCard(key);
   }
 
   return (

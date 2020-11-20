@@ -18,9 +18,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const [discount, setDiscount] = useState(0);
   const [paymentForm, setPaymentForm] = useState(null);
   const [selectedCard, setSelectedCard] = useState('');
-  const [cardNonceResponseReceived, setCardNonceResponseReceived] = useState(
-    false
-  );
   const [cardId, setCardId] = useState('');
   const [squareErrors, setSquareErrors] = useState([]);
   const [config] = useState({
@@ -46,9 +43,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     },
     callbacks: {
       cardNonceResponseReceived: (errors, nonce) => {
-        setCardNonceResponseReceived(true);
         if (errors) {
-          setCardNonceResponseReceived(false);
           setSquareErrors(errors);
         } else {
           setCardId(nonce);
@@ -59,14 +54,35 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
       },
     },
   });
+
   const formik = useFormik({
     validationSchema: schema,
+    onSubmit: handleSubmit,
     initialValues: {
       cardName: '',
       saveCard: order.isRecurrencyPay,
       tip: '',
+      cardId: '',
     },
   });
+
+  const findDiscount = useCallback(async () => {
+    try {
+      const { data } = await discountService.find(
+        order.customerId,
+        order.itemType,
+        order.item.id
+      );
+
+      setDiscount(data);
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [sendNotification, order.customerId, order.itemType, order.item.id]);
+
+  useEffect(() => {
+    findDiscount();
+  }, [findDiscount]);
 
   const checkout = useCallback(
     async (nonce) => {
@@ -104,10 +120,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   );
 
   useEffect(() => {
-    if (cardNonceResponseReceived) {
-      checkout(cardId || selectedCard);
+    if (cardId) {
+      checkout(cardId);
     }
-  }, [cardNonceResponseReceived, cardId, selectedCard, checkout]);
+  }, [cardId, checkout]);
 
   useEffect(() => {
     setPaymentForm(new SqPaymentForm(config));
@@ -123,24 +139,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     }
   };
 
-  const findDiscount = useCallback(async () => {
-    try {
-      const { data } = await discountService.find(
-        order.customerId,
-        order.itemType,
-        order.item.id
-      );
-
-      setDiscount(data);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }, [sendNotification, order.customerId, order.itemType, order.item.id]);
-
-  useEffect(() => {
-    findDiscount();
-  }, [findDiscount]);
-
   useEffect(() => {
     if (selectedCard) {
       formik.setFieldValue('saveCard', false);
@@ -155,13 +153,22 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     }
   }, [squareErrors, selectedCard, sendNotification]);
 
+  function handleSubmit() {
+    if (selectedCard) {
+      checkout(selectedCard);
+    } else {
+      requestCardNonce();
+    }
+  }
+
   return (
     <Container>
-      <Form id="form-container">
+      <Form id="form-container" onSubmit={formik.handleSubmit}>
         <Col md="7" className="card-form">
           <CardSelection
             customerId={order.customerId}
             setCardId={setSelectedCard}
+            setFormikCard={(e) => formik.setFieldValue('cardId', e)}
           />
           <Form.Label>
             <h3>New Card</h3>
@@ -200,6 +207,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                 />
               </Form.Group>
             </Col>
+
             <Col md="3">
               <Form.Group>
                 <Form.Label>Security Code (CVV)</Form.Label>
@@ -210,6 +218,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                 />
               </Form.Group>
             </Col>
+
             <Col md="6">
               <Form.Group>
                 <Form.Label>Zip Code</Form.Label>
@@ -273,8 +282,8 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             <Button
               variant="primary"
               className="mr-2 button-credit-card"
-              onClick={requestCardNonce}
-              disabled={formik.isSubmitting}
+              onClick={formik.handleSubmit}
+              // disabled={formik.isSubmitting}
             >
               Confirm Order
             </Button>
