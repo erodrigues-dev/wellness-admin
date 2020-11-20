@@ -22,6 +22,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     false
   );
   const [cardId, setCardId] = useState('');
+  const [squareErrors, setSquareErrors] = useState([]);
   const [config] = useState({
     applicationId: process.env.REACT_APP_SQUARE_APP_ID,
     locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
@@ -47,9 +48,8 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
       cardNonceResponseReceived: (errors, nonce) => {
         setCardNonceResponseReceived(true);
         if (errors) {
-          errors.forEach((error) => {
-            sendNotification(`  ${error.message}`, false);
-          });
+          setCardNonceResponseReceived(false);
+          setSquareErrors(errors);
         } else {
           setCardId(nonce);
         }
@@ -70,6 +70,8 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
 
   const checkout = useCallback(
     async (nonce) => {
+      if (!nonce) return;
+
       try {
         await checkoutService.payWithCard({
           customerId: order.customerId,
@@ -107,10 +109,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     }
   }, [cardNonceResponseReceived, cardId, selectedCard, checkout]);
 
-  // useEffect(() => {
-  //   if (cardId) checkout(cardId);
-  // }, [cardId, checkout]);
-
   useEffect(() => {
     setPaymentForm(new SqPaymentForm(config));
   }, [SqPaymentForm, config]);
@@ -143,6 +141,20 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     findDiscount();
   }, [findDiscount]);
 
+  useEffect(() => {
+    if (selectedCard) {
+      formik.setFieldValue('saveCard', false);
+    }
+  }, [selectedCard]);
+
+  useEffect(() => {
+    if (squareErrors.length > 0 && !selectedCard) {
+      squareErrors.forEach((error) => {
+        sendNotification(error.message, false);
+      });
+    }
+  }, [squareErrors, selectedCard, sendNotification]);
+
   return (
     <Container>
       <Form id="form-container">
@@ -173,7 +185,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Card Number</Form.Label>
+            <Form.Label>Credit Card Number</Form.Label>
             <Form.Control id="sq-card-number" name="sq-card-number" />
           </Form.Group>
 
@@ -190,7 +202,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             </Col>
             <Col md="3">
               <Form.Group>
-                <Form.Label>Security Code</Form.Label>
+                <Form.Label>Security Code (CVV)</Form.Label>
                 <Form.Control
                   id="sq-cvv"
                   name="sq-cvv"

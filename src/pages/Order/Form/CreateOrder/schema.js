@@ -8,7 +8,11 @@ const schema = yup.object().shape({
   isRecurrencyPay: yup.boolean(),
   dueDate: yup.date().when('isRecurrencyPay', {
     is: true,
-    then: yup.date().required('Date is a required field'),
+    then: yup.date().when('itemType', {
+      is: 'activity',
+      then: yup.date().notRequired(),
+      otherwise: yup.date().required('Due Date is a required field'),
+    }),
     otherwise: yup.date().nullable().notRequired(),
   }),
 });

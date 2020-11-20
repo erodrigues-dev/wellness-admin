@@ -269,27 +269,29 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
             {formik.errors.quantity}
           </Form.Control.Feedback>
         </Form.Group>
-        {selectedItem?.recurrencyPay !== 'one-time' && (
-          <Form.Group>
-            <Form.Label>Due Date</Form.Label>
-            <InputDatePicker
-              min={minDate}
-              name="dueDate"
-              value={formik.values.dueDate}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.dueDate && formik.errors.dueDate}
-              isValid={formik.touched.dueDate && !formik.errors.dueDate}
-            />
-            {formik.touched.dueDate && formik.errors.dueDate && (
-              <Form.Control.Feedback
-                type="invalid"
-                style={{ display: 'block' }}
-              >
-                {formik.errors.dueDate}
-              </Form.Control.Feedback>
-            )}
-          </Form.Group>
-        )}
+        {selectedItem?.recurrencyPay !== 'one-time' &&
+          selectedItem?.recurrencyPay !== undefined &&
+          formik.values.itemType === 'package' && (
+            <Form.Group>
+              <Form.Label>Due Date</Form.Label>
+              <InputDatePicker
+                min={minDate}
+                name="dueDate"
+                value={formik.values.dueDate}
+                onChange={formik.handleChange}
+                isInvalid={formik.touched.dueDate && formik.errors.dueDate}
+                isValid={formik.touched.dueDate && !formik.errors.dueDate}
+              />
+              {formik.touched.dueDate && formik.errors.dueDate && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block' }}
+                >
+                  {formik.errors.dueDate}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          )}
         {selectedItem?.price !== undefined && (
           <OrderSummary
             price={selectedItem?.price}
