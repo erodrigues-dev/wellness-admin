@@ -34,7 +34,8 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
       itemType: '',
       item: '',
       quantity: 1,
-      dueDate: null,
+      dueDate: '',
+      isRecurrencyPay: '',
     },
   });
 
@@ -133,9 +134,12 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
 
   function handleItemSelect(e) {
     formik.setFieldValue('item', e.target.value);
-    const item = formik.values.itemType === 'activity' ? activities : packages;
+    const itemType =
+      formik.values.itemType === 'activity' ? activities : packages;
+    const item = itemType.find((el) => el.id === Number(e.target.value));
 
-    setSelectedItem(item.find((el) => el.id === Number(e.target.value)));
+    setSelectedItem(item);
+    formik.setFieldValue('isRecurrencyPay', item?.recurrencyPay !== 'one-time');
   }
 
   function handleSubmit(data) {
@@ -276,6 +280,14 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
               isInvalid={formik.touched.dueDate && formik.errors.dueDate}
               isValid={formik.touched.dueDate && !formik.errors.dueDate}
             />
+            {formik.touched.dueDate && formik.errors.dueDate && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.dueDate}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
         )}
         {selectedItem?.price !== undefined && (

@@ -50,7 +50,7 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
   return (
     <Form className="modal-form">
       <div className="form-wrapper">
-        <h2>Package/Activity Name</h2>
+        <h2>{order.item.name}</h2>
         <OrderSummary
           price={order.item.price}
           discountType={discount?.type}

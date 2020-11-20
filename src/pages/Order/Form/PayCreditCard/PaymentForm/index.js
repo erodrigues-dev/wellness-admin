@@ -4,6 +4,7 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 import { useFormik } from 'formik';
 
 import useNotification from '~/contexts/notification';
+import masks from '~/helpers/masks';
 import * as checkoutService from '~/services/checkout';
 import * as discountService from '~/services/discount';
 
@@ -57,7 +58,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     validationSchema: schema,
     initialValues: {
       cardName: '',
-      saveCard: false,
+      saveCard: order.isRecurrencyPay,
       tip: '',
     },
   });
@@ -198,7 +199,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
               name="saveCard"
               checked={formik.values.saveCard}
               onChange={formik.handleChange}
-              disabled={!!order.dueDate}
+              disabled={order.isRecurrencyPay}
             />
           </Form.Group>
         </Col>
@@ -211,10 +212,27 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             discountValue={discount?.value}
             quantity={order.quantity}
             recurrency={order.item.recurrencyPay}
-            hasTip={order.item.recurrencyPay === 'one-time'}
-            tip={formik.values.tip}
-            setTip={(e) => formik.setFieldValue('tip', e)}
-          />
+          >
+            <Form.Group className="tip">
+              <div className="tip-wrapper">
+                <Form.Label className="m-0">Tip: </Form.Label>
+                <Form.Control
+                  placeholder="ex: 1,000.00"
+                  name="tip"
+                  value={formik.values.tip}
+                  onChange={(e) => formik.setFieldValue('tip', masks.price(e))}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.tip && formik.errors.tip}
+                  isValid={formik.touched.tip && !formik.errors.tip}
+                />
+              </div>
+              {formik.touched.tip && formik.errors.tip && (
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.tip}
+                </Form.Control.Feedback>
+              )}
+            </Form.Group>
+          </OrderSummary>
           <Form.Row className="button-request">
             <Button
               variant="primary"
