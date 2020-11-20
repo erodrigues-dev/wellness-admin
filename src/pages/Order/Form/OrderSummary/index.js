@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { currency } from '~/helpers/intl';
+import masks from '~/helpers/masks';
 import { handleDiscount, subtotalCalc } from '~/helpers/subtotal';
 
 import { Container } from './styles';
@@ -12,8 +13,14 @@ const OrderSummary = ({
   quantity,
   recurrency,
   createOrder,
-  children,
+  hasTip,
+  tip,
+  setTip,
 }) => {
+  function handleTip(e) {
+    setTip(masks.price(e));
+  }
+
   return (
     <Container>
       <li>
@@ -32,7 +39,11 @@ const OrderSummary = ({
           Quantity: <span>{quantity}</span>
         </li>
       )}
-      {children && <li>{children}</li>}
+      {hasTip && (
+        <li>
+          Tip: <input type="text" value={tip} onChange={handleTip} />
+        </li>
+      )}
       <li className="subtotal">
         Subtotal:{' '}
         <span>

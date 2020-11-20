@@ -34,7 +34,7 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
       itemType: '',
       item: '',
       quantity: 1,
-      date: '',
+      dueDate: null,
     },
   });
 
@@ -270,11 +270,11 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
             <Form.Label>Due Date</Form.Label>
             <InputDatePicker
               min={minDate}
-              name="date"
-              value={formik.values.date}
+              name="dueDate"
+              value={formik.values.dueDate}
               onChange={formik.handleChange}
-              isInvalid={formik.touched.date && formik.errors.date}
-              isValid={formik.touched.date && !formik.errors.date}
+              isInvalid={formik.touched.dueDate && formik.errors.dueDate}
+              isValid={formik.touched.dueDate && !formik.errors.dueDate}
             />
           </Form.Group>
         )}

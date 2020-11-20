@@ -1,18 +1,23 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Col, Form, Row } from 'react-bootstrap';
 
+import { useFormik } from 'formik';
+
 import useNotification from '~/contexts/notification';
+import * as checkoutService from '~/services/checkout';
 import * as discountService from '~/services/discount';
 
 import OrderSummary from '../../OrderSummary';
 import CardSelection from '../CardSelection';
+import schema from './schema';
 import { Container } from './styles';
 
-const PaymentForm = ({ SqPaymentForm, order }) => {
+const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const { sendNotification } = useNotification();
   const [discount, setDiscount] = useState(0);
-
-  const config = {
+  const [paymentForm, setPaymentForm] = useState(null);
+  const [cardId, setCardId] = useState('');
+  const [config] = useState({
     applicationId: process.env.REACT_APP_SQUARE_APP_ID,
     locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
     inputClass: 'sq-input',
@@ -54,14 +59,13 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
           ],
         };
       },
-      // eslint-disable-next-line no-unused-vars
-      cardNonceResponseReceived: (errors, nonce, cardData) => {
-        // console.log(nonce);
-        // console.log(cardData);
+      cardNonceResponseReceived: (errors, nonce) => {
         if (errors) {
           errors.forEach((error) => {
             sendNotification(`  ${error.message}`, false);
           });
+        } else {
+          setCardId(nonce);
         }
       },
       unsupportedBrowserDetected: () => {},
@@ -90,12 +94,65 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
         document.getElementById('name').style.display = 'inline-flex';
       },
     },
-  };
-  const paymentForm = new SqPaymentForm(config);
-  paymentForm.build();
+  });
+  const formik = useFormik({
+    validationSchema: schema,
+    initialValues: {
+      cardName: '',
+      saveCard: false,
+      tip: '',
+    },
+  });
+
+  const checkout = useCallback(
+    async (nonce) => {
+      try {
+        await checkoutService.payWithCard({
+          customerId: order.customerId,
+          itemType: order.itemType,
+          itemId: order.item.id,
+          quantity: order.quantity,
+          cardId: nonce,
+          cardName: formik.values.cardName,
+          tip: formik.values.tip,
+          dueDate: order.dueDate,
+          saveCard: formik.values.saveCard,
+        });
+
+        reloadOrders();
+        sendNotification('Order created successfully.', true);
+        setClose(false);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [
+      order,
+      sendNotification,
+      formik.values.cardName,
+      formik.values.saveCard,
+      formik.values.tip,
+      reloadOrders,
+      setClose,
+    ]
+  );
+
+  useEffect(() => {
+    if (cardId) checkout(cardId);
+  }, [cardId, checkout]);
+
+  useEffect(() => {
+    setPaymentForm(new SqPaymentForm(config));
+  }, [SqPaymentForm, config]);
+
+  useEffect(() => {
+    if (paymentForm) paymentForm.build();
+  }, [paymentForm]);
 
   const requestCardNonce = () => {
-    paymentForm.requestCardNonce();
+    if (paymentForm) {
+      paymentForm.requestCardNonce();
+    }
   };
 
   const findDiscount = useCallback(async () => {
@@ -125,8 +182,21 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
             <h3>New Card</h3>
           </Form.Label>
           <Form.Group>
-            <Form.Label>Card holder name</Form.Label>
-            <Form.Control id="name" placeholder="Name" name="name" />
+            <Form.Label id="name">Card holder name</Form.Label>
+            <Form.Control
+              id="cardName"
+              name="cardName"
+              placeholder="Name"
+              type="text"
+              value={formik.values.cardName}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.cardName && formik.errors.cardName}
+              isValid={formik.touched.cardName && !formik.errors.cardName}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.cardName}
+            </Form.Control.Feedback>
           </Form.Group>
           <Form.Group>
             <Form.Label>Card Number</Form.Label>
@@ -166,8 +236,11 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
               className="text-nowrap"
               type="checkbox"
               label="Save card"
-              id="package"
-              name="relationType"
+              id="saveCard"
+              name="saveCard"
+              checked={formik.values.saveCard}
+              onChange={formik.handleChange}
+              disabled={!!order.dueDate}
             />
           </Form.Group>
         </Col>
@@ -179,14 +252,17 @@ const PaymentForm = ({ SqPaymentForm, order }) => {
             discountType={discount?.type}
             discountValue={discount?.value}
             quantity={order.quantity}
-          >
-            Tips
-          </OrderSummary>
+            recurrency={order.item.recurrencyPay}
+            hasTip={order.item.recurrencyPay === 'one-time'}
+            tip={formik.values.tip}
+            setTip={(e) => formik.setFieldValue('tip', e)}
+          />
           <Form.Row className="button-request">
             <Button
               variant="primary"
               className="mr-2 button-credit-card"
               onClick={requestCardNonce}
+              disabled={formik.isSubmitting}
             >
               Confirm Order
             </Button>

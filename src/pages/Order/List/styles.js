@@ -12,4 +12,14 @@ export const Container = styled.div`
   .relation-name svg {
     margin-right: 5px;
   }
+
+  td div {
+    display: flex;
+    align-items: center;
+
+    svg {
+      margin-right: 5px;
+      font-size: 1.4rem;
+    }
+  }
 `;
