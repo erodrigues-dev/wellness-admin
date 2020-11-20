@@ -39,26 +39,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
       placeholder: 'ex: 1111111',
     },
     callbacks: {
-      createPaymentRequest: () => {
-        return {
-          requestShippingAddress: false,
-          requestBillingInfo: true,
-          currencyCode: 'USD',
-          countryCode: 'US',
-          total: {
-            label: 'MERCHANT NAME',
-            amount: '100',
-            pending: false,
-          },
-          lineItems: [
-            {
-              label: 'Subtotal',
-              amount: '100',
-              pending: false,
-            },
-          ],
-        };
-      },
       cardNonceResponseReceived: (errors, nonce) => {
         if (errors) {
           errors.forEach((error) => {
@@ -66,28 +46,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           });
         } else {
           setCardId(nonce);
-        }
-      },
-      unsupportedBrowserDetected: () => {},
-      inputEventReceived: (inputEvent) => {
-        switch (inputEvent.eventType) {
-          case 'focusClassAdded':
-            break;
-          case 'focusClassRemoved':
-            break;
-          case 'errorClassAdded':
-            document.getElementById('error').innerHTML =
-              'Please fix card information errors before continuing.';
-            break;
-          case 'errorClassRemoved':
-            document.getElementById('error').style.display = 'none';
-            break;
-          case 'cardBrandChanged':
-            break;
-          case 'postalCodeChanged':
-            break;
-          default:
-            break;
         }
       },
       paymentFormLoaded: () => {
