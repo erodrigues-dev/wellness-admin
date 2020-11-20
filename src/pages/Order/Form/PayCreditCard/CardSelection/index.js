@@ -25,11 +25,11 @@ export const Menu = (cards, selected) =>
     return <MenuItem text={card.last_4} key={card.id} selected={selected} />;
   });
 
-const CardSelection = ({ customerId }) => {
+const CardSelection = ({ customerId, setCardId }) => {
   const { sendNotification } = useNotification();
   const [selected, setSelected] = useState('');
   const [menuItems, setMenuItems] = useState();
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState([{ last_4: 'New', id: 'new' }]);
 
   const listCards = useCallback(async () => {
     if (customerId === undefined) return;
@@ -37,7 +37,7 @@ const CardSelection = ({ customerId }) => {
     try {
       const { data } = await checkoutService.listCards(customerId);
 
-      setCards(data);
+      setCards((prevState) => [...prevState, ...data]);
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -54,7 +54,8 @@ const CardSelection = ({ customerId }) => {
   }, [cards, selected]);
 
   function onSelect(key) {
-    setSelected(key);
+    setCardId(key !== 'new' ? key : '');
+    setSelected(key !== 'new' ? key : '');
   }
 
   return (

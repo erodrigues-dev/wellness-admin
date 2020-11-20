@@ -17,6 +17,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const { sendNotification } = useNotification();
   const [discount, setDiscount] = useState(0);
   const [paymentForm, setPaymentForm] = useState(null);
+  const [selectedCard, setSelectedCard] = useState('');
+  const [cardNonceResponseReceived, setCardNonceResponseReceived] = useState(
+    false
+  );
   const [cardId, setCardId] = useState('');
   const [config] = useState({
     applicationId: process.env.REACT_APP_SQUARE_APP_ID,
@@ -41,6 +45,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     },
     callbacks: {
       cardNonceResponseReceived: (errors, nonce) => {
+        setCardNonceResponseReceived(true);
         if (errors) {
           errors.forEach((error) => {
             sendNotification(`  ${error.message}`, false);
@@ -74,7 +79,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           cardId: nonce,
           cardName: formik.values.cardName,
           tip: formik.values.tip,
-          dueDate: order.dueDate,
+          dueDate: order.dueDate || null,
           saveCard: formik.values.saveCard,
         });
 
@@ -97,8 +102,14 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   );
 
   useEffect(() => {
-    if (cardId) checkout(cardId);
-  }, [cardId, checkout]);
+    if (cardNonceResponseReceived) {
+      checkout(cardId || selectedCard);
+    }
+  }, [cardNonceResponseReceived, cardId, selectedCard, checkout]);
+
+  // useEffect(() => {
+  //   if (cardId) checkout(cardId);
+  // }, [cardId, checkout]);
 
   useEffect(() => {
     setPaymentForm(new SqPaymentForm(config));
@@ -136,7 +147,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     <Container>
       <Form id="form-container">
         <Col md="7" className="card-form">
-          <CardSelection customerId={order.customerId} />
+          <CardSelection
+            customerId={order.customerId}
+            setCardId={setSelectedCard}
+          />
           <Form.Label>
             <h3>New Card</h3>
           </Form.Label>
@@ -152,6 +166,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.cardName && formik.errors.cardName}
               isValid={formik.touched.cardName && !formik.errors.cardName}
+              disabled={selectedCard}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.cardName}
@@ -169,19 +184,28 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                 <Form.Control
                   id="sq-expiration-date"
                   name="sq-expiration-date"
+                  disabled={selectedCard}
                 />
               </Form.Group>
             </Col>
             <Col md="3">
               <Form.Group>
                 <Form.Label>Security Code</Form.Label>
-                <Form.Control id="sq-cvv" name="sq-cvv" />
+                <Form.Control
+                  id="sq-cvv"
+                  name="sq-cvv"
+                  disabled={selectedCard}
+                />
               </Form.Group>
             </Col>
             <Col md="6">
               <Form.Group>
                 <Form.Label>Zip Code</Form.Label>
-                <Form.Control id="sq-postal-code" name="sq-postal-code" />
+                <Form.Control
+                  id="sq-postal-code"
+                  name="sq-postal-code"
+                  disabled={selectedCard}
+                />
               </Form.Group>
             </Col>
           </Row>
@@ -199,7 +223,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
               name="saveCard"
               checked={formik.values.saveCard}
               onChange={formik.handleChange}
-              disabled={order.isRecurrencyPay}
+              disabled={order.isRecurrencyPay || selectedCard}
             />
           </Form.Group>
         </Col>
