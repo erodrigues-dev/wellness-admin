@@ -11,7 +11,7 @@ import * as discountService from '~/services/discount';
 import OrderSummary from '../../OrderSummary';
 import CardSelection from '../CardSelection';
 import schema from './schema';
-import { Container } from './styles';
+import { CardForm, Container } from './styles';
 
 const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const { sendNotification } = useNotification();
@@ -20,6 +20,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const [selectedCard, setSelectedCard] = useState('');
   const [cardId, setCardId] = useState('');
   const [squareErrors, setSquareErrors] = useState([]);
+  const [formLoaded, setFormLoaded] = useState(false);
   const [config] = useState({
     applicationId: process.env.REACT_APP_SQUARE_APP_ID,
     locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
@@ -51,6 +52,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
       },
       paymentFormLoaded: () => {
         document.getElementById('name').style.display = 'inline-flex';
+        setFormLoaded(true);
       },
     },
   });
@@ -143,6 +145,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     if (selectedCard) {
       formik.setFieldValue('saveCard', false);
     }
+    // eslint-disable-next-line
   }, [selectedCard]);
 
   useEffect(() => {
@@ -170,83 +173,86 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             setCardId={setSelectedCard}
             setFormikCard={(e) => formik.setFieldValue('cardId', e)}
           />
-          <Form.Label>
-            <h3>New Card</h3>
-          </Form.Label>
-          <Form.Group>
-            <Form.Label id="name">Card holder name</Form.Label>
-            <Form.Control
-              id="cardName"
-              name="cardName"
-              placeholder="Name"
-              type="text"
-              value={formik.values.cardName}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.cardName && formik.errors.cardName}
-              isValid={formik.touched.cardName && !formik.errors.cardName}
-              disabled={selectedCard}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.cardName}
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group>
-            <Form.Label>Credit Card Number</Form.Label>
-            <Form.Control id="sq-card-number" name="sq-card-number" />
-          </Form.Group>
+          <CardForm formLoaded={formLoaded}>
+            {!formLoaded && <p>Loading...</p>}
+            <Form.Label>
+              <h3>New Card</h3>
+            </Form.Label>
+            <Form.Group>
+              <Form.Label id="name">Card holder name</Form.Label>
+              <Form.Control
+                id="cardName"
+                name="cardName"
+                placeholder="Name"
+                type="text"
+                value={formik.values.cardName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.cardName && formik.errors.cardName}
+                isValid={formik.touched.cardName && !formik.errors.cardName}
+                disabled={selectedCard}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.cardName}
+              </Form.Control.Feedback>
+            </Form.Group>
+            <Form.Group>
+              <Form.Label>Credit Card Number</Form.Label>
+              <Form.Control id="sq-card-number" name="sq-card-number" />
+            </Form.Group>
 
-          <Row className="d-flex ">
-            <Col md="3">
-              <Form.Group>
-                <Form.Label>Expiration Date</Form.Label>
-                <Form.Control
-                  id="sq-expiration-date"
-                  name="sq-expiration-date"
-                  disabled={selectedCard}
-                />
-              </Form.Group>
-            </Col>
+            <Row className="d-flex ">
+              <Col md="3">
+                <Form.Group>
+                  <Form.Label>Expiration Date</Form.Label>
+                  <Form.Control
+                    id="sq-expiration-date"
+                    name="sq-expiration-date"
+                    disabled={selectedCard}
+                  />
+                </Form.Group>
+              </Col>
 
-            <Col md="3">
-              <Form.Group>
-                <Form.Label>Security Code (CVV)</Form.Label>
-                <Form.Control
-                  id="sq-cvv"
-                  name="sq-cvv"
-                  disabled={selectedCard}
-                />
-              </Form.Group>
-            </Col>
+              <Col md="3">
+                <Form.Group>
+                  <Form.Label>Security Code (CVV)</Form.Label>
+                  <Form.Control
+                    id="sq-cvv"
+                    name="sq-cvv"
+                    disabled={selectedCard}
+                  />
+                </Form.Group>
+              </Col>
 
-            <Col md="6">
-              <Form.Group>
-                <Form.Label>Zip Code</Form.Label>
-                <Form.Control
-                  id="sq-postal-code"
-                  name="sq-postal-code"
-                  disabled={selectedCard}
-                />
-              </Form.Group>
-            </Col>
-          </Row>
+              <Col md="6">
+                <Form.Group>
+                  <Form.Label>Zip Code</Form.Label>
+                  <Form.Control
+                    id="sq-postal-code"
+                    name="sq-postal-code"
+                    disabled={selectedCard}
+                  />
+                </Form.Group>
+              </Col>
+            </Row>
 
-          <p id="error" />
+            <p id="error" />
 
-          <Form.Group>
-            <Form.Check
-              custom
-              inline
-              className="text-nowrap"
-              type="checkbox"
-              label="Save card"
-              id="saveCard"
-              name="saveCard"
-              checked={formik.values.saveCard}
-              onChange={formik.handleChange}
-              disabled={order.isRecurrencyPay || selectedCard}
-            />
-          </Form.Group>
+            <Form.Group>
+              <Form.Check
+                custom
+                inline
+                className="text-nowrap"
+                type="checkbox"
+                label="Save card"
+                id="saveCard"
+                name="saveCard"
+                checked={formik.values.saveCard}
+                onChange={formik.handleChange}
+                disabled={order.isRecurrencyPay || selectedCard}
+              />
+            </Form.Group>
+          </CardForm>
         </Col>
 
         <Col md="4" className="confirmOrder">
@@ -261,7 +267,8 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             <Form.Group className="tip">
               <div className="tip-wrapper">
                 <Form.Label className="m-0">Tip: </Form.Label>
-                <Form.Control
+                <input
+                  type="text"
                   placeholder="ex: 1,000.00"
                   name="tip"
                   value={formik.values.tip}

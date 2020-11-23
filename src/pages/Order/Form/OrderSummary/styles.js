@@ -20,6 +20,8 @@ export const Container = styled.ul`
       input {
         margin-left: 10px;
         width: 125px;
+        padding: 5px;
+        border-bottom: 1px solid #ccc;
       }
     }
 

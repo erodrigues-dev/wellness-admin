@@ -64,8 +64,8 @@ const CardSelection = ({ customerId, setCardId, setFormikCard }) => {
       {menuItems !== undefined && (
         <ScrollMenu
           data={menuItems}
-          arrowLeft={<RiArrowLeftSLine />}
-          arrowRight={<RiArrowRightSLine />}
+          arrowLeft={<RiArrowLeftSLine size={40} />}
+          arrowRight={<RiArrowRightSLine size={40} />}
           selected={selected}
           onSelect={onSelect}
         />

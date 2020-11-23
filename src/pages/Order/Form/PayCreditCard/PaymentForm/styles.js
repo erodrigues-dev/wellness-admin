@@ -13,6 +13,9 @@ export const Container = styled.div`
   .card-form {
     border-right: 1px solid #ccc;
     margin-right: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     @media (max-width: 1024px) {
       border: none;
@@ -26,4 +29,9 @@ export const Container = styled.div`
       justify-content: flex-end;
     }
   }
+`;
+
+export const CardForm = styled.div`
+  ${(props) => !props.formLoaded && 'max-height: 1px;'}
+  ${(props) => !props.formLoaded && 'overflow: hidden;'}
 `;
