@@ -12,7 +12,6 @@ const OrderSummary = ({
   quantity,
   recurrency,
   createOrder,
-  children,
 }) => {
   return (
     <Container>
@@ -32,7 +31,6 @@ const OrderSummary = ({
           Quantity: <span>{quantity}</span>
         </li>
       )}
-      <li>{children}</li>
       <li className="subtotal">
         Subtotal:{' '}
         <span>

@@ -5,13 +5,14 @@ import { useFormik } from 'formik';
 
 import useNotification from '~/contexts/notification';
 import masks from '~/helpers/masks';
+import { number } from '~/helpers/sanitize';
 import * as checkoutService from '~/services/checkout';
 import * as discountService from '~/services/discount';
 
-import OrderSummary from '../../OrderSummary';
 import CardSelection from '../CardSelection';
 import schema from './schema';
 import { CardForm, Container } from './styles';
+import Summary from './Summary';
 
 const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const { sendNotification } = useNotification();
@@ -98,7 +99,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           quantity: order.quantity,
           cardId: nonce,
           cardName: formik.values.cardName,
-          tip: formik.values.tip,
+          tip: number(formik.values.tip),
           dueDate: order.dueDate || null,
           saveCard: formik.values.saveCard,
         });
@@ -167,7 +168,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   return (
     <Container>
       <Form id="form-container" onSubmit={formik.handleSubmit}>
-        <Col md="7" className="card-form">
+        <Col md="8" className="card-form">
           <CardSelection
             customerId={order.customerId}
             setCardId={setSelectedCard}
@@ -215,7 +216,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
 
               <Col md="3">
                 <Form.Group>
-                  <Form.Label>Security Code (CVV)</Form.Label>
+                  <Form.Label>CVV</Form.Label>
                   <Form.Control
                     id="sq-cvv"
                     name="sq-cvv"
@@ -254,19 +255,19 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             </Form.Group>
           </CardForm>
         </Col>
-
         <Col md="4" className="confirmOrder">
           <h3>Order Summary</h3>
-          <OrderSummary
-            price={order.item.price}
+          <Summary
+            subtotal={order.item.price}
             discountType={discount?.type}
-            discountValue={discount?.value}
+            discount={discount?.value}
             quantity={order.quantity}
+            tip={formik.values.tip}
             recurrency={order.item.recurrencyPay}
           >
             <Form.Group className="tip">
               <div className="tip-wrapper">
-                <Form.Label className="m-0">Tip: </Form.Label>
+                $
                 <input
                   type="text"
                   placeholder="ex: 1,000.00"
@@ -274,17 +275,18 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                   value={formik.values.tip}
                   onChange={(e) => formik.setFieldValue('tip', masks.price(e))}
                   onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.tip && formik.errors.tip}
-                  isValid={formik.touched.tip && !formik.errors.tip}
                 />
               </div>
               {formik.touched.tip && formik.errors.tip && (
-                <Form.Control.Feedback type="invalid">
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block', fontWeight: 'normal' }}
+                >
                   {formik.errors.tip}
                 </Form.Control.Feedback>
               )}
             </Form.Group>
-          </OrderSummary>
+          </Summary>
           <Form.Row className="button-request">
             <Button
               variant="primary"

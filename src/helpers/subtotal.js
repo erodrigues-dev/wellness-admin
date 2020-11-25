@@ -1,6 +1,13 @@
 import { currency } from './intl';
+import { number } from './sanitize';
 
-export function subtotalCalc(price, discountType, discountValue, quantity) {
+export function subtotalCalc(
+  price,
+  discountType,
+  discountValue,
+  quantity,
+  tip
+) {
   let subtotal;
 
   if (price === undefined) {
@@ -11,6 +18,10 @@ export function subtotalCalc(price, discountType, discountValue, quantity) {
     subtotal = (price - discountValue) * quantity;
   } else if (discountType === 'percent') {
     subtotal = (price - (discountValue / 100) * price) * quantity;
+  }
+
+  if (tip || tip !== undefined) {
+    subtotal += number(tip);
   }
 
   return currency.format(subtotal);

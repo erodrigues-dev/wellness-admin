@@ -12,24 +12,6 @@ export const Container = styled.ul`
     }
   }
 
-  .tip {
-    .tip-wrapper {
-      display: flex;
-      align-items: center;
-
-      input {
-        margin-left: 10px;
-        width: 125px;
-        padding: 5px;
-        border-bottom: 1px solid #ccc;
-      }
-    }
-
-    .invalid-feedback {
-      display: block;
-    }
-  }
-
   .subtotal {
     margin-top: 10px;
     padding-top: 10px;
