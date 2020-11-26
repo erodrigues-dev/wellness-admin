@@ -23,7 +23,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const [cardId, setCardId] = useState(0);
   const [squareErrors, setSquareErrors] = useState([]);
   const [formLoaded, setFormLoaded] = useState(false);
-  const [tip, setTip] = useState(0);
+  const [tip, setTip] = useState('');
   const [config] = useState({
     applicationId: process.env.REACT_APP_SQUARE_APP_ID,
     locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
@@ -66,7 +66,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     initialValues: {
       cardName: '',
       saveCard: order.isRecurrencyPay,
-      tip: 0,
+      tip: '',
       cardId: '',
     },
   });
@@ -84,8 +84,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
       sendNotification(error.message, false);
     }
   }, [sendNotification, order.customerId, order.itemType, order.item.id]);
-
-  // VERIFICAR REGRAS (SAVE CARD TRUE E DISABLED QUANDO RECORRENTE TB)
 
   useEffect(() => {
     findDiscount();
@@ -146,13 +144,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   };
 
   useEffect(() => {
-    if (selectedCard) {
-      formik.setFieldValue('saveCard', false);
-    }
-    // eslint-disable-next-line
-  }, [selectedCard]);
-
-  useEffect(() => {
     if (squareErrors.length > 0 && !selectedCard) {
       squareErrors.forEach((error) => {
         sendNotification(error.message, false);
@@ -161,11 +152,21 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   }, [squareErrors, selectedCard, sendNotification]);
 
   function handleSubmit() {
-    if (selectedCard) {
+    if (selectedCard.id) {
       checkout(selectedCard.id);
     } else {
       requestCardNonce();
     }
+  }
+
+  function handleSelectCard(key) {
+    if (key.id === '' && order.isRecurrencyPay) {
+      formik.setFieldValue('saveCard', true);
+    } else {
+      formik.setFieldValue('saveCard', false);
+    }
+    formik.setFieldValue('cardName', '');
+    setSelectedCard(key);
   }
 
   return (
@@ -174,7 +175,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         <Col md="8" className="card-form">
           <CardSelection
             customerId={order.customerId}
-            setCard={setSelectedCard}
+            setCard={handleSelectCard}
             setFormikCard={(e) => formik.setFieldValue('cardId', e)}
           />
           <CardForm formLoaded={formLoaded} hasCardSelected={!!selectedCard.id}>
