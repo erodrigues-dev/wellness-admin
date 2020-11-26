@@ -22,7 +22,9 @@ const Summary = ({
         </li>
         <li>
           <span className="text">Discounts</span>
-          <span className="price">{handleDiscount(discount) || '-'}</span>
+          <span className="price">
+            {handleDiscount(discountType, discount) || '-'}
+          </span>
         </li>
         <li>
           <span className="text">Tips</span>

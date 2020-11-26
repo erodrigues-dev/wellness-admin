@@ -10,6 +10,7 @@ import * as checkoutService from '~/services/checkout';
 import * as discountService from '~/services/discount';
 
 import CardSelection from '../CardSelection';
+import CardResume from './CardResume';
 import schema from './schema';
 import { CardForm, Container } from './styles';
 import Summary from './Summary';
@@ -19,9 +20,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const [discount, setDiscount] = useState(0);
   const [paymentForm, setPaymentForm] = useState(null);
   const [selectedCard, setSelectedCard] = useState('');
-  const [cardId, setCardId] = useState('');
+  const [cardId, setCardId] = useState(0);
   const [squareErrors, setSquareErrors] = useState([]);
   const [formLoaded, setFormLoaded] = useState(false);
+  const [tip, setTip] = useState(0);
   const [config] = useState({
     applicationId: process.env.REACT_APP_SQUARE_APP_ID,
     locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
@@ -64,7 +66,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     initialValues: {
       cardName: '',
       saveCard: order.isRecurrencyPay,
-      tip: '',
+      tip: 0,
       cardId: '',
     },
   });
@@ -83,6 +85,8 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     }
   }, [sendNotification, order.customerId, order.itemType, order.item.id]);
 
+  // VERIFICAR REGRAS (SAVE CARD TRUE E DISABLED QUANDO RECORRENTE TB)
+
   useEffect(() => {
     findDiscount();
   }, [findDiscount]);
@@ -90,7 +94,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const checkout = useCallback(
     async (nonce) => {
       if (!nonce) return;
-
       try {
         await checkoutService.payWithCard({
           customerId: order.customerId,
@@ -99,7 +102,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           quantity: order.quantity,
           cardId: nonce,
           cardName: formik.values.cardName,
-          tip: number(formik.values.tip),
+          tip: number(tip),
           dueDate: order.dueDate || null,
           saveCard: formik.values.saveCard,
         });
@@ -116,7 +119,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
       sendNotification,
       formik.values.cardName,
       formik.values.saveCard,
-      formik.values.tip,
+      tip,
       reloadOrders,
       setClose,
     ]
@@ -159,7 +162,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
 
   function handleSubmit() {
     if (selectedCard) {
-      checkout(selectedCard);
+      checkout(selectedCard.id);
     } else {
       requestCardNonce();
     }
@@ -171,10 +174,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         <Col md="8" className="card-form">
           <CardSelection
             customerId={order.customerId}
-            setCardId={setSelectedCard}
+            setCard={setSelectedCard}
             setFormikCard={(e) => formik.setFieldValue('cardId', e)}
           />
-          <CardForm formLoaded={formLoaded}>
+          <CardForm formLoaded={formLoaded} hasCardSelected={!!selectedCard.id}>
             {!formLoaded && <p>Loading...</p>}
             <Form.Label>
               <h3>New Card</h3>
@@ -191,51 +194,56 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                 onBlur={formik.handleBlur}
                 isInvalid={formik.touched.cardName && formik.errors.cardName}
                 isValid={formik.touched.cardName && !formik.errors.cardName}
-                disabled={selectedCard}
+                disabled={!!selectedCard.id}
               />
               <Form.Control.Feedback type="invalid">
                 {formik.errors.cardName}
               </Form.Control.Feedback>
             </Form.Group>
-            <Form.Group>
-              <Form.Label>Credit Card Number</Form.Label>
-              <Form.Control id="sq-card-number" name="sq-card-number" />
-            </Form.Group>
+            {!!(selectedCard.id || formik.values.cardId) && (
+              <CardResume selectedCard={selectedCard} />
+            )}
+            <div className="square-form">
+              <Form.Group>
+                <Form.Label>Credit Card Number</Form.Label>
+                <Form.Control id="sq-card-number" name="sq-card-number" />
+              </Form.Group>
 
-            <Row className="d-flex ">
-              <Col md="3">
-                <Form.Group>
-                  <Form.Label>Expiration Date</Form.Label>
-                  <Form.Control
-                    id="sq-expiration-date"
-                    name="sq-expiration-date"
-                    disabled={selectedCard}
-                  />
-                </Form.Group>
-              </Col>
+              <Row className="d-flex ">
+                <Col md="3">
+                  <Form.Group>
+                    <Form.Label>Expiration Date</Form.Label>
+                    <Form.Control
+                      id="sq-expiration-date"
+                      name="sq-expiration-date"
+                      disabled={!!selectedCard.id}
+                    />
+                  </Form.Group>
+                </Col>
 
-              <Col md="3">
-                <Form.Group>
-                  <Form.Label>CVV</Form.Label>
-                  <Form.Control
-                    id="sq-cvv"
-                    name="sq-cvv"
-                    disabled={selectedCard}
-                  />
-                </Form.Group>
-              </Col>
+                <Col md="3">
+                  <Form.Group>
+                    <Form.Label>CVV</Form.Label>
+                    <Form.Control
+                      id="sq-cvv"
+                      name="sq-cvv"
+                      disabled={!!selectedCard.id}
+                    />
+                  </Form.Group>
+                </Col>
 
-              <Col md="6">
-                <Form.Group>
-                  <Form.Label>Zip Code</Form.Label>
-                  <Form.Control
-                    id="sq-postal-code"
-                    name="sq-postal-code"
-                    disabled={selectedCard}
-                  />
-                </Form.Group>
-              </Col>
-            </Row>
+                <Col md="6">
+                  <Form.Group>
+                    <Form.Label>Zip Code</Form.Label>
+                    <Form.Control
+                      id="sq-postal-code"
+                      name="sq-postal-code"
+                      disabled={!!selectedCard.id}
+                    />
+                  </Form.Group>
+                </Col>
+              </Row>
+            </div>
 
             <p id="error" />
 
@@ -250,7 +258,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                 name="saveCard"
                 checked={formik.values.saveCard}
                 onChange={formik.handleChange}
-                disabled={order.isRecurrencyPay || selectedCard}
+                disabled={order.isRecurrencyPay || !!selectedCard.id}
               />
             </Form.Group>
           </CardForm>
@@ -273,7 +281,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                   placeholder="ex: 1,000.00"
                   name="tip"
                   value={formik.values.tip}
-                  onChange={(e) => formik.setFieldValue('tip', masks.price(e))}
+                  onChange={(e) => {
+                    formik.setFieldValue('tip', masks.price(e));
+                    setTip(masks.price(e));
+                  }}
                   onBlur={formik.handleBlur}
                 />
               </div>

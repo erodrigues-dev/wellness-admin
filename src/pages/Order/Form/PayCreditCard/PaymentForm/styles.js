@@ -14,7 +14,6 @@ export const Container = styled.div`
     border-right: 1px solid #ccc;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     padding: 0 15px;
 
     @media (max-width: 1024px) {
@@ -35,6 +34,11 @@ export const Container = styled.div`
 `;
 
 export const CardForm = styled.div`
-  ${(props) => !props.formLoaded && 'max-height: 1px;'}
+  ${(props) => !props.formLoaded && 'max-height: 0.1px;'}
   ${(props) => !props.formLoaded && 'overflow: hidden;'}
+
+  .square-form {
+    ${(props) => props.hasCardSelected && 'max-height: 0.1px;'}
+    ${(props) => props.hasCardSelected && 'overflow: hidden;'}
+  }
 `;

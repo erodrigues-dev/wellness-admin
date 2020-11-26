@@ -25,7 +25,7 @@ export const Menu = (cards, selected) =>
     return <MenuItem text={card.last_4} key={card.id} selected={selected} />;
   });
 
-const CardSelection = ({ customerId, setCardId, setFormikCard }) => {
+const CardSelection = ({ customerId, setCard, setFormikCard }) => {
   const { sendNotification } = useNotification();
   const [selected, setSelected] = useState('');
   const [menuItems, setMenuItems] = useState();
@@ -54,7 +54,9 @@ const CardSelection = ({ customerId, setCardId, setFormikCard }) => {
   }, [cards, selected]);
 
   function onSelect(key) {
-    setCardId(key === '' ? '' : key);
+    const card = cards.find((item) => item.id === key);
+
+    setCard(card);
     setSelected(key === '' ? '' : key);
     setFormikCard(key);
   }

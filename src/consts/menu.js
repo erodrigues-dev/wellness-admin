@@ -16,16 +16,16 @@ export const MENU = [
     functionality: FUNCTIONALITIES.CUSTOMERS,
   },
   {
-    title: 'Packages',
-    path: '/packages',
-    Icon: FiPackage,
-    functionality: FUNCTIONALITIES.PACKAGES,
-  },
-  {
     title: 'Activities',
     path: '/activities',
     Icon: FiActivity,
     functionality: FUNCTIONALITIES.ACTIVITIES,
+  },
+  {
+    title: 'Packages',
+    path: '/packages',
+    Icon: FiPackage,
+    functionality: FUNCTIONALITIES.PACKAGES,
   },
   {
     title: 'Employees',

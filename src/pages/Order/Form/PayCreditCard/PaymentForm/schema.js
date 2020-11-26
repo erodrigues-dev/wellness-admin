@@ -18,6 +18,7 @@ const schema = yup.object().shape({
     .min(0.01)
     .max(999999999.99)
     .notRequired()
+    .nullable()
     .transform((_value, originalValue) => sanitize.number(originalValue)),
 });
 
