@@ -135,6 +135,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
 
   useEffect(() => {
     if (paymentForm) paymentForm.build();
+
+    return () => {
+      if (paymentForm) paymentForm.destroy();
+    };
   }, [paymentForm]);
 
   const requestCardNonce = () => {
