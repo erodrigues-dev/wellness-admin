@@ -27,7 +27,7 @@ const InputDateTimePicker = ({
   useEffect(() => {
     setFormatedValue(formatToDateTime(dateTime) || '');
     onChange({ target: { name, value: dateTime || '' } });
-  }, [dateTime]);
+  }, [dateTime, onChange, name]);
 
   const handleToggleDatePicker = () => {
     setOpenDatePicker((open) => !open);

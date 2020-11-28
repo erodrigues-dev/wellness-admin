@@ -59,8 +59,6 @@ const Order = () => {
     setPage(current);
   }
 
-  // CANCELAR REQUEST DO USEEFFECT
-
   return (
     <>
       <Card body>

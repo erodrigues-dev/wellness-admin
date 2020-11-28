@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
+import ModalForm from '~/pages/Appointments/Form';
 
 import List from './List';
 
 const Appointments = () => {
+  const [openAdd, setOpenAdd] = useState(false);
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.ACTIVITIES,
@@ -29,12 +31,12 @@ const Appointments = () => {
               <Button
                 variant="outline-secondary"
                 className="ml-2 text-nowrap"
-                onClick={() => {}}
+                onClick={() => setOpenAdd(true)}
               >
                 Book Now
               </Button>
             )}
-            <Link to="/discounts">
+            <Link to="/appointments">
               <Button variant="outline-primary" className="ml-2 text-nowrap">
                 See More
               </Button>
@@ -45,6 +47,7 @@ const Appointments = () => {
       <Card.Body>
         <List />
       </Card.Body>
+      {openAdd && <ModalForm reloadAppointments="" setClose={setOpenAdd} />}
     </Card>
   );
 };

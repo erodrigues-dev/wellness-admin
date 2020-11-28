@@ -15,7 +15,7 @@ const Orders = () => {
   const { sendNotification } = useNotification();
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
   const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.ACTIVITIES,
+    FUNCTIONALITIES.CHECKOUT,
     ACTIONS.CREATE
   );
   const [openCheckout, setOpenCheckout] = useState(false);

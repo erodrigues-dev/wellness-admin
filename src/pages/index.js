@@ -7,6 +7,8 @@ export { default as ActivityForm } from './Activity/Form';
 export { default as ActivityDisplay } from './Activity/Display';
 export { default as ActivitySchedule } from './Activity/Schedule';
 
+export { default as Appointments } from './Appointments';
+
 export { default as Category } from './Category';
 export { default as Customer } from './Customer';
 export { default as CustomerForm } from './Customer/Form';

@@ -8,6 +8,7 @@ export const FUNCTIONALITIES = {
   DISCOUNTS: 'discounts',
   ORDERS: 'orders',
   CHECKOUT: 'checkout',
+  // APPOINTMENTS: 'appointments',
 };
 
 export function listAll() {

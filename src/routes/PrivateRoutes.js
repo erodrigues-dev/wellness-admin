@@ -12,6 +12,7 @@ import {
   ActivityForm,
   ActivityDisplay,
   ActivitySchedule,
+  Appointments,
   Category,
   Customer,
   CustomerForm,
@@ -223,6 +224,14 @@ const PrivateRoutes = () => {
           path="/orders"
           component={Order}
         />
+
+        {/* <PrivateRoute
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.APPOINTMENTS}
+          path="/appointments"
+          component={Appointments}
+        /> */}
+        <Route path="/appointments" component={Appointments} />
 
         <Route path="/404" component={NotAuthorized} />
         <Redirect to="/" />

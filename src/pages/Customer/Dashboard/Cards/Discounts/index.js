@@ -12,11 +12,11 @@ import List from './List';
 const Discounts = () => {
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
   const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.ACTIVITIES,
+    FUNCTIONALITIES.DISCOUNTS,
     ACTIONS.CREATE
   );
   const hasPermissionToUpdate = hasPermission(
-    FUNCTIONALITIES.ACTIVITIES,
+    FUNCTIONALITIES.DISCOUNTS,
     ACTIONS.UPDATE
   );
   const { id } = useParams();
