@@ -60,7 +60,6 @@ const List = ({ list, reloadList, handleDelete, allowEdit }) => {
                 variant="danger"
                 onClick={() =>
                   confirmHandler(
-                    'Delete Discount',
                     'Are you sure you want to delete this discount?',
                     () => handleDelete(item.id)
                   )

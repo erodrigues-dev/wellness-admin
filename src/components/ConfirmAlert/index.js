@@ -17,7 +17,7 @@ const ConfirmAlert = ({ title, message, close, action }) => {
         <Button variant="primary" className="mr-2" onClick={close}>
           Cancel
         </Button>
-        <Button variant="danger" onClick={handleConfirm}>
+        <Button variant="secondary" onClick={handleConfirm}>
           Confirm
         </Button>
       </div>

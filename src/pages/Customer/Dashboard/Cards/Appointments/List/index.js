@@ -26,7 +26,6 @@ const List = () => {
             variant="danger"
             onClick={() =>
               confirmHandler(
-                'Delete Appointment',
                 'Are you sure you want to delete this appointment?',
                 () => {}
               )

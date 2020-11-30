@@ -3,14 +3,14 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import ConfirmAlert from '.';
 
-const confirmHandler = (title, message, handleAction) => {
+const confirmHandler = (message, handleAction) => {
   return confirmAlert({
     customUI: ({ onClose }) => {
       return (
         <ConfirmAlert
-          title={title}
+          title="Are you sure?"
           message={message}
-          messageAction="Deletar"
+          messageAction="Delete"
           close={onClose}
           action={handleAction}
         />

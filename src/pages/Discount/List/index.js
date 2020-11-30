@@ -51,7 +51,6 @@ function List({ list, allowEdit, reloadList, handleDelete }) {
                       style={{ cursor: 'pointer' }}
                       onClick={() =>
                         confirmHandler(
-                          'Delete Discount',
                           'Are you sure you want to delete this discount?',
                           () => handleDelete(item.id)
                         )
