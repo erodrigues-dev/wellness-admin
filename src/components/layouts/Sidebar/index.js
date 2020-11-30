@@ -38,7 +38,7 @@ const Sidebar = ({ open, handleClose }) => {
           <Link to="/account">
             <AvatarName>
               <span>{user.name}</span>
-              <FiEdit />
+              <FiEdit title="Edit" />
             </AvatarName>
           </Link>
 
@@ -48,7 +48,7 @@ const Sidebar = ({ open, handleClose }) => {
           {menuItems.map(({ path, title, Icon }) => (
             <Item key={path} active={isActive(path)} onClick={handleClose}>
               <Link to={path}>
-                <Icon size={24} />
+                <Icon size={24} title={title} />
                 {title}
               </Link>
             </Item>
@@ -56,7 +56,7 @@ const Sidebar = ({ open, handleClose }) => {
 
           <Item onClick={handleClose} className="settings">
             <Link to={settingsItems[0]?.path || '/'}>
-              <FiSettings size={24} />
+              <FiSettings size={24} title="Settings" />
               Settings
             </Link>
           </Item>
@@ -74,7 +74,7 @@ const Sidebar = ({ open, handleClose }) => {
 
           <Item onClick={signOut}>
             <div>
-              <FiLogOut size="24" />
+              <FiLogOut size="24" title="Sign-out" />
               Sign-Out
             </div>
           </Item>
