@@ -21,7 +21,7 @@ const OrderSummary = ({
       <li>
         Discount: <span>{handleDiscount(discountType, discountValue)}</span>
       </li>
-      {recurrency !== undefined && (
+      {(recurrency === 'weekly' || recurrency === 'monthly') && (
         <li>
           Recurrency Pay: <span>{recurrency}</span>
         </li>

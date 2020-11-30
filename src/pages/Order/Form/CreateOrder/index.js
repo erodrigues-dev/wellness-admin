@@ -134,12 +134,15 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
 
   function handleItemSelect(e) {
     formik.setFieldValue('item', e.target.value);
+
     const itemType =
       formik.values.itemType === 'activity' ? activities : packages;
     const item = itemType.find((el) => el.id === Number(e.target.value));
+    const isRecurrencyPay = item?.recurrencyPay !== 'one-time';
 
     setSelectedItem(item);
-    formik.setFieldValue('isRecurrencyPay', item?.recurrencyPay !== 'one-time');
+    formik.setFieldValue('isRecurrencyPay', isRecurrencyPay);
+    if (isRecurrencyPay) formik.setFieldValue('dueDate', new Date());
   }
 
   function handleSubmit(data) {
