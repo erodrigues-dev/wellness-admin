@@ -20,7 +20,7 @@ const List = () => {
         </div>
         <div className="buttons">
           <Button variant="secondary" className="mr-2" onClick={() => {}}>
-            <FiEdit2 color="white" />
+            <FiEdit2 color="white" title="Edit" />
           </Button>
           <Button
             variant="danger"
@@ -32,7 +32,7 @@ const List = () => {
               )
             }
           >
-            <FiTrash />
+            <FiTrash title="Delete" />
           </Button>
         </div>
       </li>

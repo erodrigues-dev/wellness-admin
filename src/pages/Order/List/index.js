@@ -14,14 +14,14 @@ function List({ list }) {
   function handleStatusName(status) {
     let value = (
       <div>
-        <RiMoneyDollarBoxLine /> Paid with money
+        <RiMoneyDollarBoxLine title="Money" /> Paid with money
       </div>
     );
 
     if (status === 'paid-with-card') {
       value = (
         <div>
-          <RiBankCardLine /> Paid with card
+          <RiBankCardLine title="Credit Card" /> Paid with card
         </div>
       );
     }
@@ -48,7 +48,11 @@ function List({ list }) {
               <td>{item.customer.name}</td>
               <td>{handleStatusName(item.status)}</td>
               <td className="relation-name">
-                {item.type === 'package' ? <FiPackage /> : <FiActivity />}
+                {item.type === 'package' ? (
+                  <FiPackage title="Package" />
+                ) : (
+                  <FiActivity title="Activity" />
+                )}
                 {item.name}
               </td>
               <td>{formatCurrency(item.total)}</td>

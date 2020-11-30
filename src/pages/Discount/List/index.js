@@ -64,9 +64,9 @@ function List({ list, allowEdit, reloadList, handleDelete }) {
               <td>{item.customerName}</td>
               <td className="relation-name">
                 {item.relationType === 'package' ? (
-                  <FiPackage />
+                  <FiPackage title="Package" />
                 ) : (
-                  <FiActivity />
+                  <FiActivity title="Activity" />
                 )}
                 {item.relationName}
               </td>

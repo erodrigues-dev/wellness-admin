@@ -42,7 +42,7 @@ function List({ list, allowEdit }) {
                     <Link
                       to={`/customers/${item.id}/dashboard`}
                       className="mr-2"
-                      title="Custom Packages"
+                      title="Dashboard"
                     >
                       <FiGrid size="18" />
                     </Link>

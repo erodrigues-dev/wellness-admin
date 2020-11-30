@@ -29,11 +29,19 @@ const List = ({ list, reloadList, handleDelete, allowEdit }) => {
         <li key={item.id}>
           <div className="items">
             <div className="name">
-              {item.relationType === 'package' ? <FiPackage /> : <FiActivity />}
+              {item.relationType === 'package' ? (
+                <FiPackage title="Package" />
+              ) : (
+                <FiActivity title="Activity" />
+              )}
               <span className="relationName">{item.relationName}</span>
             </div>
             <div className="value">
-              {item.type === 'percent' ? <FiPercent /> : <FiDollarSign />}
+              {item.type === 'percent' ? (
+                <FiPercent title="Percent" />
+              ) : (
+                <FiDollarSign title="Amount" />
+              )}
               <span>
                 {item.type === 'amount' ? item.value.toFixed(2) : item.value}
               </span>
@@ -46,7 +54,7 @@ const List = ({ list, reloadList, handleDelete, allowEdit }) => {
                 className="mr-2"
                 onClick={() => handleEdit(item)}
               >
-                <FiEdit2 color="white" />
+                <FiEdit2 color="white" title="Edit" />
               </Button>
               <Button
                 variant="danger"
@@ -58,7 +66,7 @@ const List = ({ list, reloadList, handleDelete, allowEdit }) => {
                   )
                 }
               >
-                <FiTrash />
+                <FiTrash title="Delete" />
               </Button>
             </div>
           )}

@@ -12,9 +12,9 @@ const List = ({ list }) => {
         <li key={item.id}>
           <div className="name">
             {item.status === 'paid-with-money' ? (
-              <RiMoneyDollarBoxLine />
+              <RiMoneyDollarBoxLine title="Money" />
             ) : (
-              <RiBankCardLine />
+              <RiBankCardLine title="Credit Card" />
             )}
             <span className="relationName">{item.name}</span>
           </div>
