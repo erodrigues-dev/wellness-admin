@@ -4,9 +4,15 @@ import { sanitize } from '~/helpers/sanitize';
 
 const schema = yup.object().shape({
   id: yup.number(),
-  customerId: yup.number().min(1, 'Select a Customer').required(),
+  customerId: yup
+    .number()
+    .min(1, 'Select a Customer')
+    .required('Customer is a required field'),
   relationType: yup.string().required('Select an option'),
-  relationId: yup.number().min(1, 'Select a Package/Type').required(),
+  relationId: yup
+    .number()
+    .min(1, 'Select a Package/Type')
+    .required('Package/Activity is a required field'),
   relationPrice: yup.string(),
   type: yup.string().required('Select an option'),
   value: yup
@@ -23,7 +29,7 @@ const schema = yup.object().shape({
         )
         .transform((_value, originalValue) => sanitize.number(originalValue)),
     })
-    .required(),
+    .required('Value is a required field'),
 });
 
 export default schema;

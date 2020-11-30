@@ -32,10 +32,10 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
     validationSchema: schema,
     onSubmit: handleSubmit,
     initialValues: {
-      id: isAdd ? 0 : selected.id,
+      id: isAdd ? '' : selected.id,
       customerId: isAdd ? id : selected.customerId,
       relationType: isAdd ? '' : selected.relationType,
-      relationId: isAdd ? 0 : selected.relationId,
+      relationId: isAdd ? '' : selected.relationId,
       type: isAdd ? '' : selected.type,
       value: isAdd ? '' : selected.value,
       relationPrice: isAdd ? '' : selected.relationPrice,
@@ -285,7 +285,12 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
               {formik.errors.relationId}
             </Form.Control.Feedback>
           </Form.Group>
-
+          {formik.values.relationPrice && (
+            <p className="mt-1">
+              {relationTypeName(formik.values.relationType)} Price:{' '}
+              {currency.format(formik.values.relationPrice)}
+            </p>
+          )}
           <Form.Group>
             <Form.Check
               custom
@@ -337,12 +342,6 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
             <Form.Control.Feedback type="invalid">
               {formik.errors.value}
             </Form.Control.Feedback>
-            {formik.values.relationType && formik.values.type && (
-              <p className="mt-1">
-                {relationTypeName(formik.values.relationType)} Price:{' '}
-                {currency.format(formik.values.relationPrice)}
-              </p>
-            )}
           </Form.Group>
         </div>
         <div className="buttons">
