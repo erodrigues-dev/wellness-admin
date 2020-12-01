@@ -14,7 +14,9 @@ export const Container = styled.div`
     border-right: 1px solid #ccc;
     display: flex;
     flex-direction: column;
-    padding: 0 15px;
+    padding: 0 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
 
     @media (max-width: 1024px) {
       border: none;
@@ -23,12 +25,12 @@ export const Container = styled.div`
   }
 
   .confirmOrder {
-    padding: 0 15px;
+    margin-left: 5px;
 
     .button-request {
       margin-top: 15px;
       display: flex;
-      justify-content: flex-end;
+      justify-content: center;
     }
   }
 `;

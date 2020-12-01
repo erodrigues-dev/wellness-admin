@@ -9,8 +9,8 @@ import { number } from '~/helpers/sanitize';
 import * as checkoutService from '~/services/checkout';
 import * as discountService from '~/services/discount';
 
-import CardSelection from '../CardSelection';
 import CardResume from './CardResume';
+import CardSelection from './CardSelection';
 import schema from './schema';
 import { CardForm, Container } from './styles';
 import Summary from './Summary';
@@ -29,6 +29,18 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
     inputClass: 'sq-input',
     autoBuild: false,
+    inputStyles: [
+      {
+        fontSize: '16px',
+        padding: '2.5px',
+        color: '#373F4A',
+        backgroundColor: 'transparent',
+        lineHeight: '1.15em',
+        placeholderColor: '#000',
+        _webkitFontSmoothing: 'antialiased',
+        _mozOsxFontSmoothing: 'grayscale',
+      },
+    ],
     cardNumber: {
       elementId: 'sq-card-number',
       placeholder: 'ex: xxxx xxxx xxxx xxxx',
@@ -251,21 +263,22 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             </div>
 
             <p id="error" />
-
-            <Form.Group>
-              <Form.Check
-                custom
-                inline
-                className="text-nowrap"
-                type="checkbox"
-                label="Save card"
-                id="saveCard"
-                name="saveCard"
-                checked={formik.values.saveCard}
-                onChange={formik.handleChange}
-                disabled={order.isRecurrencyPay || !!selectedCard.id}
-              />
-            </Form.Group>
+            {!selectedCard.id && (
+              <Form.Group>
+                <Form.Check
+                  custom
+                  inline
+                  className="text-nowrap"
+                  type="checkbox"
+                  label="Save card"
+                  id="saveCard"
+                  name="saveCard"
+                  checked={formik.values.saveCard}
+                  onChange={formik.handleChange}
+                  disabled={order.isRecurrencyPay}
+                />
+              </Form.Group>
+            )}
           </CardForm>
         </Col>
         <Col md="4" className="confirmOrder">
@@ -277,6 +290,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             quantity={order.quantity}
             tip={formik.values.tip}
             recurrency={order.item.recurrencyPay}
+            isRecurrencyPay={order.isRecurrencyPay}
           >
             <Form.Group className="tip">
               <div className="tip-wrapper">
@@ -305,10 +319,9 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           </Summary>
           <Form.Row className="button-request">
             <Button
-              variant="primary"
-              className="mr-2 button-credit-card"
+              variant="secondary"
+              className="button-credit-card"
               onClick={formik.handleSubmit}
-              // disabled={formik.isSubmitting}
             >
               Confirm Order
             </Button>

@@ -11,7 +11,7 @@ const List = ({ list }) => {
       {list?.map((item) => (
         <li key={item.id}>
           <div className="name">
-            {item.status === 'paid-with-money' ? (
+            {item?.paymentType === 'paid-with-money' ? (
               <RiMoneyDollarBoxLine title="Money" />
             ) : (
               <RiBankCardLine title="Credit Card" />

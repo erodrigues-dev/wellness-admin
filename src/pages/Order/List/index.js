@@ -46,7 +46,7 @@ function List({ list }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td>{item.customer.name}</td>
-              <td>{handleStatusName(item.status)}</td>
+              <td>{handleStatusName(item?.paymentType)}</td>
               <td className="relation-name">
                 {item.type === 'package' ? (
                   <FiPackage title="Package" />

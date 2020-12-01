@@ -12,6 +12,8 @@ const Summary = ({
   discountType,
   quantity,
   tip,
+  recurrency,
+  isRecurrencyPay,
 }) => {
   return (
     <Container>
@@ -26,10 +28,17 @@ const Summary = ({
             {handleDiscount(discountType, discount) || '-'}
           </span>
         </li>
-        <li>
-          <span className="text">Tips</span>
-          <span className="price">{children}</span>
-        </li>
+        {isRecurrencyPay ? (
+          <li>
+            <span className="text">Recurrency</span>
+            <span className="price">{recurrency}</span>
+          </li>
+        ) : (
+          <li>
+            <span className="text">Tips</span>
+            <span className="price">{children}</span>
+          </li>
+        )}
         <li className="total">
           <span className="text">Total</span>
           <span className="price">

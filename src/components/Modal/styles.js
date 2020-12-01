@@ -28,6 +28,10 @@ export const Content = styled.div`
     min-width: 300px;
   }
 
+  @media (min-width: 1160px) {
+    max-width: 900px;
+  }
+
   header {
     grid-area: header;
     display: flex;

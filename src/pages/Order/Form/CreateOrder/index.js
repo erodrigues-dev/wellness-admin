@@ -138,7 +138,8 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
     const itemType =
       formik.values.itemType === 'activity' ? activities : packages;
     const item = itemType.find((el) => el.id === Number(e.target.value));
-    const isRecurrencyPay = item?.recurrencyPay !== 'one-time';
+    const isRecurrencyPay =
+      item?.recurrencyPay === 'weekly' || item?.recurrencyPay === 'monthly';
 
     setSelectedItem(item);
     formik.setFieldValue('isRecurrencyPay', isRecurrencyPay);
