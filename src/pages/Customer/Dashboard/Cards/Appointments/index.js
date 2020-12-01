@@ -36,6 +36,7 @@ const Appointments = () => {
                 Book Now
               </Button>
             )}
+            {/* <Link to={`/appointments/${id}`}> */}
             <Link to="/appointments">
               <Button variant="outline-primary" className="ml-2 text-nowrap">
                 See More

@@ -18,7 +18,7 @@ function List({ list }) {
       </div>
     );
 
-    if (status === 'paid-with-card') {
+    if (status === 'card') {
       value = (
         <div>
           <RiBankCardLine title="Credit Card" /> Paid with card

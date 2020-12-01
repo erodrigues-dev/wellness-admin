@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
 import Axios from 'axios';
 
@@ -26,6 +27,13 @@ const Order = () => {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ customerId: '' });
   const [openAdd, setOpenAdd] = useState(false);
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      setFilter((prevState) => ({ ...prevState, customerId: Number(id) }));
+    }
+  }, [id]);
 
   const listOrders = useCallback(async () => {
     try {
@@ -69,6 +77,7 @@ const Order = () => {
           allowCreate={hasPermissionToCreate}
           list={list}
           setOpenAdd={setOpenAdd}
+          customerId={id}
         />
         <List list={list} />
         <Paginate

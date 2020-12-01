@@ -68,7 +68,7 @@ const Discounts = () => {
                 Add
               </Button>
             )}
-            <Link to="/discounts">
+            <Link to={`/discounts/${id}`}>
               <Button variant="outline-primary" className="ml-2 text-nowrap">
                 See More
               </Button>

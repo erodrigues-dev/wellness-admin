@@ -55,7 +55,7 @@ const Orders = () => {
                 Checkout
               </Button>
             )}
-            <Link to="/orders">
+            <Link to={`/orders/${id}`}>
               <Button variant="outline-primary" className="ml-2 text-nowrap">
                 See More
               </Button>

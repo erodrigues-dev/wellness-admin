@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
 import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
@@ -27,6 +28,13 @@ const Discount = () => {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ customerId: '', relationName: '' });
   const [openAdd, setOpenAdd] = useState(false);
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (id) {
+      setFilter((prevState) => ({ ...prevState, customerId: Number(id) }));
+    }
+  }, [id]);
 
   const listDiscounts = useCallback(async () => {
     try {
@@ -52,9 +60,9 @@ const Discount = () => {
     setPage(current);
   }
 
-  async function handleDelete(id) {
+  async function handleDelete(discountId) {
     try {
-      await service.destroy(id);
+      await service.destroy(discountId);
 
       sendNotification('Discount deleted.');
       listDiscounts();
@@ -73,6 +81,7 @@ const Discount = () => {
           allowCreate={hasPermissionToCreate}
           list={list}
           setOpenAdd={setOpenAdd}
+          customerId={id}
         />
         <List
           list={list}

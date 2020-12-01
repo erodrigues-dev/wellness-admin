@@ -198,6 +198,7 @@ const PrivateRoutes = () => {
         />
 
         <PrivateRoute
+          exact
           action={ACTIONS.GET}
           functionality={FUNCTIONALITIES.PROFILES}
           path="/profiles/:id/display"
@@ -205,6 +206,7 @@ const PrivateRoutes = () => {
         />
 
         <PrivateRoute
+          exact
           action={ACTIONS.GET}
           functionality={FUNCTIONALITIES.CATEGORIES}
           path="/categories"
@@ -212,16 +214,32 @@ const PrivateRoutes = () => {
         />
 
         <PrivateRoute
+          exact
           action={ACTIONS.GET}
           functionality={FUNCTIONALITIES.DISCOUNTS}
           path="/discounts"
           component={Discount}
         />
+        <PrivateRoute
+          exact
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.DISCOUNTS}
+          path="/discounts/:id"
+          component={Discount}
+        />
 
         <PrivateRoute
+          exact
           action={ACTIONS.GET}
           functionality={FUNCTIONALITIES.ORDERS}
           path="/orders"
+          component={Order}
+        />
+        <PrivateRoute
+          exact
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.ORDERS}
+          path="/orders/:id"
           component={Order}
         />
 
@@ -229,6 +247,12 @@ const PrivateRoutes = () => {
           action={ACTIONS.GET}
           functionality={FUNCTIONALITIES.APPOINTMENTS}
           path="/appointments"
+          component={Appointments}
+        /> */}
+        {/* <PrivateRoute
+          action={ACTIONS.GET}
+          functionality={FUNCTIONALITIES.APPOINTMENTS}
+          path="/appointments/:id"
           component={Appointments}
         /> */}
         <Route path="/appointments" component={Appointments} />

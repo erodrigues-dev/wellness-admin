@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
+import { useHistory } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
@@ -7,10 +8,11 @@ import * as customerService from '~/services/customer';
 
 import { Container } from './styles';
 
-function Filter({ onFilter, allowCreate, setOpenAdd }) {
+function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
   const [customers, setCustomers] = useState([]);
+  const history = useHistory();
   const formik = useFormik({
-    initialValues: { customerId: 0 },
+    initialValues: { customerId: customerId ?? 0 },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
@@ -21,6 +23,13 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
 
   function handleSubmit(values) {
     onFilter(values);
+  }
+
+  function handleClear(e) {
+    formik.handleReset(e);
+
+    if (customerId) history.push('/orders');
+    formik.setFieldValue('customerId', 0);
   }
 
   return (
@@ -52,7 +61,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
             <Button
               type="reset"
               className="ml-2 text-nowrap"
-              onClick={formik.handleReset}
+              onClick={handleClear}
             >
               Clear Filters
             </Button>
