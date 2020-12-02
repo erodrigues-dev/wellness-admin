@@ -2,7 +2,6 @@ import React from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 
 const CardResume = ({ selectedCard }) => {
-  // console.log(selectedCard);
   return (
     <div>
       <Form.Group>

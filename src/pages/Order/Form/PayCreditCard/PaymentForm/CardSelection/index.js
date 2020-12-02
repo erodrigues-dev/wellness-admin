@@ -14,7 +14,7 @@ import { Container, CardItem } from './style';
 const MenuItem = ({ text, selected }) => {
   return (
     <CardItem selected={selected}>
-      <RiBankCard2Fill />
+      <RiBankCard2Fill color="white" />
       {text}
     </CardItem>
   );

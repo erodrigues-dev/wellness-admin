@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   #form-container {
     display: flex;
-    margin: 10px 5px;
+    margin: 0;
 
     @media (max-width: 800px) {
       flex-direction: column;
@@ -11,11 +11,7 @@ export const Container = styled.div`
   }
 
   .card-form {
-    border-right: 1px solid #ccc;
-    display: flex;
-    flex-direction: column;
-    padding: 0 10px;
-    padding-bottom: 10px;
+    padding: 10px 25px;
     margin-bottom: 10px;
 
     @media (max-width: 1024px) {
@@ -25,7 +21,15 @@ export const Container = styled.div`
   }
 
   .confirmOrder {
-    margin-left: 5px;
+    background-color: rgb(248, 248, 248);
+    display: flex;
+    width: 100%;
+    align-items: center;
+
+    & > div {
+      width: 100%;
+      text-align: center;
+    }
 
     .button-request {
       margin-top: 15px;

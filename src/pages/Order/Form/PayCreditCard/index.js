@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import Loading from '~/components/Loading';
+
 import PaymentForm from './PaymentForm';
 
 const PayCreditCard = ({ order, reloadOrders, setClose }) => {
@@ -34,7 +36,7 @@ const PayCreditCard = ({ order, reloadOrders, setClose }) => {
     );
   }
 
-  return null;
+  return <Loading />;
 };
 
 export default PayCreditCard;

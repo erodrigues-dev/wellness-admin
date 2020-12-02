@@ -196,27 +196,32 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           />
           <CardForm formLoaded={formLoaded} hasCardSelected={!!selectedCard.id}>
             {!formLoaded && <p>Loading...</p>}
-            <Form.Label>
-              <h3>New Card</h3>
+            <Form.Label id="name">
+              <h3>
+                {selectedCard.id || formik.values.cardId ? 'Selected' : 'New'}{' '}
+                Card
+              </h3>
             </Form.Label>
-            <Form.Group>
-              <Form.Label id="name">Card holder name</Form.Label>
-              <Form.Control
-                id="cardName"
-                name="cardName"
-                placeholder="Name"
-                type="text"
-                value={formik.values.cardName}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                isInvalid={formik.touched.cardName && formik.errors.cardName}
-                isValid={formik.touched.cardName && !formik.errors.cardName}
-                disabled={!!selectedCard.id}
-              />
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.cardName}
-              </Form.Control.Feedback>
-            </Form.Group>
+            {!(selectedCard.id || formik.values.cardId) && (
+              <Form.Group>
+                <Form.Label>Card holder name</Form.Label>
+                <Form.Control
+                  id="cardName"
+                  name="cardName"
+                  placeholder="Name"
+                  type="text"
+                  value={formik.values.cardName}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.cardName && formik.errors.cardName}
+                  isValid={formik.touched.cardName && !formik.errors.cardName}
+                  disabled={!!selectedCard.id}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.cardName}
+                </Form.Control.Feedback>
+              </Form.Group>
+            )}
             {!!(selectedCard.id || formik.values.cardId) && (
               <CardResume selectedCard={selectedCard} />
             )}
@@ -282,50 +287,52 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           </CardForm>
         </Col>
         <Col md="4" className="confirmOrder">
-          <h3>Order Summary</h3>
-          <Summary
-            subtotal={order.item.price}
-            discountType={discount?.type}
-            discount={discount?.value}
-            quantity={order.quantity}
-            tip={formik.values.tip}
-            recurrency={order.item.recurrencyPay}
-            isRecurrencyPay={order.isRecurrencyPay}
-          >
-            <Form.Group className="tip">
-              <div className="tip-wrapper">
-                $
-                <input
-                  type="text"
-                  placeholder="ex: 1,000.00"
-                  name="tip"
-                  value={formik.values.tip}
-                  onChange={(e) => {
-                    formik.setFieldValue('tip', masks.price(e));
-                    setTip(masks.price(e));
-                  }}
-                  onBlur={formik.handleBlur}
-                />
-              </div>
-              {formik.touched.tip && formik.errors.tip && (
-                <Form.Control.Feedback
-                  type="invalid"
-                  style={{ display: 'block', fontWeight: 'normal' }}
-                >
-                  {formik.errors.tip}
-                </Form.Control.Feedback>
-              )}
-            </Form.Group>
-          </Summary>
-          <Form.Row className="button-request">
-            <Button
-              variant="secondary"
-              className="button-credit-card"
-              onClick={formik.handleSubmit}
+          <div className="summary">
+            <h3>Order Summary</h3>
+            <Summary
+              subtotal={order.item.price}
+              discountType={discount?.type}
+              discount={discount?.value}
+              quantity={order.quantity}
+              tip={formik.values.tip}
+              recurrency={order.item.recurrencyPay}
+              isRecurrencyPay={order.isRecurrencyPay}
             >
-              Confirm Order
-            </Button>
-          </Form.Row>
+              <Form.Group className="tip">
+                <div className="tip-wrapper">
+                  $
+                  <input
+                    type="text"
+                    placeholder="ex: 1,000.00"
+                    name="tip"
+                    value={formik.values.tip}
+                    onChange={(e) => {
+                      formik.setFieldValue('tip', masks.price(e));
+                      setTip(masks.price(e));
+                    }}
+                    onBlur={formik.handleBlur}
+                  />
+                </div>
+                {formik.touched.tip && formik.errors.tip && (
+                  <Form.Control.Feedback
+                    type="invalid"
+                    style={{ display: 'block', fontWeight: 'normal' }}
+                  >
+                    {formik.errors.tip}
+                  </Form.Control.Feedback>
+                )}
+              </Form.Group>
+            </Summary>
+            <Form.Row className="button-request">
+              <Button
+                variant="secondary"
+                className="button-credit-card"
+                onClick={formik.handleSubmit}
+              >
+                Confirm Order
+              </Button>
+            </Form.Row>
+          </div>
         </Col>
       </Form>
     </Container>

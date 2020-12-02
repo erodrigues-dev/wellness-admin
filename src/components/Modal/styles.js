@@ -16,6 +16,7 @@ export const Container = styled.div`
 export const Content = styled.div`
   background-color: #fff;
   min-width: 600px;
+  min-height: 300px;
   max-height: 90%;
   max-width: 90%;
   overflow: hidden;

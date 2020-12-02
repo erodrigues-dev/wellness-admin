@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const Container = styled.div`
   width: 100%;
+  padding: 10px 15px;
 
   ul {
     list-style: none;
@@ -29,9 +30,10 @@ export const Container = styled.div`
         input {
           margin-left: 5px;
           max-width: 125px;
-          border-bottom: 1px solid #ced4da;
+          border-bottom: 1px solid #294651;
           font-weight: bold;
           text-align: right;
+          background-color: transparent;
         }
       }
     }
