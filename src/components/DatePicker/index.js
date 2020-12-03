@@ -5,7 +5,15 @@ import OutsideClick from 'react-outside-click-handler';
 
 import { Container } from './styles';
 
-const DatePicker = ({ minDate, maxDate, value, onChange, onClose }) => {
+const DatePicker = ({
+  minDate,
+  maxDate,
+  value,
+  onChange,
+  onClose,
+  tileDisabled,
+  onActiveStartDateChange,
+}) => {
   return (
     <Fit>
       <Container>
@@ -16,6 +24,8 @@ const DatePicker = ({ minDate, maxDate, value, onChange, onClose }) => {
             maxDate={maxDate}
             value={value}
             locale="en-US"
+            tileDisabled={tileDisabled}
+            onActiveStartDateChange={onActiveStartDateChange}
           />
         </OutsideClick>
       </Container>

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiLogOut, FiEdit, FiSettings } from 'react-icons/fi';
+import { RiArrowUpSLine } from 'react-icons/ri';
 import { Link, matchPath, useLocation } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
@@ -14,11 +15,13 @@ import {
   AvatarProfile,
   Menu,
   Item,
+  RetractButton,
 } from './styles';
 
 const Sidebar = ({ open, handleClose }) => {
   const { signOut, user, menu } = useAuth();
   const { pathname } = useLocation();
+  const [retractSettings, setRetractSettings] = useState(false);
   const menuItems = menu.filter((item) => item.subgroup === undefined);
   const settingsItems = menu.filter((item) => item.subgroup === 'settings');
 
@@ -44,6 +47,7 @@ const Sidebar = ({ open, handleClose }) => {
 
           <AvatarProfile>{user.profile?.name}</AvatarProfile>
         </AvatarContainer>
+
         <Menu>
           {menuItems.map(({ path, title, Icon }) => (
             <Item key={path} active={isActive(path)} onClick={handleClose}>
@@ -59,18 +63,27 @@ const Sidebar = ({ open, handleClose }) => {
               <FiSettings size={24} title="Settings" />
               Settings
             </Link>
+            <RetractButton
+              type="button"
+              onClick={() => setRetractSettings((prevState) => !prevState)}
+              retract={retractSettings}
+              className={retractSettings && 'retract'}
+            >
+              <RiArrowUpSLine color="white" stroke="0" size={24} />
+            </RetractButton>
           </Item>
 
-          {settingsItems.map(({ path, title }) => (
-            <Item
-              key={path}
-              active={isActive(path)}
-              subgroup="settings"
-              onClick={handleClose}
-            >
-              <Link to={path}>{title}</Link>
-            </Item>
-          ))}
+          {!retractSettings &&
+            settingsItems.map(({ path, title }) => (
+              <Item
+                key={path}
+                active={isActive(path)}
+                subgroup="settings"
+                onClick={handleClose}
+              >
+                <Link to={path}>{title}</Link>
+              </Item>
+            ))}
 
           <Item onClick={signOut}>
             <div>

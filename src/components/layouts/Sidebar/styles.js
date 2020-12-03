@@ -105,4 +105,32 @@ export const Item = styled.li`
   &:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
+
+  button {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    border-radius: 25px;
+    transition: background 100ms;
+    transform: rotate(0);
+    transition: 100ms;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  .retract {
+    transform: rotate(-180deg);
+    transition: 100ms;
+  }
+`;
+
+export const RetractButton = styled.button`
+  transition: 100ms;
+  margin-right: 5px;
+
+  svg {
+    margin: 0;
+  }
 `;
