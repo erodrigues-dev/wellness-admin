@@ -137,35 +137,46 @@ export const RetractButton = styled.button`
 
 export const Subgroup = styled.div`
   overflow: hidden;
+  height: ${(props) => (props.retract ? '0px' : '100%')};
+  transition: all 50ms;
 
-  & > div {
-    ${(props) =>
-      props.retract &&
-      'animation: openmenu 400ms forwards'}/* animation: openmenu 400ms forwards; */
+  .show {
+    animation: openmenu 200ms ease forwards;
   }
 
   .retract {
-    animation: retract 400ms forwards;
+    animation: retract 200ms ease forwards;
   }
 
   @keyframes retract {
     0% {
       height: initial;
     }
+    50% {
+      height: 50%;
+      opacity: 0.5;
+    }
     100% {
       height: 0px;
       opacity: 0;
+      transform: translateY(-100%);
     }
   }
 
   @keyframes openmenu {
     0% {
+      transform: translateY(-100%);
       height: 0px;
       opacity: 0;
     }
+    50% {
+      height: 50%;
+      opacity: 0.5;
+    }
     100% {
-      height: 100%;
+      height: initial;
       opacity: 1;
+      transform: translateY(0);
     }
   }
 `;

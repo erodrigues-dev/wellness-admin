@@ -22,12 +22,13 @@ import {
 const Sidebar = ({ open, handleClose }) => {
   const { signOut, user, menu } = useAuth();
   const { pathname } = useLocation();
-  const [retractSettings, setRetractSettings] = useState();
+  const [retractSettings, setRetractSettings] = useState(
+    window.localStorage.getItem('retractSettings')
+  );
   const menuItems = menu.filter((item) => item.subgroup === undefined);
   const settingsItems = menu.filter((item) => item.subgroup === 'settings');
 
   useEffect(() => {
-    console.log(retractSettings);
     if (retractSettings) {
       window.localStorage.setItem('retractSettings', retractSettings);
     } else {
@@ -93,8 +94,7 @@ const Sidebar = ({ open, handleClose }) => {
           </Item>
 
           <Subgroup retract={retractSettings}>
-            <div className={retractSettings ? 'retract' : ''}>
-              {/* <div className="retract"> */}
+            <div className={retractSettings ? 'retract' : 'show'}>
               {settingsItems.map(({ path, title }) => (
                 <Item
                   key={path}
