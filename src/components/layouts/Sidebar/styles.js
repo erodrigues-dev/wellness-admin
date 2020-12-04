@@ -134,3 +134,38 @@ export const RetractButton = styled.button`
     margin: 0;
   }
 `;
+
+export const Subgroup = styled.div`
+  overflow: hidden;
+
+  & > div {
+    ${(props) =>
+      props.retract &&
+      'animation: openmenu 400ms forwards'}/* animation: openmenu 400ms forwards; */
+  }
+
+  .retract {
+    animation: retract 400ms forwards;
+  }
+
+  @keyframes retract {
+    0% {
+      height: initial;
+    }
+    100% {
+      height: 0px;
+      opacity: 0;
+    }
+  }
+
+  @keyframes openmenu {
+    0% {
+      height: 0px;
+      opacity: 0;
+    }
+    100% {
+      height: 100%;
+      opacity: 1;
+    }
+  }
+`;

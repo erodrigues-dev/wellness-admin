@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FiLogOut, FiEdit, FiSettings } from 'react-icons/fi';
 import { RiArrowUpSLine } from 'react-icons/ri';
 import { Link, matchPath, useLocation } from 'react-router-dom';
@@ -16,18 +16,32 @@ import {
   Menu,
   Item,
   RetractButton,
+  Subgroup,
 } from './styles';
 
 const Sidebar = ({ open, handleClose }) => {
   const { signOut, user, menu } = useAuth();
   const { pathname } = useLocation();
-  const [retractSettings, setRetractSettings] = useState(false);
+  const [retractSettings, setRetractSettings] = useState();
   const menuItems = menu.filter((item) => item.subgroup === undefined);
   const settingsItems = menu.filter((item) => item.subgroup === 'settings');
+
+  useEffect(() => {
+    console.log(retractSettings);
+    if (retractSettings) {
+      window.localStorage.setItem('retractSettings', retractSettings);
+    } else {
+      window.localStorage.removeItem('retractSettings');
+    }
+  }, [retractSettings]);
 
   const isActive = (path) => {
     return matchPath(pathname, { path });
   };
+
+  function handleRetract() {
+    setRetractSettings((prevState) => !prevState);
+  }
 
   return (
     <Container open={open}>
@@ -59,13 +73,18 @@ const Sidebar = ({ open, handleClose }) => {
           ))}
 
           <Item onClick={handleClose} className="settings">
-            <Link to={settingsItems[0]?.path || '/'}>
+            <div
+              onClick={handleRetract}
+              onKeyDown={() => {}}
+              tabIndex={0}
+              role="button"
+            >
               <FiSettings size={24} title="Settings" />
               Settings
-            </Link>
+            </div>
             <RetractButton
               type="button"
-              onClick={() => setRetractSettings((prevState) => !prevState)}
+              onClick={handleRetract}
               retract={retractSettings}
               className={retractSettings && 'retract'}
             >
@@ -73,19 +92,23 @@ const Sidebar = ({ open, handleClose }) => {
             </RetractButton>
           </Item>
 
-          {!retractSettings &&
-            settingsItems.map(({ path, title }) => (
-              <Item
-                key={path}
-                active={isActive(path)}
-                subgroup="settings"
-                onClick={handleClose}
-              >
-                <Link to={path}>{title}</Link>
-              </Item>
-            ))}
+          <Subgroup retract={retractSettings}>
+            <div className={retractSettings ? 'retract' : ''}>
+              {/* <div className="retract"> */}
+              {settingsItems.map(({ path, title }) => (
+                <Item
+                  key={path}
+                  active={isActive(path)}
+                  subgroup="settings"
+                  onClick={handleClose}
+                >
+                  <Link to={path}>{title}</Link>
+                </Item>
+              ))}
+            </div>
+          </Subgroup>
 
-          <Item onClick={signOut}>
+          <Item onClick={signOut} className="signout">
             <div>
               <FiLogOut size="24" title="Sign-out" />
               Sign-Out
