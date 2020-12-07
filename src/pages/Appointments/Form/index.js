@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
-import InputDateTimePicker from '~/components/InputDateTimePicker';
+import InputDatePicker from '~/components/InputDatePicker';
 import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import { sanitize } from '~/helpers/sanitize';
@@ -31,7 +31,8 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
       id: isAdd ? 0 : selected.id,
       customerId: isAdd ? id : selected.customerId,
       relationId: isAdd ? 0 : selected.relationId,
-      schedule: '',
+      scheduleDate: '',
+      scheduleTime: '',
     },
   });
 
@@ -150,16 +151,49 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
           </Form.Group>
           <Form.Group>
             <Form.Label>Schedule Date</Form.Label>
-            <InputDateTimePicker
+            <InputDatePicker
               min={new Date()}
-              name="expiration"
-              value={formik.values.schedule}
+              name="scheduleDate"
+              value={formik.values.scheduleDate}
               onChange={formik.handleChange}
-              isInvalid={formik.touched.schedule && formik.errors.schedule}
-              isValid={formik.touched.schedule && !formik.errors.schedule}
+              isInvalid={
+                formik.touched.scheduleDate && formik.errors.scheduleDate
+              }
+              isValid={
+                formik.touched.scheduleDate && !formik.errors.scheduleDate
+              }
             />
             <Form.Control.Feedback type="invalid">
-              {formik.errors.schedule}
+              {formik.errors.scheduleDate}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Schedule Time</Form.Label>
+            <Form.Control
+              as="select"
+              custom
+              name="scheduleTime"
+              value={formik.values.scheduleTime}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={
+                formik.touched.scheduleTime && formik.errors.scheduleTime
+              }
+              isValid={
+                formik.touched.scheduleTime && !formik.errors.scheduleTime
+              }
+              disabled={activities === undefined}
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              <option>12:00</option>
+              <option>13:00</option>
+              <option>14:00</option>
+              <option>15:00</option>
+            </Form.Control>
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.scheduleTime}
             </Form.Control.Feedback>
           </Form.Group>
         </div>
