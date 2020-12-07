@@ -23,10 +23,12 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
 
   function handleSubmit(values) {
     onFilter(values);
+    if (customerId) history.push('/discounts');
   }
 
   function handleClear(e) {
     formik.handleReset(e);
+    onFilter('');
 
     if (customerId) history.push('/discounts');
     formik.setFieldValue('customerId', 0);
