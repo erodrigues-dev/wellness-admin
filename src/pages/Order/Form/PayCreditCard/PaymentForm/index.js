@@ -102,8 +102,9 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   }, [findDiscount]);
 
   const checkout = useCallback(
-    async (nonce) => {
+    async (nonce, cardName, saveCard) => {
       if (!nonce) return;
+
       try {
         await checkoutService.payWithCard({
           customerId: order.customerId,
@@ -111,10 +112,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           itemId: order.item.id,
           quantity: order.quantity,
           cardId: nonce,
-          cardName: formik.values.cardName,
+          cardName,
           tip: number(tip),
           dueDate: order.dueDate || null,
-          saveCard: formik.values.saveCard,
+          saveCard,
         });
 
         reloadOrders();
@@ -124,15 +125,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         sendNotification(error.message, false);
       }
     },
-    [
-      order,
-      sendNotification,
-      formik.values.cardName,
-      formik.values.saveCard,
-      tip,
-      reloadOrders,
-      setClose,
-    ]
+    [order, sendNotification, tip, reloadOrders, setClose, squareErrors]
   );
 
   useEffect(() => {
@@ -167,9 +160,9 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
     }
   }, [squareErrors, selectedCard, sendNotification]);
 
-  function handleSubmit() {
+  function handleSubmit(data) {
     if (selectedCard.id) {
-      checkout(selectedCard.id);
+      checkout(selectedCard.id, data.cardName, data.saveCard);
     } else {
       requestCardNonce();
     }
@@ -234,7 +227,9 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
               <Row className="d-flex ">
                 <Col md="3">
                   <Form.Group>
-                    <Form.Label>Expiration Date</Form.Label>
+                    <Form.Label className="text-nowrap">
+                      Expiration Date
+                    </Form.Label>
                     <Form.Control
                       id="sq-expiration-date"
                       name="sq-expiration-date"
@@ -256,7 +251,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
 
                 <Col md="6">
                   <Form.Group>
-                    <Form.Label>Zip Code</Form.Label>
+                    <Form.Label className="text-nowrap">Zip Code</Form.Label>
                     <Form.Control
                       id="sq-postal-code"
                       name="sq-postal-code"

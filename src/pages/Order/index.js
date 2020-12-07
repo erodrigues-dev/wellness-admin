@@ -37,9 +37,7 @@ const Order = () => {
 
   const listOrders = useCallback(async () => {
     try {
-      let response;
-      if (filter.customerId) response = await service.list(page, 10, filter);
-      else response = await service.list(page);
+      const response = await service.list(page, 10, filter);
 
       setList(response.data);
       setTotal(parseInt(response.headers['x-total-count']));
