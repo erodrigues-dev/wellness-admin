@@ -25,9 +25,13 @@ api.interceptors.response.use(
   (response) => response,
   (error) => {
     let message = 'Has ocurred an unexpected error, please try again';
+
     if (error.response?.status === 400) message = error.response.data.message;
 
-    console.error(error);
+    if (error.response.data.errors.length > 0) {
+      // message = messages[error.response.data.errors[0].code];
+      return Promise.reject(error.response.data.errors);
+    }
 
     redirectToAuth(error);
 

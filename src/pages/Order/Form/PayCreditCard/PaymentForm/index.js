@@ -122,10 +122,24 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         sendNotification('Order created successfully.', true);
         setClose(false);
       } catch (error) {
-        sendNotification(error.message, false);
+        const messages = {
+          CVV_FAILURE: 'Error detected. Please verify the CVV field',
+          ADDRESS_VERIFICATION_ERROR:
+            'Error detected. Please verify the Zip Code field',
+          INVALID_EXPIRATION:
+            'Error detected. Please verify the Expiration Date field',
+          GENERIC_DECLINE:
+            "Generic error found. Please, verify the card's fields",
+        };
+
+        if (error.length > 0) {
+          error.forEach((er) => sendNotification(messages[er.code], false));
+        } else {
+          sendNotification(error.message, false);
+        }
       }
     },
-    [order, sendNotification, tip, reloadOrders, setClose, squareErrors]
+    [order, sendNotification, tip, reloadOrders, setClose]
   );
 
   useEffect(() => {
