@@ -2,8 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
-import Axios from 'axios';
-
 import Modal from '~/components/Modal';
 import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
@@ -22,18 +20,12 @@ const Order = () => {
     ACTIONS.CREATE
   );
 
+  const { id } = useParams();
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
-  const [filter, setFilter] = useState({ customerId: '' });
+  const [filter, setFilter] = useState({ customerId: id });
   const [openAdd, setOpenAdd] = useState(false);
-  const { id } = useParams();
-
-  useEffect(() => {
-    if (id) {
-      setFilter((prevState) => ({ ...prevState, customerId: Number(id) }));
-    }
-  }, [id]);
 
   const listOrders = useCallback(async () => {
     try {
@@ -47,13 +39,7 @@ const Order = () => {
   }, [page, filter, sendNotification]);
 
   useEffect(() => {
-    const source = Axios.CancelToken.source();
-
-    listOrders(source.token);
-
-    return () => {
-      source.cancel();
-    };
+    listOrders();
   }, [listOrders]);
 
   async function handleFilter(filterValues) {
