@@ -21,26 +21,39 @@ function Schedule() {
   const [formData, setFormData] = useState(null);
   const { sendNotification } = useNotification();
 
+  const getActivity = useCallback(
+    async (activityId) => {
+      try {
+        const response = await get(activityId);
+
+        setActivity(response.data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification]
+  );
+
   useEffect(() => {
-    get(id).then(({ data }) => setActivity(data));
-    // eslint-disable-next-line
-  }, [id]);
+    getActivity(id);
+  }, [getActivity, id]);
 
   const handleFetchEvents = useCallback(
     async ({ start, end }, resolve, reject) => {
-      try {
-        const { data: list } = await service.list(start, end, id);
-        const eventsFromApi = list.map((item) =>
-          ScheduleFormModel.fromApi(item).toEvent()
-        );
-        setEvents(eventsFromApi);
-        resolve(events);
-      } catch (error) {
-        reject(error);
+      if (activity) {
+        try {
+          const { data: list } = await service.list(start, end, id);
+          const eventsFromApi = list.map((item) =>
+            ScheduleFormModel.fromApi(item).toEvent()
+          );
+          setEvents(eventsFromApi);
+          resolve(events);
+        } catch (error) {
+          reject(error);
+        }
       }
     },
-    // eslint-disable-next-line
-    [id]
+    [id, activity, events]
   );
 
   function handleSelect({ start, end }) {
@@ -138,6 +151,8 @@ function Schedule() {
   function deleteInApi(scheduleId) {
     return service.destroy(scheduleId);
   }
+
+  if (!activity) return null;
 
   return (
     <Container className="schedule-activity-container">
