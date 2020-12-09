@@ -15,6 +15,13 @@ import schema from './schema';
 import { CardForm, Container } from './styles';
 import Summary from './Summary';
 
+const messages = {
+  CVV_FAILURE: 'Please verify the CVV field',
+  ADDRESS_VERIFICATION_ERROR: 'Please verify the Zip Code field',
+  INVALID_EXPIRATION: 'Please verify the Expiration Date field',
+  GENERIC_DECLINE: "Please, verify the card's fields",
+};
+
 const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const { sendNotification } = useNotification();
   const [discount, setDiscount] = useState(0);
@@ -72,16 +79,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         sendNotification('Order created successfully.', true);
         setClose(false);
       } catch (error) {
-        const messages = {
-          CVV_FAILURE: 'Error detected. Please verify the CVV field',
-          ADDRESS_VERIFICATION_ERROR:
-            'Error detected. Please verify the Zip Code field',
-          INVALID_EXPIRATION:
-            'Error detected. Please verify the Expiration Date field',
-          GENERIC_DECLINE:
-            "Generic error found. Please, verify the card's fields",
-        };
-
         if (error.length > 0) {
           error.forEach((er) => sendNotification(messages[er.code], false));
         } else {
