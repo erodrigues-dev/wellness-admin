@@ -27,68 +27,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const [discount, setDiscount] = useState(0);
   const [paymentForm, setPaymentForm] = useState(null);
   const [selectedCard, setSelectedCard] = useState('');
+  const [cardId, setCardId] = useState(0);
   const [squareErrors, setSquareErrors] = useState([]);
   const [formLoaded, setFormLoaded] = useState(false);
-  const formik = useFormik({
-    validationSchema: schema,
-    onSubmit: handleSubmit,
-    initialValues: {
-      cardName: '',
-      saveCard: order.isRecurrencyPay,
-      tip: '',
-      cardId: '',
-    },
-  });
-
-  const findDiscount = useCallback(async () => {
-    try {
-      const { data } = await discountService.find(
-        order.customerId,
-        order.itemType,
-        order.item.id
-      );
-
-      setDiscount(data);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }, [sendNotification, order.customerId, order.itemType, order.item.id]);
-
-  useEffect(() => {
-    findDiscount();
-  }, [findDiscount]);
-
-  const checkout = useCallback(
-    async (nonce, cardName, tip, saveCard) => {
-      if (!nonce) return;
-
-      try {
-        await checkoutService.payWithCard({
-          customerId: order.customerId,
-          itemType: order.itemType,
-          itemId: order.item.id,
-          quantity: order.quantity,
-          cardId: nonce,
-          cardName,
-          tip: number(tip ?? 0),
-          dueDate: order.dueDate || null,
-          saveCard,
-        });
-
-        reloadOrders();
-        sendNotification('Order created successfully.', true);
-        setClose(false);
-      } catch (error) {
-        if (error.length > 0) {
-          error.forEach((er) => sendNotification(messages[er.code], false));
-        } else {
-          sendNotification(error.message, false);
-        }
-      }
-    },
-    [order, sendNotification, reloadOrders, setClose]
-  );
-
+  const [tip, setTip] = useState('');
   const [config] = useState({
     applicationId: process.env.REACT_APP_SQUARE_APP_ID,
     locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
@@ -127,12 +69,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         if (errors) {
           setSquareErrors(errors);
         } else {
-          checkout(
-            nonce,
-            formik.values.cardName,
-            formik.values.tip,
-            formik.values.saveCard
-          );
+          setCardId(nonce);
         }
       },
       paymentFormLoaded: () => {
@@ -141,6 +78,72 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
       },
     },
   });
+
+  const formik = useFormik({
+    validationSchema: schema,
+    onSubmit: handleSubmit,
+    initialValues: {
+      cardName: '',
+      saveCard: order.isRecurrencyPay,
+      tip: '',
+      cardId: '',
+    },
+  });
+
+  const findDiscount = useCallback(async () => {
+    try {
+      const { data } = await discountService.find(
+        order.customerId,
+        order.itemType,
+        order.item.id
+      );
+
+      setDiscount(data);
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [sendNotification, order.customerId, order.itemType, order.item.id]);
+
+  useEffect(() => {
+    findDiscount();
+  }, [findDiscount]);
+
+  const checkout = useCallback(
+    async (nonce, cardName, saveCard) => {
+      if (!nonce) return;
+
+      try {
+        await checkoutService.payWithCard({
+          customerId: order.customerId,
+          itemType: order.itemType,
+          itemId: order.item.id,
+          quantity: order.quantity,
+          cardId: nonce,
+          cardName,
+          tip: number(tip),
+          dueDate: order.dueDate || null,
+          saveCard,
+        });
+
+        reloadOrders();
+        sendNotification('Order created successfully.', true);
+        setClose(false);
+      } catch (error) {
+        if (error.length > 0) {
+          error.forEach((er) => sendNotification(messages[er.code], false));
+        } else {
+          sendNotification(error.message, false);
+        }
+      }
+    },
+    [order, sendNotification, tip, reloadOrders, setClose]
+  );
+
+  useEffect(() => {
+    if (cardId) {
+      checkout(cardId);
+    }
+  }, [cardId, checkout]);
 
   useEffect(() => {
     setPaymentForm(new SqPaymentForm(config));
@@ -170,7 +173,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
 
   function handleSubmit(data) {
     if (selectedCard.id) {
-      checkout(selectedCard.id, data.cardName, data.tip, data.saveCard);
+      checkout(selectedCard.id, data.cardName, data.saveCard);
     } else {
       requestCardNonce();
     }
@@ -215,6 +218,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
                   isInvalid={formik.touched.cardName && formik.errors.cardName}
+                  isValid={formik.touched.cardName && !formik.errors.cardName}
                   disabled={!!selectedCard.id}
                 />
                 <Form.Control.Feedback type="invalid">
@@ -308,9 +312,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                     placeholder="ex: 1,000.00"
                     name="tip"
                     value={formik.values.tip}
-                    onChange={(e) =>
-                      formik.setFieldValue('tip', masks.price(e))
-                    }
+                    onChange={(e) => {
+                      formik.setFieldValue('tip', masks.price(e));
+                      setTip(masks.price(e));
+                    }}
                     onBlur={formik.handleBlur}
                   />
                 </div>
