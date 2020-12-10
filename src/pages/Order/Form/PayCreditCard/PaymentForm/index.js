@@ -17,6 +17,7 @@ import Summary from './Summary';
 
 const messages = {
   CVV_FAILURE: 'Please verify the CVV field',
+  VERIFY_CVV_FAILURE: 'Please verify the CVV field',
   ADDRESS_VERIFICATION_ERROR: 'Please verify the Zip Code field',
   INVALID_EXPIRATION: 'Please verify the Expiration Date field',
   GENERIC_DECLINE: "Please, verify the card's fields and try again",
