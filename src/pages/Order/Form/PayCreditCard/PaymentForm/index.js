@@ -19,7 +19,8 @@ const messages = {
   CVV_FAILURE: 'Please verify the CVV field',
   ADDRESS_VERIFICATION_ERROR: 'Please verify the Zip Code field',
   INVALID_EXPIRATION: 'Please verify the Expiration Date field',
-  GENERIC_DECLINE: "Please, verify the card's fields",
+  GENERIC_DECLINE: "Please, verify the card's fields and try again",
+  VALUE_EMPTY: "Please, verify the card's fields and try again",
 };
 
 const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
@@ -120,7 +121,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           quantity: order.quantity,
           cardId: nonce,
           cardName,
-          tip: number(tip ?? 0),
+          tip: number(tip || 0),
           dueDate: order.dueDate || null,
           saveCard,
         });
@@ -130,7 +131,12 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         setClose(false);
       } catch (error) {
         if (error.length > 0) {
-          error.forEach((er) => sendNotification(messages[er.code], false));
+          error.forEach((er) => {
+            if (er.code === 'CARD_TOKEN_USED') {
+              setCardId('');
+            }
+            sendNotification(messages[er.code], false);
+          });
         } else {
           sendNotification(error.message, false);
         }
@@ -175,11 +181,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   }
 
   useEffect(() => {
-    if (
-      cardId &&
-      formikData &&
-      (selectedCard.id === undefined || !selectedCard.id)
-    ) {
+    if (cardId && formikData) {
       checkout(
         cardId,
         formikData.cardName,
@@ -187,7 +189,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         formikData.saveCard
       );
     }
-  }, [formikData, cardId, selectedCard.id, checkout]);
+  }, [formikData, cardId, checkout]);
 
   function handleSelectCard(key) {
     if (key.id === '' && order.isRecurrencyPay) {
