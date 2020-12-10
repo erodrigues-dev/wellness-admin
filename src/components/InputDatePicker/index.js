@@ -14,6 +14,8 @@ function InputDatePicker({
   feedback,
   onChange,
   onBlur,
+  tileDisabled,
+  onActiveStartDateChange,
   ...props
 }) {
   const [open, setOpen] = useState(false);
@@ -72,6 +74,8 @@ function InputDatePicker({
           minDate={min}
           maxDate={max}
           value={date || new Date()}
+          tileDisabled={tileDisabled}
+          onActiveStartDateChange={onActiveStartDateChange}
         />
       )}
     </Container>

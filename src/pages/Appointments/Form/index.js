@@ -12,6 +12,7 @@ import useNotification from '~/contexts/notification';
 import { sanitize } from '~/helpers/sanitize';
 import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
+// import * as schedulesService from '~/services/schedule';
 import * as service from '~/services/discount';
 
 import schema from './schema';
@@ -57,6 +58,12 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
       sendNotification(error.message, false);
     }
   }, [sendNotification]);
+
+  // const listSchedules = useCallback(async () => {
+  //   try {
+  //     const { data } = await schedulesService.list(formik.values.)
+  //   }
+  // }, [])
 
   useEffect(() => {
     listCustomers();
@@ -162,6 +169,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               isValid={
                 formik.touched.scheduleDate && !formik.errors.scheduleDate
               }
+              onActiveStartDateChange={(e, b) => console.log(e, b)}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.scheduleDate}
@@ -182,15 +190,11 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               isValid={
                 formik.touched.scheduleTime && !formik.errors.scheduleTime
               }
-              disabled={activities === undefined}
+              disabled
             >
               <option value="" disabled>
                 Select an option
               </option>
-              <option>12:00</option>
-              <option>13:00</option>
-              <option>14:00</option>
-              <option>15:00</option>
             </Form.Control>
             <Form.Control.Feedback type="invalid">
               {formik.errors.scheduleTime}
