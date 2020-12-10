@@ -23,18 +23,12 @@ const Discount = () => {
     ACTIONS.UPDATE
   );
 
+  const { id } = useParams();
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
-  const [filter, setFilter] = useState({ customerId: '', relationName: '' });
+  const [filter, setFilter] = useState({ customerId: id, relationName: '' });
   const [openAdd, setOpenAdd] = useState(false);
-  const { id } = useParams();
-
-  useEffect(() => {
-    if (id) {
-      setFilter((prevState) => ({ ...prevState, customerId: Number(id) }));
-    }
-  }, [id]);
 
   const listDiscounts = useCallback(async () => {
     try {
