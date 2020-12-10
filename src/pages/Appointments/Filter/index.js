@@ -3,7 +3,7 @@ import { Form, Col, Row, Button } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
-import InputDateTimePicker from '~/components/InputDateTimePicker';
+import InputDatePicker from '~/components/InputDatePicker';
 import * as customerService from '~/services/customer';
 
 import { Container } from './styles';
@@ -45,13 +45,17 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
             />
           </Form.Group>
           <Form.Group as={Col}>
-            <InputDateTimePicker
+            <InputDatePicker
               min={new Date()}
-              name="expiration"
-              value={formik.values.expiration}
+              name="scheduleDate"
+              value={formik.values.scheduleDate}
               onChange={formik.handleChange}
-              isInvalid={formik.touched.expiration && formik.errors.expiration}
-              isValid={formik.touched.expiration && !formik.errors.expiration}
+              isInvalid={
+                formik.touched.scheduleDate && formik.errors.scheduleDate
+              }
+              isValid={
+                formik.touched.scheduleDate && !formik.errors.scheduleDate
+              }
             />
           </Form.Group>
         </Row>

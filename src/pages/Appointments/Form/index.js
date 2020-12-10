@@ -12,7 +12,6 @@ import useNotification from '~/contexts/notification';
 import { sanitize } from '~/helpers/sanitize';
 import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
-// import * as schedulesService from '~/services/schedule';
 import * as service from '~/services/discount';
 
 import schema from './schema';
@@ -24,6 +23,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
   const { sendNotification } = useNotification();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
+  const [, setDateRange] = useState();
 
   const formik = useFormik({
     validationSchema: schema,
@@ -169,7 +169,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               isValid={
                 formik.touched.scheduleDate && !formik.errors.scheduleDate
               }
-              onActiveStartDateChange={(e, b) => console.log(e, b)}
+              onActiveStartDateChange={(date) => setDateRange(date)}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.scheduleDate}
