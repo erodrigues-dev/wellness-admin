@@ -30,7 +30,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   const [cardId, setCardId] = useState(0);
   const [squareErrors, setSquareErrors] = useState([]);
   const [formLoaded, setFormLoaded] = useState(false);
-  const [tip, setTip] = useState('');
+  const [formikData, setFormikData] = useState(null);
   const [config] = useState({
     applicationId: process.env.REACT_APP_SQUARE_APP_ID,
     locationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
@@ -109,7 +109,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   }, [findDiscount]);
 
   const checkout = useCallback(
-    async (nonce, cardName, saveCard) => {
+    async (nonce, cardName, tip, saveCard) => {
       if (!nonce) return;
 
       try {
@@ -120,7 +120,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
           quantity: order.quantity,
           cardId: nonce,
           cardName,
-          tip: number(tip),
+          tip: number(tip ?? 0),
           dueDate: order.dueDate || null,
           saveCard,
         });
@@ -136,7 +136,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         }
       }
     },
-    [order, sendNotification, tip, reloadOrders, setClose]
+    [order, sendNotification, reloadOrders, setClose]
   );
 
   useEffect(() => {
@@ -172,12 +172,28 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   }, [squareErrors, selectedCard, sendNotification]);
 
   function handleSubmit(data) {
+    setFormikData(data);
     if (selectedCard.id) {
-      checkout(selectedCard.id, data.cardName, data.saveCard);
+      checkout(selectedCard.id, data.cardName, data.tip, data.saveCard);
     } else {
       requestCardNonce();
     }
   }
+
+  useEffect(() => {
+    if (
+      cardId &&
+      formikData &&
+      (selectedCard.id === undefined || !selectedCard.id)
+    ) {
+      checkout(
+        cardId,
+        formikData.cardName,
+        formikData.tip,
+        formikData.saveCard
+      );
+    }
+  }, [formikData, cardId, selectedCard.id, checkout]);
 
   function handleSelectCard(key) {
     if (key.id === '' && order.isRecurrencyPay) {
@@ -312,10 +328,9 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                     placeholder="ex: 1,000.00"
                     name="tip"
                     value={formik.values.tip}
-                    onChange={(e) => {
-                      formik.setFieldValue('tip', masks.price(e));
-                      setTip(masks.price(e));
-                    }}
+                    onChange={(e) =>
+                      formik.setFieldValue('tip', masks.price(e))
+                    }
                     onBlur={formik.handleBlur}
                   />
                 </div>
