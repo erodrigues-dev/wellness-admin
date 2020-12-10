@@ -140,12 +140,6 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   );
 
   useEffect(() => {
-    if (cardId) {
-      checkout(cardId);
-    }
-  }, [cardId, checkout]);
-
-  useEffect(() => {
     setPaymentForm(new SqPaymentForm(config));
   }, [SqPaymentForm, config]);
 
