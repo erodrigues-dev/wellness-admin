@@ -23,6 +23,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
   const { sendNotification } = useNotification();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
+  const [activeStartDate, setActiveStartDate] = useState();
   const [, setDateRange] = useState();
 
   const formik = useFormik({
@@ -32,10 +33,25 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
       id: isAdd ? 0 : selected.id,
       customerId: isAdd ? id : selected.customerId,
       relationId: isAdd ? 0 : selected.relationId,
-      scheduleDate: '',
-      scheduleTime: '',
+      date: '',
+      schedule: '',
     },
   });
+
+  const getFullMonth = useCallback((startDate) => {
+    if (startDate === undefined) return;
+    const endDate = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth() + 1,
+      0
+    );
+
+    setDateRange([startDate, endDate]);
+  }, []);
+
+  useEffect(() => {
+    getFullMonth(activeStartDate?.activeStartDate);
+  }, [activeStartDate, getFullMonth]);
 
   const listCustomers = useCallback(async () => {
     if (!id) {
@@ -58,12 +74,6 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
       sendNotification(error.message, false);
     }
   }, [sendNotification]);
-
-  // const listSchedules = useCallback(async () => {
-  //   try {
-  //     const { data } = await schedulesService.list(formik.values.)
-  //   }
-  // }, [])
 
   useEffect(() => {
     listCustomers();
@@ -141,7 +151,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.relationId && formik.errors.relationId}
               isValid={formik.touched.relationId && !formik.errors.relationId}
-              disabled={activities === undefined}
+              disabled={activities === undefined || !formik.values.customerId}
             >
               <option value={0} disabled>
                 Select an option
@@ -157,47 +167,47 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Schedule Date</Form.Label>
+            <Form.Label>Date</Form.Label>
             <InputDatePicker
               min={new Date()}
-              name="scheduleDate"
-              value={formik.values.scheduleDate}
+              name="date"
+              value={formik.values.date}
               onChange={formik.handleChange}
-              isInvalid={
-                formik.touched.scheduleDate && formik.errors.scheduleDate
-              }
-              isValid={
-                formik.touched.scheduleDate && !formik.errors.scheduleDate
-              }
-              onActiveStartDateChange={(date) => setDateRange(date)}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.date && formik.errors.date}
+              isValid={formik.touched.date && !formik.errors.date}
+              disabled={!formik.values.relationId}
+              // tileDisabled={(e) => console.log(e)}
+              onActiveStartDateChange={(e) => setActiveStartDate(e)}
             />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.scheduleDate}
-            </Form.Control.Feedback>
+            {formik.touched.date && formik.errors.date && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.date}
+              </Form.Control.Feedback>
+            )}
           </Form.Group>
           <Form.Group>
-            <Form.Label>Schedule Time</Form.Label>
+            <Form.Label>Available Time Slots</Form.Label>
             <Form.Control
               as="select"
               custom
-              name="scheduleTime"
-              value={formik.values.scheduleTime}
+              name="schedule"
+              value={formik.values.schedule}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              isInvalid={
-                formik.touched.scheduleTime && formik.errors.scheduleTime
-              }
-              isValid={
-                formik.touched.scheduleTime && !formik.errors.scheduleTime
-              }
-              disabled
+              isInvalid={formik.touched.schedule && formik.errors.schedule}
+              isValid={formik.touched.schedule && !formik.errors.schedule}
+              disabled={!formik.values.date}
             >
               <option value="" disabled>
                 Select an option
               </option>
             </Form.Control>
             <Form.Control.Feedback type="invalid">
-              {formik.errors.scheduleTime}
+              {formik.errors.schedule}
             </Form.Control.Feedback>
           </Form.Group>
         </div>
