@@ -19,7 +19,7 @@ export const Content = styled.div`
   min-height: 300px;
   max-height: 90%;
   max-width: 90%;
-  overflow: hidden;
+  ${(props) => !props.overflowNone && 'overflow: hidden'};
   display: grid;
   grid-template-columns: 1fr;
   grid-template-rows: 80px 1fr;
@@ -58,13 +58,13 @@ export const Content = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-    overflow: auto;
+    ${(props) => !props.overflowNone && 'overflow: auto'};
 
     .modal-form {
       display: flex;
       flex-direction: column;
       height: 100%;
-      overflow: auto;
+      ${(props) => !props.overflowNone && 'overflow: auto'};
 
       h2 {
         font-size: 1.2rem;
@@ -73,7 +73,7 @@ export const Content = styled.div`
 
       .form-wrapper {
         padding: 25px;
-        overflow: auto;
+        ${(props) => !props.overflowNone && 'overflow: auto'};
       }
 
       .buttons {

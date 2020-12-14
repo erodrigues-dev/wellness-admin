@@ -3,10 +3,10 @@ import { RiCloseLine } from 'react-icons/ri';
 
 import { Container, Content } from './styles';
 
-const Modal = ({ children, title, setClose }) => {
+const Modal = ({ children, title, overflowNone, setClose }) => {
   return (
     <Container>
-      <Content>
+      <Content overflowNone={overflowNone}>
         <header>
           <h1>{title}</h1>
           <RiCloseLine onClick={() => setClose(false)} title="Close" />

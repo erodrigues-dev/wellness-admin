@@ -25,6 +25,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
   const [activities, setActivities] = useState();
   const [activeStartDate, setActiveStartDate] = useState();
   const [, setDateRange] = useState();
+  const [openedDatePicker, setOpenedDatePicker] = useState(false);
 
   const formik = useFormik({
     validationSchema: schema,
@@ -107,7 +108,11 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
   }
 
   return (
-    <Modal setClose={setClose} title={`${isAdd ? 'Add' : 'Edit'} Appointments`}>
+    <Modal
+      setClose={setClose}
+      title={`${isAdd ? 'Add' : 'Edit'} Appointments`}
+      overflowNone={openedDatePicker}
+    >
       <Form onSubmit={formik.handleSubmit} className="modal-form">
         <div className="form-wrapper">
           {!id && (
@@ -176,6 +181,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.date && formik.errors.date}
               isValid={formik.touched.date && !formik.errors.date}
+              setOpenedDatePicker={setOpenedDatePicker}
               disabled={!formik.values.relationId}
               // tileDisabled={(e) => console.log(e)}
               onActiveStartDateChange={(e) => setActiveStartDate(e)}
