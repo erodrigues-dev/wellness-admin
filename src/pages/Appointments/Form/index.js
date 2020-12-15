@@ -12,9 +12,11 @@ import useNotification from '~/contexts/notification';
 import { sanitize } from '~/helpers/sanitize';
 import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
-import * as service from '~/services/discount';
+import * as discountService from '~/services/discount';
+import * as scheduleService from '~/services/schedule';
 
 import schema from './schema';
+import { Container } from './styles';
 
 const ModalForm = ({ setClose, reloadAppointments, selected }) => {
   const isAdd = !selected;
@@ -23,9 +25,10 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
   const { sendNotification } = useNotification();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
-  const [activeStartDate, setActiveStartDate] = useState();
-  const [, setDateRange] = useState();
+  const [activeStartDate, setActiveStartDate] = useState(new Date());
+  const [dateRange, setDateRange] = useState();
   const [openedDatePicker, setOpenedDatePicker] = useState(false);
+  const [availableDates, setAvailableDates] = useState([]);
 
   const formik = useFormik({
     validationSchema: schema,
@@ -51,8 +54,27 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
   }, []);
 
   useEffect(() => {
-    getFullMonth(activeStartDate?.activeStartDate);
+    getFullMonth(activeStartDate);
   }, [activeStartDate, getFullMonth]);
+
+  const listAvailableDates = useCallback(
+    async (activityId, start, end) => {
+      try {
+        const { data } = await scheduleService.list(activityId, start, end);
+
+        setAvailableDates(data.map((item) => new Date(item)));
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification]
+  );
+
+  useEffect(() => {
+    if (formik.values.relationId && dateRange?.length > 0) {
+      listAvailableDates(formik.values.relationId, dateRange[0], dateRange[1]);
+    }
+  }, [listAvailableDates, formik.values.relationId, dateRange]);
 
   const listCustomers = useCallback(async () => {
     if (!id) {
@@ -89,9 +111,9 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
 
     try {
       if (isAdd) {
-        await service.create(submitValue);
+        await discountService.create(submitValue);
       } else {
-        await service.update(submitValue);
+        await discountService.update(submitValue);
       }
 
       reloadAppointments();
@@ -114,7 +136,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
       overflowNone={openedDatePicker}
     >
       <Form onSubmit={formik.handleSubmit} className="modal-form">
-        <div className="form-wrapper">
+        <Container className="form-wrapper">
           {!id && (
             <Form.Group>
               <Form.Label>Customer</Form.Label>
@@ -182,9 +204,17 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               isInvalid={formik.touched.date && formik.errors.date}
               isValid={formik.touched.date && !formik.errors.date}
               setOpenedDatePicker={setOpenedDatePicker}
-              disabled={!formik.values.relationId}
-              // tileDisabled={(e) => console.log(e)}
-              onActiveStartDateChange={(e) => setActiveStartDate(e)}
+              disabled={!formik.values.relationId && availableDates.length <= 0}
+              tileDisabled={({ date }) => {
+                return (
+                  availableDates
+                    .find((item) => item.getDate() === date.getDate())
+                    ?.getDate() !== date.getDate()
+                );
+              }}
+              onActiveStartDateChange={(e) =>
+                setActiveStartDate(e.activeStartDate)
+              }
             />
             {formik.touched.date && formik.errors.date && (
               <Form.Control.Feedback
@@ -216,7 +246,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               {formik.errors.schedule}
             </Form.Control.Feedback>
           </Form.Group>
-        </div>
+        </Container>
         <div className="buttons">
           <Form.Row className="d-flex justify-content-end">
             <Button
