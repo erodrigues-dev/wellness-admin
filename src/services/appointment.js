@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 import { toInputValue } from '~/helpers/date';
->>>>>>> available time slots list, fix available dates
-import masks from '~/helpers/masks';
+
 import api from './api';
 
 // const LIMIT = 10;
