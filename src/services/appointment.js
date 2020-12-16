@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+import { toInputValue } from '~/helpers/date';
+>>>>>>> available time slots list, fix available dates
 import masks from '~/helpers/masks';
 import api from './api';
 
@@ -18,7 +22,7 @@ export function listDates(activityId, start, end) {
 
 export function listAvailableTimeSlots(activityId, date) {
   return api.get(
-    `/activities/${activityId}/schedules/days/${masks.date(date)}/times`
+    `/activities/${activityId}/schedules/days/${toInputValue(date)}/times`
   );
 }
 
