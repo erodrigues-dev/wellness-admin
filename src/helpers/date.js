@@ -90,3 +90,7 @@ export function transformIn24h(time) {
 export function toDate(date) {
   return parseISO(date);
 }
+
+export function toInputValue(date) {
+  return new Date(date).toISOString().split('T')[0];
+}

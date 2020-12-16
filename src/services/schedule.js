@@ -8,13 +8,13 @@ const route = '/activities/schedules';
  * @param {Date} end
  * @param {number} activityId
  */
-export function list(activityId, start, end) {
+export function list(start, end, activityId) {
   const params = {
     start: start.toISOString(),
     end: end.toISOString(),
   };
 
-  return api.get(`/activities/${activityId}/schedules/days`, { params });
+  return api.get(`/activities/${activityId}/schedules`, { params });
 }
 
 export function create(data) {
