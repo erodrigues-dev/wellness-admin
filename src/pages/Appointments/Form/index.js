@@ -14,6 +14,7 @@ import * as activityService from '~/services/activity';
 import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
 import * as discountService from '~/services/discount';
+import { toDate, transformIn24h } from '~helpers/date';
 
 import schema from './schema';
 import { Container } from './styles';
@@ -67,8 +68,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
           end
         );
 
-        // setAvailableDates(data.map((item) => new Date(item)));
-        setAvailableDates(data.map((item) => new Date(item.replace('Z', ''))));
+        setAvailableDates(data.map((item) => toDate(item)));
       } catch (error) {
         sendNotification(error.message, false);
       }
@@ -292,7 +292,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               {availableTimeSlots.length > 0 &&
                 availableTimeSlots.map((item) => (
                   <option value={item.id} key={item.id}>
-                    {item.start} - {item.end}
+                    {transformIn24h(item.start)} - {transformIn24h(item.end)}
                   </option>
                 ))}
             </Form.Control>

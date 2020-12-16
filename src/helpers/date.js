@@ -84,7 +84,7 @@ export function transformIn24h(time) {
   const [, hour, min] = /^(\d?\d):(\d\d)/.exec(time);
   const isAm = +hour < 12;
 
-  return `${isAm ? +hour : +hour - 12}:${min} ${isAm ? 'am' : 'pm'}`;
+  return `${isAm ? +hour : +hour - 12}:${min} ${isAm ? 'AM' : 'PM'}`;
 }
 
 export function toDate(date) {
