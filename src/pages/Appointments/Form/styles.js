@@ -6,9 +6,10 @@ export const Container = styled.div`
       background-color: #f7f7f7;
 
       abbr {
+        display: inline-block;
         background-color: #42c5be;
         border-radius: 100%;
-        padding: 5px;
+        width: 25px;
         color: white;
         transition: background 100ms;
       }
