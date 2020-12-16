@@ -245,8 +245,12 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               value={formik.values.date}
               onChange={handleDateChange}
               onBlur={formik.handleBlur}
-              isInvalid={formik.touched.date && formik.errors.date}
-              isValid={formik.touched.date && !formik.errors.date}
+              isInvalid={
+                formik.touched.date && formik.errors.date && !formik.values.date
+              }
+              isValid={
+                formik.touched.date && !formik.errors.date && formik.values.date
+              }
               setOpenedDatePicker={setOpenedDatePicker}
               disabled={!formik.values.relationId && availableDates.length <= 0}
               tileDisabled={({ date }) => {
@@ -260,7 +264,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
                 setActiveStartDate(e.activeStartDate)
               }
             />
-            {formik.touched.date && formik.errors.date && (
+            {formik.touched.date && formik.errors.date && !formik.values.date && (
               <Form.Control.Feedback
                 type="invalid"
                 style={{ display: 'block' }}
