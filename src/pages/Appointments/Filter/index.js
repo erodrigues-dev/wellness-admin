@@ -1,28 +1,63 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
+import { useHistory, useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
 import InputDatePicker from '~/components/InputDatePicker';
+import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
 
 import { Container } from './styles';
 
 function Filter({ onFilter, allowCreate, setOpenAdd }) {
-  const [, setCustomers] = useState([]);
+  const { id: customerId } = useParams();
+  const history = useHistory();
+  const [customers, setCustomers] = useState();
+  const [activities, setActivities] = useState();
+
   const formik = useFormik({
-    initialValues: { customerId: 0 },
+    initialValues: {
+      customerId: customerId ?? '',
+      // activityId: '',
+      // date: '',
+    },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
+
+  function handleSubmit(values) {
+    onFilter(values);
+  }
+
+  function resetFilter() {
+    onFilter('');
+
+    if (customerId) history.push('/appointments');
+
+    formik.setFieldValue('customerId', '');
+  }
+
+  function handleClear(e) {
+    formik.handleReset(e);
+
+    resetFilter();
+  }
+
+  function handleOpenAdd() {
+    onFilter('');
+
+    resetFilter();
+    setOpenAdd(true);
+  }
 
   useEffect(() => {
     customerService.listAll().then((response) => setCustomers(response.data));
   }, []);
 
-  function handleSubmit(values) {
-    onFilter(values);
-  }
+  useEffect(() => {
+    activityService.listAll().then((response) => setActivities(response.data));
+  }, []);
 
   return (
     <Container>
@@ -30,50 +65,63 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
         <Row>
           <Form.Group as={Col}>
             <Form.Control
-              placeholder="Customer Name"
-              name="name"
-              value={formik.values.name}
+              as="select"
+              custom
+              name="customerId"
+              value={formik.values.customerId}
               onChange={formik.handleChange}
-            />
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              {customers?.map((customer) => (
+                <option key={customer.id} value={customer.id}>
+                  {customer.name}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
           <Form.Group as={Col}>
             <Form.Control
-              placeholder="Activity Name"
-              name="name"
-              value={formik.values.name}
+              as="select"
+              custom
+              name="activityId"
+              defaultValue=""
+              // value={formik.values.activityId}
               onChange={formik.handleChange}
-            />
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              {activities?.map((activity) => (
+                <option key={activity.id} value={activity.id}>
+                  {activity.name}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
           <Form.Group as={Col}>
             <InputDatePicker
               min={new Date()}
-              name="scheduleDate"
-              value={formik.values.scheduleDate}
+              name="date"
+              value={formik.values.date}
               onChange={formik.handleChange}
-              isInvalid={
-                formik.touched.scheduleDate && formik.errors.scheduleDate
-              }
-              isValid={
-                formik.touched.scheduleDate && !formik.errors.scheduleDate
-              }
+              isInvalid={formik.touched.date && formik.errors.date}
+              isValid={formik.touched.date && !formik.errors.date}
             />
           </Form.Group>
         </Row>
         <Row>
           <Col className="d-flex justify-content-end">
             <Button type="submit">Filter</Button>
-            <Button
-              type="reset"
-              className="ml-2 text-nowrap"
-              onClick={formik.handleReset}
-            >
+            <Button type="reset" className="ml-2" onClick={handleClear}>
               Clear Filters
             </Button>
             {allowCreate && (
               <Button
                 variant="secondary"
                 className="ml-2 text-nowrap"
-                onClick={() => setOpenAdd(true)}
+                onClick={handleOpenAdd}
               >
                 Add Appointments
               </Button>

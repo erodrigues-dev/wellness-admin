@@ -11,7 +11,7 @@ const schema = yup.object().shape({
     .min(1, 'Select an Activity')
     .required('Select an Activity'),
   date: yup.string().required('Select an available date'),
-  schedule: yup.string().required('Select an available hour'),
+  timeId: yup.string().required('Select an available hour'),
 });
 
 export default schema;

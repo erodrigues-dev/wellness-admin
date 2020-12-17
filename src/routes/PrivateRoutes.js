@@ -255,7 +255,8 @@ const PrivateRoutes = () => {
           path="/appointments/:id"
           component={Appointments}
         /> */}
-        <Route path="/appointments" component={Appointments} />
+        <Route path="/appointments" exact component={Appointments} />
+        <Route path="/appointments/:id" exact component={Appointments} />
 
         <Route path="/404" component={NotAuthorized} />
         <Redirect to="/" />

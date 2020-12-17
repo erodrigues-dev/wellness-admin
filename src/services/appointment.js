@@ -2,7 +2,15 @@ import { toInputValue } from '~/helpers/date';
 
 import api from './api';
 
-// const LIMIT = 10;
+export function list(page, limit, filters) {
+  return api.get('/schedules', {
+    params: {
+      page,
+      limit,
+      ...filters,
+    },
+  });
+}
 
 export function customerActivities(customerId) {
   return api.get(`/customer/${customerId}/activities`);
@@ -23,11 +31,16 @@ export function listAvailableTimeSlots(activityId, date) {
   );
 }
 
-export function create({ customerId, data }) {
-  return api.post(`/customer/${customerId}/schedule`, {
-    customerId,
-    data,
+export function create(data) {
+  return api.post(`/schedules`, {
+    customerId: +data.customerId,
+    timeId: +data.timeId,
+    date: data.date,
   });
+}
+
+export function cancel(id) {
+  return api.delete(`/schedules/${id}/cancel`);
 }
 
 const service = {

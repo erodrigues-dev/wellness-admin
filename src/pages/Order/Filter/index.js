@@ -26,12 +26,24 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
     if (customerId) history.push('/orders');
   }
 
-  function handleClear(e) {
-    formik.handleReset(e);
+  function resetFilter() {
     onFilter('');
 
     if (customerId) history.push('/orders');
-    formik.setFieldValue('customerId', 0);
+
+    formik.setFieldValue('customerId', '');
+  }
+
+  function handleClear(e) {
+    formik.handleReset(e);
+
+    resetFilter();
+  }
+
+  function handleOpenAdd() {
+    resetFilter();
+
+    setOpenAdd(true);
   }
 
   return (
@@ -71,7 +83,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
               <Button
                 variant="secondary"
                 className="ml-2 text-nowrap"
-                onClick={() => setOpenAdd(true)}
+                onClick={handleOpenAdd}
               >
                 Add Order
               </Button>

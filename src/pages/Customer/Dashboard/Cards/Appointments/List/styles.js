@@ -35,3 +35,8 @@ export const Container = styled.ul`
     }
   }
 `;
+
+export const DateSpan = styled.span`
+  color: #777;
+  margin-right: 5px;
+`;
