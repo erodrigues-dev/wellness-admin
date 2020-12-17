@@ -20,7 +20,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
     initialValues: {
       customerId: customerId ?? '',
       // activityId: '',
-      // date: '',
+      // dateStart: '',
     },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
@@ -72,7 +72,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
               onChange={formik.handleChange}
             >
               <option value="" disabled>
-                Select an option
+                All customers
               </option>
               {customers?.map((customer) => (
                 <option key={customer.id} value={customer.id}>
@@ -91,7 +91,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
               onChange={formik.handleChange}
             >
               <option value="" disabled>
-                Select an option
+                All activities
               </option>
               {activities?.map((activity) => (
                 <option key={activity.id} value={activity.id}>
@@ -103,11 +103,23 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
           <Form.Group as={Col}>
             <InputDatePicker
               min={new Date()}
-              name="date"
-              value={formik.values.date}
+              name="dateStart"
+              placeholder="Start Date"
+              value={formik.values.dateStart}
               onChange={formik.handleChange}
-              isInvalid={formik.touched.date && formik.errors.date}
-              isValid={formik.touched.date && !formik.errors.date}
+              isInvalid={formik.touched.dateStart && formik.errors.dateStart}
+              isValid={formik.touched.dateStart && !formik.errors.dateStart}
+            />
+          </Form.Group>
+          <Form.Group as={Col}>
+            <InputDatePicker
+              min={new Date()}
+              name="dateEnd"
+              placeholder="End Date"
+              value={formik.values.dateEnd}
+              onChange={formik.handleChange}
+              isInvalid={formik.touched.dateEnd && formik.errors.dateEnd}
+              isValid={formik.touched.dateEnd && !formik.errors.dateEnd}
             />
           </Form.Group>
         </Row>

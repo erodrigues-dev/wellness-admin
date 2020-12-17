@@ -17,6 +17,7 @@ function InputDatePicker({
   tileDisabled,
   onActiveStartDateChange,
   setOpenedDatePicker,
+  placeholder,
   ...props
 }) {
   const [open, setOpen] = useState(false);
@@ -57,7 +58,7 @@ function InputDatePicker({
           value={formated}
           onChange={() => {}}
           onBlur={onBlur}
-          placeholder="mm/dd/yyyy"
+          placeholder={placeholder ?? 'mm/dd/yyyy'}
           autoComplete="off"
         />
         <InputGroup.Append>
