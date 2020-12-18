@@ -13,7 +13,7 @@ export function list(page, limit, filters) {
 }
 
 export function customerActivities(customerId) {
-  return api.get(`/customer/${customerId}/activities`);
+  return api.get(`/customers/${customerId}/activities`);
 }
 
 export function listDates(activityId, start, end) {

@@ -9,7 +9,6 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
-import * as activityService from '~/services/activity';
 import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
 import { toDate, transformIn24h } from '~helpers/date';
@@ -55,6 +54,39 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
   useEffect(() => {
     getFullMonth(activeStartDate);
   }, [activeStartDate, getFullMonth]);
+
+  const listCustomers = useCallback(async () => {
+    if (!customerId) {
+      try {
+        const { data } = await customerService.listAll();
+
+        setCustomers(data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    }
+  }, [customerId, sendNotification]);
+
+  const listActivities = useCallback(
+    async (id) => {
+      try {
+        const { data } = await appointmentService.customerActivities(id);
+
+        setActivities(data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification]
+  );
+
+  useEffect(() => {
+    listCustomers();
+  }, [listCustomers]);
+
+  useEffect(() => {
+    if (formik.values.customerId) listActivities(formik.values.customerId);
+  }, [listActivities, formik.values.customerId]);
 
   const listAvailableDates = useCallback(
     async (activityId, start, end) => {
@@ -106,36 +138,6 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
     if (formik.values.date)
       listAvailableTimeSlots(formik.values.relationId, formik.values.date);
   }, [listAvailableTimeSlots, formik.values.date, formik.values.relationId]);
-
-  const listCustomers = useCallback(async () => {
-    if (!customerId) {
-      try {
-        const { data } = await customerService.listAll();
-
-        setCustomers(data);
-      } catch (error) {
-        sendNotification(error.message, false);
-      }
-    }
-  }, [customerId, sendNotification]);
-
-  const listActivities = useCallback(async () => {
-    try {
-      const { data } = await activityService.listAll();
-
-      setActivities(data);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }, [sendNotification]);
-
-  useEffect(() => {
-    listCustomers();
-  }, [listCustomers]);
-
-  useEffect(() => {
-    listActivities();
-  }, [listActivities]);
 
   async function handleSubmit(data) {
     try {

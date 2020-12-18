@@ -19,8 +19,9 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
   const formik = useFormik({
     initialValues: {
       customerId: customerId ?? '',
-      // activityId: '',
-      // dateStart: '',
+      activityId: '',
+      dateStart: '',
+      dateEnd: '',
     },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
@@ -86,8 +87,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
               as="select"
               custom
               name="activityId"
-              defaultValue=""
-              // value={formik.values.activityId}
+              value={formik.values.activityId}
               onChange={formik.handleChange}
             >
               <option value="" disabled>

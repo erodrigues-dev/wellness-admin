@@ -25,13 +25,15 @@ const Appointments = () => {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({
     customerId: id,
+    activityId: '',
+    dateStart: '',
+    dateEnd: '',
   });
   const [openAdd, setOpenAdd] = useState(false);
 
   const listAppointments = useCallback(async () => {
     try {
       const { data, headers } = await appointmentService.list(page, 10, filter);
-      // const { data, headers } = await appointmentService.list(page, 10, filter);
 
       setList(data);
       setTotal(parseInt(headers['x-total-count']));
