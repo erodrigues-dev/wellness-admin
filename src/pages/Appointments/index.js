@@ -14,6 +14,7 @@ import List from './List';
 const Appointments = () => {
   const { sendNotification } = useNotification();
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
+  // ADJUST TO FUNCTIONALITIES.APPOINTMENTS
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.CHECKOUT,
     ACTIONS.CREATE
@@ -26,6 +27,7 @@ const Appointments = () => {
   const [filter, setFilter] = useState({
     customerId: id,
     activityId: '',
+    status: '',
     dateStart: '',
     dateEnd: '',
   });

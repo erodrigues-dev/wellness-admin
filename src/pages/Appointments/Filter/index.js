@@ -20,6 +20,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
     initialValues: {
       customerId: customerId ?? '',
       activityId: '',
+      status: '',
       dateStart: '',
       dateEnd: '',
     },
@@ -101,6 +102,25 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
             </Form.Control>
           </Form.Group>
           <Form.Group as={Col}>
+            <Form.Control
+              as="select"
+              custom
+              name="status"
+              value={formik.values.status}
+              onChange={formik.handleChange}
+            >
+              <option value="" disabled>
+                All status
+              </option>
+              <option value="scheduled">Scheduled</option>
+              <option value="arrived">Arrived</option>
+              <option value="completed">Completed</option>
+              <option value="canceled">Canceled</option>
+            </Form.Control>
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col}>
             <InputDatePicker
               min={new Date()}
               name="dateStart"
@@ -113,7 +133,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
           </Form.Group>
           <Form.Group as={Col}>
             <InputDatePicker
-              min={new Date()}
+              min={formik.values.dateStart || new Date()}
               name="dateEnd"
               placeholder="End Date"
               value={formik.values.dateEnd}
