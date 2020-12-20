@@ -141,7 +141,11 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
 
   async function handleSubmit(data) {
     try {
-      await appointmentService.create(data);
+      const { orderActivityId } = activities.find(
+        (x) => x.id === +data.relationId
+      );
+
+      await appointmentService.create({ ...data, orderActivityId });
 
       reloadAppointments();
       setClose(false);

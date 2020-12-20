@@ -34,7 +34,8 @@ export function listAvailableTimeSlots(activityId, date) {
 export function create(data) {
   return api.post(`/schedules`, {
     customerId: +data.customerId,
-    timeId: +data.timeId,
+    orderActivityId: data.orderActivityId,
+    activityScheduleId: +data.timeId,
     date: data.date,
   });
 }
