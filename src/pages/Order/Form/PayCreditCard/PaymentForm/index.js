@@ -249,7 +249,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
               </Form.Group>
 
               <Row className="d-flex ">
-                <Col md="3">
+                <Col md="4">
                   <Form.Group>
                     <Form.Label className="text-nowrap">
                       Expiration Date
@@ -273,7 +273,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
                   </Form.Group>
                 </Col>
 
-                <Col md="6">
+                <Col md="5">
                   <Form.Group>
                     <Form.Label className="text-nowrap">Zip Code</Form.Label>
                     <Form.Control
