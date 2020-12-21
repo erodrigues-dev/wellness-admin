@@ -253,7 +253,10 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
               tileDisabled={({ date }) => {
                 return (
                   availableDates.find(
-                    (item) => item.getDate() === date.getDate()
+                    (item) =>
+                      item.getDate() === date.getDate() &&
+                      item.getMonth() === date.getMonth() &&
+                      activeStartDate.getMonth() === date.getMonth()
                   ) === undefined
                 );
               }}
