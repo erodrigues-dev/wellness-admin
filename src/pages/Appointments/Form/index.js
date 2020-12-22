@@ -186,6 +186,8 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
     formik.setFieldValue('relationId', value);
     formik.setFieldValue('date', '');
     formik.setFieldValue('timeId', '');
+    setAvailableTimeSlots([]);
+    setActiveStartDate(new Date());
   }
 
   function handleDateChange(e) {
