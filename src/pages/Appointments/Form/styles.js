@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  .react-calendar__tile {
+  .react-calendar__month-view__days__day {
     &:not(:disabled) {
       abbr {
         display: inline-block;
