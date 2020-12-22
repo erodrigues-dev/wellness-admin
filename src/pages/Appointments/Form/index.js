@@ -168,6 +168,18 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
     }
   }
 
+  function handleSelectCustomer(e) {
+    formik.setFieldValue('customerId', e.target.value);
+
+    formik.setFieldValue('relationId', '');
+    formik.setFieldValue('date', '');
+    formik.setFieldValue('timeId', '');
+
+    setAvailableDates([]);
+    setAvailableTimeSlots([]);
+    setActiveStartDate(new Date());
+  }
+
   function handleSelectRelation(e) {
     const { value } = e.target;
 
@@ -206,7 +218,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
                 custom
                 name="customerId"
                 value={formik.values.customerId}
-                onChange={formik.handleChange}
+                onChange={handleSelectCustomer}
                 onBlur={formik.handleBlur}
                 isInvalid={
                   formik.touched.customerId && formik.errors.customerId
