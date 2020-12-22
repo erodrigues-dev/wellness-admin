@@ -31,6 +31,12 @@ export function formatToDateTime(date) {
   return null;
 }
 
+export function formatToSubmit(date) {
+  if (date instanceof Date) return format(date, 'y-MM-dd');
+
+  return null;
+}
+
 export function getTimezone() {
   return TIMEZONE;
 }

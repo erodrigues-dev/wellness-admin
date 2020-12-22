@@ -3,8 +3,6 @@ import styled from 'styled-components';
 export const Container = styled.div`
   .react-calendar__tile {
     &:not(:disabled) {
-      /* background-color: transparent; */
-
       abbr {
         display: inline-block;
         background-color: #42c5be;
@@ -28,5 +26,10 @@ export const Container = styled.div`
         background-color: #b0d04c;
       }
     }
+  }
+
+  .react-calendar .react-calendar__tile--active,
+  .kIzxMT .react-calendar .react-calendar__tile--hasActive {
+    background-color: unset;
   }
 `;

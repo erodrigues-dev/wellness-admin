@@ -18,8 +18,8 @@ export function customerActivities(customerId) {
 
 export function listDates(activityId, start, end) {
   const params = {
-    start: start.toISOString(),
-    end: end.toISOString(),
+    start,
+    end,
   };
 
   return api.get(`/activities/${activityId}/schedules/days`, { params });
@@ -32,12 +32,7 @@ export function listAvailableTimeSlots(activityId, date) {
 }
 
 export function create(data) {
-  return api.post(`/schedules`, {
-    customerId: +data.customerId,
-    orderActivityId: data.orderActivityId,
-    activityScheduleId: +data.timeId,
-    date: data.date,
-  });
+  return api.post(`/schedules`, data);
 }
 
 export function cancel(id) {

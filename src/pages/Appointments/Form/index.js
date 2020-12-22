@@ -9,9 +9,14 @@ import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
+import {
+  toDate,
+  transformIn24h,
+  toInputValue,
+  formatToSubmit,
+} from '~/helpers/date';
 import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
-import { toDate, transformIn24h } from '~helpers/date';
 
 import schema from './schema';
 import { Container } from './styles';
@@ -106,7 +111,11 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
 
   useEffect(() => {
     if (formik.values.relationId && dateRange?.length > 0) {
-      listAvailableDates(formik.values.relationId, dateRange[0], dateRange[1]);
+      listAvailableDates(
+        formik.values.relationId,
+        formatToSubmit(dateRange[0]),
+        formatToSubmit(dateRange[1])
+      );
     }
   }, [listAvailableDates, formik.values.relationId, dateRange]);
 
@@ -144,7 +153,12 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
         (x) => x.id === +data.relationId
       );
 
-      await appointmentService.create({ ...data, orderActivityId });
+      await appointmentService.create({
+        customerId: +data.customerId,
+        orderActivityId,
+        activityScheduleId: +data.timeId,
+        date: toInputValue(data.date),
+      });
 
       reloadAppointments();
       setClose(false);
