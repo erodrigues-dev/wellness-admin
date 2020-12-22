@@ -16,7 +16,6 @@ function InputDatePicker({
   onBlur,
   tileDisabled,
   onActiveStartDateChange,
-  setOpenedDatePicker,
   placeholder,
   ...props
 }) {
@@ -45,10 +44,6 @@ function InputDatePicker({
     event.preventDefault();
     handleChangeDate(null);
   }
-
-  useEffect(() => {
-    if (setOpenedDatePicker) setOpenedDatePicker(open);
-  }, [setOpenedDatePicker, open]);
 
   return (
     <Container onClick={() => setOpen(true)}>

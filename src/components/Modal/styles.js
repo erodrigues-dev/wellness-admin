@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const Container = styled.div`
+export const Full = styled.div`
   position: fixed;
   top: 0;
   left: 0;
@@ -8,25 +8,35 @@ export const Container = styled.div`
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
   z-index: 100;
+  overflow-x: hidden;
+  overflow-y: auto;
+`;
+
+export const Container = styled.div`
+  position: relative;
+  width: 100%;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin: 40px auto;
 `;
 
 export const Content = styled.div`
   background-color: #fff;
   min-width: 600px;
   min-height: 300px;
-  max-height: 90%;
-  max-width: 90%;
-  ${(props) => !props.overflowNone && 'overflow: hidden'};
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: 80px 1fr;
-  grid-template-areas: 'header' 'main';
+  max-width: 900px;
+
+  @media (max-width: 720px) {
+    width: 100%;
+    min-width: 350px;
+    max-width: 600px;
+  }
 
   @media (max-width: 1024px) {
-    min-width: 300px;
+    width: 100%;
+    min-width: 350px;
   }
 
   @media (min-width: 1160px) {
@@ -34,12 +44,12 @@ export const Content = styled.div`
   }
 
   header {
-    grid-area: header;
     display: flex;
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #ccc;
     padding: 25px;
+    height: 80px;
 
     h1 {
       font-size: 24px;
@@ -53,18 +63,14 @@ export const Content = styled.div`
   }
 
   main {
-    grid-area: main;
     height: 100%;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    ${(props) => !props.overflowNone && 'overflow: auto'};
 
     .modal-form {
       display: flex;
       flex-direction: column;
       height: 100%;
-      ${(props) => !props.overflowNone && 'overflow: auto'};
 
       h2 {
         font-size: 1.2rem;
@@ -73,7 +79,6 @@ export const Content = styled.div`
 
       .form-wrapper {
         padding: 25px;
-        ${(props) => !props.overflowNone && 'overflow: auto'};
       }
 
       .buttons {

@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 
+import Modal from '~/components/Modal';
+
 import CreateOrder from './CreateOrder';
 import PayCreditCard from './PayCreditCard';
 import PayMoney from './PayMoney';
@@ -9,7 +11,7 @@ const OrderWizard = ({ setClose, reloadOrders }) => {
   const [order, setOrder] = useState(null);
 
   return (
-    <>
+    <Modal title="Create Order" setClose={setClose}>
       {page === 1 && (
         <CreateOrder
           setOrder={setOrder}
@@ -31,7 +33,7 @@ const OrderWizard = ({ setClose, reloadOrders }) => {
           reloadOrders={reloadOrders}
         />
       )}
-    </>
+    </Modal>
   );
 };
 

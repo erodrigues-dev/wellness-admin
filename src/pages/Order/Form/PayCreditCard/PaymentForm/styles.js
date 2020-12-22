@@ -5,7 +5,7 @@ export const Container = styled.div`
     display: flex;
     margin: 0;
 
-    @media (max-width: 800px) {
+    @media (max-width: 767px) {
       flex-direction: column;
     }
   }
@@ -14,7 +14,7 @@ export const Container = styled.div`
     padding: 10px 25px;
     margin-bottom: 10px;
 
-    @media (max-width: 1024px) {
+    @media (max-width: 767px) {
       border: none;
       margin: 0;
     }
@@ -25,6 +25,10 @@ export const Container = styled.div`
     display: flex;
     width: 100%;
     align-items: center;
+
+    @media (max-width: 767px) {
+      padding: 10px 0;
+    }
 
     & > div {
       width: 100%;

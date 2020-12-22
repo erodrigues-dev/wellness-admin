@@ -24,7 +24,6 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
   const [activities, setActivities] = useState();
   const [activeStartDate, setActiveStartDate] = useState(new Date());
   const [dateRange, setDateRange] = useState();
-  const [openedDatePicker, setOpenedDatePicker] = useState(false);
   const [availableDates, setAvailableDates] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
 
@@ -171,11 +170,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
   }
 
   return (
-    <Modal
-      setClose={setClose}
-      title="Add Appointments"
-      overflowNone={openedDatePicker}
-    >
+    <Modal setClose={setClose} title="Add Appointments">
       <Form onSubmit={formik.handleSubmit} className="modal-form">
         <Container className="form-wrapper">
           {!customerId && (
@@ -248,7 +243,6 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
               isValid={
                 formik.touched.date && !formik.errors.date && formik.values.date
               }
-              setOpenedDatePicker={setOpenedDatePicker}
               disabled={!formik.values.relationId && availableDates.length <= 0}
               tileDisabled={({ date }) => {
                 return (
@@ -260,8 +254,8 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
                   ) === undefined
                 );
               }}
-              onActiveStartDateChange={(e) =>
-                setActiveStartDate(e.activeStartDate)
+              onActiveStartDateChange={(e, view) =>
+                view === 'month' && setActiveStartDate(e.activeStartDate)
               }
             />
             {formik.touched.date && formik.errors.date && !formik.values.date && (
