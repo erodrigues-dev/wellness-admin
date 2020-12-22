@@ -3,7 +3,7 @@ import { Table } from 'react-bootstrap';
 import { FiXCircle } from 'react-icons/fi';
 
 import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
-import { formatToDisplay, transformIn24h } from '~/helpers/date';
+import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
 
 import { Container } from './styles';
 
@@ -41,7 +41,7 @@ function List({ list, handleDelete }) {
 
               <td>{item.customer.name}</td>
               <td>{item.activity.name}</td>
-              <td>{formatToDisplay(new Date(item.date))}</td>
+              <td>{formatToDisplay(toDate(item.date))}</td>
               <td>{transformIn24h(item.start)}</td>
               <td>{transformIn24h(item.end)}</td>
               <td>{item.status}</td>
