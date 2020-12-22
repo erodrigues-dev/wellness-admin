@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const Container = styled.div`
   .react-calendar__tile {
     &:not(:disabled) {
-      background-color: #f7f7f7;
+      /* background-color: transparent; */
 
       abbr {
         display: inline-block;

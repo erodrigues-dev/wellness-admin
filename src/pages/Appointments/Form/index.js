@@ -169,6 +169,17 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
     formik.setFieldValue('timeId', '');
   }
 
+  function handleTileDisable({ date, view }) {
+    return (
+      availableDates.find(
+        (item) =>
+          item.getDate() === date.getDate() &&
+          item.getMonth() === date.getMonth() &&
+          activeStartDate.getMonth() === date.getMonth()
+      ) === undefined && view === 'month'
+    );
+  }
+
   return (
     <Modal setClose={setClose} title="Add Appointments">
       <Form onSubmit={formik.handleSubmit} className="modal-form">
@@ -244,18 +255,9 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
                 formik.touched.date && !formik.errors.date && formik.values.date
               }
               disabled={!formik.values.relationId && availableDates.length <= 0}
-              tileDisabled={({ date }) => {
-                return (
-                  availableDates.find(
-                    (item) =>
-                      item.getDate() === date.getDate() &&
-                      item.getMonth() === date.getMonth() &&
-                      activeStartDate.getMonth() === date.getMonth()
-                  ) === undefined
-                );
-              }}
-              onActiveStartDateChange={(e, view) =>
-                view === 'month' && setActiveStartDate(e.activeStartDate)
+              tileDisabled={handleTileDisable}
+              onActiveStartDateChange={({ activeStartDate: startDate, view }) =>
+                view === 'month' && setActiveStartDate(startDate)
               }
             />
             {formik.touched.date && formik.errors.date && !formik.values.date && (

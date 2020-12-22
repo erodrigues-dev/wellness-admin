@@ -15,11 +15,12 @@ export const Full = styled.div`
 export const Container = styled.div`
   position: relative;
   width: 100%;
+  height: 100vh;
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 40px auto;
+  margin: auto;
 `;
 
 export const Content = styled.div`
@@ -27,6 +28,7 @@ export const Content = styled.div`
   min-width: 600px;
   min-height: 300px;
   max-width: 900px;
+  margin: auto;
 
   @media (max-width: 720px) {
     width: 100%;
