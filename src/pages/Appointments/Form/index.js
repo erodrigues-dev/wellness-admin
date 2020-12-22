@@ -284,8 +284,8 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
               }
               disabled={!formik.values.relationId && availableDates.length <= 0}
               tileDisabled={handleTileDisable}
-              onActiveStartDateChange={({ activeStartDate: startDate, view }) =>
-                view === 'month' && setActiveStartDate(startDate)
+              onActiveStartDateChange={({ activeStartDate: startDate }) =>
+                setActiveStartDate(startDate)
               }
             />
             {formik.touched.date && formik.errors.date && !formik.values.date && (
