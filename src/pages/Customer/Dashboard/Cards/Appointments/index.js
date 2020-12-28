@@ -39,6 +39,7 @@ const Appointments = () => {
     try {
       await appointmentService.cancel(appointmentId);
 
+      listAppointments();
       sendNotification('Appointment cancelled successfully');
     } catch (error) {
       sendNotification(error.message, false);

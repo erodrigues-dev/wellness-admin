@@ -33,6 +33,12 @@ export const Container = styled.ul`
         }
       }
     }
+
+    .status {
+      font-weight: normal;
+      font-size: 0.9rem;
+      color: #777;
+    }
   }
 `;
 

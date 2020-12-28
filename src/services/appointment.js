@@ -36,7 +36,7 @@ export function create(data) {
 }
 
 export function cancel(id) {
-  return api.delete(`/schedules/${id}/cancel`);
+  return api.put(`/schedules/${id}/cancel`);
 }
 
 const service = {

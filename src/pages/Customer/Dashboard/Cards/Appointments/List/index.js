@@ -22,6 +22,7 @@ const List = ({ list, handleDelete }) => {
                 | {transformIn24h(item.start)} - {transformIn24h(item.end)}
               </span>
             </div>
+            <span className="status">{item.status}</span>
           </div>
           <div className="buttons">
             <Button
@@ -32,6 +33,7 @@ const List = ({ list, handleDelete }) => {
                   () => handleDelete(item.id)
                 )
               }
+              disabled={item.status === 'canceled'}
             >
               <FiXCircle title="Cancel Appointment" />
             </Button>
