@@ -17,13 +17,9 @@ const Appointments = () => {
   const { sendNotification } = useNotification();
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
   const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.ACTIVITIES,
+    FUNCTIONALITIES.SCHEDULES,
     ACTIONS.CREATE
   );
-  // const hasPermissionToUpdate = hasPermission(
-  //   FUNCTIONALITIES.ACTIVITIES,
-  //   ACTIONS.UPDATE
-  // );
 
   const listAppointments = useCallback(async () => {
     try {

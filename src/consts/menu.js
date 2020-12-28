@@ -66,7 +66,7 @@ export const MENU = [
     title: 'Appointments',
     path: '/appointments',
     Icon: FiPenTool,
-    functionality: FUNCTIONALITIES.ORDERS,
+    functionality: FUNCTIONALITIES.SCHEDULES,
     subgroup: 'settings',
   },
 ];

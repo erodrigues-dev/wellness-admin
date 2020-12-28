@@ -14,9 +14,8 @@ import List from './List';
 const Appointments = () => {
   const { sendNotification } = useNotification();
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
-  // ADJUST TO FUNCTIONALITIES.APPOINTMENTS
   const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.CHECKOUT,
+    FUNCTIONALITIES.SCHEDULES,
     ACTIONS.CREATE
   );
 
