@@ -127,8 +127,6 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
               placeholder="Start Date"
               value={formik.values.dateStart}
               onChange={formik.handleChange}
-              isInvalid={formik.touched.dateStart && formik.errors.dateStart}
-              isValid={formik.touched.dateStart && !formik.errors.dateStart}
             />
           </Form.Group>
           <Form.Group as={Col}>
@@ -138,8 +136,6 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
               placeholder="End Date"
               value={formik.values.dateEnd}
               onChange={formik.handleChange}
-              isInvalid={formik.touched.dateEnd && formik.errors.dateEnd}
-              isValid={formik.touched.dateEnd && !formik.errors.dateEnd}
             />
           </Form.Group>
         </Row>
