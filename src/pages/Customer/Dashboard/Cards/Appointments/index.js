@@ -75,13 +75,12 @@ const Appointments = () => {
         </Row>
       </Card.Header>
       <Card.Body>
-        <List list={list} />
+        <List list={list} handleDelete={handleDelete} />
       </Card.Body>
       {openAdd && (
         <ModalForm
           reloadAppointments={listAppointments}
           setClose={setOpenAdd}
-          handleDelete={handleDelete}
         />
       )}
     </Card>
