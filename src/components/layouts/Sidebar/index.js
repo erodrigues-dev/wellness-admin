@@ -63,40 +63,44 @@ const Sidebar = ({ open, handleClose }) => {
             </Item>
           ))}
 
-          <Item onClick={handleClose} className="settings">
-            <div
-              onClick={handleRetract}
-              onKeyDown={() => {}}
-              tabIndex={0}
-              role="button"
-            >
-              <FiSettings size={24} title="Settings" />
-              Settings
-            </div>
-            <RetractButton
-              type="button"
-              onClick={handleRetract}
-              retract={retractSettings}
-              className={retractSettings && 'retract'}
-            >
-              <RiArrowUpSLine color="white" stroke="0" size={24} />
-            </RetractButton>
-          </Item>
-
-          <Subgroup retract={retractSettings}>
-            <div className={retractSettings ? 'retract' : 'show'}>
-              {settingsItems.map(({ path, title }) => (
-                <Item
-                  key={path}
-                  active={isActive(path)}
-                  subgroup="settings"
-                  onClick={handleClose}
+          {settingsItems.length > 0 && (
+            <>
+              <Item onClick={handleClose} className="settings">
+                <div
+                  onClick={handleRetract}
+                  onKeyDown={() => {}}
+                  tabIndex={0}
+                  role="button"
                 >
-                  <Link to={path}>{title}</Link>
-                </Item>
-              ))}
-            </div>
-          </Subgroup>
+                  <FiSettings size={24} title="Settings" />
+                  Settings
+                </div>
+                <RetractButton
+                  type="button"
+                  onClick={handleRetract}
+                  retract={retractSettings}
+                  className={retractSettings && 'retract'}
+                >
+                  <RiArrowUpSLine color="white" stroke="0" size={24} />
+                </RetractButton>
+              </Item>
+
+              <Subgroup retract={retractSettings}>
+                <div className={retractSettings ? 'retract' : 'show'}>
+                  {settingsItems.map(({ path, title }) => (
+                    <Item
+                      key={path}
+                      active={isActive(path)}
+                      subgroup="settings"
+                      onClick={handleClose}
+                    >
+                      <Link to={path}>{title}</Link>
+                    </Item>
+                  ))}
+                </div>
+              </Subgroup>
+            </>
+          )}
 
           <Item onClick={signOut} className="signout">
             <div>
