@@ -1,10 +1,6 @@
-import { toInputValue } from '~/helpers/date';
-
 import api from './api';
 
-export function list(page, limit, filter) {
-  const filters = filter;
-
+export function list(page, limit, filters) {
   return api.get('/schedules', {
     params: {
       page,
@@ -28,9 +24,7 @@ export function listDates(activityId, start, end) {
 }
 
 export function listAvailableTimeSlots(activityId, date) {
-  return api.get(
-    `/activities/${activityId}/schedules/days/${toInputValue(date)}/times`
-  );
+  return api.get(`/activities/${activityId}/schedules/days/${date}/times`);
 }
 
 export function create(data) {

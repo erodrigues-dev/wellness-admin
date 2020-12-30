@@ -73,7 +73,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
               value={formik.values.customerId}
               onChange={formik.handleChange}
             >
-              <option value="">All customers</option>
+              <option value="">All Customers</option>
               {customers?.map((customer) => (
                 <option key={customer.id} value={customer.id}>
                   {customer.name}
@@ -89,7 +89,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
               value={formik.values.activityId}
               onChange={formik.handleChange}
             >
-              <option value="">All activities</option>
+              <option value="">All Activities</option>
               {activities?.map((activity) => (
                 <option key={activity.id} value={activity.id}>
                   {activity.name}
@@ -105,7 +105,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
               value={formik.values.status}
               onChange={formik.handleChange}
             >
-              <option value="">All status</option>
+              <option value="">All Status</option>
               <option value="scheduled">Scheduled</option>
               <option value="arrived">Arrived</option>
               <option value="completed">Completed</option>

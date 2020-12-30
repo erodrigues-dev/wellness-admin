@@ -58,9 +58,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
               value={formik.values.customerId}
               onChange={formik.handleChange}
             >
-              <option value="" disabled>
-                All customers
-              </option>
+              <option value="">All Customers</option>
               {customers?.map((customer) => (
                 <option key={customer.id} value={customer.id}>
                   {customer.name}

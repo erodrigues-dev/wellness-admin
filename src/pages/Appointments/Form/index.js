@@ -124,7 +124,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
       try {
         const { data } = await appointmentService.listAvailableTimeSlots(
           activityId,
-          date
+          toInputValue(date)
         );
 
         if (data.length <= 0) {
