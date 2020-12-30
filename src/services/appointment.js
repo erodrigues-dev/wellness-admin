@@ -2,7 +2,9 @@ import { toInputValue } from '~/helpers/date';
 
 import api from './api';
 
-export function list(page, limit, filters) {
+export function list(page, limit, filter) {
+  const filters = filter;
+
   return api.get('/schedules', {
     params: {
       page,

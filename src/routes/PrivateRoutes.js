@@ -244,12 +244,14 @@ const PrivateRoutes = () => {
         />
 
         <PrivateRoute
+          exact
           action={ACTIONS.GET}
           functionality={FUNCTIONALITIES.SCHEDULES}
           path="/appointments"
           component={Appointments}
         />
         <PrivateRoute
+          exact
           action={ACTIONS.GET}
           functionality={FUNCTIONALITIES.SCHEDULES}
           path="/appointments/:id"

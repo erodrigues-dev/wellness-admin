@@ -26,19 +26,21 @@ function List({ list, handleDelete }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center actions">
-                {item.status !== 'canceled' && (
-                  <FiXCircle
-                    title="Cancel Appointment"
-                    size="18"
-                    style={{ cursor: 'pointer' }}
-                    onClick={() =>
-                      confirmHandler(
-                        'Are you sure you want to cancel this appointment?',
-                        () => handleDelete(item.id)
-                      )
-                    }
-                  />
-                )}
+                {item.status !== 'canceled' &&
+                  item.status !== 'completed' &&
+                  toDate(item.date) >= new Date() && (
+                    <FiXCircle
+                      title="Cancel Appointment"
+                      size="18"
+                      style={{ cursor: 'pointer' }}
+                      onClick={() =>
+                        confirmHandler(
+                          'Are you sure you want to cancel this appointment?',
+                          () => handleDelete(item.id)
+                        )
+                      }
+                    />
+                  )}
               </td>
 
               <td>{item.customer.name}</td>

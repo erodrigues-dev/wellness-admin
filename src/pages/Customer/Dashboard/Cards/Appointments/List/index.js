@@ -3,7 +3,7 @@ import { Button } from 'react-bootstrap';
 import { FiXCircle } from 'react-icons/fi';
 
 import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
-import { formatToDisplay, transformIn24h } from '~/helpers/date';
+import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
 
 import { Container, DateSpan } from './styles';
 
@@ -17,7 +17,7 @@ const List = ({ list, handleDelete }) => {
               <span className="relationName">{item.activity.name}</span>
             </div>
             <div className="value">
-              <DateSpan>{formatToDisplay(new Date(item.date))}</DateSpan>
+              <DateSpan>{formatToDisplay(toDate(item.date))}</DateSpan>
               <span>
                 | {transformIn24h(item.start)} - {transformIn24h(item.end)}
               </span>
@@ -33,7 +33,11 @@ const List = ({ list, handleDelete }) => {
                   () => handleDelete(item.id)
                 )
               }
-              disabled={item.status === 'canceled'}
+              disabled={
+                item.status === 'canceled' ||
+                item.status === 'completed' ||
+                toDate(item.date) < new Date()
+              }
             >
               <FiXCircle title="Cancel Appointment" />
             </Button>
