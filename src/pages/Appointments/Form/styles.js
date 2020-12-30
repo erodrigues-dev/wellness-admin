@@ -29,7 +29,12 @@ export const Container = styled.div`
   }
 
   .react-calendar .react-calendar__tile--active,
-  .kIzxMT .react-calendar .react-calendar__tile--hasActive {
+  .react-calendar .react-calendar__tile--hasActive,
+  .react-calendar__tile.react-calendar__tile--now.react-calendar__month-view__days__day {
     background-color: unset;
+  }
+
+  .react-calendar__tile.react-calendar__tile--now {
+    background-color: #b0d04c;
   }
 `;
