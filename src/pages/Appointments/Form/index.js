@@ -27,7 +27,9 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
   const { sendNotification } = useNotification();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
-  const [activeStartDate, setActiveStartDate] = useState(new Date());
+  const [activeStartDate, setActiveStartDate] = useState(
+    formatToSubmit(new Date())
+  );
   const [dateRange, setDateRange] = useState();
   const [availableDates, setAvailableDates] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
@@ -44,8 +46,9 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
     },
   });
 
-  const getFullMonth = useCallback((startDate) => {
-    if (startDate === undefined) return;
+  const getFullMonth = useCallback((start) => {
+    if (start === undefined) return;
+    const startDate = toDate(start);
     const endDate = new Date(
       startDate.getFullYear(),
       startDate.getMonth() + 1,
@@ -124,7 +127,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
       try {
         const { data } = await appointmentService.listAvailableTimeSlots(
           activityId,
-          toInputValue(date)
+          date
         );
 
         if (data.length <= 0) {
@@ -177,7 +180,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
 
     setAvailableDates([]);
     setAvailableTimeSlots([]);
-    setActiveStartDate(new Date());
+    setActiveStartDate(formatToSubmit(new Date()));
   }
 
   function handleSelectRelation(e) {
@@ -187,14 +190,22 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
     formik.setFieldValue('date', '');
     formik.setFieldValue('timeId', '');
     setAvailableTimeSlots([]);
-    setActiveStartDate(new Date());
+    setActiveStartDate(formatToSubmit(new Date()));
   }
 
   function handleDateChange(e) {
     const { value } = e.target;
 
-    formik.setFieldValue('date', value);
+    formik.setFieldValue('date', formatToSubmit(value));
     formik.setFieldValue('timeId', '');
+  }
+
+  function handleDateValue(value) {
+    if (value && typeof value === 'string') {
+      return toDate(value);
+    }
+
+    return null;
   }
 
   function handleTileDisable({ date, view }) {
@@ -203,7 +214,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
         (item) =>
           item.getDate() === date.getDate() &&
           item.getMonth() === date.getMonth() &&
-          activeStartDate.getMonth() === date.getMonth()
+          toDate(activeStartDate).getMonth() === date.getMonth()
       ) === undefined && view === 'month'
     );
   }
@@ -273,7 +284,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
             <InputDatePicker
               min={new Date()}
               name="date"
-              value={formik.values.date}
+              value={() => handleDateValue(formik.values.date)}
               onChange={handleDateChange}
               onBlur={formik.handleBlur}
               isInvalid={
@@ -285,7 +296,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
               disabled={!formik.values.relationId && availableDates.length <= 0}
               tileDisabled={handleTileDisable}
               onActiveStartDateChange={({ activeStartDate: startDate }) =>
-                setActiveStartDate(startDate)
+                setActiveStartDate(formatToSubmit(startDate))
               }
             />
             {formik.touched.date && formik.errors.date && !formik.values.date && (
