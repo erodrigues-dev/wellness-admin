@@ -5,6 +5,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import InputDatePicker from '~/components/InputDatePicker';
+import { formatToSubmit, toDate } from '~/helpers/date';
 import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
 
@@ -60,6 +61,20 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
   useEffect(() => {
     activityService.listAll().then((response) => setActivities(response.data));
   }, []);
+
+  function handleDateChange(e) {
+    const { name, value } = e.target;
+
+    formik.setFieldValue(name, formatToSubmit(value));
+  }
+
+  function handleDateValue(value) {
+    if (value && typeof value === 'string') {
+      return toDate(value);
+    }
+
+    return null;
+  }
 
   return (
     <Container>
@@ -118,16 +133,16 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
             <InputDatePicker
               name="dateStart"
               placeholder="Start Date"
-              value={formik.values.dateStart}
-              onChange={formik.handleChange}
+              value={() => handleDateValue(formik.values.dateStart)}
+              onChange={handleDateChange}
             />
           </Form.Group>
           <Form.Group as={Col}>
             <InputDatePicker
               name="dateEnd"
               placeholder="End Date"
-              value={formik.values.dateEnd}
-              onChange={formik.handleChange}
+              value={() => handleDateValue(formik.values.dateEnd)}
+              onChange={handleDateChange}
             />
           </Form.Group>
         </Row>
