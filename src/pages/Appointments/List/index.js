@@ -1,13 +1,17 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiXCircle } from 'react-icons/fi';
+import { FiInfo } from 'react-icons/fi';
 
-import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
 
 import { Container } from './styles';
 
-function List({ list, handleDelete }) {
+function List({ list, setOpenDetails, setAppointment }) {
+  function handleClickInfo(item) {
+    setAppointment(item);
+    setOpenDetails(true);
+  }
+
   return (
     <Container>
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -26,21 +30,12 @@ function List({ list, handleDelete }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center actions">
-                {item.status !== 'canceled' &&
-                  item.status !== 'completed' &&
-                  toDate(item.date) >= new Date() && (
-                    <FiXCircle
-                      title="Cancel Appointment"
-                      size="18"
-                      style={{ cursor: 'pointer' }}
-                      onClick={() =>
-                        confirmHandler(
-                          'Are you sure you want to cancel this appointment?',
-                          () => handleDelete(item.id)
-                        )
-                      }
-                    />
-                  )}
+                <FiInfo
+                  title="Details"
+                  size="18"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleClickInfo(item)}
+                />
               </td>
 
               <td>{item.customer.name}</td>

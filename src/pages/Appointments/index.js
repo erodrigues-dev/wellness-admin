@@ -7,6 +7,7 @@ import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import * as appointmentService from '~/services/appointment';
 
+import Details from './Details';
 import Filter from './Filter';
 import ModalForm from './Form';
 import List from './List';
@@ -31,6 +32,8 @@ const Appointments = () => {
     dateEnd: '',
   });
   const [openAdd, setOpenAdd] = useState(false);
+  const [openDetails, setOpenDetails] = useState(false);
+  const [appointment, setAppointment] = useState();
 
   const listAppointments = useCallback(async () => {
     try {
@@ -56,17 +59,6 @@ const Appointments = () => {
     setPage(current);
   }
 
-  async function handleDelete(appointmentId) {
-    try {
-      await appointmentService.cancel(appointmentId);
-
-      sendNotification('Appointment cancelled successfully');
-      listAppointments();
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }
-
   return (
     <>
       <Card body>
@@ -78,7 +70,11 @@ const Appointments = () => {
           list={list}
           setOpenAdd={setOpenAdd}
         />
-        <List list={list} handleDelete={handleDelete} />
+        <List
+          list={list}
+          setOpenDetails={setOpenDetails}
+          setAppointment={setAppointment}
+        />
         <Paginate
           activePage={page}
           itemsCountPerPage={10}
@@ -90,6 +86,13 @@ const Appointments = () => {
         <ModalForm
           reloadAppointments={listAppointments}
           setClose={setOpenAdd}
+        />
+      )}
+      {openDetails && (
+        <Details
+          setClose={setOpenDetails}
+          listAppointments={listAppointments}
+          appointment={appointment}
         />
       )}
     </>

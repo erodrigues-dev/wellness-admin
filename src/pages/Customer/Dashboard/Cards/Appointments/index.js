@@ -4,6 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
+import Details from '~/pages/Appointments/Details';
 import ModalForm from '~/pages/Appointments/Form';
 import * as appointmentService from '~/services/appointment';
 
@@ -13,7 +14,9 @@ const Appointments = () => {
   const { id } = useParams();
   const [list, setList] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
+  const [openDetails, setOpenDetails] = useState(false);
   const [filter] = useState({ customerId: id });
+  const [appointment, setAppointment] = useState();
   const { sendNotification } = useNotification();
   const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
   const hasPermissionToCreate = hasPermission(
@@ -72,13 +75,21 @@ const Appointments = () => {
         </Row>
       </Card.Header>
       <Card.Body>
-        <List list={list} handleDelete={handleDelete} />
+        <List
+          list={list}
+          handleDelete={handleDelete}
+          setOpenDetails={() => setOpenDetails(true)}
+          setAppointment={setAppointment}
+        />
       </Card.Body>
       {openAdd && (
         <ModalForm
           reloadAppointments={listAppointments}
           setClose={setOpenAdd}
         />
+      )}
+      {openDetails && (
+        <Details setClose={setOpenDetails} appointment={appointment} />
       )}
     </Card>
   );

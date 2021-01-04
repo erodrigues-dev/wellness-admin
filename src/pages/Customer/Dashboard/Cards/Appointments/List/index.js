@@ -1,13 +1,17 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-import { FiXCircle } from 'react-icons/fi';
+import { FiInfo } from 'react-icons/fi';
 
-import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
 
 import { Container, DateSpan } from './styles';
 
-const List = ({ list, handleDelete }) => {
+const List = ({ list, setOpenDetails, setAppointment }) => {
+  function handleClickInfo(item) {
+    setAppointment(item);
+    setOpenDetails(true);
+  }
+
   return (
     <Container>
       {list.map((item) => (
@@ -25,23 +29,12 @@ const List = ({ list, handleDelete }) => {
             <span className="status">{item.status}</span>
           </div>
           <div className="buttons">
-            {!(
-              item.status === 'canceled' ||
-              item.status === 'completed' ||
-              toDate(item.date) < new Date()
-            ) && (
-              <Button
-                variant="danger"
-                onClick={() =>
-                  confirmHandler(
-                    'Are you sure you want to cancel this appointment?',
-                    () => handleDelete(item.id)
-                  )
-                }
-              >
-                <FiXCircle title="Cancel Appointment" />
-              </Button>
-            )}
+            <Button
+              variant="outline-primary"
+              onClick={() => handleClickInfo(item)}
+            >
+              <FiInfo title="Appointment's Information" />
+            </Button>
           </div>
         </li>
       ))}
