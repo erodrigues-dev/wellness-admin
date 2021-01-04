@@ -25,22 +25,24 @@ const List = ({ list, handleDelete }) => {
             <span className="status">{item.status}</span>
           </div>
           <div className="buttons">
-            <Button
-              variant="danger"
-              onClick={() =>
-                confirmHandler(
-                  'Are you sure you want to cancel this appointment?',
-                  () => handleDelete(item.id)
-                )
-              }
-              disabled={
-                item.status === 'canceled' ||
-                item.status === 'completed' ||
-                toDate(item.date) < new Date()
-              }
-            >
-              <FiXCircle title="Cancel Appointment" />
-            </Button>
+            {!(
+              item.status === 'canceled' ||
+              item.status === 'completed' ||
+              toDate(item.date) < new Date()
+            ) && (
+              <Button
+                variant="danger"
+                onClick={() =>
+                  confirmHandler(
+                    'Are you sure you want to cancel this appointment?',
+                    () => handleDelete(item.id)
+                  )
+                }
+                disab
+              >
+                <FiXCircle title="Cancel Appointment" />
+              </Button>
+            )}
           </div>
         </li>
       ))}
