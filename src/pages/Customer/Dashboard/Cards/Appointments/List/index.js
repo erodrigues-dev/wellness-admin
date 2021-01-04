@@ -38,7 +38,6 @@ const List = ({ list, handleDelete }) => {
                     () => handleDelete(item.id)
                   )
                 }
-                disab
               >
                 <FiXCircle title="Cancel Appointment" />
               </Button>
