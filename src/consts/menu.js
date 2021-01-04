@@ -4,16 +4,30 @@ import {
   FiActivity,
   FiPackage,
   FiPenTool,
+  FiCalendar,
+  FiShoppingCart,
 } from 'react-icons/fi';
 
 import { FUNCTIONALITIES } from './functionalities';
 
 export const MENU = [
   {
+    title: 'Appointments',
+    path: '/appointments',
+    Icon: FiCalendar,
+    functionality: FUNCTIONALITIES.SCHEDULES,
+  },
+  {
     title: 'Customers',
     path: '/customers',
     Icon: FiUsers,
     functionality: FUNCTIONALITIES.CUSTOMERS,
+  },
+  {
+    title: 'Orders',
+    path: '/orders',
+    Icon: FiShoppingCart,
+    functionality: FUNCTIONALITIES.ORDERS,
   },
   {
     title: 'Activities',
@@ -53,20 +67,6 @@ export const MENU = [
     path: '/discounts',
     Icon: FiPenTool,
     functionality: FUNCTIONALITIES.DISCOUNTS,
-    subgroup: 'settings',
-  },
-  {
-    title: 'Orders',
-    path: '/orders',
-    Icon: FiPenTool,
-    functionality: FUNCTIONALITIES.ORDERS,
-    subgroup: 'settings',
-  },
-  {
-    title: 'Appointments',
-    path: '/appointments',
-    Icon: FiPenTool,
-    functionality: FUNCTIONALITIES.SCHEDULES,
     subgroup: 'settings',
   },
 ];
