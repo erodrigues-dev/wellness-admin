@@ -1,12 +1,11 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
-import { FiInfo } from 'react-icons/fi';
 
 import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
 
-import { Container, DateSpan } from './styles';
+import { Container, DateSpan, Status } from './styles';
 
 const List = ({ list, setOpenDetails, setAppointment }) => {
+  // eslint-disable-next-line no-unused-vars
   function handleClickInfo(item) {
     setAppointment(item);
     setOpenDetails(true);
@@ -20,22 +19,12 @@ const List = ({ list, setOpenDetails, setAppointment }) => {
             <div className="name">
               <span className="relationName">{item.activity.name}</span>
             </div>
-            <div className="value">
-              <DateSpan>{formatToDisplay(toDate(item.date))}</DateSpan>
-              <span>
-                | {transformIn24h(item.start)} - {transformIn24h(item.end)}
-              </span>
-            </div>
-            <span className="status">{item.status}</span>
+            <span className="value">
+              {transformIn24h(item.start)} - {transformIn24h(item.end)}
+            </span>
+            <DateSpan>{formatToDisplay(toDate(item.date))}</DateSpan>
           </div>
-          <div className="buttons">
-            <Button
-              variant="outline-primary"
-              onClick={() => handleClickInfo(item)}
-            >
-              <FiInfo title="Appointment's Information" />
-            </Button>
-          </div>
+          <Status status={item.status}>{item.status}</Status>
         </li>
       ))}
     </Container>
