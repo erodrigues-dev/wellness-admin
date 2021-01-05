@@ -91,7 +91,7 @@ const Appointments = () => {
       {openDetails && (
         <Details
           setClose={setOpenDetails}
-          listAppointments={listAppointments}
+          reloadAppointments={listAppointments}
           appointment={appointment}
         />
       )}

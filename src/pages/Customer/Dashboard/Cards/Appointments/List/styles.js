@@ -13,9 +13,6 @@ function getStatusColors(status) {
 
 export const Container = styled.ul`
   li {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
     list-style: none;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 2px;
@@ -23,21 +20,31 @@ export const Container = styled.ul`
     margin-bottom: 5px;
     cursor: pointer;
     transition: background 100ms;
+    display: flex;
 
     &:hover {
       background-color: rgba(0, 0, 0, 0.1);
     }
 
+    button {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
     .items {
       display: flex;
       flex-direction: column;
+      align-items: flex-start;
 
-      .name {
+      h2 {
+        margin: 0;
+        font-size: 1.1rem;
         font-weight: 600;
-
-        svg {
-          margin-right: 5px;
-        }
       }
 
       .value {

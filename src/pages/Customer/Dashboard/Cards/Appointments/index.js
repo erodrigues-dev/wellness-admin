@@ -89,7 +89,11 @@ const Appointments = () => {
         />
       )}
       {openDetails && (
-        <Details setClose={setOpenDetails} appointment={appointment} />
+        <Details
+          setClose={setOpenDetails}
+          appointment={appointment}
+          reloadAppointments={listAppointments}
+        />
       )}
     </Card>
   );

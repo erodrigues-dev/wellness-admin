@@ -9,23 +9,23 @@ import * as appointmentService from '~/services/appointment';
 
 import { Container } from './styles';
 
-const Details = ({ appointment, setClose, listAppointments }) => {
+const Details = ({ appointment, setClose, reloadAppointments }) => {
   const { sendNotification } = useNotification();
 
-  async function handleDelete(appointmentId) {
+  async function changeStatus(appointmentId, status) {
     try {
-      await appointmentService.changeStatus(appointmentId, 'canceled');
+      await appointmentService.changeStatus(appointmentId, status);
 
       sendNotification('Appointment canceled successfully');
-      listAppointments();
+      reloadAppointments();
     } catch (error) {
       sendNotification(error.message, false);
     }
+    setClose(false);
   }
 
-  function handleConfirm() {
-    handleDelete(appointment.id);
-    setClose(false);
+  function handleChangeStatus(e) {
+    changeStatus(appointment.id, e.target.name);
   }
 
   return (
@@ -59,10 +59,11 @@ const Details = ({ appointment, setClose, listAppointments }) => {
           ) && (
             <Button
               variant="danger"
-              onClick={() =>
+              name="canceled"
+              onClick={(e) =>
                 confirmHandler(
                   'Are you sure you want to cancel this appointment?',
-                  handleConfirm
+                  handleChangeStatus(e)
                 )
               }
             >
@@ -70,12 +71,22 @@ const Details = ({ appointment, setClose, listAppointments }) => {
             </Button>
           )}
           {appointment.status === 'scheduled' && (
-            <Button variant="secondary" className="ml-2">
+            <Button
+              variant="secondary"
+              className="ml-2"
+              name="arrived"
+              onClick={handleChangeStatus}
+            >
               Set Arrived
             </Button>
           )}
-          {appointment.status === 'completed' && (
-            <Button variant="secondary" className="ml-2">
+          {appointment.status === 'arrived' && (
+            <Button
+              variant="secondary"
+              className="ml-2"
+              name="completed"
+              onClick={handleChangeStatus}
+            >
               Set Completed
             </Button>
           )}
