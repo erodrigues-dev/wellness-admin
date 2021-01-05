@@ -31,8 +31,8 @@ export function create(data) {
   return api.post(`/schedules`, data);
 }
 
-export function cancel(id) {
-  return api.put(`/schedules/${id}/cancel`);
+export function changeStatus(id, status) {
+  return api.put(`/schedules/${id}/change-status/${status}`);
 }
 
 const service = {

@@ -14,9 +14,9 @@ const Details = ({ appointment, setClose, listAppointments }) => {
 
   async function handleDelete(appointmentId) {
     try {
-      await appointmentService.cancel(appointmentId);
+      await appointmentService.changeStatus(appointmentId, 'canceled');
 
-      sendNotification('Appointment cancelled successfully');
+      sendNotification('Appointment canceled successfully');
       listAppointments();
     } catch (error) {
       sendNotification(error.message, false);

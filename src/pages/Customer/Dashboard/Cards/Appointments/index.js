@@ -40,10 +40,10 @@ const Appointments = () => {
 
   async function handleDelete(appointmentId) {
     try {
-      await appointmentService.cancel(appointmentId);
+      await appointmentService.changeStatus(appointmentId, 'canceled');
 
       listAppointments();
-      sendNotification('Appointment cancelled successfully');
+      sendNotification('Appointment canceled successfully');
     } catch (error) {
       sendNotification(error.message, false);
     }
