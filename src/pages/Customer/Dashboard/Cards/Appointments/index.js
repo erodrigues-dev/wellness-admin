@@ -86,6 +86,7 @@ const Appointments = () => {
         <ModalForm
           reloadAppointments={listAppointments}
           setClose={setOpenAdd}
+          dashboard
         />
       )}
       {openDetails && (

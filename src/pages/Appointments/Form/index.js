@@ -21,7 +21,7 @@ import * as customerService from '~/services/customer';
 import schema from './schema';
 import { Container } from './styles';
 
-const ModalForm = ({ setClose, reloadAppointments }) => {
+const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
   const { id: routeId } = useParams();
   const customerId = routeId || '';
   const { sendNotification } = useNotification();
@@ -39,7 +39,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
     onSubmit: handleSubmit,
     initialValues: {
       id: '',
-      customerId: customerId || '',
+      customerId: dashboard ? customerId : '',
       relationId: '',
       date: '',
       timeId: '',
@@ -63,7 +63,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
   }, [activeStartDate, getFullMonth]);
 
   const listCustomers = useCallback(async () => {
-    if (!customerId) {
+    if (!dashboard) {
       try {
         const { data } = await customerService.listAll();
 
@@ -72,7 +72,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
         sendNotification(error.message, false);
       }
     }
-  }, [customerId, sendNotification]);
+  }, [dashboard, sendNotification]);
 
   const listActivities = useCallback(
     async (id) => {
@@ -223,7 +223,7 @@ const ModalForm = ({ setClose, reloadAppointments }) => {
     <Modal setClose={setClose} title="Add Appointments">
       <Form onSubmit={formik.handleSubmit} className="modal-form">
         <Container className="form-wrapper">
-          {!customerId && (
+          {!dashboard && (
             <Form.Group>
               <Form.Label>Customer</Form.Label>
               <Form.Control

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
-import { useHistory, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
@@ -13,7 +13,6 @@ import { Container } from './styles';
 
 function Filter({ onFilter, allowCreate, setOpenAdd }) {
   const { id: customerId } = useParams();
-  const history = useHistory();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
 
@@ -31,27 +30,6 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
 
   function handleSubmit(values) {
     onFilter(values);
-  }
-
-  function resetFilter() {
-    onFilter('');
-
-    if (customerId) history.push('/appointments');
-
-    formik.setFieldValue('customerId', '');
-  }
-
-  function handleClear(e) {
-    formik.handleReset(e);
-
-    resetFilter();
-  }
-
-  function handleOpenAdd() {
-    onFilter('');
-
-    resetFilter();
-    setOpenAdd(true);
   }
 
   useEffect(() => {
@@ -149,14 +127,14 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
         <Row>
           <Col className="d-flex justify-content-end">
             <Button type="submit">Filter</Button>
-            <Button type="reset" className="ml-2" onClick={handleClear}>
+            <Button type="reset" className="ml-2" onClick={formik.handleReset}>
               Clear Filters
             </Button>
             {allowCreate && (
               <Button
                 variant="secondary"
                 className="ml-2 text-nowrap"
-                onClick={handleOpenAdd}
+                onClick={() => setOpenAdd(true)}
               >
                 Add Appointments
               </Button>
