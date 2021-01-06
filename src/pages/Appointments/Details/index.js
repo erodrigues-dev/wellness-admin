@@ -52,24 +52,21 @@ const Details = ({ appointment, setClose, reloadAppointments }) => {
           </li>
         </ul>
         <div className="buttons">
-          {!(
-            appointment.status === 'canceled' ||
-            appointment.status === 'completed' ||
-            toDate(appointment.date) < new Date()
-          ) && (
-            <Button
-              variant="danger"
-              name="canceled"
-              onClick={(e) =>
-                confirmHandler(
-                  'Are you sure you want to cancel this appointment?',
-                  handleChangeStatus(e)
-                )
-              }
-            >
-              Cancel Schedule
-            </Button>
-          )}
+          {appointment.status === 'scheduled' &&
+            toDate(appointment.date) >= new Date() && (
+              <Button
+                variant="danger"
+                name="canceled"
+                onClick={(e) =>
+                  confirmHandler(
+                    'Are you sure you want to cancel this appointment?',
+                    handleChangeStatus(e)
+                  )
+                }
+              >
+                Cancel Schedule
+              </Button>
+            )}
           {appointment.status === 'scheduled' && (
             <Button
               variant="secondary"
