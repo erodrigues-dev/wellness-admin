@@ -57,14 +57,22 @@ const Activities = ({ formik, packageType }) => {
       <Form.Row>
         <Form.Group as={Col} md="6">
           <Form.Label>Activity</Form.Label>
-          <Form.Control type="text" list="activities" ref={activityRef} />
-          <datalist id="activities" name="activities">
-            {getItens().map((item) => (
-              <option key={item.id} value={item.name}>
-                {item.name}
+          <Form.Control
+            as="select"
+            custom
+            defaultValue=""
+            name="activityId"
+            ref={activityRef}
+          >
+            <option value="" disabled>
+              Select an activity
+            </option>
+            {getItens().map((activity) => (
+              <option key={activity.id} value={activity.name}>
+                {activity.name}
               </option>
             ))}
-          </datalist>
+          </Form.Control>
         </Form.Group>
         <Form.Group as={Col} className="d-flex align-items-end">
           <Button onClick={addItem}>Add</Button>
