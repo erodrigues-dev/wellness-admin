@@ -5,7 +5,6 @@ export const Container = styled.ul`
     list-style: none;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 2px;
-    padding: 15px;
     margin-bottom: 5px;
     cursor: pointer;
     transition: background 100ms;
@@ -23,6 +22,7 @@ export const Container = styled.ul`
       align-items: center;
       justify-content: space-between;
       width: 100%;
+      padding: 15px;
 
       @media screen and (max-width: 1130px) {
         flex-direction: column;
