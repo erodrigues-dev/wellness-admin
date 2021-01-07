@@ -42,22 +42,36 @@ const Details = ({
       <Container>
         <ul>
           <li>
-            <span>Customer:</span> {appointment.customer.name}
+            <span>Customer:</span>
+            <span className="appointment"> {appointment.customer.name}</span>
           </li>
           <li>
-            <span>Activity:</span> {appointment.activity.name}
+            <span>Activity:</span>
+            <span className="appointment"> {appointment.activity.name}</span>
           </li>
           <li>
-            <span>Date:</span> {formatToDisplay(toDate(appointment.date))}
+            <span>Date:</span>
+            <span className="appointment">
+              {formatToDisplay(toDate(appointment.date))}
+            </span>
           </li>
           <li>
-            <span>Start:</span> {transformIn24h(appointment.start)}
+            <span>Start:</span>
+            <span className="appointment">
+              {transformIn24h(appointment.start)}
+            </span>
           </li>
           <li>
-            <span>End:</span> {transformIn24h(appointment.end)}
+            <span>End:</span>
+            <span className="appointment">
+              {transformIn24h(appointment.end)}
+            </span>
           </li>
           <li>
-            <Status status={appointment.status}>{appointment.status}</Status>
+            <span>Status:</span>
+            <div className="appointment">
+              <Status status={appointment.status}>{appointment.status}</Status>
+            </div>
           </li>
         </ul>
         <div className="buttons">

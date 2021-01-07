@@ -20,5 +20,4 @@ export const Status = styled.span`
   padding: 5px 10px;
   width: 100px;
   text-align: center;
-  align-self: center;
 `;

@@ -8,7 +8,24 @@ export const Container = styled.div`
   ul {
     list-style: none;
 
-    span {
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+
+      &:not(:last-child) {
+        border-bottom: 1px solid #ccc;
+      }
+    }
+
+    .appointment {
+      display: flex;
+      width: 75%;
+    }
+
+    span:not(.appointment) {
+      width: 25%;
       font-weight: 600;
     }
   }
