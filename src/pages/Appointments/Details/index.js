@@ -1,6 +1,8 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
 
+import { isToday } from 'date-fns';
+
 import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
@@ -16,7 +18,7 @@ const Details = ({ appointment, setClose, reloadAppointments }) => {
     try {
       await appointmentService.changeStatus(appointmentId, status);
 
-      sendNotification('Appointment canceled successfully');
+      sendNotification(`Appointment set as ${status} successfully`);
       reloadAppointments();
     } catch (error) {
       sendNotification(error.message, false);
@@ -24,8 +26,8 @@ const Details = ({ appointment, setClose, reloadAppointments }) => {
     setClose(false);
   }
 
-  function handleChangeStatus(e) {
-    changeStatus(appointment.id, e.target.name);
+  function handleChangeStatus(status) {
+    changeStatus(appointment.id, status);
   }
 
   return (
@@ -56,33 +58,31 @@ const Details = ({ appointment, setClose, reloadAppointments }) => {
             toDate(appointment.date) >= new Date() && (
               <Button
                 variant="danger"
-                name="canceled"
-                onClick={(e) =>
+                onClick={() =>
                   confirmHandler(
                     'Are you sure you want to cancel this appointment?',
-                    handleChangeStatus(e)
+                    () => handleChangeStatus('canceled')
                   )
                 }
               >
                 Cancel Schedule
               </Button>
             )}
-          {appointment.status === 'scheduled' && (
-            <Button
-              variant="secondary"
-              className="ml-2"
-              name="arrived"
-              onClick={handleChangeStatus}
-            >
-              Set Arrived
-            </Button>
-          )}
+          {appointment.status === 'scheduled' &&
+            isToday(toDate(appointment.date)) && (
+              <Button
+                variant="secondary"
+                className="ml-2"
+                onClick={() => handleChangeStatus('arrived')}
+              >
+                Set Arrived
+              </Button>
+            )}
           {appointment.status === 'arrived' && (
             <Button
               variant="secondary"
               className="ml-2"
-              name="completed"
-              onClick={handleChangeStatus}
+              onClick={() => handleChangeStatus('completed')}
             >
               Set Completed
             </Button>
