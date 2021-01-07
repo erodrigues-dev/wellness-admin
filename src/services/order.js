@@ -13,6 +13,10 @@ export function list(page, limit, filter, cancelToken) {
   });
 }
 
+export function cancel() {
+  return null;
+}
+
 export default {
   list,
 };
