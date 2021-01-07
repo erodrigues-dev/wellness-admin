@@ -94,6 +94,7 @@ const Appointments = () => {
           setClose={setOpenDetails}
           appointment={appointment}
           reloadAppointments={listAppointments}
+          setAppointment={setAppointment}
         />
       )}
     </Card>

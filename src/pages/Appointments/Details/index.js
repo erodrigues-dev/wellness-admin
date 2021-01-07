@@ -12,7 +12,12 @@ import * as appointmentService from '~/services/appointment';
 
 import { Container } from './styles';
 
-const Details = ({ appointment, setClose, reloadAppointments }) => {
+const Details = ({
+  appointment,
+  setAppointment,
+  setClose,
+  reloadAppointments,
+}) => {
   const { sendNotification } = useNotification();
 
   async function changeStatus(appointmentId, status) {
@@ -21,10 +26,11 @@ const Details = ({ appointment, setClose, reloadAppointments }) => {
 
       sendNotification(`Appointment set as ${status} successfully`);
       reloadAppointments();
+
+      setAppointment({ ...appointment, status });
     } catch (error) {
       sendNotification(error.message, false);
     }
-    setClose(false);
   }
 
   function handleChangeStatus(status) {

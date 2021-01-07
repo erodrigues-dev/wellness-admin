@@ -93,6 +93,7 @@ const Appointments = () => {
           setClose={setOpenDetails}
           reloadAppointments={listAppointments}
           appointment={appointment}
+          setAppointment={setAppointment}
         />
       )}
     </>
