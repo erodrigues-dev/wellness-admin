@@ -266,7 +266,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
                 (activities === undefined || packages === undefined)
               }
             >
-              <option value={0} disabled>
+              <option value="" disabled>
                 Select an option
               </option>
               {formik.values.relationType === 'activity'

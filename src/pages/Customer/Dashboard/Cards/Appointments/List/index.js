@@ -1,40 +1,34 @@
 import React from 'react';
-import { Button } from 'react-bootstrap';
-import { FiEdit2, FiTrash } from 'react-icons/fi';
 
-import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
+import { Status } from '~/components/Label/styles';
+import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
 
 import { Container } from './styles';
 
-const List = () => {
+const List = ({ list, setOpenDetails, setAppointment }) => {
+  function handleClickInfo(item) {
+    setAppointment(item);
+    setOpenDetails(true);
+  }
+
   return (
     <Container>
-      <li>
-        <div className="items">
-          <div className="name">
-            <span className="relationName">Activity Name</span>
-          </div>
-          <div className="value">
-            <span>20/10/2020 08:00 AM</span>
-          </div>
-        </div>
-        <div className="buttons">
-          <Button variant="secondary" className="mr-2" onClick={() => {}}>
-            <FiEdit2 color="white" title="Edit" />
-          </Button>
-          <Button
-            variant="danger"
-            onClick={() =>
-              confirmHandler(
-                'Are you sure you want to delete this appointment?',
-                () => {}
-              )
-            }
-          >
-            <FiTrash title="Delete" />
-          </Button>
-        </div>
-      </li>
+      {list.map((item) => (
+        <li key={item.id}>
+          <button type="button" onClick={() => handleClickInfo(item)}>
+            <div className="items">
+              <h2 className="relationName">{item.activity.name}</h2>
+              <div className="date">
+                <span>{formatToDisplay(toDate(item.date))}</span>
+                <span className="value">
+                  {transformIn24h(item.start)} - {transformIn24h(item.end)}
+                </span>
+              </div>
+            </div>
+            <Status status={item.status}>{item.status}</Status>
+          </button>
+        </li>
+      ))}
     </Container>
   );
 };

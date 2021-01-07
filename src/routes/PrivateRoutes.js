@@ -243,19 +243,20 @@ const PrivateRoutes = () => {
           component={Order}
         />
 
-        {/* <PrivateRoute
+        <PrivateRoute
+          exact
           action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.APPOINTMENTS}
+          functionality={FUNCTIONALITIES.SCHEDULES}
           path="/appointments"
           component={Appointments}
-        /> */}
-        {/* <PrivateRoute
+        />
+        <PrivateRoute
+          exact
           action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.APPOINTMENTS}
+          functionality={FUNCTIONALITIES.SCHEDULES}
           path="/appointments/:id"
           component={Appointments}
-        /> */}
-        <Route path="/appointments" component={Appointments} />
+        />
 
         <Route path="/404" component={NotAuthorized} />
         <Redirect to="/" />

@@ -6,6 +6,7 @@ export const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
 `;
 
 export const ImageWrapper = styled.div`
@@ -27,6 +28,7 @@ export const NameWrapper = styled.div`
   /* margin-left: 16px; */
   display: flex;
   flex-direction: column;
+  text-align: center;
 `;
 
 export const Name = styled.span``;

@@ -15,9 +15,9 @@ const CardResume = ({ selectedCard }) => {
       </Form.Group>
 
       <Row className="d-flex ">
-        <Col md="3">
+        <Col md="4">
           <Form.Group>
-            <Form.Label>Expiration Date</Form.Label>
+            <Form.Label className="text-nowrap">Expiration Date</Form.Label>
             <Form.Control
               name="sq-expiration-date"
               disabled={selectedCard}
@@ -38,7 +38,7 @@ const CardResume = ({ selectedCard }) => {
           </Form.Group>
         </Col>
 
-        <Col md="6">
+        <Col md="5">
           <Form.Group>
             <Form.Label>Zip Code</Form.Label>
             <Form.Control

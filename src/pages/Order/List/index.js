@@ -57,7 +57,7 @@ function List({ list }) {
               </td>
               <td>{formatCurrency(item.total)}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
-              <td>{item.user.name}</td>
+              <td>{item.user?.name ?? ''}</td>
             </tr>
           ))}
           {list.length === 0 && (

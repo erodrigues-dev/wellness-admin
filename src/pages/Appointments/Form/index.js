@@ -6,37 +6,64 @@ import { toast } from 'react-toastify';
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
-import InputDateTimePicker from '~/components/InputDateTimePicker';
+import InputDatePicker from '~/components/InputDatePicker';
 import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
-import { sanitize } from '~/helpers/sanitize';
-import * as activityService from '~/services/activity';
+import {
+  toDate,
+  transformIn24h,
+  toInputValue,
+  formatToSubmit,
+} from '~/helpers/date';
+import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
-import * as service from '~/services/discount';
 
 import schema from './schema';
+import { Container } from './styles';
 
-const ModalForm = ({ setClose, reloadAppointments, selected }) => {
-  const isAdd = !selected;
+const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
   const { id: routeId } = useParams();
-  const id = routeId || '';
+  const customerId = routeId || '';
   const { sendNotification } = useNotification();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
+  const [activeStartDate, setActiveStartDate] = useState(
+    formatToSubmit(new Date())
+  );
+  const [dateRange, setDateRange] = useState();
+  const [availableDates, setAvailableDates] = useState([]);
+  const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
 
   const formik = useFormik({
     validationSchema: schema,
     onSubmit: handleSubmit,
     initialValues: {
-      id: isAdd ? 0 : selected.id,
-      customerId: isAdd ? id : selected.customerId,
-      relationId: isAdd ? 0 : selected.relationId,
-      schedule: '',
+      id: '',
+      customerId: dashboard ? customerId : '',
+      relationId: '',
+      date: '',
+      timeId: '',
     },
   });
 
+  const getFullMonth = useCallback((start) => {
+    if (start === undefined) return;
+    const startDate = toDate(start);
+    const endDate = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth() + 1,
+      0
+    );
+
+    setDateRange([startDate, endDate]);
+  }, []);
+
+  useEffect(() => {
+    getFullMonth(activeStartDate);
+  }, [activeStartDate, getFullMonth]);
+
   const listCustomers = useCallback(async () => {
-    if (!id) {
+    if (!dashboard) {
       try {
         const { data } = await customerService.listAll();
 
@@ -45,54 +72,158 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
         sendNotification(error.message, false);
       }
     }
-  }, [id, sendNotification]);
+  }, [dashboard, sendNotification]);
 
-  const listActivities = useCallback(async () => {
-    try {
-      const { data } = await activityService.listAll();
+  const listActivities = useCallback(
+    async (id) => {
+      try {
+        const { data } = await appointmentService.customerActivities(id);
 
-      setActivities(data);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }, [sendNotification]);
+        setActivities(data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification]
+  );
 
   useEffect(() => {
     listCustomers();
   }, [listCustomers]);
 
   useEffect(() => {
-    listActivities();
-  }, [listActivities]);
+    if (formik.values.customerId) listActivities(formik.values.customerId);
+  }, [listActivities, formik.values.customerId]);
+
+  const listAvailableDates = useCallback(
+    async (activityId, start, end) => {
+      try {
+        const { data } = await appointmentService.listDates(
+          activityId,
+          start,
+          end
+        );
+
+        setAvailableDates(data.map((item) => toDate(item)));
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification]
+  );
+
+  useEffect(() => {
+    if (formik.values.relationId && dateRange?.length > 0) {
+      listAvailableDates(
+        formik.values.relationId,
+        formatToSubmit(dateRange[0]),
+        formatToSubmit(dateRange[1])
+      );
+    }
+  }, [listAvailableDates, formik.values.relationId, dateRange]);
+
+  const listAvailableTimeSlots = useCallback(
+    async (activityId, date) => {
+      try {
+        const { data } = await appointmentService.listAvailableTimeSlots(
+          activityId,
+          date
+        );
+
+        if (data.length <= 0) {
+          toast.error(
+            "The selected date doesn't have available time slots. Please try another date"
+          );
+
+          return;
+        }
+        setAvailableTimeSlots(data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification]
+  );
+
+  useEffect(() => {
+    if (formik.values.date)
+      listAvailableTimeSlots(formik.values.relationId, formik.values.date);
+  }, [listAvailableTimeSlots, formik.values.date, formik.values.relationId]);
 
   async function handleSubmit(data) {
-    const submitValue = { ...data, value: sanitize.number(data.value) };
-
     try {
-      if (isAdd) {
-        await service.create(submitValue);
-      } else {
-        await service.update(submitValue);
-      }
+      const { orderActivityId } = activities.find(
+        (x) => x.id === +data.relationId
+      );
+
+      await appointmentService.create({
+        customerId: +data.customerId,
+        orderActivityId,
+        activityScheduleId: +data.timeId,
+        date: toInputValue(data.date),
+      });
 
       reloadAppointments();
       setClose(false);
-      toast.success(`Discount ${isAdd ? 'created' : 'edited'} successfully.`);
+      toast.success(`Appointments created successfully.`);
     } catch (error) {
       sendNotification(error.message, false);
     }
   }
 
+  function handleSelectCustomer(e) {
+    formik.setFieldValue('customerId', e.target.value);
+
+    formik.setFieldValue('relationId', '');
+    formik.setFieldValue('date', '');
+    formik.setFieldValue('timeId', '');
+
+    setAvailableDates([]);
+    setAvailableTimeSlots([]);
+    setActiveStartDate(formatToSubmit(new Date()));
+  }
+
   function handleSelectRelation(e) {
     const { value } = e.target;
+
     formik.setFieldValue('relationId', value);
+    formik.setFieldValue('date', '');
+    formik.setFieldValue('timeId', '');
+    setAvailableTimeSlots([]);
+    setActiveStartDate(formatToSubmit(new Date()));
+  }
+
+  function handleDateChange(e) {
+    const { value } = e.target;
+
+    formik.setFieldValue('date', formatToSubmit(value));
+    formik.setFieldValue('timeId', '');
+  }
+
+  function handleDateValue(value) {
+    if (value && typeof value === 'string') {
+      return toDate(value);
+    }
+
+    return null;
+  }
+
+  function handleTileDisable({ date, view }) {
+    return (
+      availableDates.find(
+        (item) =>
+          item.getDate() === date.getDate() &&
+          item.getMonth() === date.getMonth() &&
+          toDate(activeStartDate).getMonth() === date.getMonth()
+      ) === undefined && view === 'month'
+    );
   }
 
   return (
-    <Modal setClose={setClose} title={`${isAdd ? 'Add' : 'Edit'} Appointments`}>
+    <Modal setClose={setClose} title="Add Appointments">
       <Form onSubmit={formik.handleSubmit} className="modal-form">
-        <div className="form-wrapper">
-          {!id && (
+        <Container className="form-wrapper">
+          {!dashboard && (
             <Form.Group>
               <Form.Label>Customer</Form.Label>
               <Form.Control
@@ -100,7 +231,7 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
                 custom
                 name="customerId"
                 value={formik.values.customerId}
-                onChange={formik.handleChange}
+                onChange={handleSelectCustomer}
                 onBlur={formik.handleBlur}
                 isInvalid={
                   formik.touched.customerId && formik.errors.customerId
@@ -133,9 +264,9 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.relationId && formik.errors.relationId}
               isValid={formik.touched.relationId && !formik.errors.relationId}
-              disabled={activities === undefined}
+              disabled={activities === undefined || !formik.values.customerId}
             >
-              <option value={0} disabled>
+              <option value="" disabled>
                 Select an option
               </option>
               {activities?.map((activity) => (
@@ -149,20 +280,62 @@ const ModalForm = ({ setClose, reloadAppointments, selected }) => {
             </Form.Control.Feedback>
           </Form.Group>
           <Form.Group>
-            <Form.Label>Schedule Date</Form.Label>
-            <InputDateTimePicker
+            <Form.Label>Date</Form.Label>
+            <InputDatePicker
               min={new Date()}
-              name="expiration"
-              value={formik.values.schedule}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.schedule && formik.errors.schedule}
-              isValid={formik.touched.schedule && !formik.errors.schedule}
+              name="date"
+              value={() => handleDateValue(formik.values.date)}
+              onChange={handleDateChange}
+              onBlur={formik.handleBlur}
+              isInvalid={
+                formik.touched.date && formik.errors.date && !formik.values.date
+              }
+              isValid={
+                formik.touched.date && !formik.errors.date && formik.values.date
+              }
+              disabled={!formik.values.relationId && availableDates.length <= 0}
+              tileDisabled={handleTileDisable}
+              onActiveStartDateChange={({ activeStartDate: startDate }) =>
+                setActiveStartDate(formatToSubmit(startDate))
+              }
             />
+            {formik.touched.date && formik.errors.date && !formik.values.date && (
+              <Form.Control.Feedback
+                type="invalid"
+                style={{ display: 'block' }}
+              >
+                {formik.errors.date}
+              </Form.Control.Feedback>
+            )}
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Available Time Slots</Form.Label>
+            <Form.Control
+              as="select"
+              custom
+              name="timeId"
+              value={formik.values.timeId}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.timeId && formik.errors.timeId}
+              isValid={formik.touched.timeId && !formik.errors.timeId}
+              disabled={!formik.values.date || availableTimeSlots.length <= 0}
+            >
+              <option value="" disabled>
+                Select an option
+              </option>
+              {availableTimeSlots.length > 0 &&
+                availableTimeSlots.map((item) => (
+                  <option value={item.id} key={item.id}>
+                    {transformIn24h(item.start)} - {transformIn24h(item.end)}
+                  </option>
+                ))}
+            </Form.Control>
             <Form.Control.Feedback type="invalid">
-              {formik.errors.schedule}
+              {formik.errors.timeId}
             </Form.Control.Feedback>
           </Form.Group>
-        </div>
+        </Container>
         <div className="buttons">
           <Form.Row className="d-flex justify-content-end">
             <Button

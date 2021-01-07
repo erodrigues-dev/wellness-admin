@@ -14,6 +14,9 @@ function InputDatePicker({
   feedback,
   onChange,
   onBlur,
+  tileDisabled,
+  onActiveStartDateChange,
+  placeholder,
   ...props
 }) {
   const [open, setOpen] = useState(false);
@@ -50,7 +53,7 @@ function InputDatePicker({
           value={formated}
           onChange={() => {}}
           onBlur={onBlur}
-          placeholder="mm/dd/yyyy"
+          placeholder={placeholder ?? 'mm/dd/yyyy'}
           autoComplete="off"
         />
         <InputGroup.Append>
@@ -72,6 +75,8 @@ function InputDatePicker({
           minDate={min}
           maxDate={max}
           value={date || new Date()}
+          tileDisabled={tileDisabled}
+          onActiveStartDateChange={onActiveStartDateChange}
         />
       )}
     </Container>

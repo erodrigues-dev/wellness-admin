@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, CardDeck } from 'react-bootstrap';
+import { CardDeck } from 'react-bootstrap';
+import styled from 'styled-components';
 
 import Appointments from './Appointments';
 import Discounts from './Discounts';
@@ -10,9 +11,17 @@ import Orders from './Orders';
 // import WorkoutLog from './WorkoutLog';
 // import WorkoutProfile from './WorkoutProfile';
 
+const Container = styled.div`
+  margin-top: 32px;
+
+  > .card-deck {
+    margin-bottom: 32px;
+  }
+`;
+
 const Cards = () => {
   return (
-    <Card>
+    <Container className="teste-001">
       <CardDeck>
         <Appointments />
         <Orders />
@@ -29,7 +38,7 @@ const Cards = () => {
         <PrivateAnnotations />
         <PublicAnnotations />
       </CardDeck> */}
-    </Card>
+    </Container>
   );
 };
 

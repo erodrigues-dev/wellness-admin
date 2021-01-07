@@ -17,8 +17,8 @@ function List({ list, allowEdit }) {
         <thead>
           <tr>
             <th className="text-center">Actions</th>
-            <th>Category</th>
             <th>Name</th>
+            <th>Category</th>
             <th>Price</th>
             <th>Duration</th>
             <th>Employee</th>
@@ -37,18 +37,14 @@ function List({ list, allowEdit }) {
                     <Link to={`/activities/${item.id}`} title="Edit">
                       <FiEdit size="18" />
                     </Link>
-                    <Link
-                      to={`/activities/${item.id}/schedule`}
-                      title="Schedule"
-                    >
+                    <Link to={`/activities/${item.id}/schedule`} title="Events">
                       <FiCalendar size="18" />
                     </Link>
                   </>
                 )}
               </td>
-
-              <td>{item.category.name}</td>
               <td>{item.name}</td>
+              <td>{item.category.name}</td>
               <td>{formatCurrency(item.price)}</td>
               <td>{`${item.duration}min`}</td>
               <td>{item.employee.name}</td>

@@ -12,7 +12,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
   const [customers, setCustomers] = useState([]);
   const history = useHistory();
   const formik = useFormik({
-    initialValues: { customerId: customerId ?? 0, relationName: '' },
+    initialValues: { customerId: customerId ?? '', relationName: '' },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
@@ -24,14 +24,30 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
   function handleSubmit(values) {
     onFilter(values);
     if (customerId) history.push('/discounts');
+<<<<<<< HEAD
+=======
+  }
+
+  function resetFilter() {
+    onFilter('');
+
+    if (customerId) history.push('/discounts');
+
+    formik.setFieldValue('customerId', '');
+>>>>>>> appointments
   }
 
   function handleClear(e) {
     formik.handleReset(e);
     onFilter('');
 
-    if (customerId) history.push('/discounts');
-    formik.setFieldValue('customerId', 0);
+    resetFilter();
+  }
+
+  function handleOpenAdd() {
+    resetFilter();
+
+    setOpenAdd(true);
   }
 
   return (
@@ -46,9 +62,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
               value={formik.values.customerId}
               onChange={formik.handleChange}
             >
-              <option value={0} disabled>
-                Select an option
-              </option>
+              <option value="">All Customers</option>
               {customers?.map((customer) => (
                 <option key={customer.id} value={customer.id}>
                   {customer.name}
@@ -75,7 +89,7 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
               <Button
                 variant="secondary"
                 className="ml-2"
-                onClick={() => setOpenAdd(true)}
+                onClick={handleOpenAdd}
               >
                 Add Discount
               </Button>

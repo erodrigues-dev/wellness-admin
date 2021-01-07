@@ -31,6 +31,12 @@ export function formatToDateTime(date) {
   return null;
 }
 
+export function formatToSubmit(date) {
+  if (date instanceof Date) return format(date, 'y-MM-dd');
+
+  return null;
+}
+
 export function getTimezone() {
   return TIMEZONE;
 }
@@ -84,9 +90,13 @@ export function transformIn24h(time) {
   const [, hour, min] = /^(\d?\d):(\d\d)/.exec(time);
   const isAm = +hour < 12;
 
-  return `${isAm ? +hour : +hour - 12}:${min} ${isAm ? 'am' : 'pm'}`;
+  return `${isAm ? +hour : +hour - 12}:${min} ${isAm ? 'AM' : 'PM'}`;
 }
 
 export function toDate(date) {
   return parseISO(date);
+}
+
+export function toInputValue(date) {
+  return new Date(date).toISOString().split('T')[0];
 }

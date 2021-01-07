@@ -1,27 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
+import { useParams } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
-import InputDateTimePicker from '~/components/InputDateTimePicker';
+import InputDatePicker from '~/components/InputDatePicker';
+import { formatToSubmit, toDate } from '~/helpers/date';
+import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
 
 import { Container } from './styles';
 
 function Filter({ onFilter, allowCreate, setOpenAdd }) {
-  const [, setCustomers] = useState([]);
+  const { id: customerId } = useParams();
+  const [customers, setCustomers] = useState();
+  const [activities, setActivities] = useState();
+
   const formik = useFormik({
-    initialValues: { customerId: 0 },
+    initialValues: {
+      customerId: customerId ?? '',
+      activityId: '',
+      status: '',
+      dateStart: '',
+      dateEnd: '',
+    },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
+
+  function handleSubmit(values) {
+    onFilter(values);
+  }
 
   useEffect(() => {
     customerService.listAll().then((response) => setCustomers(response.data));
   }, []);
 
-  function handleSubmit(values) {
-    onFilter(values);
+  useEffect(() => {
+    activityService.listAll().then((response) => setActivities(response.data));
+  }, []);
+
+  function handleDateChange(e) {
+    const { name, value } = e.target;
+
+    formik.setFieldValue(name, formatToSubmit(value));
+  }
+
+  function handleDateValue(value) {
+    if (value && typeof value === 'string') {
+      return toDate(value);
+    }
+
+    return null;
   }
 
   return (
@@ -30,39 +60,74 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
         <Row>
           <Form.Group as={Col}>
             <Form.Control
-              placeholder="Customer Name"
-              name="name"
-              value={formik.values.name}
+              as="select"
+              custom
+              name="customerId"
+              value={formik.values.customerId}
               onChange={formik.handleChange}
-            />
+            >
+              <option value="">All Customers</option>
+              {customers?.map((customer) => (
+                <option key={customer.id} value={customer.id}>
+                  {customer.name}
+                </option>
+              ))}
+            </Form.Control>
           </Form.Group>
           <Form.Group as={Col}>
             <Form.Control
-              placeholder="Activity Name"
-              name="name"
-              value={formik.values.name}
+              as="select"
+              custom
+              name="activityId"
+              value={formik.values.activityId}
               onChange={formik.handleChange}
+            >
+              <option value="">All Activities</option>
+              {activities?.map((activity) => (
+                <option key={activity.id} value={activity.id}>
+                  {activity.name}
+                </option>
+              ))}
+            </Form.Control>
+          </Form.Group>
+          <Form.Group as={Col}>
+            <Form.Control
+              as="select"
+              custom
+              name="status"
+              value={formik.values.status}
+              onChange={formik.handleChange}
+            >
+              <option value="">All Status</option>
+              <option value="scheduled">Scheduled</option>
+              <option value="arrived">Arrived</option>
+              <option value="completed">Completed</option>
+              <option value="canceled">Canceled</option>
+            </Form.Control>
+          </Form.Group>
+        </Row>
+        <Row>
+          <Form.Group as={Col}>
+            <InputDatePicker
+              name="dateStart"
+              placeholder="Start Date"
+              value={() => handleDateValue(formik.values.dateStart)}
+              onChange={handleDateChange}
             />
           </Form.Group>
           <Form.Group as={Col}>
-            <InputDateTimePicker
-              min={new Date()}
-              name="expiration"
-              value={formik.values.expiration}
-              onChange={formik.handleChange}
-              isInvalid={formik.touched.expiration && formik.errors.expiration}
-              isValid={formik.touched.expiration && !formik.errors.expiration}
+            <InputDatePicker
+              name="dateEnd"
+              placeholder="End Date"
+              value={() => handleDateValue(formik.values.dateEnd)}
+              onChange={handleDateChange}
             />
           </Form.Group>
         </Row>
         <Row>
           <Col className="d-flex justify-content-end">
             <Button type="submit">Filter</Button>
-            <Button
-              type="reset"
-              className="ml-2 text-nowrap"
-              onClick={formik.handleReset}
-            >
+            <Button type="reset" className="ml-2" onClick={formik.handleReset}>
               Clear Filters
             </Button>
             {allowCreate && (

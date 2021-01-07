@@ -23,11 +23,13 @@ export const AuthProvider = ({ children }) => {
   const hasPermission = useCallback(
     (functionality, action) => {
       if (user !== undefined) {
-        const { actions } = user.profile.functionalities.find(
+        const funcionality = user.profile.functionalities.find(
           (x) => x.name.toLowerCase() === functionality.toLowerCase()
         );
 
-        const allowed = (action & actions) === action;
+        const allowed =
+          (action & funcionality?.actions) === action &&
+          funcionality !== undefined;
 
         return allowed;
       }

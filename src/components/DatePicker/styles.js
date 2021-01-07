@@ -4,6 +4,8 @@ export const Container = styled.div`
   position: absolute;
   z-index: 2;
   min-width: 320px;
+  max-height: 100px;
+  max-width: 100px;
 
   .react-calendar {
     * {
