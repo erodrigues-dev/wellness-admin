@@ -1,22 +1,11 @@
 import styled from 'styled-components';
 
-function getStatusColors(status) {
-  const colors = {
-    scheduled: '#42c5be',
-    arrived: '#e0c200',
-    completed: '#b0d04c',
-    canceled: '#C82333',
-  };
-
-  return colors[status];
-}
-
 export const Container = styled.ul`
   li {
     list-style: none;
     border: 1px solid rgba(0, 0, 0, 0.2);
     border-radius: 2px;
-    padding: 5px;
+    padding: 15px;
     margin-bottom: 5px;
     cursor: pointer;
     transition: background 100ms;
@@ -34,6 +23,11 @@ export const Container = styled.ul`
       align-items: center;
       justify-content: space-between;
       width: 100%;
+
+      @media screen and (max-width: 1130px) {
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     .items {
@@ -47,26 +41,31 @@ export const Container = styled.ul`
         font-weight: 600;
       }
 
-      .value {
-        font-size: 0.9rem;
+      .date {
+        display: flex;
+
+        @media screen and (max-width: 1130px) {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        span {
+          font-size: 0.9rem;
+          margin-top: 5px;
+
+          :nth-child(1) {
+            margin-right: 5px;
+            padding-right: 5px;
+            border-right: 1px solid #ccc;
+
+            @media screen and (max-width: 1130px) {
+              border: 0;
+              padding: 0;
+              margin: 0;
+            }
+          }
+        }
       }
     }
   }
-`;
-
-export const DateSpan = styled.span`
-  color: #777;
-  margin-right: 5px;
-  font-size: 0.9rem;
-`;
-
-export const Status = styled.span`
-  font-weight: 600;
-  font-size: 0.9rem;
-  color: white;
-  background-color: ${(props) => getStatusColors(props.status)};
-  border-radius: 5px;
-  padding: 5px 0;
-  width: 80px;
-  text-align: center;
 `;

@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import { isToday } from 'date-fns';
 
 import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
+import { Status } from '~/components/Label/styles';
 import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import { formatToDisplay, toDate, transformIn24h } from '~/helpers/date';
@@ -50,7 +51,7 @@ const Details = ({ appointment, setClose, reloadAppointments }) => {
             <span>End:</span> {transformIn24h(appointment.end)}
           </li>
           <li>
-            <span>Status:</span> {appointment.status}
+            <Status status={appointment.status}>{appointment.status}</Status>
           </li>
         </ul>
         <div className="buttons">
