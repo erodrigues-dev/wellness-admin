@@ -24,8 +24,6 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
   function handleSubmit(values) {
     onFilter(values);
     if (customerId) history.push('/orders');
-<<<<<<< HEAD
-=======
   }
 
   function resetFilter() {
@@ -34,7 +32,6 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
     if (customerId) history.push('/orders');
 
     formik.setFieldValue('customerId', '');
->>>>>>> appointments
   }
 
   function handleClear(e) {

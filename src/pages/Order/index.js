@@ -2,10 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
-<<<<<<< HEAD
-import Modal from '~/components/Modal';
-=======
->>>>>>> appointments
 import Paginate from '~/components/Paginate';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
