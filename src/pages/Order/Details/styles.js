@@ -19,14 +19,14 @@ export const Container = styled.div`
       }
     }
 
-    .appointment {
-      display: flex;
-      width: 75%;
+    span:not(.order) {
+      width: 30%;
+      font-weight: 600;
     }
 
-    span:not(.appointment) {
-      width: 25%;
-      font-weight: 600;
+    .order {
+      display: flex;
+      width: 70%;
     }
   }
 

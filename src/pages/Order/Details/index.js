@@ -38,19 +38,47 @@ const Details = ({ order, setOrder, setClose, reloadOrders }) => {
             <span className="order">test</span>
           </li>
           <li>
-            <span>Activity:</span>
+            <span>Activity/Package:</span>
             <span className="order">test</span>
           </li>
           <li>
-            <span>Date:</span>
+            <span>Quantity:</span>
             <span className="order">test</span>
           </li>
           <li>
-            <span>Start:</span>
+            <span>Discount:</span>
             <span className="order">test</span>
           </li>
           <li>
-            <span>End:</span>
+            <span>Tip:</span>
+            <span className="order">test</span>
+          </li>
+          <li>
+            <span>Total:</span>
+            <span className="order">test</span>
+          </li>
+          <li>
+            <span>Created At:</span>
+            <span className="order">test</span>
+          </li>
+          <li>
+            <span>Created By:</span>
+            <span className="order">test</span>
+          </li>
+          <li>
+            <span>Payment Type:</span>
+            <span className="order">test</span>
+          </li>
+          <li>
+            <span>Paid until date:</span>
+            <span className="order">test</span>
+          </li>
+          <li>
+            <span>Canceled date:</span>
+            <span className="order">test</span>
+          </li>
+          <li>
+            <span>Order&apos;s Progress:</span>
             <span className="order">test</span>
           </li>
           <li>
