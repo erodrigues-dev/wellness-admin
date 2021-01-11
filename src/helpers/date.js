@@ -80,8 +80,12 @@ export function timeIsBefore(timeA, timeB) {
   const [, hourB, minB, merB] = regex.exec(timeB);
 
   if (merA === 'am' && merB === 'pm') return true;
-  if (Number(hourA) < Number(hourB)) return true;
-  if (Number(minA) < Number(minB)) return true;
+
+  if (merA === 'pm' && merA === merB && Number(hourA) < Number(hourB))
+    return true;
+
+  if (Number(hourA) <= Number(hourB) && Number(minA) < Number(minB))
+    return true;
 
   return false;
 }
