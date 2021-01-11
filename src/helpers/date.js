@@ -84,6 +84,8 @@ export function timeIsBefore(timeA, timeB) {
   if (merA === 'pm' && merA === merB && Number(hourA) < Number(hourB))
     return true;
 
+  if (merA === 'pm' && merB === 'am') return false;
+
   if (Number(hourA) <= Number(hourB) && Number(minA) < Number(minB))
     return true;
 
