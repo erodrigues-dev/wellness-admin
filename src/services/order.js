@@ -13,6 +13,10 @@ export function list(page, limit, filter, cancelToken) {
   });
 }
 
+export function get(id) {
+  return api.get(`${ENDPOINT}/${id}`);
+}
+
 export function cancel() {
   return null;
 }

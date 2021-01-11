@@ -2,17 +2,18 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import { FiPackage, FiActivity, FiInfo } from 'react-icons/fi';
 import { RiBankCardLine, RiMoneyDollarBoxLine } from 'react-icons/ri';
+import { Status } from '~/components/Label/styles';
 
 import * as dateHelper from '~/helpers/date';
 import { currency } from '~/helpers/intl';
 
 import { Container } from './styles';
 
-function List({ list, setOrder, setOpenDetails }) {
+function List({ list, setOrderId, setOpenDetails }) {
   const formatCurrency = (value) => currency.format(value);
 
   function handleClickInfo(item) {
-    setOrder(item);
+    setOrderId(item.id);
     setOpenDetails(true);
   }
 
@@ -41,11 +42,12 @@ function List({ list, setOrder, setOpenDetails }) {
           <tr>
             <th>Actions</th>
             <th>Customer</th>
-            <th>Status</th>
+            <th>Payment Type</th>
             <th>Activity/Package</th>
             <th>Total</th>
             <th>Created At</th>
             <th>Created By</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -72,6 +74,7 @@ function List({ list, setOrder, setOpenDetails }) {
               <td>{formatCurrency(item.total)}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
               <td>{item.user?.name ?? ''}</td>
+              <td>{item?.status.toLowerCase()}</td>
             </tr>
           ))}
           {list.length === 0 && (

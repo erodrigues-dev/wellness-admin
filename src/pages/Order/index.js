@@ -31,7 +31,7 @@ const Order = () => {
   const [filter, setFilter] = useState({ customerId: id });
   const [openAdd, setOpenAdd] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
-  const [order, setOrder] = useState();
+  const [orderId, setOrderId] = useState();
 
   const listOrders = useCallback(async () => {
     try {
@@ -69,7 +69,11 @@ const Order = () => {
           setOpenAdd={setOpenAdd}
           customerId={id}
         />
-        <List list={list} setOrder={setOrder} setOpenDetails={setOpenDetails} />
+        <List
+          list={list}
+          setOrderId={setOrderId}
+          setOpenDetails={setOpenDetails}
+        />
         <Paginate
           activePage={page}
           itemsCountPerPage={10}
@@ -88,8 +92,7 @@ const Order = () => {
         <Details
           setClose={setOpenDetails}
           reloadOrders={listOrders}
-          order={order}
-          setOrder={setOrder}
+          orderId={orderId}
           hasPermissionToUpdate={hasPermissionToUpdate}
         />
       )}
