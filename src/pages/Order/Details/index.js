@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import { Status } from '~/components/Label/styles';
 import Modal from '~/components/Modal';
+import { ORDER_STATUS_COLOR } from '~/consts/labelColors';
 import useNotification from '~/contexts/notification';
 import * as dateHelper from '~/helpers/date';
 import { currency } from '~/helpers/intl';
@@ -31,14 +32,14 @@ const Details = ({ orderId, setClose, reloadOrders }) => {
   );
 
   const cancelOrder = useCallback(
-    async (id, status) => {
+    async (id) => {
       try {
-        await orderService.cancel(id, status);
+        await orderService.cancel(id);
 
-        sendNotification(`order set as ${status} successfully`);
+        sendNotification('Order canceled successfully');
         reloadOrders();
 
-        setOrder((prevState) => ({ ...prevState, status }));
+        setOrder((prevState) => ({ ...prevState, canceledDate: new Date() }));
       } catch (error) {
         sendNotification(error.message, false);
       }
@@ -50,8 +51,8 @@ const Details = ({ orderId, setClose, reloadOrders }) => {
     getOrder(orderId);
   }, [getOrder, orderId]);
 
-  function handleChangeStatus(status) {
-    cancelOrder(orderId, status);
+  function handleCancelOrder() {
+    cancelOrder(orderId);
   }
 
   return (
@@ -72,17 +73,21 @@ const Details = ({ orderId, setClose, reloadOrders }) => {
           </li>
           <li>
             <span>Discount:</span>
-            <span className="order">{formatCurrency(order?.discount)}</span>
+            <span className="order">
+              {formatCurrency(order?.discount ?? 0)}
+            </span>
           </li>
           {!order?.recurrency && (
             <li>
               <span>Tip:</span>
-              <span className="order">{formatCurrency(order?.tip)}</span>
+              <span className="order">{formatCurrency(order?.tip ?? 0)}</span>
             </li>
           )}
           <li>
             <span>Total:</span>
-            <span className="order">{formatCurrency(order?.total ?? 0)}</span>
+            <span className="order">
+              {formatCurrency(order?.amount ?? 0 ?? 0)}
+            </span>
           </li>
           <li>
             <span>Created At:</span>
@@ -100,41 +105,54 @@ const Details = ({ orderId, setClose, reloadOrders }) => {
               {masks.capitalize(order?.paymentType)}
             </span>
           </li>
-          {order?.recurrency && (
-            <>
-              <li>
-                <span>Paid until date:</span>
-                <span className="order">{order?.paidUntilDate}</span>
-              </li>
-              <li>
-                <span>Canceled date:</span>
-                <span className="order">
-                  {dateHelper.formatToList(order?.canceledDate)}
-                </span>
-              </li>
-            </>
+          {order?.recurrency && order?.paidUntilDate && (
+            <li>
+              <span>Paid Until Date:</span>
+              <span className="order">
+                {dateHelper.formatToDisplay(
+                  dateHelper.toDate(order?.paidUntilDate ?? '')
+                )}
+              </span>
+            </li>
+          )}
+          {order?.recurrency && order?.canceledDate && (
+            <li>
+              <span>Canceled Date:</span>
+              <span className="order">
+                {dateHelper.formatToDisplay(
+                  order?.canceledDate instanceof Date
+                    ? order?.canceledDate
+                    : dateHelper.toDate(order?.canceledDate ?? '')
+                )}
+              </span>
+            </li>
           )}
           <li>
             <span>Status:</span>
             <div className="order">
-              <Status order status={order?.status.toLowerCase()}>
+              <Status
+                color={ORDER_STATUS_COLOR}
+                status={order?.status.toLowerCase()}
+              >
                 {order?.status.toLowerCase()}
               </Status>
             </div>
           </li>
         </ul>
         <div className="buttons">
-          <Button
-            variant="danger"
-            onClick={() =>
-              confirmHandler(
-                'Are you sure you want to cancel this order?',
-                () => handleChangeStatus('canceled')
-              )
-            }
-          >
-            Cancel Order
-          </Button>
+          {order?.recurrency && !order?.canceledDate && (
+            <Button
+              variant="danger"
+              onClick={() =>
+                confirmHandler(
+                  'Are you sure you want to cancel this order?',
+                  () => handleCancelOrder()
+                )
+              }
+            >
+              Cancel Order
+            </Button>
+          )}
         </div>
       </Container>
     </Modal>

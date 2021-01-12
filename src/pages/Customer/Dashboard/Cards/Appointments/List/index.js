@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { Status } from '~/components/Label/styles';
+import { APPOINTMENTS_STATUS_COLOR } from '~/consts/labelColors';
 import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
 
 import { Container } from './styles';
@@ -25,7 +26,9 @@ const List = ({ list, setOpenDetails, setAppointment }) => {
                 </span>
               </div>
             </div>
-            <Status status={item.status}>{item.status}</Status>
+            <Status color={APPOINTMENTS_STATUS_COLOR} status={item.status}>
+              {item.status}
+            </Status>
           </button>
         </li>
       ))}

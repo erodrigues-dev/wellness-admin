@@ -17,8 +17,8 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function cancel() {
-  return null;
+export function cancel(id) {
+  return api.put(`${ENDPOINT}/${id}/cancel`);
 }
 
 export default {

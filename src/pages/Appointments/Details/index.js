@@ -6,6 +6,7 @@ import { isToday } from 'date-fns';
 import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import { Status } from '~/components/Label/styles';
 import Modal from '~/components/Modal';
+import { APPOINTMENTS_STATUS_COLOR } from '~/consts/labelColors';
 import useNotification from '~/contexts/notification';
 import { formatToDisplay, toDate, transformIn24h } from '~/helpers/date';
 import * as appointmentService from '~/services/appointment';
@@ -70,7 +71,12 @@ const Details = ({
           <li>
             <span>Status:</span>
             <div className="appointment">
-              <Status status={appointment.status}>{appointment.status}</Status>
+              <Status
+                color={APPOINTMENTS_STATUS_COLOR}
+                status={appointment.status}
+              >
+                {appointment.status}
+              </Status>
             </div>
           </li>
         </ul>

@@ -2,7 +2,6 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import { FiPackage, FiActivity, FiInfo } from 'react-icons/fi';
 import { RiBankCardLine, RiMoneyDollarBoxLine } from 'react-icons/ri';
-import { Status } from '~/components/Label/styles';
 
 import * as dateHelper from '~/helpers/date';
 import { currency } from '~/helpers/intl';
