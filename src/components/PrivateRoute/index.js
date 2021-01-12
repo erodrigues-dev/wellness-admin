@@ -15,7 +15,7 @@ const PrivateRoute = ({
     <Route
       {...rest}
       render={(routeProps) =>
-        hasPermission(functionality, action) ? (
+        hasPermission(1) ? (
           <Component {...routeProps} />
         ) : (
           <Redirect to="/404" />

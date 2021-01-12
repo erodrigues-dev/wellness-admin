@@ -17,32 +17,29 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const userStoraged = auth.getUserFromStorage();
+  const [permissions] = useState(auth.getPermissionsFromStorage());
   const [user, setUser] = useState(userStoraged);
   const [menu, setMenu] = useState([]);
 
   const hasPermission = useCallback(
-    (functionality, action) => {
-      if (user !== undefined) {
-        const funcionality = user.profile.functionalities.find(
-          (x) => x.name.toLowerCase() === functionality.toLowerCase()
+    (functionality) => {
+      if (user !== undefined && permissions !== undefined) {
+        const allowed = permissions.find(
+          (x) => (x.id & user?.permissions) === functionality
         );
 
-        const allowed =
-          (action & funcionality?.actions) === action &&
-          funcionality !== undefined;
-
-        return allowed;
+        return !!allowed;
       }
 
-      return null;
+      return true;
     },
-    [user]
+    [user, permissions]
   );
 
   const buildMenu = useCallback(() => {
     if (user) {
       const menuHasPermission = MENU.filter((itemMenu) =>
-        hasPermission(itemMenu.functionality, ACTIONS.LIST)
+        hasPermission(itemMenu.functionality)
       );
 
       setMenu(menuHasPermission);
