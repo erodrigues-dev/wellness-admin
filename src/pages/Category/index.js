@@ -11,10 +11,9 @@ import List from './List';
 import ModalCategory from './Modal';
 
 const Category = () => {
-  const { hasPermission, ACTIONS } = useAuth();
+  const { hasPermission } = useAuth();
 
-  const hasPermissionToCreate = hasPermission('employees', ACTIONS.CREATE);
-  const hasPermissionToUpdate = hasPermission('employees', ACTIONS.UPDATE);
+  const hasPermissionToCreate = hasPermission(16384);
 
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -76,7 +75,7 @@ const Category = () => {
       )}
       <List
         list={list}
-        allowEdit={hasPermissionToUpdate}
+        allowEdit={hasPermissionToCreate}
         setOpenEdit={setOpenEdit}
         setSelectedCategory={setSelectedCategory}
       />

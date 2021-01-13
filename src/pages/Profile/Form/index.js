@@ -5,14 +5,11 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
-import { listAll } from '~/consts/functionalities';
 import useNotification from '~/contexts/notification';
 import * as service from '~/services/profile';
 
 import Functionalities from './Functionalities';
 import schema from './schema';
-
-const functionalities = listAll();
 
 function FormComponent() {
   const { sendNotification } = useNotification();
@@ -107,7 +104,8 @@ function FormComponent() {
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Functionalities list={functionalities} formik={formik} />
+        <Functionalities formik={formik} />
+        {/* <Functionalities list={functionalities} formik={formik} /> */}
 
         <Form.Row className="d-flex justify-content-end">
           <Button

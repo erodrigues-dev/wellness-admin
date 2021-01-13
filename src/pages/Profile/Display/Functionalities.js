@@ -3,9 +3,6 @@ import { Table } from 'react-bootstrap';
 
 import DisplayCheck from '~/components/DisplayCheck';
 import { ACTIONS } from '~/consts/actions';
-import { listAll } from '~/consts/functionalities';
-
-const functionalities = listAll();
 
 function Functionalities({ values }) {
   const isChecked = (name, action) => {
@@ -14,8 +11,6 @@ function Functionalities({ values }) {
     const hasAction = (functionality.actions & action) === action;
     return hasAction;
   };
-
-  console.log(functionalities, values);
 
   return (
     <>
@@ -29,7 +24,8 @@ function Functionalities({ values }) {
           </tr>
         </thead>
         <tbody>
-          {functionalities.map((item) => (
+          {[].map((item) => (
+            // {functionalities.map((item) => (
             <tr key={item.id}>
               <td>{item.name}</td>
               <td className="text-center">

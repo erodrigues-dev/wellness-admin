@@ -13,14 +13,11 @@ import useAuth from '../../../contexts/auth';
 function DisplayComponent() {
   const { id } = useParams();
   const history = useHistory();
-  const { hasPermission, FUNCTIONALITIES, ACTIONS } = useAuth();
+  const { hasPermission } = useAuth();
   const { sendNotification } = useNotification();
   const [view, setView] = useState({});
 
-  const hasEditPermission = hasPermission(
-    FUNCTIONALITIES.ACTIVITIES,
-    ACTIONS.UPDATE
-  );
+  const hasPermissionToCreate = hasPermission(512);
 
   useEffect(() => {
     if (!id) return;
@@ -111,7 +108,7 @@ function DisplayComponent() {
           <Button variant="secondary" className="mr-2" onClick={handleCancel}>
             Back
           </Button>
-          {hasEditPermission && (
+          {hasPermissionToCreate && (
             <Link to={`/activities/${id}`}>
               <Button>Edit</Button>
             </Link>

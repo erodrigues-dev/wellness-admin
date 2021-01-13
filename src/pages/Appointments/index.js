@@ -14,11 +14,8 @@ import List from './List';
 
 const Appointments = () => {
   const { sendNotification } = useNotification();
-  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
-  const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.SCHEDULES,
-    ACTIONS.CREATE
-  );
+  const { hasPermission } = useAuth();
+  const hasPermissionToCreate = hasPermission(2);
 
   const { id } = useParams();
   const [page, setPage] = useState(1);

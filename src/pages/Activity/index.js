@@ -11,15 +11,8 @@ import List from './List';
 
 const Activity = () => {
   const { sendNotification } = useNotification();
-  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
-  const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.ACTIVITIES,
-    ACTIONS.CREATE
-  );
-  const hasPermissionToUpdate = hasPermission(
-    FUNCTIONALITIES.ACTIVITIES,
-    ACTIONS.UPDATE
-  );
+  const { hasPermission } = useAuth();
+  const hasPermissionToCreate = hasPermission(512);
 
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -55,7 +48,7 @@ const Activity = () => {
         allowCreate={hasPermissionToCreate}
         list={list}
       />
-      <List list={list} allowEdit={hasPermissionToUpdate} />
+      <List list={list} allowEdit={hasPermissionToCreate} />
       <Paginate
         activePage={page}
         itemsCountPerPage={10}
