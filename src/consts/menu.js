@@ -8,63 +8,65 @@ import {
   FiShoppingCart,
 } from 'react-icons/fi';
 
+import { FUNCTIONALITIES } from './functionalities';
+
 export const MENU = [
   {
     title: 'Appointments',
     path: '/appointments',
     Icon: FiCalendar,
-    functionality: 1,
+    functionality: FUNCTIONALITIES.appointments.list,
   },
   {
     title: 'Customers',
     path: '/customers',
     Icon: FiUsers,
-    functionality: 8,
+    functionality: FUNCTIONALITIES.customers.list,
   },
   {
     title: 'Orders',
     path: '/orders',
     Icon: FiShoppingCart,
-    functionality: 32,
+    functionality: FUNCTIONALITIES.orders.list,
   },
   {
     title: 'Activities',
     path: '/activities',
     Icon: FiActivity,
-    functionality: 256,
+    functionality: FUNCTIONALITIES.activities.list,
   },
   {
     title: 'Packages',
     path: '/packages',
     Icon: FiPackage,
-    functionality: 2048,
+    functionality: FUNCTIONALITIES.packages.list,
   },
   {
     title: 'Employees',
     path: '/employees',
     Icon: FiUsers,
-    functionality: 8192,
+    functionality: FUNCTIONALITIES.settings.employees.list,
     subgroup: 'settings',
   },
   {
     title: 'Profiles',
     path: '/profiles',
     Icon: FiSettings,
-    functionality: 32768,
+    functionality: FUNCTIONALITIES.settings.profiles.list,
     subgroup: 'settings',
   },
   {
     title: 'Categories',
     path: '/categories',
     Icon: FiPenTool,
-    functionality: 131072,
+    functionality: FUNCTIONALITIES.settings.categories.list,
     subgroup: 'settings',
   },
   {
     title: 'Discounts',
     path: '/discounts',
     Icon: FiPenTool,
-    functionality: 524288,
+    functionality: FUNCTIONALITIES.settings.discount.list,
     subgroup: 'settings',
   },
 ];

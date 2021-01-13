@@ -8,8 +8,6 @@ import React, {
 
 import JwtDecode from 'jwt-decode';
 
-import { ACTIONS } from '~/consts/actions';
-import { FUNCTIONALITIES } from '~/consts/functionalities';
 import { MENU } from '~/consts/menu';
 import * as auth from '~/services/auth';
 
@@ -77,8 +75,6 @@ export const AuthProvider = ({ children }) => {
         signOut,
         hasPermission,
         menu,
-        ACTIONS,
-        FUNCTIONALITIES,
         updateUserFromToken,
       }}
     >

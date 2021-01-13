@@ -2,7 +2,6 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 
 import DisplayCheck from '~/components/DisplayCheck';
-import { ACTIONS } from '~/consts/actions';
 
 function Functionalities({ values }) {
   const isChecked = (name, action) => {
@@ -29,13 +28,16 @@ function Functionalities({ values }) {
             <tr key={item.id}>
               <td>{item.name}</td>
               <td className="text-center">
-                <DisplayCheck checked={isChecked(item.id, ACTIONS.LIST)} />
+                <DisplayCheck checked={isChecked(item.id)} />
+                {/* <DisplayCheck checked={isChecked(item.id, ACTIONS.LIST)} /> */}
               </td>
               <td className="text-center">
-                <DisplayCheck checked={isChecked(item.id, ACTIONS.CREATE)} />
+                <DisplayCheck checked={isChecked(item.id)} />
+                {/* <DisplayCheck checked={isChecked(item.id, ACTIONS.CREATE)} /> */}
               </td>
               <td className="text-center">
-                <DisplayCheck checked={isChecked(item.id, ACTIONS.UPDATE)} />
+                <DisplayCheck checked={isChecked(item.id)} />
+                {/* <DisplayCheck checked={isChecked(item.id, ACTIONS.UPDATE)} /> */}
               </td>
             </tr>
           ))}
