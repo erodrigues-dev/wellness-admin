@@ -3,19 +3,14 @@ import { Route, Redirect } from 'react-router-dom';
 
 import useAuth from '~/contexts/auth';
 
-const PrivateRoute = ({
-  functionality,
-  action,
-  component: Component,
-  ...rest
-}) => {
+const PrivateRoute = ({ functionality, component: Component, ...rest }) => {
   const { hasPermission } = useAuth();
 
   return (
     <Route
       {...rest}
       render={(routeProps) =>
-        hasPermission(1) ? (
+        hasPermission(functionality) ? (
           <Component {...routeProps} />
         ) : (
           <Redirect to="/404" />

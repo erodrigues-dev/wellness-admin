@@ -3,8 +3,6 @@ import { Route, Redirect, Switch } from 'react-router-dom';
 
 import MainLayout from '~/components/layouts/MainLayout';
 import PrivateRoute from '~/components/PrivateRoute';
-import { ACTIONS } from '~/consts/actions';
-import { FUNCTIONALITIES } from '~/consts/functionalities';
 import {
   Home,
   Account,
@@ -40,220 +38,190 @@ const PrivateRoutes = () => {
 
         <PrivateRoute
           exact
-          action={ACTIONS.LIST}
-          functionality={FUNCTIONALITIES.ACTIVITIES}
+          functionality={256}
           path="/activities"
           component={Activity}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.CREATE}
-          functionality={FUNCTIONALITIES.ACTIVITIES}
+          functionality={512}
           path="/activities/create"
           component={ActivityForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.ACTIVITIES}
+          functionality={256}
           path="/activities/:id"
           component={ActivityForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.ACTIVITIES}
+          functionality={256}
           path="/activities/:id/display"
           component={ActivityDisplay}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.ACTIVITIES}
+          functionality={1024}
           path="/activities/:id/schedule"
           component={ActivitySchedule}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.LIST}
-          functionality={FUNCTIONALITIES.CUSTOMERS}
+          functionality={8}
           path="/customers"
           component={Customer}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.CREATE}
-          functionality={FUNCTIONALITIES.CUSTOMERS}
+          functionality={16}
           path="/customers/create"
           component={CustomerForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.CUSTOMERS}
+          functionality={8}
           path="/customers/:id"
           component={CustomerForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.CUSTOMERS}
+          functionality={8}
           path="/customers/:id/display"
           component={CustomerDisplay}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.PACKAGES}
+          functionality={8}
           path="/customers/:id/dashboard"
           component={CustomerDashboard}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.LIST}
-          functionality={FUNCTIONALITIES.EMPLOYEES}
+          functionality={8192}
           path="/employees"
           component={Employee}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.CREATE}
-          functionality={FUNCTIONALITIES.EMPLOYEES}
+          functionality={16384}
           path="/employees/create"
           component={EmployeeForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.EMPLOYEES}
+          functionality={8192}
           path="/employees/:id"
           component={EmployeeForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.EMPLOYEES}
+          functionality={8192}
           path="/employees/:id/display"
           component={EmployeeDisplay}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.LIST}
-          functionality={FUNCTIONALITIES.PACKAGES}
+          functionality={2048}
           path="/packages"
           component={Package}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.CREATE}
-          functionality={FUNCTIONALITIES.PACKAGES}
+          functionality={4096}
           path="/packages/create"
           component={PackageForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.PACKAGES}
+          functionality={2048}
           path="/packages/:id"
           component={PackageForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.PACKAGES}
+          functionality={2048}
           path="/packages/:id/display"
           component={PackageDisplay}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.LIST}
-          functionality={FUNCTIONALITIES.PROFILES}
+          functionality={32768}
           path="/profiles"
           component={Profile}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.CREATE}
-          functionality={FUNCTIONALITIES.PROFILES}
+          functionality={65536}
           path="/profiles/create"
           component={ProfileForm}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.PROFILES}
+          functionality={32768}
           path="/profiles/:id"
           component={ProfileForm}
         />
         <PrivateRoute
           exact
           path="/account"
-          action={ACTIONS.UPDATE}
-          functionality={FUNCTIONALITIES.PROFILES}
+          functionality={32768}
           component={Account}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.PROFILES}
+          functionality={32768}
           path="/profiles/:id/display"
           component={ProfileDisplay}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.CATEGORIES}
+          functionality={131072}
           path="/categories"
           component={Category}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.DISCOUNTS}
+          functionality={524288}
           path="/discounts"
           component={Discount}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.DISCOUNTS}
+          functionality={524288}
           path="/discounts/:id"
           component={Discount}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.ORDERS}
+          functionality={32}
           path="/orders"
           component={Order}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.ORDERS}
+          functionality={32}
           path="/orders/:id"
           component={Order}
         />
 
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.SCHEDULES}
+          functionality={1}
           path="/appointments"
           component={Appointments}
         />
         <PrivateRoute
           exact
-          action={ACTIONS.GET}
-          functionality={FUNCTIONALITIES.SCHEDULES}
+          functionality={1}
           path="/appointments/:id"
           component={Appointments}
         />

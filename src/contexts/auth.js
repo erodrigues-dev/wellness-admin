@@ -24,14 +24,14 @@ export const AuthProvider = ({ children }) => {
   const hasPermission = useCallback(
     (functionality) => {
       if (user !== undefined && permissions !== undefined) {
-        const allowed = permissions.find(
+        const allowed = permissions?.find(
           (x) => (x.id & user?.permissions) === functionality
         );
 
         return !!allowed;
       }
 
-      return true;
+      return null;
     },
     [user, permissions]
   );
