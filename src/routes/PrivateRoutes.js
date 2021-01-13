@@ -26,8 +26,6 @@ import {
   PackageForm,
   PackageDisplay,
   Profile,
-  ProfileForm,
-  ProfileDisplay,
   NotAuthorized,
 } from '~/pages';
 
@@ -155,30 +153,12 @@ const PrivateRoutes = () => {
           path="/profiles"
           component={Profile}
         />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.settings.profiles.create}
-          path="/profiles/create"
-          component={ProfileForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.settings.profiles.update}
-          path="/profiles/:id"
-          component={ProfileForm}
-        />
+
         <PrivateRoute
           exact
           path="/account"
           functionality={FUNCTIONALITIES.settings.profiles.update}
           component={Account}
-        />
-
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.settings.profiles.list}
-          path="/profiles/:id/display"
-          component={ProfileDisplay}
         />
 
         <PrivateRoute
