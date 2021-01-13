@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import service from '~/services/package';
 
@@ -9,9 +10,9 @@ import Filter from './Filter';
 import List from './List';
 
 const Package = () => {
-  const { hasPermission, ACTIONS } = useAuth();
-  const hasPermissionToCreate = hasPermission('packages', ACTIONS.CREATE);
-  const hasPermissionToUpdate = hasPermission('packages', ACTIONS.UPDATE);
+  const { hasPermission } = useAuth();
+  const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.packages.create);
+  const hasPermissionToUpdate = hasPermission(FUNCTIONALITIES.packages.update);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);

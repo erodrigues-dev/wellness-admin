@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import Details from '~/pages/Appointments/Details';
@@ -18,10 +19,9 @@ const Appointments = () => {
   const [filter] = useState({ customerId: id });
   const [appointment, setAppointment] = useState();
   const { sendNotification } = useNotification();
-  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
+  const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.SCHEDULES,
-    ACTIONS.CREATE
+    FUNCTIONALITIES.appointments.create
   );
 
   const listAppointments = useCallback(async () => {

@@ -3,6 +3,7 @@ import { Card, Row, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import DisplayInfo from '~/components/DisplayInfo';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import * as service from '~/services/profile';
@@ -13,11 +14,10 @@ function FormComponent() {
   const { id } = useParams();
   const history = useHistory();
   const { sendNotification } = useNotification();
-  const { hasPermission, FUNCTIONALITIES, ACTIONS } = useAuth();
+  const { hasPermission } = useAuth();
   const [view, setView] = useState({});
   const hasEditPermission = hasPermission(
-    FUNCTIONALITIES.PROFILES,
-    ACTIONS.UPDATE
+    FUNCTIONALITIES.settings.profiles.update
   );
 
   useEffect(() => {

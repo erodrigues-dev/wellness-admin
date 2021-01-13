@@ -4,6 +4,7 @@ import { useHistory, useParams, Link } from 'react-router-dom';
 
 import Avatar from '~/components/Avatar';
 import DisplayInfo from '~/components/DisplayInfo';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import * as employeeService from '~/services/employee';
@@ -12,11 +13,10 @@ function DisplayComponent() {
   const { id } = useParams();
   const history = useHistory();
   const { sendNotification } = useNotification();
-  const { hasPermission, FUNCTIONALITIES, ACTIONS } = useAuth();
+  const { hasPermission } = useAuth();
   const [view, setView] = useState({});
   const hasEditPermission = hasPermission(
-    FUNCTIONALITIES.EMPLOYEES,
-    ACTIONS.UPDATE
+    FUNCTIONALITIES.settings.employees.update
   );
 
   useEffect(() => {

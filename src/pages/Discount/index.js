@@ -3,6 +3,7 @@ import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import Paginate from '~/components/Paginate';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import * as service from '~/services/discount';
@@ -13,14 +14,12 @@ import List from './List';
 
 const Discount = () => {
   const { sendNotification } = useNotification();
-  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
+  const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.DISCOUNTS,
-    ACTIONS.CREATE
+    FUNCTIONALITIES.settings.discount.create
   );
   const hasPermissionToUpdate = hasPermission(
-    FUNCTIONALITIES.DISCOUNTS,
-    ACTIONS.UPDATE
+    FUNCTIONALITIES.settings.discount.update
   );
 
   const { id } = useParams();

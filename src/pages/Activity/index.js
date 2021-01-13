@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import * as service from '~/services/activity';
 
@@ -12,7 +13,12 @@ import List from './List';
 const Activity = () => {
   const { sendNotification } = useNotification();
   const { hasPermission } = useAuth();
-  const hasPermissionToCreate = hasPermission(512);
+  const hasPermissionToCreate = hasPermission(
+    FUNCTIONALITIES.activities.create
+  );
+  const hasPermissionToUpdate = hasPermission(
+    FUNCTIONALITIES.activities.update
+  );
 
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -48,7 +54,7 @@ const Activity = () => {
         allowCreate={hasPermissionToCreate}
         list={list}
       />
-      <List list={list} allowEdit={hasPermissionToCreate} />
+      <List list={list} allowEdit={hasPermissionToUpdate} />
       <Paginate
         activePage={page}
         itemsCountPerPage={10}

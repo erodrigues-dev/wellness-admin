@@ -3,6 +3,7 @@ import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 
 import Modal from '~/components/Modal';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import * as service from '~/services/order';
@@ -13,11 +14,8 @@ import List from './List';
 const Orders = () => {
   const { id } = useParams();
   const { sendNotification } = useNotification();
-  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
-  const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.CHECKOUT,
-    ACTIONS.CREATE
-  );
+  const { hasPermission } = useAuth();
+  const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.orders.create);
   const [openCheckout, setOpenCheckout] = useState(false);
   const [filter] = useState({
     customerId: id,

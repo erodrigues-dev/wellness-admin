@@ -3,6 +3,7 @@ import { Card } from 'react-bootstrap';
 
 import Modal from '~/components/Modal';
 import Paginate from '~/components/Paginate';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import * as service from '~/services/category';
 
@@ -13,7 +14,12 @@ import ModalCategory from './Modal';
 const Category = () => {
   const { hasPermission } = useAuth();
 
-  const hasPermissionToCreate = hasPermission(16384);
+  const hasPermissionToCreate = hasPermission(
+    FUNCTIONALITIES.settings.categories.create
+  );
+  const hasPermissionToUpdate = hasPermission(
+    FUNCTIONALITIES.settings.categories.update
+  );
 
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
@@ -75,7 +81,7 @@ const Category = () => {
       )}
       <List
         list={list}
-        allowEdit={hasPermissionToCreate}
+        allowEdit={hasPermissionToUpdate}
         setOpenEdit={setOpenEdit}
         setSelectedCategory={setSelectedCategory}
       />

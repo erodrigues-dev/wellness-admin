@@ -3,6 +3,7 @@ import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import Paginate from '~/components/Paginate';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import * as service from '~/services/order';
@@ -14,15 +15,9 @@ import List from './List';
 
 const Order = () => {
   const { sendNotification } = useNotification();
-  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
-  const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.CHECKOUT,
-    ACTIONS.CREATE
-  );
-  const hasPermissionToUpdate = hasPermission(
-    FUNCTIONALITIES.CHECKOUT,
-    ACTIONS.UPDATE
-  );
+  const { hasPermission } = useAuth();
+  const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.orders.create);
+  const hasPermissionToUpdate = hasPermission(FUNCTIONALITIES.orders.create);
 
   const { id } = useParams();
   const [page, setPage] = useState(1);

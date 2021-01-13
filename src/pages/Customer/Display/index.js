@@ -4,6 +4,7 @@ import { Card, Row, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams, Link } from 'react-router-dom';
 
 import DisplayInfo from '~/components/DisplayInfo';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useNotification from '~/contexts/notification';
 import * as service from '~/services/customer';
 
@@ -13,13 +14,10 @@ import useAuth from '../../../contexts/auth';
 function DisplayComponent() {
   const { id } = useParams();
   const history = useHistory();
-  const { hasPermission, FUNCTIONALITIES, ACTIONS } = useAuth();
+  const { hasPermission } = useAuth();
   const { sendNotification } = useNotification();
   const [view, setView] = useState({});
-  const hasEditPermission = hasPermission(
-    FUNCTIONALITIES.CUSTOMERS,
-    ACTIONS.UPDATE
-  );
+  const hasEditPermission = hasPermission(FUNCTIONALITIES.customers.update);
 
   useEffect(() => {
     if (!id) return;

@@ -4,6 +4,7 @@ import { useHistory, useParams, Link } from 'react-router-dom';
 
 import DisplayCheck from '~/components/DisplayCheck';
 import DisplayInfo from '~/components/DisplayInfo';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import * as service from '~/services/activity';
@@ -17,7 +18,7 @@ function DisplayComponent() {
   const { sendNotification } = useNotification();
   const [view, setView] = useState({});
 
-  const hasPermissionToCreate = hasPermission(512);
+  const hasEditPermission = hasPermission(FUNCTIONALITIES.activities.update);
 
   useEffect(() => {
     if (!id) return;
@@ -108,7 +109,7 @@ function DisplayComponent() {
           <Button variant="secondary" className="mr-2" onClick={handleCancel}>
             Back
           </Button>
-          {hasPermissionToCreate && (
+          {hasEditPermission && (
             <Link to={`/activities/${id}`}>
               <Button>Edit</Button>
             </Link>

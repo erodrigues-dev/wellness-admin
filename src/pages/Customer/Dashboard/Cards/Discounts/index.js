@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Card, Col, Row } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 
+import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import * as service from '~/services/discount';
@@ -10,14 +11,12 @@ import ModalForm from '../../../../Discount/Form';
 import List from './List';
 
 const Discounts = () => {
-  const { hasPermission, ACTIONS, FUNCTIONALITIES } = useAuth();
+  const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(
-    FUNCTIONALITIES.DISCOUNTS,
-    ACTIONS.CREATE
+    FUNCTIONALITIES.settings.discount.create
   );
   const hasPermissionToUpdate = hasPermission(
-    FUNCTIONALITIES.DISCOUNTS,
-    ACTIONS.UPDATE
+    FUNCTIONALITIES.settings.discount.update
   );
   const { id } = useParams();
   const { sendNotification } = useNotification();
