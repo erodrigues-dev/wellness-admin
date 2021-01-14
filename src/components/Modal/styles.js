@@ -74,7 +74,7 @@ export const Content = styled.div`
       flex-direction: column;
       height: 100%;
 
-      h2 {
+      & > h2 {
         font-size: 1.2rem;
         font-weight: bold;
       }

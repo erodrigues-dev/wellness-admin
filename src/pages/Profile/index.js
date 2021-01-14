@@ -7,6 +7,7 @@ import useAuth from '~/contexts/auth';
 import * as service from '~/services/profile';
 
 import Filter from './Filter';
+import Form from './Form';
 import List from './List';
 
 function Profile() {
@@ -22,6 +23,7 @@ function Profile() {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '', description: '' });
+  const [openNew, setOpenNew] = useState(false);
 
   useEffect(() => {
     service.list(page, filter).then((response) => {
@@ -43,7 +45,11 @@ function Profile() {
     <Card body>
       <Card.Title>Profiles</Card.Title>
       <hr />
-      <Filter onFilter={handleFilter} allowCreate={hasPermissionToCreate} />
+      <Filter
+        onFilter={handleFilter}
+        allowCreate={hasPermissionToCreate}
+        setOpenNew={setOpenNew}
+      />
       <List list={list} allowEdit={hasPermissionToUpdate} />
       <Paginate
         activePage={page}
@@ -51,6 +57,8 @@ function Profile() {
         totalItemsCount={total}
         onChange={handlePagination}
       />
+
+      {openNew && <Form setClose={setOpenNew} />}
     </Card>
   );
 }

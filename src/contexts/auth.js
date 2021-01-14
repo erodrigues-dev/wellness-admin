@@ -76,6 +76,7 @@ export const AuthProvider = ({ children }) => {
         hasPermission,
         menu,
         updateUserFromToken,
+        permissions,
       }}
     >
       {children}

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 import styled from 'styled-components';
@@ -9,7 +8,7 @@ const Container = styled.div`
   margin-top: 24px;
 `;
 
-function Filter({ onFilter, allowCreate }) {
+function Filter({ onFilter, allowCreate, setOpenNew }) {
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -52,10 +51,9 @@ function Filter({ onFilter, allowCreate }) {
             </Button>
             {allowCreate && (
               <Button
-                as={Link}
-                to="/profiles/create"
                 variant="secondary"
                 className="ml-2"
+                onClick={() => setOpenNew(true)}
               >
                 Add Profile
               </Button>
