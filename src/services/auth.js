@@ -26,7 +26,7 @@ export async function signIn({ email, password }) {
 }
 
 export function signOut() {
-  localStorage.removeItem(KEY_TOKEN);
+  localStorage.clear();
 }
 
 export function getUserFromStorage() {
