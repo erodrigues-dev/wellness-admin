@@ -15,7 +15,9 @@ const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const userStoraged = auth.getUserFromStorage();
-  const [permissions] = useState(auth.getPermissionsFromStorage());
+  const [permissions, setPermissions] = useState(
+    auth.getPermissionsFromStorage()
+  );
   const [user, setUser] = useState(userStoraged);
   const [menu, setMenu] = useState([]);
 
@@ -49,8 +51,12 @@ export const AuthProvider = ({ children }) => {
   }, [buildMenu]);
 
   async function signIn({ email, password }) {
-    const userAuthenticated = await auth.signIn({ email, password });
+    const { userAuthenticated, permissionsAuthenticated } = await auth.signIn({
+      email,
+      password,
+    });
     setUser(userAuthenticated);
+    setPermissions(permissionsAuthenticated);
   }
 
   function signOut() {

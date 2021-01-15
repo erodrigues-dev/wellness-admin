@@ -19,7 +19,11 @@ export async function signIn({ email, password }) {
     });
     setStorage(KEY_TOKEN, token);
     setStorage(PERMISSIONS, btoa(JSON.stringify(permissions)));
-    return JwtDecode(token);
+
+    return {
+      userAuthenticated: JwtDecode(token),
+      permissionsAuthenticated: permissions,
+    };
   } catch (error) {
     throw new Error('Email or password are invalid!');
   }
