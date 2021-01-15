@@ -147,6 +147,14 @@ const ProfileForm = ({ profileId, setClose, reloadProfiles }) => {
           <Form.Group>
             <ul>
               <h1>Permissions</h1>
+              {formik.touched.permissions && formik.errors.permissions && (
+                <Form.Control.Feedback
+                  type="invalid"
+                  style={{ display: 'block', fontWeight: 'normal' }}
+                >
+                  {formik.errors.permissions}
+                </Form.Control.Feedback>
+              )}
               {groups.map((permission, index) => {
                 return (
                   <li key={permission.id}>
