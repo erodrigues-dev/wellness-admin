@@ -23,20 +23,19 @@ export function list(page, filters) {
   });
 }
 
-export function create({ name, description, functionalities }) {
+export function create({ name, description, permissions }) {
   return api.post(ENDPOINT, {
     name,
     description,
-    functionalities,
+    permissions,
   });
 }
 
-export function update({ id, name, description, enabled, functionalities }) {
+export function update({ id, name, description, permissions }) {
   return api.put(ENDPOINT, {
     id,
     name,
     description,
-    enabled,
-    functionalities,
+    permissions,
   });
 }

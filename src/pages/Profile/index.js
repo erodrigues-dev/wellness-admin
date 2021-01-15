@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
+import useNotification from '~/contexts/notification';
 import * as service from '~/services/profile';
 
 import Filter from './Filter';
@@ -12,25 +13,35 @@ import List from './List';
 
 function Profile() {
   const { hasPermission } = useAuth();
+  const { sendNotification } = useNotification();
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.settings.profiles.create
   );
   const hasPermissionToUpdate = hasPermission(
-    'profiles',
     FUNCTIONALITIES.settings.profiles.update
   );
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '', description: '' });
+  const [selected, setSelected] = useState();
   const [openNew, setOpenNew] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+
+  const listProfiles = useCallback(async () => {
+    try {
+      const { headers, data } = await service.list(page, filter);
+
+      setList(data);
+      setTotal(parseInt(headers['x-total-count']));
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [filter, page, sendNotification]);
 
   useEffect(() => {
-    service.list(page, filter).then((response) => {
-      setList(response.data);
-      setTotal(parseInt(response.headers['x-total-count']));
-    });
-  }, [page, filter]);
+    listProfiles();
+  }, [listProfiles]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -50,7 +61,12 @@ function Profile() {
         allowCreate={hasPermissionToCreate}
         setOpenNew={setOpenNew}
       />
-      <List list={list} allowEdit={hasPermissionToUpdate} />
+      <List
+        list={list}
+        allowEdit={hasPermissionToUpdate}
+        setOpenEdit={setOpenEdit}
+        setSelected={setSelected}
+      />
       <Paginate
         activePage={page}
         itemsCountPerPage={10}
@@ -58,7 +74,14 @@ function Profile() {
         onChange={handlePagination}
       />
 
-      {openNew && <Form setClose={setOpenNew} />}
+      {openNew && <Form setClose={setOpenNew} reloadProfiles={listProfiles} />}
+      {openEdit && (
+        <Form
+          setClose={setOpenEdit}
+          profileId={selected}
+          reloadProfiles={listProfiles}
+        />
+      )}
     </Card>
   );
 }
