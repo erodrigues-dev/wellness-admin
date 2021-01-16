@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
@@ -24,12 +25,15 @@ const Employee = () => {
   const isMounted = useRef(true);
 
   useEffect(() => {
-    service.index(page, filter).then((response) => {
-      if (isMounted.current) {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
-      }
-    });
+    service
+      .index(page, filter)
+      .then((response) => {
+        if (isMounted.current) {
+          setList(response.data);
+          setTotal(parseInt(response.headers['x-total-count']));
+        }
+      })
+      .catch((error) => toast.error(error.message));
 
     return () => {
       isMounted.current = false;

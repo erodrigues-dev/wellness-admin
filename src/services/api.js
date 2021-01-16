@@ -32,12 +32,6 @@ api.interceptors.response.use(
       return Promise.reject(error.response.data.errors);
     }
 
-    if (error.response?.status === 500) {
-      return Promise.reject(
-        new Error('Internal Server Error found. (Status 500)')
-      );
-    }
-
     redirectToAuth(error);
 
     return Promise.reject(new Error(message));

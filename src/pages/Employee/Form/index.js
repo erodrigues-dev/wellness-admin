@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Card, Form, Col, Button } from 'react-bootstrap';
 import { useHistory, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
@@ -11,7 +12,6 @@ import * as employeeService from '~/services/employee';
 import * as profileService from '~/services/profile';
 
 import schema from './schema';
-import { toast } from 'react-toastify';
 
 const initialValues = {
   id: 0,

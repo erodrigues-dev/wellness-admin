@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Col, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import useNotification from '~/contexts/notification';
 import { listAll } from '~/services/activity';
@@ -12,7 +13,9 @@ const Activities = ({ formik, packageType }) => {
   const [activities, setActivities] = useState([]);
 
   useEffect(() => {
-    listAll().then((response) => setActivities(response.data));
+    listAll()
+      .then((response) => setActivities(response.data))
+      .catch((error) => toast.error(error.message));
   }, []);
 
   const getItens = () => {

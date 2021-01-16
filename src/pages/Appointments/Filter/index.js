@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
@@ -36,7 +37,8 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
   useEffect(() => {
     customerService
       .listAll()
-      .then((response) => isMounted.current && setCustomers(response.data));
+      .then((response) => isMounted.current && setCustomers(response.data))
+      .catch((error) => toast.error(error.message));
 
     return () => {
       isMounted.current = false;
@@ -46,7 +48,8 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
   useEffect(() => {
     activityService
       .listAll()
-      .then((response) => isMounted.current && setActivities(response.data));
+      .then((response) => isMounted.current && setActivities(response.data))
+      .catch((error) => toast.error(error.message));
 
     return () => {
       isMounted.current = false;

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
@@ -21,7 +22,8 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
   useEffect(() => {
     customerService
       .listAll()
-      .then((response) => isMounted.current && setCustomers(response.data));
+      .then((response) => isMounted.current && setCustomers(response.data))
+      .catch((error) => toast.error(error.message));
 
     return () => {
       isMounted.current = false;

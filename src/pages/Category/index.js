@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Card } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import Modal from '~/components/Modal';
 import Paginate from '~/components/Paginate';
@@ -35,12 +36,15 @@ const Category = () => {
   }
 
   const loadCategories = useCallback(() => {
-    service.index(page, filter).then((response) => {
-      if (isMounted.current) {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
-      }
-    });
+    service
+      .index(page, filter)
+      .then((response) => {
+        if (isMounted.current) {
+          setList(response.data);
+          setTotal(parseInt(response.headers['x-total-count']));
+        }
+      })
+      .catch((error) => toast.error(error.message));
   }, [page, filter]);
 
   useEffect(() => {

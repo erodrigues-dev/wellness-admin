@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
@@ -18,9 +19,9 @@ function Filter({ onFilter, allowCreate, list }) {
   const isMounted = useRef(true);
 
   useEffect(() => {
-    listAllEmployees().then(
-      (response) => isMounted.current && setEmployees(response.data)
-    );
+    listAllEmployees()
+      .then((response) => isMounted.current && setEmployees(response.data))
+      .catch((error) => toast.error(error.message));
 
     return () => {
       isMounted.current = false;
