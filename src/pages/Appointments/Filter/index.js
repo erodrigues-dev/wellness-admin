@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -16,7 +16,6 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
   const { id: customerId } = useParams();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
-  const isMounted = useRef(true);
 
   const formik = useFormik({
     initialValues: {
@@ -37,23 +36,15 @@ function Filter({ onFilter, allowCreate, setOpenAdd }) {
   useEffect(() => {
     customerService
       .listAll()
-      .then((response) => isMounted.current && setCustomers(response.data))
+      .then((response) => setCustomers(response.data))
       .catch((error) => toast.error(error.message));
-
-    return () => {
-      isMounted.current = false;
-    };
   }, []);
 
   useEffect(() => {
     activityService
       .listAll()
-      .then((response) => isMounted.current && setActivities(response.data))
+      .then((response) => setActivities(response.data))
       .catch((error) => toast.error(error.message));
-
-    return () => {
-      isMounted.current = false;
-    };
   }, []);
 
   function handleDateChange(e) {

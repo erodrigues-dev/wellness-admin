@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
@@ -27,16 +27,13 @@ const Order = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const [orderId, setOrderId] = useState();
-  const isMounted = useRef(true);
 
   const listOrders = useCallback(async () => {
     try {
       const response = await service.list(page, 10, filter);
 
-      if (isMounted.current) {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
-      }
+      setList(response.data);
+      setTotal(parseInt(response.headers['x-total-count']));
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -44,10 +41,6 @@ const Order = () => {
 
   useEffect(() => {
     listOrders();
-
-    return () => {
-      isMounted.current = false;
-    };
   }, [listOrders]);
 
   async function handleFilter(filterValues) {

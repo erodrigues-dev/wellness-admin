@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -17,17 +17,12 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
-  const isMounted = useRef(true);
 
   useEffect(() => {
     customerService
       .listAll()
-      .then((response) => isMounted.current && setCustomers(response.data))
+      .then((response) => setCustomers(response.data))
       .catch((error) => toast.error(error.message));
-
-    return () => {
-      isMounted.current = false;
-    };
   }, []);
 
   function handleSubmit(values) {

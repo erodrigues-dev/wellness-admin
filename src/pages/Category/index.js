@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -29,7 +29,6 @@ const Category = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
-  const isMounted = useRef(true);
 
   function handleOpenAdd(state) {
     setOpenAdd(state);
@@ -39,20 +38,14 @@ const Category = () => {
     service
       .index(page, filter)
       .then((response) => {
-        if (isMounted.current) {
-          setList(response.data);
-          setTotal(parseInt(response.headers['x-total-count']));
-        }
+        setList(response.data);
+        setTotal(parseInt(response.headers['x-total-count']));
       })
       .catch((error) => toast.error(error.message));
   }, [page, filter]);
 
   useEffect(() => {
     loadCategories();
-
-    return () => {
-      isMounted.current = false;
-    };
   }, [loadCategories]);
 
   async function handleFilter(filterValues) {

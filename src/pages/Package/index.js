@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -18,22 +18,15 @@ const Package = () => {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '' });
-  const isMounted = useRef(true);
 
   useEffect(() => {
     service
       .index(page, filter)
       .then((response) => {
-        if (isMounted.current) {
-          setList(response.data);
-          setTotal(parseInt(response.headers['x-total-count']));
-        }
+        setList(response.data);
+        setTotal(parseInt(response.headers['x-total-count']));
       })
       .catch((error) => toast.error(error.message));
-
-    return () => {
-      isMounted.current = false;
-    };
   }, [page, filter]);
 
   async function handleFilter(filterValues) {

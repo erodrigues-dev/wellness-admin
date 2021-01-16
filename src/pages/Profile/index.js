@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
@@ -27,16 +27,13 @@ function Profile() {
   const [selected, setSelected] = useState();
   const [openNew, setOpenNew] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
-  const isMounted = useRef(true);
 
   const listProfiles = useCallback(async () => {
     try {
       const { headers, data } = await service.list(page, filter);
 
-      if (isMounted.current) {
-        setList(data);
-        setTotal(parseInt(headers['x-total-count']));
-      }
+      setList(data);
+      setTotal(parseInt(headers['x-total-count']));
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -44,10 +41,6 @@ function Profile() {
 
   useEffect(() => {
     listProfiles();
-
-    return () => {
-      isMounted.current = false;
-    };
   }, [listProfiles]);
 
   async function handleFilter(filterValues) {

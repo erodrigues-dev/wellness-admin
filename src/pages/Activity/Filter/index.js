@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -16,16 +16,11 @@ function Filter({ onFilter, allowCreate, list }) {
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
-  const isMounted = useRef(true);
 
   useEffect(() => {
     listAllEmployees()
-      .then((response) => isMounted.current && setEmployees(response.data))
+      .then((response) => setEmployees(response.data))
       .catch((error) => toast.error(error.message));
-
-    return () => {
-      isMounted.current = false;
-    };
   }, []);
 
   function handleSubmit(values) {
