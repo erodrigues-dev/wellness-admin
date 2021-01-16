@@ -28,7 +28,7 @@ api.interceptors.response.use(
 
     if (error.response?.status === 400) message = error.response.data.message;
 
-    if (error.response.data.errors?.length > 0) {
+    if (error?.response?.data.errors?.length > 0) {
       return Promise.reject(error.response.data.errors);
     }
 
