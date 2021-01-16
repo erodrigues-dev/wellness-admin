@@ -11,6 +11,7 @@ import * as employeeService from '~/services/employee';
 import * as profileService from '~/services/profile';
 
 import schema from './schema';
+import { toast } from 'react-toastify';
 
 const initialValues = {
   id: 0,
@@ -61,7 +62,10 @@ function EmployeeForm() {
   }, [id, sendNotification]);
 
   useEffect(() => {
-    profileService.listAll().then((response) => setProfiles(response.data));
+    profileService
+      .listAll()
+      .then((response) => setProfiles(response.data))
+      .catch((error) => toast.error(error.message));
   }, []);
 
   async function handleSubmit(values, { setSubmitting }) {
