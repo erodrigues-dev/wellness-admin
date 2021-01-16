@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
@@ -15,9 +15,16 @@ function Filter({ onFilter, allowCreate, list }) {
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
+  const isMounted = useRef(true);
 
   useEffect(() => {
-    listAllEmployees().then((response) => setEmployees(response.data));
+    listAllEmployees().then(
+      (response) => isMounted.current && setEmployees(response.data)
+    );
+
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   function handleSubmit(values) {

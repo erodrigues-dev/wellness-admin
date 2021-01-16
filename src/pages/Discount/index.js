@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
@@ -28,13 +28,16 @@ const Discount = () => {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ customerId: id, relationName: '' });
   const [openAdd, setOpenAdd] = useState(false);
+  const isMounted = useRef(true);
 
   const listDiscounts = useCallback(async () => {
     try {
       const { data, headers } = await service.list(page, filter);
 
-      setList(data);
-      setTotal(parseInt(headers['x-total-count']));
+      if (isMounted.current) {
+        setList(data);
+        setTotal(parseInt(headers['x-total-count']));
+      }
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -42,6 +45,10 @@ const Discount = () => {
 
   useEffect(() => {
     listDiscounts();
+
+    return () => {
+      isMounted.current = false;
+    };
   }, [listDiscounts]);
 
   async function handleFilter(filterValues) {
@@ -75,6 +82,7 @@ const Discount = () => {
           list={list}
           setOpenAdd={setOpenAdd}
           customerId={id}
+          isMounted={isMounted.current}
         />
         <List
           list={list}

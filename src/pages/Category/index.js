@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Modal from '~/components/Modal';
@@ -28,6 +28,7 @@ const Category = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState();
+  const isMounted = useRef(true);
 
   function handleOpenAdd(state) {
     setOpenAdd(state);
@@ -35,13 +36,19 @@ const Category = () => {
 
   const loadCategories = useCallback(() => {
     service.index(page, filter).then((response) => {
-      setList(response.data);
-      setTotal(parseInt(response.headers['x-total-count']));
+      if (isMounted.current) {
+        setList(response.data);
+        setTotal(parseInt(response.headers['x-total-count']));
+      }
     });
   }, [page, filter]);
 
   useEffect(() => {
     loadCategories();
+
+    return () => {
+      isMounted.current = false;
+    };
   }, [loadCategories]);
 
   async function handleFilter(filterValues) {

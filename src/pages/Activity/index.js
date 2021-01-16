@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
@@ -24,15 +24,22 @@ const Activity = () => {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '' });
+  const isMounted = useRef(true);
 
   useEffect(() => {
     service
       .list(page, filter)
       .then((response) => {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
+        if (isMounted.current) {
+          setList(response.data);
+          setTotal(parseInt(response.headers['x-total-count']));
+        }
       })
       .catch(({ message }) => sendNotification(message, false));
+
+    return () => {
+      isMounted.current = false;
+    };
     // eslint-disable-next-line
   }, [page, filter]);
 

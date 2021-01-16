@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
 
@@ -16,9 +16,16 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
+  const isMounted = useRef(true);
 
   useEffect(() => {
-    customerService.listAll().then((response) => setCustomers(response.data));
+    customerService
+      .listAll()
+      .then((response) => isMounted.current && setCustomers(response.data));
+
+    return () => {
+      isMounted.current = false;
+    };
   }, []);
 
   function handleSubmit(values) {

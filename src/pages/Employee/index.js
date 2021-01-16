@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
@@ -21,12 +21,19 @@ const Employee = () => {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '', email: '' });
+  const isMounted = useRef(true);
 
   useEffect(() => {
     service.index(page, filter).then((response) => {
-      setList(response.data);
-      setTotal(parseInt(response.headers['x-total-count']));
+      if (isMounted.current) {
+        setList(response.data);
+        setTotal(parseInt(response.headers['x-total-count']));
+      }
     });
+
+    return () => {
+      isMounted.current = false;
+    };
   }, [page, filter]);
 
   async function handleFilter(filterValues) {

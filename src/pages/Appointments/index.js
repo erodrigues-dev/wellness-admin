@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
@@ -34,13 +34,16 @@ const Appointments = () => {
   const [openAdd, setOpenAdd] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const [appointment, setAppointment] = useState();
+  const isMounted = useRef(true);
 
   const listAppointments = useCallback(async () => {
     try {
       const { data, headers } = await appointmentService.list(page, 10, filter);
 
-      setList(data);
-      setTotal(parseInt(headers['x-total-count']));
+      if (isMounted.current) {
+        setList(data);
+        setTotal(parseInt(headers['x-total-count']));
+      }
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -48,6 +51,10 @@ const Appointments = () => {
 
   useEffect(() => {
     listAppointments();
+
+    return () => {
+      isMounted.current = false;
+    };
   }, [listAppointments]);
 
   async function handleFilter(filterValues) {
