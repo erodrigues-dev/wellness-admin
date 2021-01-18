@@ -117,7 +117,8 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
   function handleRelationType(e) {
     const { id: inputId } = e.target;
     formik.setFieldValue('relationType', inputId);
-    formik.setFieldValue('relationId', 0);
+    formik.setFieldValue('relationId', '');
+    formik.setFieldValue('relationPrice', '');
   }
 
   function handleType(e) {
