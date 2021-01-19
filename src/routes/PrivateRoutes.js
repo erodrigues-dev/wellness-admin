@@ -19,8 +19,6 @@ import {
   CustomerDashboard,
   Discount,
   Employee,
-  EmployeeForm,
-  EmployeeDisplay,
   Order,
   Package,
   PackageForm,
@@ -102,24 +100,6 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.settings.employees.list}
           path="/employees"
           component={Employee}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.settings.employees.create}
-          path="/employees/create"
-          component={EmployeeForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.settings.employees.update}
-          path="/employees/:id"
-          component={EmployeeForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.settings.employees.list}
-          path="/employees/:id/display"
-          component={EmployeeDisplay}
         />
 
         <PrivateRoute

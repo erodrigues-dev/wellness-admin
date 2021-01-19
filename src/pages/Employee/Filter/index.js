@@ -1,12 +1,11 @@
 import React from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
 import { Container } from './styles';
 
-function Filter({ onFilter, allowCreate }) {
+function Filter({ onFilter, allowCreate, setOpenNew }) {
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -67,10 +66,10 @@ function Filter({ onFilter, allowCreate }) {
             </Button>
             {allowCreate && (
               <Button
-                as={Link}
-                to="/employees/create"
+                onClick={() => setOpenNew(true)}
                 variant="secondary"
                 className="ml-2"
+                style={{ cursor: 'pointer' }}
               >
                 Add Employee
               </Button>

@@ -25,12 +25,12 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function create({ name, email, password, profileId, specialty, file }) {
+export function create({ name, email, phone, profileId, specialty, file }) {
   const formData = new FormData();
 
   formData.append('name', name);
   formData.append('email', email);
-  formData.append('password', password);
+  formData.append('phone', phone);
   formData.append('profileId', profileId);
   formData.append('specialty', specialty);
   if (file) formData.append('image', file);
@@ -38,21 +38,12 @@ export function create({ name, email, password, profileId, specialty, file }) {
   return api.post(ENDPOINT, formData);
 }
 
-export function update({
-  id,
-  name,
-  email,
-  password,
-  profileId,
-  specialty,
-  file,
-}) {
+export function update({ id, name, phone, profileId, specialty, file }) {
   const formData = new FormData();
 
   formData.append('id', id);
   formData.append('name', name);
-  formData.append('email', email);
-  formData.append('password', password);
+  formData.append('phone', phone);
   formData.append('profileId', profileId);
   formData.append('specialty', specialty);
   if (file) formData.append('image', file);
