@@ -8,6 +8,7 @@ import useAuth from '~/contexts/auth';
 import { index } from '~/services/customer';
 
 import Filter from './Filter';
+import ModalForm from './Form';
 import List from './List';
 
 const Customer = () => {
@@ -18,6 +19,9 @@ const Customer = () => {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '', email: '' });
+  const [openNew, setOpenNew] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [selected, setSelected] = useState();
 
   useEffect(() => {
     index(page, filter)
@@ -37,18 +41,41 @@ const Customer = () => {
     setPage(current);
   }
 
+  function handleOpenEdit(item) {
+    setOpenEdit(true);
+    setSelected(item);
+  }
+
   return (
     <Card body>
       <Card.Title>Customers</Card.Title>
       <hr />
-      <Filter onFilter={handleFilter} allowCreate={hasPermissionToCreate} />
-      <List list={list} allowEdit={hasPermissionToUpdate} />
+      <Filter
+        onFilter={handleFilter}
+        allowCreate={hasPermissionToCreate}
+        setOpenNew={setOpenNew}
+      />
+      <List
+        list={list}
+        allowEdit={hasPermissionToUpdate}
+        handleOpenEdit={handleOpenEdit}
+      />
       <Paginate
         activePage={page}
         itemsCountPerPage={10}
         totalItemsCount={total}
         onChange={handlePagination}
       />
+      {openNew && (
+        <ModalForm title="New Customer" setClose={() => setOpenNew(false)} />
+      )}
+      {openEdit && (
+        <ModalForm
+          title="Edit Customer"
+          setClose={() => setOpenEdit(false)}
+          customer={selected}
+        />
+      )}
     </Card>
   );
 };

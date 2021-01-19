@@ -1,167 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import { Card, Form, Col, Button } from 'react-bootstrap';
-import { useHistory, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Button, Form } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
 import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
-import useNotification from '~/contexts/notification';
-import * as service from '~/services/customer';
+import Modal from '~/components/Modal';
 
 import schema from './schema';
 
-function FormComponent() {
-  const [file, setFile] = useState(null);
-  const { sendNotification } = useNotification();
-  const { id } = useParams();
-  const history = useHistory();
-  const action = id ? 'Edit Customer' : 'Add Customer';
-  const formik = useFormik({
-    validationSchema: schema,
+const ModalForm = ({ title, customer, setClose }) => {
+  const [, setFile] = useState(null);
+
+  const { setValues, ...formik } = useFormik({
     onSubmit: handleSubmit,
+    validationSchema: schema,
     initialValues: {
-      id: 0,
-      name: '',
-      email: '',
-      password: '',
-      confirmPassword: '',
+      id: customer?.id ?? '',
+      name: customer?.name ?? '',
+      email: customer?.email ?? '',
+      phone: customer?.phone ?? '',
+      imageUrl: customer?.imageUrl ?? '',
+      privateNotes: customer?.privateNotes ?? '',
     },
   });
 
-  useEffect(() => {
-    if (!id) return;
-    service
-      .get(id)
-      .then((response) => {
-        const { name, email, imageUrl } = response.data;
-        formik.setValues({
-          id,
-          name,
-          email,
-          imageUrl,
-          password: '',
-          confirmPassword: '',
-        });
-      })
-      .catch(({ message }) => sendNotification(message, false));
-
-    // TODO
-    // React Hook useEffect has missing dependencies
-    // eslint-disable-next-line
-  }, [id]);
-
-  async function handleSubmit(values, { setSubmitting }) {
-    try {
-      if (id === undefined) {
-        await service.create({ ...values, file });
-        sendNotification('Customer created with success.');
-      } else {
-        await service.update({ ...values, file });
-        sendNotification('Customer updated with success.');
-      }
-
-      history.goBack();
-    } catch (error) {
-      sendNotification(error.message, false);
-      setSubmitting(false);
-    }
-  }
-
-  function handleCancel() {
-    history.goBack();
-  }
+  function handleSubmit() {}
 
   return (
-    <Card body>
-      <Card.Title>{action}</Card.Title>
-      <hr />
-      <Form onSubmit={formik.handleSubmit}>
-        <AvatarUpload imageUrl={formik.values.imageUrl} handleFile={setFile} />
-        <Form.Group>
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            placeholder="Name"
-            name="name"
-            value={formik.values.name}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.name && formik.errors.name}
-            isValid={formik.touched.name && !formik.errors.name}
+    <Modal title={title} setClose={setClose}>
+      <Form className="modal-form">
+        <div className="form-wrapper">
+          <AvatarUpload
+            imageUrl={formik.values.imageUrl}
+            handleFile={setFile}
           />
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.name}
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Group>
-          <Form.Label>E-mail</Form.Label>
-          <Form.Control
-            placeholder="E-mail"
-            name="email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.email && formik.errors.email}
-            isValid={formik.touched.email && !formik.errors.email}
-          />
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.email}
-          </Form.Control.Feedback>
-        </Form.Group>
-        <Form.Row>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Password</Form.Label>
+          <Form.Group>
+            <Form.Label>Name</Form.Label>
             <Form.Control
-              placeholder="Password"
-              name="password"
-              type="password"
-              value={formik.values.password}
+              placeholder="ex: Profile 1"
+              name="name"
+              value={formik.values.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              isInvalid={formik.touched.password && formik.errors.password}
-              isValid={formik.touched.password && !formik.errors.password}
+              isInvalid={formik.touched.name && formik.errors.name}
+              isValid={formik.touched.name && !formik.errors.name}
             />
             <Form.Control.Feedback type="invalid">
-              {formik.errors.password}
+              {formik.errors.name}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Confirm Password</Form.Label>
+          <Form.Group>
+            <Form.Label>Email</Form.Label>
             <Form.Control
-              placeholder="Confirm Password"
-              name="confirmPassword"
-              type="password"
-              value={formik.values.confirmPassword}
+              placeholder="ex: yourname@email.com"
+              name="email"
+              value={formik.values.email}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.email && formik.errors.email}
+              isValid={formik.touched.email && !formik.errors.email}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.email}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Phone</Form.Label>
+            <Form.Control
+              placeholder="ex: 555 222 111"
+              name="phone"
+              value={formik.values.phone}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={formik.touched.phone && formik.errors.phone}
+              isValid={formik.touched.phone && !formik.errors.phone}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.phone}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Private Notes</Form.Label>
+            <Form.Control
+              style={{ resize: 'none' }}
+              placeholder="ex: My private notes here"
+              as="textarea"
+              name="privateNotes"
+              value={formik.values.privateNotes}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
+                formik.touched.privateNotes && formik.errors.privateNotes
               }
               isValid={
-                formik.touched.confirmPassword && !formik.errors.confirmPassword
+                formik.touched.privateNotes && !formik.errors.privateNotes
               }
             />
             <Form.Control.Feedback type="invalid">
-              {formik.errors.confirmPassword}
+              {formik.errors.privateNotes}
             </Form.Control.Feedback>
           </Form.Group>
-        </Form.Row>
-        <Form.Row className="d-flex justify-content-end">
-          <Button
-            variant="secondary"
-            className="mr-2"
-            onClick={handleCancel}
-            disabled={formik.isSubmitting}
-          >
-            Cancel
-          </Button>
-          <ButtonLoading type="submit" loading={formik.isSubmitting}>
-            Save
-          </ButtonLoading>
-        </Form.Row>
+        </div>
+        <div className="buttons">
+          <Form.Row className="d-flex justify-content-end">
+            <Button
+              variant="secondary"
+              className="mr-2"
+              onClick={() => setClose(false)}
+            >
+              Cancel
+            </Button>
+            <ButtonLoading type="submit">Save</ButtonLoading>
+          </Form.Row>
+        </div>
       </Form>
-    </Card>
+    </Modal>
   );
-}
+};
 
-export default FormComponent;
+export default ModalForm;

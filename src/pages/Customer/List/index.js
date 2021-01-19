@@ -7,7 +7,7 @@ import * as dateHelper from '~/helpers/date';
 
 import { Container } from './styles';
 
-function List({ list, allowEdit }) {
+function List({ list, allowEdit, handleOpenEdit }) {
   return (
     <Container>
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -32,13 +32,13 @@ function List({ list, allowEdit }) {
                 </Link>
                 {allowEdit && (
                   <>
-                    <Link
-                      to={`/customers/${item.id}`}
-                      className="mr-2"
+                    <FiEdit
+                      size="18"
                       title="Edit"
-                    >
-                      <FiEdit size="18" />
-                    </Link>
+                      cursor="pointer"
+                      className="mr-2"
+                      onClick={() => handleOpenEdit(item)}
+                    />
                     <Link
                       to={`/customers/${item.id}/dashboard`}
                       className="mr-2"
