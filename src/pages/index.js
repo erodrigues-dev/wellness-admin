@@ -10,15 +10,13 @@ export { default as ActivitySchedule } from './Activity/Schedule';
 export { default as Appointments } from './Appointments';
 
 export { default as Category } from './Category';
+
 export { default as Customer } from './Customer';
-export { default as CustomerForm } from './Customer/Form';
 export { default as CustomerDashboard } from './Customer/Dashboard';
 
 export { default as Discount } from './Discount';
 
 export { default as Employee } from './Employee';
-export { default as EmployeeForm } from './Employee/Form';
-export { default as EmployeeDisplay } from './Employee/Display';
 
 export { default as Order } from './Order';
 
