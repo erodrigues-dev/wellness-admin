@@ -25,25 +25,26 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function create({ name, email, password, file }) {
+export function create(customer) {
   const data = new FormData();
 
-  data.append('name', name);
-  data.append('email', email);
-  data.append('password', password);
-  if (file) data.append('image', file);
+  data.append('name', customer.name);
+  data.append('email', customer.email);
+  data.append('phone', customer.phone);
+  data.append('privateNotes', customer.privateNotes);
+  if (customer.file) data.append('image', customer.file);
 
   return api.post(ENDPOINT, data);
 }
 
-export function update({ id, name, email, password, file }) {
+export function update(customer) {
   const data = new FormData();
 
-  data.append('id', id);
-  data.append('name', name);
-  data.append('email', email);
-  data.append('password', password);
-  if (file) data.append('image', file);
+  data.append('id', customer.id);
+  data.append('name', customer.name);
+  data.append('phone', customer.phone);
+  data.append('privateNotes', customer.privateNotes);
+  if (customer.file) data.append('image', customer.file);
 
   return api.put(ENDPOINT, data);
 }

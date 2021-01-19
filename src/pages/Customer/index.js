@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
+import useNotification from '~/contexts/notification';
 import { index } from '~/services/customer';
 
 import Filter from './Filter';
@@ -12,6 +12,7 @@ import ModalForm from './Form';
 import List from './List';
 
 const Customer = () => {
+  const { sendNotification } = useNotification();
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.customers.create);
   const hasPermissionToUpdate = hasPermission(FUNCTIONALITIES.customers.update);
@@ -23,14 +24,20 @@ const Customer = () => {
   const [openEdit, setOpenEdit] = useState(false);
   const [selected, setSelected] = useState();
 
+  const listCustomers = useCallback(async () => {
+    try {
+      const { data, headers } = await index(page, filter);
+
+      setList(data);
+      setTotal(parseInt(headers['x-total-count']));
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [sendNotification, filter, page]);
+
   useEffect(() => {
-    index(page, filter)
-      .then((response) => {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
-      })
-      .catch((error) => toast.error(error.message));
-  }, [page, filter]);
+    listCustomers();
+  }, [listCustomers]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -67,13 +74,18 @@ const Customer = () => {
         onChange={handlePagination}
       />
       {openNew && (
-        <ModalForm title="New Customer" setClose={() => setOpenNew(false)} />
+        <ModalForm
+          title="New Customer"
+          setClose={() => setOpenNew(false)}
+          reloadCustomers={listCustomers}
+        />
       )}
       {openEdit && (
         <ModalForm
           title="Edit Customer"
           setClose={() => setOpenEdit(false)}
           customer={selected}
+          reloadCustomers={listCustomers}
         />
       )}
     </Card>
