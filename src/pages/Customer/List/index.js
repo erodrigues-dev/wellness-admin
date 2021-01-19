@@ -1,6 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit, FiEye, FiGrid } from 'react-icons/fi';
+import { FiEdit, FiGrid } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import * as dateHelper from '~/helpers/date';
@@ -23,13 +23,6 @@ function List({ list, allowEdit, handleOpenEdit }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center">
-                <Link
-                  to={`/customers/${item.id}/display`}
-                  className="mr-2"
-                  title="Display"
-                >
-                  <FiEye size="18" />
-                </Link>
                 {allowEdit && (
                   <>
                     <FiEdit

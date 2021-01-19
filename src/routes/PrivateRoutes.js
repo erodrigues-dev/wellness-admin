@@ -14,8 +14,6 @@ import {
   Appointments,
   Category,
   Customer,
-  CustomerForm,
-  CustomerDisplay,
   CustomerDashboard,
   Discount,
   Employee,
@@ -71,24 +69,6 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.customers.list}
           path="/customers"
           component={Customer}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.customers.create}
-          path="/customers/create"
-          component={CustomerForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.customers.update}
-          path="/customers/:id"
-          component={CustomerForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.customers.list}
-          path="/customers/:id/display"
-          component={CustomerDisplay}
         />
         <PrivateRoute
           exact

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
@@ -19,14 +19,33 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
     onSubmit: handleSubmit,
     validationSchema: schema,
     initialValues: {
-      id: customer?.id ?? '',
-      name: customer?.name ?? '',
-      email: customer?.email ?? '',
-      phone: customer?.phone ?? '',
-      imageUrl: customer?.imageUrl ?? '',
-      privateNotes: customer?.privateNotes ?? '',
+      id: '',
+      name: '',
+      email: '',
+      phone: '',
+      imageUrl: '',
+      privateNotes: '',
     },
   });
+
+  const getCustomer = useCallback(
+    async (customerId) => {
+      try {
+        const { data } = await customerService.get(customerId);
+
+        setValues(data);
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification, setValues]
+  );
+
+  useEffect(() => {
+    if (customer) {
+      getCustomer(customer.id);
+    }
+  }, [getCustomer, customer]);
 
   async function handleSubmit(data) {
     try {
