@@ -33,8 +33,11 @@ api.interceptors.response.use(
     }
 
     if (error?.response?.status === 403) {
-      window.location = '/404';
-      return Promise.reject(new Error(error?.response?.data?.message));
+      return Promise.reject(
+        new Error(
+          `${error?.response?.data?.required}: ${error?.response?.data?.message}`
+        )
+      );
     }
 
     redirectToAuth(error);
