@@ -22,6 +22,7 @@ const Customer = () => {
   const [filter, setFilter] = useState({ name: '', email: '' });
   const [openNew, setOpenNew] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDisplay, setOpenDisplay] = useState(false);
   const [selected, setSelected] = useState();
 
   const listCustomers = useCallback(async () => {
@@ -48,6 +49,11 @@ const Customer = () => {
     setPage(current);
   }
 
+  function handleOpenDisplay(item) {
+    setOpenDisplay(true);
+    setSelected(item);
+  }
+
   function handleOpenEdit(item) {
     setOpenEdit(true);
     setSelected(item);
@@ -66,6 +72,7 @@ const Customer = () => {
         list={list}
         allowEdit={hasPermissionToUpdate}
         handleOpenEdit={handleOpenEdit}
+        handleOpenDisplay={handleOpenDisplay}
       />
       <Paginate
         activePage={page}
@@ -86,6 +93,15 @@ const Customer = () => {
           setClose={() => setOpenEdit(false)}
           customer={selected}
           reloadCustomers={listCustomers}
+        />
+      )}
+      {openDisplay && (
+        <ModalForm
+          title="Display Customer"
+          setClose={() => setOpenDisplay(false)}
+          customer={selected}
+          reloadCustomers={listCustomers}
+          display={openDisplay}
         />
       )}
     </Card>

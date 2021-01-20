@@ -10,8 +10,8 @@ export const Container = styled.div`
 `;
 
 export const ImageWrapper = styled.div`
-  width: 80px;
-  height: 80px;
+  width: ${(props) => props.size ?? '80px'};
+  height: ${(props) => props.size ?? '80px'};
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.2) url(${avatarImg});
   background-size: contain;

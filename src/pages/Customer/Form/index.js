@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
+import Avatar from '~/components/Avatar';
 import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
@@ -11,7 +12,7 @@ import * as customerService from '~/services/customer';
 
 import schema from './schema';
 
-const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
+const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
   const { sendNotification } = useNotification();
   const [file, setFile] = useState(null);
 
@@ -48,6 +49,8 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
   }, [getCustomer, customer]);
 
   async function handleSubmit(data) {
+    if (display) return;
+
     try {
       if (customer) {
         await customerService.update({ ...data, file });
@@ -67,10 +70,14 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
     <Modal title={title} setClose={setClose}>
       <Form className="modal-form" onSubmit={formik.handleSubmit}>
         <div className="form-wrapper">
-          <AvatarUpload
-            imageUrl={formik.values.imageUrl}
-            handleFile={setFile}
-          />
+          {display ? (
+            <Avatar size="160px" imageUrl={customer?.imageUrl} />
+          ) : (
+            <AvatarUpload
+              imageUrl={formik.values.imageUrl}
+              handleFile={setFile}
+            />
+          )}
           <Form.Group>
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -81,6 +88,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.name && formik.errors.name}
               isValid={formik.touched.name && !formik.errors.name}
+              disabled={display}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.name}
@@ -96,7 +104,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.email && formik.errors.email}
               isValid={formik.touched.email && !formik.errors.email}
-              disabled={!!customer}
+              disabled={!!customer || display}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.email}
@@ -112,6 +120,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.phone && formik.errors.phone}
               isValid={formik.touched.phone && !formik.errors.phone}
+              disabled={display}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.phone}
@@ -133,6 +142,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
               isValid={
                 formik.touched.privateNotes && !formik.errors.privateNotes
               }
+              disabled={display}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.privateNotes}
@@ -148,7 +158,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers }) => {
             >
               Cancel
             </Button>
-            <ButtonLoading type="submit">Save</ButtonLoading>
+            {!display && <ButtonLoading type="submit">Save</ButtonLoading>}
           </Form.Row>
         </div>
       </Form>

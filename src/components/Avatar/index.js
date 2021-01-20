@@ -9,9 +9,11 @@ import {
   TitleName,
 } from './styles';
 
-const Avatar = ({ name, titleName, imageUrl }) => (
+const Avatar = ({ name, titleName, imageUrl, size }) => (
   <Container>
-    <ImageWrapper>{imageUrl && <Image src={imageUrl} />}</ImageWrapper>
+    <ImageWrapper size={size}>
+      {imageUrl && <Image src={imageUrl} />}
+    </ImageWrapper>
     <NameWrapper>
       <Name>{name}</Name>
       <TitleName>{titleName}</TitleName>
