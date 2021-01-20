@@ -72,6 +72,10 @@ export const AuthProvider = ({ children }) => {
     setUser(decoded);
   }
 
+  function recoverPassword(email) {
+    return auth.recoverPassword(email);
+  }
+
   return (
     <AuthContext.Provider
       value={{
@@ -83,6 +87,7 @@ export const AuthProvider = ({ children }) => {
         menu,
         updateUserFromToken,
         permissions,
+        recoverPassword,
       }}
     >
       {children}

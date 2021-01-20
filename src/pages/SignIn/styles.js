@@ -18,6 +18,15 @@ export const Box = styled.div`
   padding: 48px 24px;
   border-radius: 4px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    a {
+      align-self: flex-end;
+    }
+  }
 `;
 
 export const Logo = styled.img`

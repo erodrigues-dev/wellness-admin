@@ -70,3 +70,11 @@ function isExpired(exp) {
 
   return now > exp;
 }
+
+export async function recoverPassword(email) {
+  try {
+    await api.post('/session/recover-password', email);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}

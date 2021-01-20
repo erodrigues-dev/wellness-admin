@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -8,6 +9,7 @@ import ButtonLoading from '~/components/ButtonLoading';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 
+import RecoverPassword from './RecoverPassword';
 import { Container, Box, Logo } from './styles';
 
 const schema = yup.object().shape({
@@ -18,6 +20,8 @@ const schema = yup.object().shape({
 const SignIn = () => {
   const { sendNotification } = useNotification();
   const { signIn } = useAuth();
+  const [recovery, setRecovery] = useState(false);
+  const [seconds, setSeconds] = useState(0);
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const { email, password } = values;
@@ -36,51 +40,68 @@ const SignIn = () => {
     onSubmit: handleSubmit,
   });
 
+  useEffect(() => {
+    if (seconds > 0) {
+      setTimeout(() => setSeconds((prevState) => prevState - 1), 1000);
+    }
+  }, [seconds, setSeconds]);
+
   return (
     <Container>
       <Logo src="/images/logo.png" />
       <Box>
-        <Form onSubmit={formik.handleSubmit}>
-          <Form.Group>
-            <Form.Control
-              placeholder="E-mail"
-              name="email"
-              value={formik.values.email}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isValid={formik.touched.email && !formik.errors.email}
-              isInvalid={formik.touched.email && !!formik.errors.email}
-            />
-            <Form.Text className="text-danger">
-              {formik.touched.email && formik.errors.email}
-            </Form.Text>
-          </Form.Group>
+        {recovery ? (
+          <RecoverPassword
+            setRecovery={setRecovery}
+            seconds={seconds}
+            setSeconds={setSeconds}
+          />
+        ) : (
+          <Form onSubmit={formik.handleSubmit}>
+            <Form.Group>
+              <Form.Control
+                placeholder="E-mail"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isValid={formik.touched.email && !formik.errors.email}
+                isInvalid={formik.touched.email && !!formik.errors.email}
+              />
+              <Form.Text className="text-danger">
+                {formik.touched.email && formik.errors.email}
+              </Form.Text>
+            </Form.Group>
 
-          <Form.Group>
-            <Form.Control
-              placeholder="Password"
-              name="password"
-              type="password"
-              value={formik.values.password}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isValid={formik.touched.password && !formik.errors.password}
-              isInvalid={formik.touched.password && !!formik.errors.password}
-            />
-            <Form.Text className="text-danger">
-              {formik.touched.password && formik.errors.password}
-            </Form.Text>
-          </Form.Group>
+            <Form.Group>
+              <Form.Control
+                placeholder="Password"
+                name="password"
+                type="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isValid={formik.touched.password && !formik.errors.password}
+                isInvalid={formik.touched.password && !!formik.errors.password}
+              />
+              <Form.Text className="text-danger">
+                {formik.touched.password && formik.errors.password}
+              </Form.Text>
+            </Form.Group>
 
-          <ButtonLoading
-            block
-            className="mb-3"
-            type="submit"
-            loading={formik.isSubmitting}
-          >
-            Sign In
-          </ButtonLoading>
-        </Form>
+            <ButtonLoading
+              block
+              className="mb-3"
+              type="submit"
+              loading={formik.isSubmitting}
+            >
+              Sign In
+            </ButtonLoading>
+            <Link to="/sign-in" onClick={() => setRecovery(true)}>
+              Forgot my password
+            </Link>
+          </Form>
+        )}
       </Box>
     </Container>
   );
