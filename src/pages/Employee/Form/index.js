@@ -79,7 +79,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
           <Form.Group>
             <Form.Label>Name</Form.Label>
             <Form.Control
-              placeholder="ex: Profile 1"
+              placeholder="ex: Employee 1"
               name="name"
               value={formik.values.name}
               onChange={formik.handleChange}
