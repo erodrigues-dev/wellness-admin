@@ -113,7 +113,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
           <Form.Group>
             <Form.Label>Phone</Form.Label>
             <Form.Control
-              placeholder="ex: 555 222 111"
+              placeholder={!display ? 'ex: 555 111 222' : '-'}
               name="phone"
               value={formik.values.phone}
               onChange={formik.handleChange}
@@ -130,7 +130,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
             <Form.Label>Private Notes</Form.Label>
             <Form.Control
               style={{ resize: 'none' }}
-              placeholder="ex: My private notes here"
+              placeholder={!display ? 'ex: My private notes here' : '-'}
               as="textarea"
               name="privateNotes"
               value={formik.values.privateNotes}

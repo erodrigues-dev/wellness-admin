@@ -3,6 +3,7 @@ import { Button, Form } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
+import Avatar from '~/components/Avatar';
 import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
@@ -12,7 +13,7 @@ import * as profileService from '~/services/profile';
 
 import schema from './schema';
 
-const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
+const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
   const { sendNotification } = useNotification();
   const [file, setFile] = useState(null);
   const [profiles, setProfiles] = useState();
@@ -46,6 +47,8 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
   }, [listProfiles]);
 
   async function handleSubmit(data) {
+    if (display) return;
+
     try {
       if (employee) {
         await employeeService.update({ ...data, file });
@@ -65,10 +68,14 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
     <Modal title={title} setClose={setClose}>
       <Form onSubmit={formik.handleSubmit} className="modal-form">
         <div className="form-wrapper">
-          <AvatarUpload
-            imageUrl={formik.values.imageUrl}
-            handleFile={setFile}
-          />
+          {display ? (
+            <Avatar size="160px" imageUrl={employee?.imageUrl} />
+          ) : (
+            <AvatarUpload
+              imageUrl={formik.values.imageUrl}
+              handleFile={setFile}
+            />
+          )}
           <Form.Group>
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -79,6 +86,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.name && formik.errors.name}
               isValid={formik.touched.name && !formik.errors.name}
+              disabled={display}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.name}
@@ -94,7 +102,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.email && formik.errors.email}
               isValid={formik.touched.email && !formik.errors.email}
-              disabled={!!employee}
+              disabled={!!employee || display}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.email}
@@ -103,13 +111,14 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
           <Form.Group>
             <Form.Label>Phone</Form.Label>
             <Form.Control
-              placeholder="ex: 555 111 222"
+              placeholder={!display ? 'ex: 555 111 222' : '-'}
               name="phone"
               value={formik.values.phone}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.phone && formik.errors.phone}
               isValid={formik.touched.phone && !formik.errors.phone}
+              disabled={display}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.phone}
@@ -126,6 +135,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.profileId && formik.errors.profileId}
               isValid={formik.touched.profileId && !formik.errors.profileId}
+              disabled={display}
             >
               <option value="" disabled>
                 Select an option
@@ -145,13 +155,14 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
           <Form.Group>
             <Form.Label>Specialty</Form.Label>
             <Form.Control
-              placeholder="ex: Admin"
+              placeholder={!display ? 'ex: Admin' : '-'}
               name="specialty"
               value={formik.values.specialty}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.specialty && formik.errors.specialty}
               isValid={formik.touched.specialty && !formik.errors.specialty}
+              disabled={display}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.specialty}
@@ -167,7 +178,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees }) => {
             >
               Cancel
             </Button>
-            <ButtonLoading type="submit">Save</ButtonLoading>
+            {!display && <ButtonLoading type="submit">Save</ButtonLoading>}
           </Form.Row>
         </div>
       </Form>

@@ -26,6 +26,7 @@ const Employee = () => {
   const [filter, setFilter] = useState({ name: '', email: '' });
   const [openNew, setOpenNew] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
+  const [openDisplay, setOpenDisplay] = useState(false);
   const [selected, setSelected] = useState();
 
   const listEmpĺoyees = useCallback(async () => {
@@ -52,6 +53,11 @@ const Employee = () => {
     setPage(current);
   }
 
+  function handleOpenDisplay(item) {
+    setOpenDisplay(true);
+    setSelected(item);
+  }
+
   function handleEdit(item) {
     setOpenEdit(true);
     setSelected(item);
@@ -70,6 +76,7 @@ const Employee = () => {
         list={list}
         allowEdit={hasPermissionToUpdate}
         handleEdit={handleEdit}
+        handleOpenDisplay={handleOpenDisplay}
       />
       <Paginate
         activePage={page}
@@ -90,6 +97,15 @@ const Employee = () => {
           setClose={() => setOpenEdit(false)}
           employee={selected}
           reloadEmployees={listEmpĺoyees}
+        />
+      )}
+      {openDisplay && (
+        <ModalForm
+          title="Display Employee"
+          setClose={() => setOpenDisplay(false)}
+          employee={selected}
+          reloadEmployees={listEmpĺoyees}
+          display={openDisplay}
         />
       )}
     </Card>

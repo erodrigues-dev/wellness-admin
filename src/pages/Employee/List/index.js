@@ -1,12 +1,12 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit } from 'react-icons/fi';
+import { FiEdit, FiEye } from 'react-icons/fi';
 
 import * as dateHelper from '~/helpers/date';
 
 import { Container } from './styles';
 
-function List({ list, allowEdit, handleEdit }) {
+function List({ list, allowEdit, handleEdit, handleOpenDisplay }) {
   return (
     <Container>
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -24,6 +24,13 @@ function List({ list, allowEdit, handleEdit }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center">
+                <FiEye
+                  size="18"
+                  title="Display"
+                  cursor="pointer"
+                  className="mr-2"
+                  onClick={() => handleOpenDisplay(item)}
+                />
                 {allowEdit && (
                   <FiEdit
                     size="18"
