@@ -34,6 +34,7 @@ export const Container = styled.ul`
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      text-align: left;
 
       h2 {
         margin: 0;
