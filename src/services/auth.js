@@ -29,6 +29,14 @@ export async function signIn({ email, password }) {
   }
 }
 
+export async function recoverPassword(email) {
+  try {
+    await api.post('/sessions/recover-password', email);
+  } catch (error) {
+    throw new Error(error.message);
+  }
+}
+
 export function signOut() {
   localStorage.clear();
 }
@@ -69,12 +77,4 @@ function isExpired(exp) {
   const now = new Date().getTime() / 1000;
 
   return now > exp;
-}
-
-export async function recoverPassword(email) {
-  try {
-    await api.post('/session/recover-password', email);
-  } catch (error) {
-    throw new Error(error.message);
-  }
 }

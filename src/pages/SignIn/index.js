@@ -22,6 +22,7 @@ const SignIn = () => {
   const { signIn } = useAuth();
   const [recovery, setRecovery] = useState(false);
   const [seconds, setSeconds] = useState(0);
+  const [recoverEmail, setRecoverEmail] = useState();
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
       const { email, password } = values;
@@ -41,9 +42,17 @@ const SignIn = () => {
   });
 
   useEffect(() => {
+    let debouncer = 0;
     if (seconds > 0) {
-      setTimeout(() => setSeconds((prevState) => prevState - 1), 1000);
+      debouncer = setTimeout(
+        () => setSeconds((prevState) => prevState - 1),
+        1000
+      );
     }
+
+    return () => {
+      clearTimeout(debouncer);
+    };
   }, [seconds, setSeconds]);
 
   return (
@@ -55,6 +64,8 @@ const SignIn = () => {
             setRecovery={setRecovery}
             seconds={seconds}
             setSeconds={setSeconds}
+            recoverEmail={recoverEmail}
+            setRecoverEmail={setRecoverEmail}
           />
         ) : (
           <Form onSubmit={formik.handleSubmit}>
