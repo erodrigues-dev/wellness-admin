@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Status } from '~/components/Label/styles';
 import { APPOINTMENTS_STATUS_COLOR } from '~/consts/labelColors';
-import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
+import { formatToDisplay, formatTime24To12, toDate } from '~/helpers/date';
 
 import { Container } from './styles';
 
@@ -22,7 +22,7 @@ const List = ({ list, setOpenDetails, setAppointment }) => {
               <div className="date">
                 <span>{formatToDisplay(toDate(item.date))}</span>
                 <span className="value">
-                  {transformIn24h(item.start)} - {transformIn24h(item.end)}
+                  {formatTime24To12(item.start)} - {formatTime24To12(item.end)}
                 </span>
               </div>
             </div>

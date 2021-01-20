@@ -2,7 +2,7 @@ import React from 'react';
 import { Table } from 'react-bootstrap';
 import { FiInfo } from 'react-icons/fi';
 
-import { formatToDisplay, transformIn24h, toDate } from '~/helpers/date';
+import { formatToDisplay, formatTime24To12, toDate } from '~/helpers/date';
 
 import { Container } from './styles';
 
@@ -41,8 +41,8 @@ function List({ list, setOpenDetails, setAppointment }) {
               <td>{item.customer.name}</td>
               <td>{item.activity.name}</td>
               <td>{formatToDisplay(toDate(item.date))}</td>
-              <td>{transformIn24h(item.start)}</td>
-              <td>{transformIn24h(item.end)}</td>
+              <td>{formatTime24To12(item.start)}</td>
+              <td>{formatTime24To12(item.end)}</td>
               <td>{item.status}</td>
             </tr>
           ))}

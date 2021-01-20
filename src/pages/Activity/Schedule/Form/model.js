@@ -2,7 +2,7 @@ import {
   formatToTime,
   createDateTime,
   clearTime,
-  transformIn24h,
+  formatTime24To12,
   toDate,
 } from '~/helpers/date';
 
@@ -121,8 +121,8 @@ export default class ScheduleFormModel {
   static fromApi({ date, start, end, weekdays, ...rest }) {
     return new ScheduleFormModel({
       date: toDate(date),
-      start: transformIn24h(start),
-      end: transformIn24h(end),
+      start: formatTime24To12(start),
+      end: formatTime24To12(end),
       weekdays: weekdays?.split(','),
       ...rest,
     });

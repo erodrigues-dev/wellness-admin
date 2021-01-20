@@ -5,6 +5,7 @@ import {
   parseISO,
   startOfDay,
   isValid,
+  parse,
 } from 'date-fns';
 
 const TIMEZONE = /\((.*)\)/.exec(new Date().toString())[1];
@@ -100,11 +101,10 @@ export function timeIsBefore(timeA, timeB) {
   return false;
 }
 
-export function transformIn24h(time) {
-  const [, hour, min] = /^(\d?\d):(\d\d)/.exec(time);
-  const isAm = +hour < 12;
+export function formatTime24To12(time) {
+  const dateTime = parse(time, 'HH:mm:ss', new Date());
 
-  return `${isAm ? +hour : +hour - 12}:${min} ${isAm ? 'AM' : 'PM'}`;
+  return format(dateTime, 'hh:mm aa');
 }
 
 export function toDate(date) {

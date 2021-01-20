@@ -11,7 +11,7 @@ import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import {
   toDate,
-  transformIn24h,
+  formatTime24To12,
   toInputValue,
   formatToSubmit,
 } from '~/helpers/date';
@@ -327,7 +327,8 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
               {availableTimeSlots.length > 0 &&
                 availableTimeSlots.map((item) => (
                   <option value={item.id} key={item.id}>
-                    {transformIn24h(item.start)} - {transformIn24h(item.end)}
+                    {formatTime24To12(item.start)} -{' '}
+                    {formatTime24To12(item.end)}
                   </option>
                 ))}
             </Form.Control>

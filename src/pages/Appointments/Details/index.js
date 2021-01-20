@@ -8,7 +8,7 @@ import { Status } from '~/components/Label/styles';
 import Modal from '~/components/Modal';
 import { APPOINTMENTS_STATUS_COLOR } from '~/consts/labelColors';
 import useNotification from '~/contexts/notification';
-import { formatToDisplay, toDate, transformIn24h } from '~/helpers/date';
+import { formatToDisplay, toDate, formatTime24To12 } from '~/helpers/date';
 import * as appointmentService from '~/services/appointment';
 
 import { Container } from './styles';
@@ -59,13 +59,13 @@ const Details = ({
           <li>
             <span>Start:</span>
             <span className="appointment">
-              {transformIn24h(appointment.start)}
+              {formatTime24To12(appointment.start)}
             </span>
           </li>
           <li>
             <span>End:</span>
             <span className="appointment">
-              {transformIn24h(appointment.end)}
+              {formatTime24To12(appointment.end)}
             </span>
           </li>
           <li>
