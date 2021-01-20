@@ -27,6 +27,8 @@ const Discounts = () => {
     try {
       const { data } = await service.listAll({
         customerId: id,
+        page: 1,
+        limit: 5,
       });
 
       setDiscounts(data);
