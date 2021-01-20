@@ -6,6 +6,7 @@ import Modal from '~/components/Modal';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
+import Details from '~/pages/Order/Details';
 import * as service from '~/services/order';
 
 import OrderWizard from '../../../../Order/Form';
@@ -21,6 +22,8 @@ const Orders = () => {
     customerId: id,
   });
   const [list, setList] = useState([]);
+  const [openDetails, setOpenDetails] = useState(false);
+  const [order, setOrder] = useState();
 
   const listOrders = useCallback(async () => {
     try {
@@ -62,12 +65,20 @@ const Orders = () => {
         </Row>
       </Card.Header>
       <Card.Body>
-        <List list={list} />
+        <List list={list} setOrder={setOrder} setOpenDetails={setOpenDetails} />
       </Card.Body>
       {openCheckout && (
         <Modal title="Create Order" setClose={setOpenCheckout}>
           <OrderWizard reloadOrders={listOrders} setClose={setOpenCheckout} />
         </Modal>
+      )}
+      {openDetails && (
+        <Details
+          setClose={setOpenDetails}
+          orderId={order.id}
+          reloadOrders={listOrders}
+          setOrder={setOrder}
+        />
       )}
     </Card>
   );
