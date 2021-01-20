@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -84,11 +83,17 @@ const RecoverPassword = ({
         loading={formik.isSubmitting}
         disabled={seconds > 0}
       >
-        {seconds > 0 ? seconds : 'Recover my Password'}
+        {seconds > 0
+          ? `Please wait ${seconds}s to resend`
+          : 'Recover my Password'}
       </ButtonLoading>
-      <Link to="/sign-in" onClick={() => setRecovery(false)}>
+      <button
+        className="btn-forgot-password"
+        type="button"
+        onClick={() => setRecovery(false)}
+      >
         Back to Sign In
-      </Link>
+      </button>
     </Form>
   );
 };

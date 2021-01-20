@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Form } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -108,9 +107,13 @@ const SignIn = () => {
             >
               Sign In
             </ButtonLoading>
-            <Link to="/sign-in" onClick={() => setRecovery(true)}>
+            <button
+              className="btn-forgot-password"
+              type="button"
+              onClick={() => setRecovery(true)}
+            >
               Forgot my password
-            </Link>
+            </button>
           </Form>
         )}
       </Box>

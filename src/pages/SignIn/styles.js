@@ -23,8 +23,15 @@ export const Box = styled.div`
     display: flex;
     flex-direction: column;
 
-    a {
+    .btn-forgot-password {
       align-self: flex-end;
+      background-color: transparent;
+      border: none;
+      outline: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
     }
   }
 `;
