@@ -69,7 +69,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
       <Form onSubmit={formik.handleSubmit} className="modal-form">
         <div className="form-wrapper">
           {display ? (
-            <Avatar size="160px" imageUrl={employee?.imageUrl} />
+            <Avatar size="160px" imageUrl={formik.values.imageUrl} />
           ) : (
             <AvatarUpload
               imageUrl={formik.values.imageUrl}
@@ -176,7 +176,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
               className="mr-2"
               onClick={() => setClose(false)}
             >
-              Cancel
+              {display ? 'Close' : 'Cancel'}
             </Button>
             {!display && <ButtonLoading type="submit">Save</ButtonLoading>}
           </Form.Row>

@@ -34,7 +34,14 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
       try {
         const { data } = await customerService.get(customerId);
 
-        setValues(data);
+        setValues({
+          id: data.id,
+          name: data.name,
+          email: data.email,
+          phone: data?.phone ?? '',
+          imageUrl: data?.imageUrl ?? '',
+          privateNotes: data?.privateNotes ?? '',
+        });
       } catch (error) {
         sendNotification(error.message, false);
       }
@@ -71,7 +78,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
       <Form className="modal-form" onSubmit={formik.handleSubmit}>
         <div className="form-wrapper">
           {display ? (
-            <Avatar size="160px" imageUrl={customer?.imageUrl} />
+            <Avatar size="160px" imageUrl={formik.values.imageUrl} />
           ) : (
             <AvatarUpload
               imageUrl={formik.values.imageUrl}
@@ -156,7 +163,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
               className="mr-2"
               onClick={() => setClose(false)}
             >
-              Cancel
+              {display ? 'Close' : 'Cancel'}
             </Button>
             {!display && <ButtonLoading type="submit">Save</ButtonLoading>}
           </Form.Row>
