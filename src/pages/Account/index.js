@@ -144,7 +144,7 @@ const Account = () => {
             <Col md="2" className="d-flex">
               <ButtonLoading
                 block
-                className="mt-2 align-self-center"
+                className="mt-1 align-self-center"
                 onClick={handleSendConfirmation}
                 loading={sendingCode}
                 disabled={seconds > 0 || user.email === formik.values.email}
