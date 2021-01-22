@@ -108,7 +108,7 @@ const Account = () => {
           </Form.Group>
 
           <Row>
-            <Col md="6">
+            <Col md="6" lg="5">
               <Form.Group>
                 <Form.Label>E-mail</Form.Label>
                 <Form.Control
@@ -125,7 +125,7 @@ const Account = () => {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col md="4">
+            <Col md="6" lg="4">
               <Form.Group>
                 <Form.Label>Confirmation Code</Form.Label>
                 <Form.Control
@@ -149,10 +149,10 @@ const Account = () => {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col md="2">
+            <Col lg="3">
+              <Form.Label className="d-none d-lg-block">&nbsp;</Form.Label>
               <ButtonLoading
                 block
-                className="btn-vertical-align-middle"
                 onClick={handleSendConfirmation}
                 loading={sendingCode}
                 disabled={
@@ -165,8 +165,7 @@ const Account = () => {
               </ButtonLoading>
             </Col>
           </Row>
-
-          <Form.Group>
+          <Form.Group className="mt-2">
             <Form.Label>Specialty</Form.Label>
             <Form.Control
               placeholder="Speciality"
@@ -181,9 +180,8 @@ const Account = () => {
               {formik.errors.specialty}
             </Form.Control.Feedback>
           </Form.Group>
-
-          <div className="input-wrapper">
-            <Form.Group>
+          <Row>
+            <Form.Group as={Col} md="6">
               <Form.Label>Password</Form.Label>
               <Form.Control
                 placeholder="Password"
@@ -200,7 +198,7 @@ const Account = () => {
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group>
+            <Form.Group as={Col} md="6">
               <Form.Label>Confirm Password</Form.Label>
               <Form.Control
                 placeholder="Confirm Password"
@@ -222,7 +220,8 @@ const Account = () => {
                 {formik.errors.confirmPassword}
               </Form.Control.Feedback>
             </Form.Group>
-          </div>
+          </Row>
+
           <div className="buttons">
             <Button
               type="reset"

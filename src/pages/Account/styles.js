@@ -3,35 +3,10 @@ import styled from 'styled-components';
 import avatarBgImg from '~/assets/images/avatar.svg';
 
 export const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-
-  form {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .input-wrapper {
+  .buttons {
     display: flex;
     align-items: center;
-    justify-content: center;
-
-    .form-group {
-      width: 100%;
-
-      &:not(:last-child) {
-        margin-right: 15px;
-      }
-    }
-  }
-
-  .buttons {
-    align-self: flex-end;
-    justify-self: flex-end;
-  }
-
-  .btn-vertical-align-middle {
-    margin-top: 34px;
+    justify-content: flex-end;
   }
 `;
 
