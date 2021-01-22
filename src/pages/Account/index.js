@@ -70,10 +70,10 @@ const Account = () => {
       return;
     }
 
-    setSeconds(60);
     setSendingCode(true);
     try {
       await account.sendConfirmation(formik.values);
+      setSeconds(60);
     } catch (error) {
       sendNotification(error.message, false);
     } finally {
