@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
   function updateUserFromToken(token) {
     const decoded = JwtDecode(token);
 
-    auth.setStorage(token);
+    auth.setStorage('@auth:token', token);
 
     setUser(decoded);
   }
