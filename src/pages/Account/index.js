@@ -64,6 +64,12 @@ const Account = () => {
   }, [seconds, setSeconds]);
 
   async function handleSendConfirmation() {
+    if (formik.errors.name || !formik.values.name) {
+      sendNotification('Name must be valid to send a confirmation code', false);
+
+      return;
+    }
+
     setSeconds(60);
     setSendingCode(true);
     try {
