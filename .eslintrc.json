@@ -3,7 +3,7 @@
   "env": {
     "browser": true
   },
-  "extends": ["airbnb", "prettier"],
+  "extends": ["airbnb", "prettier", "prettier/react"],
   "plugins": ["react", "jsx-a11y", "import", "import-helpers", "prettier"],
   "rules": {
     "react/jsx-filename-extension": [
@@ -55,7 +55,9 @@
     "no-restricted-globals": "off",
     "no-template-curly-in-string": "off",
     "no-bitwise": "off",
-    "prettier/prettier": ["error"]
+    "no-nested-ternary": "off",
+    "import/no-named-as-default-member": "off",
+    "prettier/prettier": "error"
   },
   "settings": {
     "import/resolver": {

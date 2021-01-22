@@ -1,24 +1,20 @@
-import React, { createContext, useContext, createRef } from 'react';
-import ReactNotificationSystem from 'react-notification-system';
+import React, { createContext, useContext } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 
-import { style } from './notification.style';
+import 'react-toastify/dist/ReactToastify.css';
 
 const NotificationContext = createContext({});
 
 export const NotificationProvider = ({ children }) => {
-  const ref = createRef();
-
   const sendNotification = (message, success = true) => {
-    const notification = ref.current;
-    notification.addNotification({
-      message,
-      level: success ? 'success' : 'error',
+    toast(message, {
+      type: success ? toast.TYPE.SUCCESS : toast.TYPE.ERROR,
     });
   };
 
   return (
     <NotificationContext.Provider value={{ sendNotification }}>
-      <ReactNotificationSystem ref={ref} style={style} />
+      <ToastContainer />
       {children}
     </NotificationContext.Provider>
   );

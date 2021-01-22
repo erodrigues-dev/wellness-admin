@@ -1,23 +1,62 @@
-import React, { createContext, useState, useContext } from 'react';
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useEffect,
+  useCallback,
+} from 'react';
 
+import JwtDecode from 'jwt-decode';
+
+import { MENU } from '~/consts/menu';
 import * as auth from '~/services/auth';
-
-const ACTIONS = {
-  LIST: 1,
-  GET: 1,
-  CREATE: 2,
-  UPDATE: 4,
-};
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
   const userStoraged = auth.getUserFromStorage();
+  const [permissions, setPermissions] = useState(
+    auth.getPermissionsFromStorage()
+  );
   const [user, setUser] = useState(userStoraged);
+  const [menu, setMenu] = useState([]);
+
+  const hasPermission = useCallback(
+    (functionality) => {
+      if (user !== undefined && permissions !== undefined) {
+        const allowed = permissions?.find(
+          (x) => (x.id & user?.permissions) === functionality
+        );
+
+        return !!allowed;
+      }
+
+      return null;
+    },
+    [user, permissions]
+  );
+
+  const buildMenu = useCallback(() => {
+    if (user) {
+      const menuHasPermission = MENU.filter((itemMenu) =>
+        hasPermission(itemMenu.functionality)
+      );
+
+      setMenu(menuHasPermission);
+    }
+  }, [user, hasPermission]);
+
+  useEffect(() => {
+    buildMenu();
+  }, [buildMenu]);
 
   async function signIn({ email, password }) {
-    const userAuthenticated = await auth.signIn({ email, password });
+    const { userAuthenticated, permissionsAuthenticated } = await auth.signIn({
+      email,
+      password,
+    });
     setUser(userAuthenticated);
+    setPermissions(permissionsAuthenticated);
   }
 
   function signOut() {
@@ -25,26 +64,25 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   }
 
-  function hasPermission(functionality, action) {
-    const { actions } = user.profile.functionalities.find(
-      (x) => x.name.toLowerCase() === functionality.toLowerCase()
-    );
+  function updateUserFromToken(token) {
+    const decoded = JwtDecode(token);
 
-    const allowed = (action & actions) === action;
+    auth.setStorage('@auth:token', token);
 
-    return allowed;
+    setUser(decoded);
   }
 
   return (
     <AuthContext.Provider
       value={{
         signed: !!user,
-        isEmployee: user?.type === 'employee',
         user,
         signIn,
         signOut,
         hasPermission,
-        ACTIONS,
+        menu,
+        updateUserFromToken,
+        permissions,
       }}
     >
       {children}

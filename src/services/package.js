@@ -15,6 +15,14 @@ function index(page, filters) {
   });
 }
 
+export function listAll(filters) {
+  return api.get(ENDPOINT, {
+    params: {
+      ...filters,
+    },
+  });
+}
+
 function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
@@ -28,6 +36,10 @@ function create({
   showInWeb,
   activities,
   image,
+  categoryId,
+  recurrencyPay,
+  type,
+  total,
 }) {
   const data = new FormData();
   data.append('name', name);
@@ -36,14 +48,23 @@ function create({
   data.append('showInApp', showInApp);
   data.append('showInWeb', showInWeb);
   data.append('price', sanitize.number(price));
+  data.append('categoryId', categoryId);
+  data.append('recurrencyPay', recurrencyPay);
+  data.append('type', type);
+  if ((total && type === 'minutes') || type === 'amount')
+    data.append('total', total);
 
   activities.map((item) =>
     data.append(
       'activities[]',
-      JSON.stringify({
-        id: item.id,
-        quantity: item.quantity,
-      })
+      type === 'appointments'
+        ? JSON.stringify({
+            id: item.id,
+            quantity: item.quantity,
+          })
+        : JSON.stringify({
+            id: item.id,
+          })
     )
   );
 
@@ -62,6 +83,10 @@ function update({
   showInWeb,
   activities,
   image,
+  categoryId,
+  recurrencyPay,
+  type,
+  total,
 }) {
   const data = new FormData();
   data.append('id', id);
@@ -71,14 +96,22 @@ function update({
   data.append('showInApp', showInApp);
   data.append('showInWeb', showInWeb);
   data.append('price', sanitize.number(price));
+  data.append('categoryId', categoryId);
+  data.append('recurrencyPay', recurrencyPay);
+  data.append('type', type);
+  if (type === 'minutes' || type === 'amount') data.append('total', total);
 
   activities.map((item) =>
     data.append(
       'activities[]',
-      JSON.stringify({
-        id: item.id,
-        quantity: item.quantity,
-      })
+      type === 'appointments'
+        ? JSON.stringify({
+            id: item.id,
+            quantity: item.quantity,
+          })
+        : JSON.stringify({
+            id: item.id,
+          })
     )
   );
 
