@@ -6,7 +6,7 @@ function ButtonLoading({ children, loading, disabled, ...props }) {
   return (
     <Button {...props} disabled={loading || disabled}>
       {loading && (
-        <Spinner as="span" animation="border" size="sm" className="mr-3" />
+        <Spinner as="span" animation="border" size="sm" className="mr-2" />
       )}
       {children}
     </Button>

@@ -43,6 +43,7 @@ const Account = () => {
 
       sendNotification('Account updated.');
       formik.setFieldValue('confirmationCode', '');
+      formik.setFieldValue('oldEmail', data.email);
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -142,7 +143,7 @@ const Account = () => {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col className="d-flex mt-2">
+            <Col md="2" className="d-flex mt-2 justify-content-center">
               <ButtonLoading
                 block
                 className="align-self-center"
