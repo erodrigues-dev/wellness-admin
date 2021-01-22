@@ -149,10 +149,10 @@ const Account = () => {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col md="2" className="d-flex mt-2 justify-content-center">
+            <Col md="2">
               <ButtonLoading
                 block
-                className="align-self-center"
+                className="btn-vertical-align-middle"
                 onClick={handleSendConfirmation}
                 loading={sendingCode}
                 disabled={

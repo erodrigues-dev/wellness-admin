@@ -29,6 +29,10 @@ export const Container = styled.div`
     align-self: flex-end;
     justify-self: flex-end;
   }
+
+  .btn-vertical-align-middle {
+    margin-top: 34px;
+  }
 `;
 
 export const AvatarContainer = styled.div`
