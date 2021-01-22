@@ -42,6 +42,7 @@ const Account = () => {
       updateUserFromToken(response.data.token);
 
       sendNotification('Account updated.');
+      formik.setFieldValue('confirmationCode', '');
     } catch (error) {
       sendNotification(error.message, false);
     }
@@ -141,13 +142,17 @@ const Account = () => {
                 </Form.Control.Feedback>
               </Form.Group>
             </Col>
-            <Col md="2" className="d-flex">
+            <Col className="d-flex mt-2">
               <ButtonLoading
                 block
-                className="mt-1 align-self-center"
+                className="align-self-center"
                 onClick={handleSendConfirmation}
                 loading={sendingCode}
-                disabled={seconds > 0 || user.email === formik.values.email}
+                disabled={
+                  seconds > 0 ||
+                  user.email === formik.values.email ||
+                  !formik.values.name
+                }
               >
                 {seconds > 0 ? `Wait ${seconds}s to resend` : 'Send Code'}
               </ButtonLoading>

@@ -13,6 +13,8 @@ export const Container = styled.div`
 
   .input-wrapper {
     display: flex;
+    align-items: center;
+    justify-content: center;
 
     .form-group {
       width: 100%;
