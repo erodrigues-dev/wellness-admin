@@ -8,8 +8,6 @@ import {
   Home,
   Account,
   Activity,
-  ActivityForm,
-  ActivityDisplay,
   ActivitySchedule,
   Appointments,
   Category,
@@ -19,8 +17,6 @@ import {
   Employee,
   Order,
   Package,
-  PackageForm,
-  PackageDisplay,
   Profile,
   NotAuthorized,
 } from '~/pages';
@@ -36,24 +32,6 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.activities.list}
           path="/activities"
           component={Activity}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.activities.create}
-          path="/activities/create"
-          component={ActivityForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.activities.update}
-          path="/activities/:id"
-          component={ActivityForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.activities.list}
-          path="/activities/:id/display"
-          component={ActivityDisplay}
         />
         <PrivateRoute
           exact
@@ -87,24 +65,6 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.packages.list}
           path="/packages"
           component={Package}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.packages.create}
-          path="/packages/create"
-          component={PackageForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.packages.update}
-          path="/packages/:id"
-          component={PackageForm}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.packages.list}
-          path="/packages/:id/display"
-          component={PackageDisplay}
         />
 
         <PrivateRoute

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
 
 import Paginate from '~/components/Paginate';
@@ -25,16 +25,20 @@ const Activity = () => {
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '' });
 
+  const listActivities = useCallback(async () => {
+    try {
+      const response = await service.list(page, filter);
+
+      setList(response.data);
+      setTotal(parseInt(response.headers['x-total-count']));
+    } catch (error) {
+      sendNotification(error.message, false);
+    }
+  }, [page, filter, sendNotification]);
+
   useEffect(() => {
-    service
-      .list(page, filter)
-      .then((response) => {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
-      })
-      .catch(({ message }) => sendNotification(message, false));
-    // eslint-disable-next-line
-  }, [page, filter]);
+    listActivities();
+  }, [listActivities]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);

@@ -3,8 +3,6 @@ export { default as Home } from './Home';
 export { default as Account } from './Account';
 
 export { default as Activity } from './Activity';
-export { default as ActivityForm } from './Activity/Form';
-export { default as ActivityDisplay } from './Activity/Display';
 export { default as ActivitySchedule } from './Activity/Schedule';
 
 export { default as Appointments } from './Appointments';
@@ -21,8 +19,6 @@ export { default as Employee } from './Employee';
 export { default as Order } from './Order';
 
 export { default as Package } from './Package';
-export { default as PackageForm } from './Package/Form';
-export { default as PackageDisplay } from './Package/Display';
 
 export { default as Profile } from './Profile';
 
