@@ -8,8 +8,13 @@ import { currency } from '~/helpers/intl';
 
 import { Container } from './styles';
 
-function List({ list, allowEdit }) {
+function List({ list, allowEdit, setOpenEdit, setOpenDisplay, setSelected }) {
   const formatCurrency = (value) => currency.format(value);
+
+  function handleOpen(callback, item) {
+    callback(true);
+    setSelected(item);
+  }
 
   return (
     <Container>
@@ -29,14 +34,22 @@ function List({ list, allowEdit }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center actions">
-                <Link to={`/activities/${item.id}/display`} title="View">
-                  <FiEye size="18" />
-                </Link>
+                <FiEye
+                  size="18"
+                  title="Display"
+                  cursor="pointer"
+                  className="mr-2"
+                  onClick={() => handleOpen(setOpenDisplay, item)}
+                />
                 {allowEdit && (
                   <>
-                    <Link to={`/activities/${item.id}`} title="Edit">
-                      <FiEdit size="18" />
-                    </Link>
+                    <FiEdit
+                      size="18"
+                      onClick={() => handleOpen(setOpenEdit, item)}
+                      className="mr-2"
+                      title="Edit"
+                      cursor="pointer"
+                    />
                     <Link to={`/activities/${item.id}/schedule`} title="Events">
                       <FiCalendar size="18" />
                     </Link>

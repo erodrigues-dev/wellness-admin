@@ -8,6 +8,7 @@ import * as service from '~/services/activity';
 
 import useNotification from '../../contexts/notification';
 import Filter from './Filter';
+import ModalForm from './Form';
 import List from './List';
 
 const Activity = () => {
@@ -24,6 +25,10 @@ const Activity = () => {
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
   const [filter, setFilter] = useState({ name: '' });
+  const [openNew, setOpenNew] = useState(false);
+  const [openEdit, setOpenEdit] = useState(false);
+  const [openDisplay, setOpenDisplay] = useState(false);
+  const [selected, setSelected] = useState(false);
 
   const listActivities = useCallback(async () => {
     try {
@@ -57,14 +62,35 @@ const Activity = () => {
         onFilter={handleFilter}
         allowCreate={hasPermissionToCreate}
         list={list}
+        setOpenNew={setOpenNew}
       />
-      <List list={list} allowEdit={hasPermissionToUpdate} />
+      <List
+        list={list}
+        allowEdit={hasPermissionToUpdate}
+        setOpenEdit={setOpenEdit}
+        setOpenDisplay={setOpenDisplay}
+        setSelected={setSelected}
+      />
       <Paginate
         activePage={page}
         itemsCountPerPage={10}
         totalItemsCount={total}
         onChange={handlePagination}
       />
+      {openNew && (
+        <ModalForm title="New Activity" setClose={() => setOpenNew(false)} />
+      )}
+      {openEdit && (
+        <ModalForm title="Edit Activity" setClose={() => setOpenEdit(false)} />
+      )}
+      {openDisplay && (
+        <ModalForm
+          title="Display Activity"
+          setClose={() => setOpenDisplay(false)}
+          activity={selected}
+          display
+        />
+      )}
     </Card>
   );
 };
