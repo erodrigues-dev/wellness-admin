@@ -7,7 +7,7 @@ import { listAll } from '~/services/activity';
 
 import List from './List';
 
-const Activities = ({ formik, packageType }) => {
+const Activities = ({ formik, packageType, display }) => {
   const { sendNotification } = useNotification();
   const activityRef = useRef(null);
   const [activities, setActivities] = useState([]);
@@ -66,6 +66,7 @@ const Activities = ({ formik, packageType }) => {
             defaultValue=""
             name="activityId"
             ref={activityRef}
+            disabled={display}
           >
             <option value="" disabled>
               Select an activity
@@ -78,7 +79,9 @@ const Activities = ({ formik, packageType }) => {
           </Form.Control>
         </Form.Group>
         <Form.Group as={Col} className="d-flex align-items-end">
-          <Button onClick={addItem}>Add</Button>
+          <Button onClick={addItem} disabled={display}>
+            Add
+          </Button>
         </Form.Group>
       </Form.Row>
 
@@ -87,6 +90,7 @@ const Activities = ({ formik, packageType }) => {
         formik={formik}
         onRemove={removeItem}
         packageType={packageType}
+        display={display}
       />
 
       <p className="text-error">{getError()}</p>

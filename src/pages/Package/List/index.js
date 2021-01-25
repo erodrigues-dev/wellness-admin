@@ -1,15 +1,19 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 import { FiEdit, FiEye } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
 
 import * as dateHelper from '~/helpers/date';
 import { currency } from '~/helpers/intl';
 
 import { Container } from './styles';
 
-function List({ list, allowEdit }) {
+function List({ list, allowEdit, setSelected, setOpenEdit, setOpenDisplay }) {
   const formatCurrency = (value) => currency.format(value);
+
+  function handleOpen(callback, item) {
+    callback(true);
+    setSelected(item);
+  }
 
   return (
     <Container>
@@ -30,21 +34,21 @@ function List({ list, allowEdit }) {
           {list.map((item) => (
             <tr key={item.id}>
               <td className="text-center">
-                <Link
-                  to={`/packages/${item.id}/display`}
-                  className="ml-2"
+                <FiEye
+                  size="18"
                   title="Display"
-                >
-                  <FiEye size="18" />
-                </Link>
+                  cursor="pointer"
+                  className="mr-2"
+                  onClick={() => handleOpen(setOpenDisplay, item)}
+                />
                 {allowEdit && (
-                  <Link
-                    to={`/packages/${item.id}`}
+                  <FiEdit
+                    size="18"
+                    onClick={() => handleOpen(setOpenEdit, item)}
                     className="ml-2"
                     title="Edit"
-                  >
-                    <FiEdit size="18" />
-                  </Link>
+                    cursor="pointer"
+                  />
                 )}
               </td>
               <td>{item.name}</td>
