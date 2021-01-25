@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
-// import { decimal } from '~/helpers/intl';
+import { decimal } from '~/helpers/intl';
 import masks from '~/helpers/masks';
 import ModalCategory from '~/pages/Category/Modal';
 import * as service from '~/services/activity';
@@ -44,7 +44,11 @@ function ModalForm({ title, setClose, activity, display = false }) {
       try {
         const { data } = await service.get(activityId);
 
-        setValues({ ...data, maxPeople: data.maxPeople ?? 0 });
+        setValues({
+          ...data,
+          maxPeople: data.maxPeople ?? '-',
+          price: decimal.format(data.price),
+        });
         setImage(data.imageUrl ?? '');
       } catch (error) {
         sendNotification(error.message, false);
