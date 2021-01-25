@@ -412,11 +412,13 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
                 onClick={handleCancel}
                 disabled={formik.isSubmitting}
               >
-                Cancel
+                {display ? 'Close' : 'Cancel'}
               </Button>
-              <ButtonLoading type="submit" loading={formik.isSubmitting}>
-                Save
-              </ButtonLoading>
+              {!display && (
+                <ButtonLoading type="submit" loading={formik.isSubmitting}>
+                  Save
+                </ButtonLoading>
+              )}
             </Form.Row>
           </div>
         </Form>
