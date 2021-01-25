@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -24,15 +24,20 @@ const Package = () => {
   const [openDisplay, setOpenDisplay] = useState(false);
   const [selected, setSelected] = useState(false);
 
-  useEffect(() => {
-    service
-      .index(page, filter)
-      .then((response) => {
-        setList(response.data);
-        setTotal(parseInt(response.headers['x-total-count']));
-      })
-      .catch((error) => toast.error(error.message));
+  const listPackages = useCallback(async () => {
+    try {
+      const response = await service.index(page, filter);
+
+      setList(response.data);
+      setTotal(parseInt(response.headers['x-total-count']));
+    } catch (error) {
+      toast.error(error.message);
+    }
   }, [page, filter]);
+
+  useEffect(() => {
+    listPackages();
+  }, [listPackages]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -66,13 +71,18 @@ const Package = () => {
         onChange={handlePagination}
       />
       {openNew && (
-        <ModalForm title="New Package" setClose={() => setOpenNew(false)} />
+        <ModalForm
+          title="New Package"
+          setClose={() => setOpenNew(false)}
+          reloadPackages={listPackages}
+        />
       )}
       {openEdit && (
         <ModalForm
           title="Edit Package"
           setClose={() => setOpenEdit(false)}
           selected={selected}
+          reloadPackages={listPackages}
         />
       )}
       {openDisplay && (

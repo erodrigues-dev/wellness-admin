@@ -17,7 +17,7 @@ import Activities from './Activities';
 import schema from './schema';
 import { ImageContainer } from './styles';
 
-function ModalForm({ title, setClose, selected, display }) {
+function ModalForm({ title, setClose, selected, display, reloadPackages }) {
   const [minDate] = useState(new Date());
   const [image, setImage] = useState({ file: null, url: null });
   const [categories, setCategories] = useState();
@@ -97,6 +97,7 @@ function ModalForm({ title, setClose, selected, display }) {
         sendNotification('Package updated with success.');
       }
 
+      reloadPackages();
       setClose();
     } catch (error) {
       sendNotification(error.message, false);

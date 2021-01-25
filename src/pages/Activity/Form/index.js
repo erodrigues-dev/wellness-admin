@@ -15,7 +15,13 @@ import * as employeeService from '~/services/employee';
 
 import schema from './schema';
 
-function ModalForm({ title, setClose, activity, display = false }) {
+function ModalForm({
+  title,
+  setClose,
+  activity,
+  display = false,
+  reloadActivities,
+}) {
   const [image, setImage] = useState({ file: null, url: null });
   const [employees, setEmployees] = useState([]);
   const [categories, setCategories] = useState();
@@ -92,7 +98,10 @@ function ModalForm({ title, setClose, activity, display = false }) {
           image: image.file,
         });
       }
+
       sendNotification('Activity saved successfully');
+      reloadActivities();
+      setClose();
     } catch (error) {
       sendNotification(error.message, false);
       setSubmitting(false);

@@ -78,10 +78,18 @@ const Activity = () => {
         onChange={handlePagination}
       />
       {openNew && (
-        <ModalForm title="New Activity" setClose={() => setOpenNew(false)} />
+        <ModalForm
+          title="New Activity"
+          setClose={() => setOpenNew(false)}
+          reloadActivities={listActivities}
+        />
       )}
       {openEdit && (
-        <ModalForm title="Edit Activity" setClose={() => setOpenEdit(false)} />
+        <ModalForm
+          title="Edit Activity"
+          setClose={() => setOpenEdit(false)}
+          reloadActivities={listActivities}
+        />
       )}
       {openDisplay && (
         <ModalForm
