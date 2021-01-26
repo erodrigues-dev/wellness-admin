@@ -9,6 +9,7 @@ import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import masks from '~/helpers/masks';
+import { sanitize } from '~/helpers/sanitize';
 import ModalCategory from '~/pages/Category/Modal';
 import * as categoryService from '~/services/category';
 import service from '~/services/package';
@@ -86,7 +87,10 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
       const data = {
         ...values,
         image: image.file,
+        price: sanitize.number(values.price),
       };
+
+      if (values.total) data.total = sanitize.number(values.total);
 
       if (selected === undefined) {
         await service.create(data);
