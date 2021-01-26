@@ -52,7 +52,7 @@ function ModalForm({
 
         setValues({
           ...data,
-          maxPeople: data.maxPeople ?? '-',
+          maxPeople: data.maxPeople ?? display ? '-' : '',
           price: decimal.format(data.price),
         });
         setImage(data.imageUrl ?? '');
@@ -254,6 +254,7 @@ function ModalForm({
                       <Button
                         variant="primary"
                         onClick={() => setOpenAdd(true)}
+                        disabled={display}
                       >
                         Add
                       </Button>

@@ -89,6 +89,7 @@ const Activity = () => {
           title="Edit Activity"
           setClose={() => setOpenEdit(false)}
           reloadActivities={listActivities}
+          activity={selected}
         />
       )}
       {openDisplay && (
