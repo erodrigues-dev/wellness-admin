@@ -83,17 +83,16 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
+      const data = {
+        ...values,
+        image: image.file,
+      };
+
       if (selected === undefined) {
-        await service.create({
-          ...values,
-          image: image.file,
-        });
+        await service.create(data);
         sendNotification('Package created with success.');
       } else {
-        await service.update({
-          ...values,
-          image: image.file,
-        });
+        await service.update(data);
         sendNotification('Package updated with success.');
       }
 

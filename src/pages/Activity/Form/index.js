@@ -60,7 +60,7 @@ function ModalForm({
         sendNotification(error.message, false);
       }
     },
-    [sendNotification, setValues]
+    [sendNotification, setValues, display]
   );
 
   useEffect(() => {
