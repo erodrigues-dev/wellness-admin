@@ -67,6 +67,7 @@ const Activities = ({ formik, packageType, display }) => {
             name="activityId"
             ref={activityRef}
             disabled={display}
+            onBlur={formik.handleBlur}
           >
             <option value="" disabled>
               Select an activity

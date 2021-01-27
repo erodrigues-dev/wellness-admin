@@ -125,14 +125,17 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
   }
 
   function handlePackageTypeChange(e) {
-    formik.setFieldValue('type', e.target.value);
+    const { value } = e.target;
+
+    formik.setFieldValue('type', value);
     formik.setFieldValue('total', '');
-    if (
-      e.target.value === 'appointments' &&
-      formik.values.activities.length > 0
-    ) {
-      formik.values.activities.map((activity, index) =>
-        formik.setFieldValue(`activities[${index}].quantity`, 1)
+    if (value === 'appointments' && formik.values.activities.length > 0) {
+      formik.setFieldValue(
+        'activities',
+        formik.values.activities.map((item) => ({
+          ...item,
+          quantity: item.quantity ?? 1,
+        }))
       );
     }
   }
