@@ -26,23 +26,24 @@ export const Container = styled.div`
 export const Content = styled.div`
   background-color: #fff;
   min-width: 600px;
-  min-height: 300px;
+  width: ${(props) => props.width ?? 'unset'};
   max-width: 900px;
+  min-height: 300px;
   margin: auto;
+
+  @media (min-width: 1160px) {
+    max-width: 900px;
+  }
+
+  @media (max-width: 1024px) {
+    width: 90%;
+    min-width: 350px;
+  }
 
   @media (max-width: 720px) {
     width: 100%;
     min-width: 350px;
     max-width: 600px;
-  }
-
-  @media (max-width: 1024px) {
-    width: 100%;
-    min-width: 350px;
-  }
-
-  @media (min-width: 1160px) {
-    max-width: 900px;
   }
 
   header {

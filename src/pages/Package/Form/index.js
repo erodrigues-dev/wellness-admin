@@ -143,7 +143,7 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
 
   return (
     <>
-      <Modal title={title} setClose={setClose}>
+      <Modal title={title} setClose={setClose} width="750px">
         <ImageContainer>
           {image.url && (
             <img src={image.url} alt="cover" accept=".jpg,.jpeg,.png" />

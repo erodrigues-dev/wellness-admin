@@ -3,7 +3,7 @@ import { RiCloseLine } from 'react-icons/ri';
 
 import { Full, Container, Content } from './styles';
 
-const Modal = ({ children, title, setClose }) => {
+const Modal = ({ children, title, setClose, width }) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden';
 
@@ -15,7 +15,7 @@ const Modal = ({ children, title, setClose }) => {
   return (
     <Full>
       <Container>
-        <Content>
+        <Content width={width}>
           <header>
             <h1>{title}</h1>
             <RiCloseLine onClick={() => setClose(false)} title="Close" />
