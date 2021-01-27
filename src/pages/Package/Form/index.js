@@ -127,9 +127,10 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
   function handlePackageTypeChange(e) {
     const { value } = e.target;
 
-    formik.setFieldValue('type', value);
+    formik.handleChange(e);
     formik.setFieldValue('total', '');
     if (value === 'appointments' && formik.values.activities.length > 0) {
+      formik.setErrors(formik.errors);
       formik.setFieldValue(
         'activities',
         formik.values.activities.map((item) => ({
@@ -262,7 +263,6 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
                 </Form.Group>
               </Col>
             </Form.Row>
-
             <Form.Row>
               <Form.Group as={Col} md="6">
                 <Form.Label>Category</Form.Label>
@@ -344,7 +344,6 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
                 </Form.Control.Feedback>
               </Form.Group>
             </Form.Row>
-
             <Form.Row>
               <Form.Group as={Col} md="6">
                 <Form.Label>Package Type</Form.Label>
@@ -402,7 +401,6 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
                 </Form.Group>
               )}
             </Form.Row>
-
             <Activities
               formik={formik}
               packageType={formik.values.type}

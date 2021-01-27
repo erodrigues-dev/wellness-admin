@@ -41,9 +41,6 @@ const Activities = ({ formik, packageType, display }) => {
   };
 
   const getError = () => {
-    const touched = formik.touched.activities;
-    if (touched === undefined) return null;
-
     const err = formik.errors.activities;
 
     if (typeof err === 'string') return err;
@@ -64,7 +61,7 @@ const Activities = ({ formik, packageType, display }) => {
             as="select"
             custom
             defaultValue=""
-            name="activityId"
+            name="activities"
             ref={activityRef}
             disabled={display}
             onBlur={formik.handleBlur}
@@ -94,7 +91,9 @@ const Activities = ({ formik, packageType, display }) => {
         display={display}
       />
 
-      <p className="text-error">{getError()}</p>
+      {formik.touched.activities && formik.touched.type && (
+        <p className="text-error">{getError()}</p>
+      )}
     </>
   );
 };
