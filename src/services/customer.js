@@ -49,9 +49,14 @@ export function update(customer) {
   return api.put(ENDPOINT, data);
 }
 
+export function destroy(id) {
+  return api.delete(`${ENDPOINT}/${id}`);
+}
+
 export default {
   index,
   get,
   create,
   update,
+  destroy,
 };

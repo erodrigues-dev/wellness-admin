@@ -9,6 +9,7 @@ export const FUNCTIONALITIES = {
     list: 8,
     create: 16,
     update: 16,
+    delete: 2097152,
   },
   orders: {
     list: 32,

@@ -54,7 +54,7 @@ function Schedule() {
         }
       }
     },
-    [id, activity, events]
+    [id, activity]
   );
 
   function handleSelect({ start, end }) {

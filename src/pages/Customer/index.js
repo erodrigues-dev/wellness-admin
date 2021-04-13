@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
 
+import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
-import { index } from '~/services/customer';
+import { index, destroy } from '~/services/customer';
 
 import Filter from './Filter';
 import ModalForm from './Form';
@@ -16,6 +17,7 @@ const Customer = () => {
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.customers.create);
   const hasPermissionToUpdate = hasPermission(FUNCTIONALITIES.customers.update);
+  const hasPermissionToDelete = hasPermission(FUNCTIONALITIES.customers.delete);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
@@ -28,7 +30,6 @@ const Customer = () => {
   const listCustomers = useCallback(async () => {
     try {
       const { data, headers } = await index(page, filter);
-
       setList(data);
       setTotal(parseInt(headers['x-total-count']));
     } catch (error) {
@@ -36,9 +37,18 @@ const Customer = () => {
     }
   }, [sendNotification, filter, page]);
 
-  useEffect(() => {
-    listCustomers();
-  }, [listCustomers]);
+  const destroyCustomer = useCallback(
+    async (id) => {
+      try {
+        await destroy(id);
+        sendNotification('Customer deleted with success');
+        await listCustomers();
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification, listCustomers]
+  );
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -59,6 +69,17 @@ const Customer = () => {
     setSelected(item);
   }
 
+  function handleDelete(item) {
+    confirmHandler(
+      'Are you sure to delete this customer, this action is irreversible?',
+      () => destroyCustomer(item.id)
+    );
+  }
+
+  useEffect(() => {
+    listCustomers();
+  }, [listCustomers]);
+
   return (
     <Card body>
       <Card.Title>Customers</Card.Title>
@@ -71,8 +92,10 @@ const Customer = () => {
       <List
         list={list}
         allowEdit={hasPermissionToUpdate}
+        allowDelete={hasPermissionToDelete}
         handleOpenEdit={handleOpenEdit}
         handleOpenDisplay={handleOpenDisplay}
+        handleDelete={handleDelete}
       />
       <Paginate
         activePage={page}
