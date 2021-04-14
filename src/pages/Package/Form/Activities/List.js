@@ -4,7 +4,7 @@ import { Table, Form } from 'react-bootstrap';
 import ButtonDelete from '~/components/List/ButtonDelete';
 import { currency } from '~/helpers/intl';
 
-const List = ({ list, onRemove, formik, packageType }) => {
+const List = ({ list, onRemove, formik, packageType, display }) => {
   const hasTouched = (index) => {
     const { activities } = formik.touched;
     if (activities && activities.length > index)
@@ -42,7 +42,10 @@ const List = ({ list, onRemove, formik, packageType }) => {
         {list.map((item, i) => (
           <tr key={item.id}>
             <td className="text-center">
-              <ButtonDelete onClick={() => onRemove(item.id)} />
+              <ButtonDelete
+                onClick={() => onRemove(item.id)}
+                disabled={display}
+              />
             </td>
             <td>{item.name}</td>
             <td>{currency.format(item.price)}</td>
@@ -58,6 +61,7 @@ const List = ({ list, onRemove, formik, packageType }) => {
                   maxLength={3}
                   isInvalid={hasTouched(i) && hasError(i)}
                   isValid={hasTouched(i) && !hasError(i)}
+                  disabled={display}
                 />
               </td>
             )}

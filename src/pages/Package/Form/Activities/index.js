@@ -7,7 +7,7 @@ import { listAll } from '~/services/activity';
 
 import List from './List';
 
-const Activities = ({ formik, packageType }) => {
+const Activities = ({ formik, packageType, display }) => {
   const { sendNotification } = useNotification();
   const activityRef = useRef(null);
   const [activities, setActivities] = useState([]);
@@ -41,9 +41,6 @@ const Activities = ({ formik, packageType }) => {
   };
 
   const getError = () => {
-    const touched = formik.touched.activities;
-    if (touched === undefined) return null;
-
     const err = formik.errors.activities;
 
     if (typeof err === 'string') return err;
@@ -64,8 +61,10 @@ const Activities = ({ formik, packageType }) => {
             as="select"
             custom
             defaultValue=""
-            name="activityId"
+            name="activities"
             ref={activityRef}
+            disabled={display}
+            onBlur={formik.handleBlur}
           >
             <option value="" disabled>
               Select an activity
@@ -78,7 +77,9 @@ const Activities = ({ formik, packageType }) => {
           </Form.Control>
         </Form.Group>
         <Form.Group as={Col} className="d-flex align-items-end">
-          <Button onClick={addItem}>Add</Button>
+          <Button onClick={addItem} disabled={display}>
+            Add
+          </Button>
         </Form.Group>
       </Form.Row>
 
@@ -87,9 +88,12 @@ const Activities = ({ formik, packageType }) => {
         formik={formik}
         onRemove={removeItem}
         packageType={packageType}
+        display={display}
       />
 
-      <p className="text-error">{getError()}</p>
+      {formik.touched.activities && formik.touched.type && (
+        <p className="text-error">{getError()}</p>
+      )}
     </>
   );
 };

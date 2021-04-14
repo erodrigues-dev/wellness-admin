@@ -1,13 +1,20 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit, FiEye, FiGrid } from 'react-icons/fi';
+import { FiEdit, FiEye, FiGrid, FiTrash } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
 import * as dateHelper from '~/helpers/date';
 
 import { Container } from './styles';
 
-function List({ list, allowEdit, handleOpenEdit, handleOpenDisplay }) {
+function List({
+  list,
+  allowDelete,
+  allowEdit,
+  handleOpenEdit,
+  handleOpenDisplay,
+  handleDelete,
+}) {
   return (
     <Container>
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -47,6 +54,16 @@ function List({ list, allowEdit, handleOpenEdit, handleOpenDisplay }) {
                       <FiGrid size="18" />
                     </Link>
                   </>
+                )}
+
+                {allowDelete && (
+                  <FiTrash
+                    size="18"
+                    color="var(--danger)"
+                    title="Delete"
+                    cursor="pointer"
+                    onClick={() => handleDelete(item)}
+                  />
                 )}
               </td>
               <td>{item.name}</td>

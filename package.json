@@ -4,9 +4,7 @@
   "private": true,
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject"
+    "build": "react-app-rewired build"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^5.3.0",

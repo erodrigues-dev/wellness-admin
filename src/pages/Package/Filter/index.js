@@ -1,12 +1,11 @@
 import React from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 
 import { Container } from './styles';
 
-function Filter({ onFilter, allowCreate }) {
+function Filter({ onFilter, allowCreate, setOpenNew }) {
   const formik = useFormik({
     initialValues: { name: '' },
     onSubmit: handleSubmit,
@@ -38,10 +37,9 @@ function Filter({ onFilter, allowCreate }) {
             </Button>
             {allowCreate && (
               <Button
-                as={Link}
-                to="/packages/create"
                 variant="secondary"
                 className="ml-2"
+                onClick={() => setOpenNew(true)}
               >
                 Add Package
               </Button>

@@ -46,14 +46,15 @@ function Schedule() {
           const eventsFromApi = list.map((item) =>
             ScheduleFormModel.fromApi(item).toEvent()
           );
+
           setEvents(eventsFromApi);
-          resolve(events);
+          resolve(eventsFromApi);
         } catch (error) {
           reject(error);
         }
       }
     },
-    [id, activity, events]
+    [id, activity]
   );
 
   function handleSelect({ start, end }) {

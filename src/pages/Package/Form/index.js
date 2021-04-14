@@ -1,15 +1,15 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Card, Form, Col, Button, InputGroup } from 'react-bootstrap';
-import { useHistory, useParams } from 'react-router-dom';
+import { Form, Col, Button, InputGroup } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
-import ModalComponent from '~/components/Modal';
+import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import masks from '~/helpers/masks';
+import { sanitize } from '~/helpers/sanitize';
 import ModalCategory from '~/pages/Category/Modal';
 import * as categoryService from '~/services/category';
 import service from '~/services/package';
@@ -18,16 +18,14 @@ import Activities from './Activities';
 import schema from './schema';
 import { ImageContainer } from './styles';
 
-function FormComponent() {
+function ModalForm({ title, setClose, selected, display, reloadPackages }) {
   const [minDate] = useState(new Date());
   const [image, setImage] = useState({ file: null, url: null });
   const [categories, setCategories] = useState();
   const [openAdd, setOpenAdd] = useState(false);
   const { sendNotification } = useNotification();
-  const { id } = useParams();
-  const history = useHistory();
-  const action = id ? 'Edit Package' : 'Add Package';
-  const formik = useFormik({
+
+  const { setValues, ...formik } = useFormik({
     validationSchema: schema,
     onSubmit: handleSubmit,
     initialValues: {
@@ -46,36 +44,29 @@ function FormComponent() {
     },
   });
 
-  useEffect(() => {
-    if (!id) return;
-    service
-      .get(id)
-      .then((response) => {
-        formik.setValues({
-          id,
-          name: response.data.name,
-          price: decimal.format(response.data.price),
-          description: response.data.description,
-          expiration: response.data.expiration
-            ? new Date(response.data.expiration)
-            : null,
-          showInApp: response.data.showInApp ?? true,
-          showInWeb: response.data.showInWeb ?? true,
-          activities: response.data.activities,
-          categoryId: response.data.category.id,
-          recurrencyPay: response.data.recurrencyPay,
-          type: response.data.type,
-          total: response.data.total,
+  const getPackage = useCallback(
+    async (packageId) => {
+      try {
+        const { data } = await service.get(packageId);
+
+        setValues({
+          ...data,
+          price: decimal.format(data.price),
+          expiration: data.expiration ? new Date(data.expiration) : null,
+          showInApp: data.showInApp ?? true,
+          showInWeb: data.showInWeb ?? true,
         });
+        setImage({ file: null, url: data.imageUrl });
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification, setValues]
+  );
 
-        setImage({ file: null, url: response.data.imageUrl });
-      })
-      .catch(({ message }) => sendNotification(message, false));
-
-    // TODO
-    // React Hook useEffect has missing dependencies
-    // eslint-disable-next-line
-  }, [id]);
+  useEffect(() => {
+    if (selected) getPackage(selected.id);
+  }, [getPackage, selected]);
 
   const loadCategories = useCallback(async () => {
     try {
@@ -85,9 +76,6 @@ function FormComponent() {
     } catch (error) {
       sendNotification(error.message, false);
     }
-    // TODO
-    // React Hook useEffect has missing dependencies
-    // eslint-disable-next-line
   }, [sendNotification]);
 
   useEffect(() => {
@@ -96,21 +84,24 @@ function FormComponent() {
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
-      if (id === undefined) {
-        await service.create({
-          ...values,
-          image: image.file,
-        });
+      const data = {
+        ...values,
+        image: image.file,
+        price: sanitize.number(values.price),
+      };
+
+      if (values.total) data.total = sanitize.number(values.total);
+
+      if (selected === undefined) {
+        await service.create(data);
         sendNotification('Package created with success.');
       } else {
-        await service.update({
-          ...values,
-          image: image.file,
-        });
+        await service.update(data);
         sendNotification('Package updated with success.');
       }
 
-      history.goBack();
+      reloadPackages();
+      setClose();
     } catch (error) {
       sendNotification(error.message, false);
       setSubmitting(false);
@@ -118,7 +109,7 @@ function FormComponent() {
   }
 
   function handleCancel() {
-    history.goBack();
+    setClose();
   }
 
   function handleImage(e) {
@@ -134,281 +125,321 @@ function FormComponent() {
   }
 
   function handlePackageTypeChange(e) {
-    formik.setFieldValue('type', e.target.value);
+    const { value } = e.target;
+
+    formik.handleChange(e);
     formik.setFieldValue('total', '');
-    if (
-      e.target.value === 'appointments' &&
-      formik.values.activities.length > 0
-    ) {
-      formik.values.activities.map((activity, index) =>
-        formik.setFieldValue(`activities[${index}].quantity`, 1)
+    if (value === 'appointments' && formik.values.activities.length > 0) {
+      formik.setErrors(formik.errors);
+      formik.setFieldValue(
+        'activities',
+        formik.values.activities.map((item) => ({
+          ...item,
+          quantity: item.quantity ?? 1,
+        }))
       );
     }
   }
 
   return (
-    <Card body>
-      <Card.Title>{action}</Card.Title>
-      <hr />
+    <>
+      <Modal title={title} setClose={setClose} width="750px">
+        <ImageContainer>
+          {image.url && (
+            <img src={image.url} alt="cover" accept=".jpg,.jpeg,.png" />
+          )}
+        </ImageContainer>
 
-      <ImageContainer>
-        {image.url && (
-          <img src={image.url} alt="cover" accept=".jpg,.jpeg,.png" />
-        )}
-      </ImageContainer>
-
-      <Form onSubmit={formik.handleSubmit}>
-        <Form.Row>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Name</Form.Label>
-            <Form.Control
-              placeholder="Name"
-              name="name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.name && formik.errors.name}
-              isValid={formik.touched.name && !formik.errors.name}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.name}
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Price</Form.Label>
-            <Form.Control
-              placeholder="Price"
-              name="price"
-              value={formik.values.price}
-              onChange={(e) => formik.setFieldValue('price', masks.price(e))}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.price && formik.errors.price}
-              isValid={formik.touched.price && !formik.errors.price}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.price}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Form.Row>
-        <Form.Row />
-        <Form.Row>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Description</Form.Label>
-            <Form.Control
-              as="textarea"
-              rows="10"
-              placeholder="Description"
-              name="description"
-              value={formik.values.description}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={
-                formik.touched.description && formik.errors.description
-              }
-              isValid={formik.touched.description && !formik.errors.description}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.description}
-            </Form.Control.Feedback>
-          </Form.Group>
-          <Col>
-            <Form.Group>
-              <Form.Label>Image</Form.Label>
-              <Form.Control type="file" onChange={handleImage} />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Expiration Date</Form.Label>
-              <InputDatePicker
-                min={minDate}
-                name="expiration"
-                value={formik.values.expiration}
-                onChange={formik.handleChange}
-                isInvalid={
-                  formik.touched.expiration && formik.errors.expiration
-                }
-                isValid={formik.touched.expiration && !formik.errors.expiration}
-              />
-            </Form.Group>
-            <Form.Group>
-              <Form.Label>Show In</Form.Label>
-              <Form.Group controlId="showInApp">
-                <Form.Check
-                  type="checkbox"
-                  label="App"
-                  onChange={formik.handleChange}
-                  checked={formik.values.showInApp}
-                  custom
-                />
-              </Form.Group>
-              <Form.Group controlId="showInWeb">
-                <Form.Check
-                  type="checkbox"
-                  label="Web"
-                  onChange={formik.handleChange}
-                  checked={formik.values.showInWeb}
-                  custom
-                />
-              </Form.Group>
-            </Form.Group>
-          </Col>
-        </Form.Row>
-
-        <Form.Row>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Category</Form.Label>
-            <InputGroup>
-              <Form.Control
-                as="select"
-                custom
-                placeholder="Category"
-                name="categoryId"
-                value={formik.values.categoryId}
-                onChange={(e) => {
-                  formik.setFieldValue('categoryId', e.target.value);
-                }}
-                onBlur={formik.handleBlur}
-                isInvalid={
-                  formik.touched.categoryId && formik.errors.categoryId
-                }
-                isValid={formik.touched.categoryId && !formik.errors.categoryId}
-              >
-                <option value={0} disabled>
-                  Select a Category
-                </option>
-                {categories &&
-                  categories.map((loadedCategory) => (
-                    <option key={loadedCategory.id} value={loadedCategory.id}>
-                      {loadedCategory.name}
-                    </option>
-                  ))}
-              </Form.Control>
-              <InputGroup.Append>
-                <Button variant="primary" onClick={() => setOpenAdd(true)}>
-                  Add
-                </Button>
-              </InputGroup.Append>
-              {formik.errors.categoryId && (
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.categoryId}
-                </Form.Control.Feedback>
-              )}
-            </InputGroup>
-          </Form.Group>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Recurrency Pay</Form.Label>
-            <Form.Control
-              placeholder="Recurrency Pay"
-              as="select"
-              custom
-              name="recurrencyPay"
-              value={formik.values.recurrencyPay}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={
-                formik.touched.recurrencyPay && formik.errors.recurrencyPay
-              }
-              isValid={
-                formik.touched.recurrencyPay && !formik.errors.recurrencyPay
-              }
-            >
-              <option value="" disabled>
-                Select a Recurrency Pay
-              </option>
-              <option value="one-time">One Time</option>
-              <option value="weekly">Weekly</option>
-              <option value="monthly">Monthly</option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.recurrencyPay}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Form.Row>
-
-        <Form.Row>
-          <Form.Group as={Col} md="6">
-            <Form.Label>Package Type</Form.Label>
-            <Form.Control
-              placeholder="Package Type"
-              as="select"
-              custom
-              name="type"
-              value={formik.values.type}
-              onChange={handlePackageTypeChange}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.type && formik.errors.type}
-              isValid={formik.touched.type && !formik.errors.type}
-            >
-              <option value="" disabled>
-                Select a Package Type
-              </option>
-              <option value="minutes">Minutes</option>
-              <option value="amount">Amount</option>
-              <option value="unlimited">Unlimited</option>
-              <option value="appointments">Appointments</option>
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.type}
-            </Form.Control.Feedback>
-          </Form.Group>
-
-          {(formik.values.type === 'minutes' ||
-            formik.values.type === 'amount') && (
-            <Form.Group as={Col} md="6">
-              <Form.Label>{`Total of ${formik.values.type}`}</Form.Label>
-              <InputGroup>
+        <Form onSubmit={formik.handleSubmit} className="modal-form">
+          <div className="form-wrapper">
+            <Form.Row>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Name</Form.Label>
                 <Form.Control
-                  placeholder={`Total of ${formik.values.type}`}
-                  name="total"
-                  value={formik.values.total || ''}
+                  placeholder="Name"
+                  name="name"
+                  value={formik.values.name}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.name && formik.errors.name}
+                  isValid={formik.touched.name && !formik.errors.name}
+                  disabled={display}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.name}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Price</Form.Label>
+                <Form.Control
+                  placeholder="Price"
+                  name="price"
+                  value={formik.values.price}
                   onChange={(e) =>
-                    formik.setFieldValue(
-                      'total',
-                      formik.values.type === 'minutes'
-                        ? masks.duration(e)
-                        : masks.price(e)
-                    )
+                    formik.setFieldValue('price', masks.price(e))
                   }
                   onBlur={formik.handleBlur}
-                  isInvalid={formik.touched.total && formik.errors.total}
-                  isValid={formik.touched.total && !formik.errors.total}
+                  isInvalid={formik.touched.price && formik.errors.price}
+                  isValid={formik.touched.price && !formik.errors.price}
+                  disabled={display}
                 />
                 <Form.Control.Feedback type="invalid">
-                  {formik.errors.total}
+                  {formik.errors.price}
                 </Form.Control.Feedback>
-              </InputGroup>
-            </Form.Group>
-          )}
-        </Form.Row>
+              </Form.Group>
+            </Form.Row>
+            <Form.Row />
+            <Form.Row>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Description</Form.Label>
+                <Form.Control
+                  as="textarea"
+                  rows="10"
+                  placeholder="Description"
+                  name="description"
+                  value={formik.values.description}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={
+                    formik.touched.description && formik.errors.description
+                  }
+                  isValid={
+                    formik.touched.description && !formik.errors.description
+                  }
+                  disabled={display}
+                  style={{ resize: 'none' }}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.description}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Col>
+                <Form.Group>
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    onChange={handleImage}
+                    disabled={display}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Expiration Date</Form.Label>
+                  <InputDatePicker
+                    min={minDate}
+                    name="expiration"
+                    value={formik.values.expiration}
+                    onChange={formik.handleChange}
+                    isInvalid={
+                      formik.touched.expiration && formik.errors.expiration
+                    }
+                    isValid={
+                      formik.touched.expiration && !formik.errors.expiration
+                    }
+                    disabled={display}
+                  />
+                </Form.Group>
+                <Form.Group>
+                  <Form.Label>Show In</Form.Label>
+                  <Form.Group controlId="showInApp">
+                    <Form.Check
+                      type="checkbox"
+                      label="App"
+                      onChange={formik.handleChange}
+                      checked={formik.values.showInApp}
+                      custom
+                      disabled={display}
+                    />
+                  </Form.Group>
+                  <Form.Group controlId="showInWeb">
+                    <Form.Check
+                      type="checkbox"
+                      label="Web"
+                      onChange={formik.handleChange}
+                      checked={formik.values.showInWeb}
+                      custom
+                      disabled={display}
+                    />
+                  </Form.Group>
+                </Form.Group>
+              </Col>
+            </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Category</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    as="select"
+                    custom
+                    placeholder="Category"
+                    name="categoryId"
+                    value={formik.values.categoryId}
+                    onChange={(e) => {
+                      formik.setFieldValue('categoryId', e.target.value);
+                    }}
+                    onBlur={formik.handleBlur}
+                    isInvalid={
+                      formik.touched.categoryId && formik.errors.categoryId
+                    }
+                    isValid={
+                      formik.touched.categoryId && !formik.errors.categoryId
+                    }
+                    disabled={display}
+                  >
+                    <option value={0} disabled>
+                      Select a Category
+                    </option>
+                    {categories &&
+                      categories.map((loadedCategory) => (
+                        <option
+                          key={loadedCategory.id}
+                          value={loadedCategory.id}
+                        >
+                          {loadedCategory.name}
+                        </option>
+                      ))}
+                  </Form.Control>
+                  <InputGroup.Append>
+                    <Button
+                      variant="primary"
+                      onClick={() => setOpenAdd(true)}
+                      disabled={display}
+                    >
+                      Add
+                    </Button>
+                  </InputGroup.Append>
+                  {formik.errors.categoryId && (
+                    <Form.Control.Feedback type="invalid">
+                      {formik.errors.categoryId}
+                    </Form.Control.Feedback>
+                  )}
+                </InputGroup>
+              </Form.Group>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Recurrency Pay</Form.Label>
+                <Form.Control
+                  placeholder="Recurrency Pay"
+                  as="select"
+                  custom
+                  name="recurrencyPay"
+                  value={formik.values.recurrencyPay}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={
+                    formik.touched.recurrencyPay && formik.errors.recurrencyPay
+                  }
+                  isValid={
+                    formik.touched.recurrencyPay && !formik.errors.recurrencyPay
+                  }
+                  disabled={display}
+                >
+                  <option value="" disabled>
+                    Select a Recurrency Pay
+                  </option>
+                  <option value="one-time">One Time</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.recurrencyPay}
+                </Form.Control.Feedback>
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col} md="6">
+                <Form.Label>Package Type</Form.Label>
+                <Form.Control
+                  placeholder="Package Type"
+                  as="select"
+                  custom
+                  name="type"
+                  value={formik.values.type}
+                  onChange={handlePackageTypeChange}
+                  onBlur={formik.handleBlur}
+                  isInvalid={formik.touched.type && formik.errors.type}
+                  isValid={formik.touched.type && !formik.errors.type}
+                  disabled={display}
+                >
+                  <option value="" disabled>
+                    Select a Package Type
+                  </option>
+                  <option value="minutes">Minutes</option>
+                  <option value="amount">Amount</option>
+                  <option value="unlimited">Unlimited</option>
+                  <option value="appointments">Appointments</option>
+                </Form.Control>
+                <Form.Control.Feedback type="invalid">
+                  {formik.errors.type}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-        <Activities formik={formik} packageType={formik.values.type} />
+              {(formik.values.type === 'minutes' ||
+                formik.values.type === 'amount') && (
+                <Form.Group as={Col} md="6">
+                  <Form.Label>{`Total of ${formik.values.type}`}</Form.Label>
+                  <InputGroup>
+                    <Form.Control
+                      placeholder={`Total of ${formik.values.type}`}
+                      name="total"
+                      value={formik.values.total || ''}
+                      onChange={(e) =>
+                        formik.setFieldValue(
+                          'total',
+                          formik.values.type === 'minutes'
+                            ? masks.duration(e)
+                            : masks.price(e)
+                        )
+                      }
+                      onBlur={formik.handleBlur}
+                      isInvalid={formik.touched.total && formik.errors.total}
+                      isValid={formik.touched.total && !formik.errors.total}
+                      disabled={display}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {formik.errors.total}
+                    </Form.Control.Feedback>
+                  </InputGroup>
+                </Form.Group>
+              )}
+            </Form.Row>
+            <Activities
+              formik={formik}
+              packageType={formik.values.type}
+              display={display}
+            />
+          </div>
 
-        <Form.Row className="d-flex justify-content-end">
-          <Button
-            variant="secondary"
-            className="mr-2"
-            onClick={handleCancel}
-            disabled={formik.isSubmitting}
-          >
-            Cancel
-          </Button>
-          <ButtonLoading type="submit" loading={formik.isSubmitting}>
-            Save
-          </ButtonLoading>
-        </Form.Row>
-      </Form>
+          <div className="buttons">
+            <Form.Row className="d-flex justify-content-end">
+              <Button
+                variant="secondary"
+                className="mr-2"
+                onClick={handleCancel}
+                disabled={formik.isSubmitting}
+              >
+                {display ? 'Close' : 'Cancel'}
+              </Button>
+              {!display && (
+                <ButtonLoading type="submit" loading={formik.isSubmitting}>
+                  Save
+                </ButtonLoading>
+              )}
+            </Form.Row>
+          </div>
+        </Form>
+      </Modal>
 
       {openAdd && (
-        <ModalComponent setClose={() => setOpenAdd(false)} title="Add Category">
+        <Modal setClose={() => setOpenAdd(false)} title="Add Category">
           <ModalCategory
             handleOpenModal={setOpenAdd}
             handleValue={(e) => formik.setFieldValue('categoryId', e)}
             addComponent="package"
             loadCategories={loadCategories}
           />
-        </ModalComponent>
+        </Modal>
       )}
-    </Card>
+    </>
   );
 }
 
-export default FormComponent;
+export default ModalForm;

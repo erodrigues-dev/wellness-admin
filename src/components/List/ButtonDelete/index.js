@@ -2,8 +2,9 @@ import React from 'react';
 import { confirmAlert } from 'react-confirm-alert';
 import { FiTrash } from 'react-icons/fi';
 
-const ButtonDelete = ({ onClick: handleDelete }) => {
+const ButtonDelete = ({ onClick: handleDelete, disabled }) => {
   const handleClick = () => {
+    if (disabled) return;
     confirmAlert({
       title: 'Confirm Delete',
       message: 'Are you sure to do this?',
@@ -22,9 +23,10 @@ const ButtonDelete = ({ onClick: handleDelete }) => {
   return (
     <FiTrash
       size={22}
-      color="#dc3545"
-      style={{ cursor: 'pointer' }}
+      color={disabled ? '#ccc' : '#dc3545'}
+      style={{ cursor: !disabled && 'pointer' }}
       onClick={handleClick}
+      disabled={disabled}
     />
   );
 };

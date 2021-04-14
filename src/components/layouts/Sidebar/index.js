@@ -65,7 +65,7 @@ const Sidebar = ({ open, handleClose }) => {
 
           {settingsItems.length > 0 && (
             <>
-              <Item onClick={handleClose} className="settings">
+              <Item className="settings">
                 <div
                   onClick={handleRetract}
                   onKeyDown={() => {}}

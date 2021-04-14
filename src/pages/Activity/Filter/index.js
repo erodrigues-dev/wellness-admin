@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
@@ -9,7 +8,7 @@ import { listAll as listAllEmployees } from '~/services/employee';
 
 import { Container } from './styles';
 
-function Filter({ onFilter, allowCreate, list }) {
+function Filter({ onFilter, allowCreate, list, setOpenNew }) {
   const [employees, setEmployees] = useState([]);
   const formik = useFormik({
     initialValues: { name: '', employeeId: '' },
@@ -69,10 +68,9 @@ function Filter({ onFilter, allowCreate, list }) {
             </Button>
             {allowCreate && (
               <Button
-                as={Link}
-                to="/activities/create"
                 variant="secondary"
                 className="ml-2"
+                onClick={() => setOpenNew(true)}
               >
                 Add Activity
               </Button>
