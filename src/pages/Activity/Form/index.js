@@ -203,9 +203,7 @@ function ModalForm({
                   }
                   disabled={display}
                 >
-                  <option value="" disabled>
-                    Select an Employee
-                  </option>
+                  <option value="">Select</option>
                   {employees.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}

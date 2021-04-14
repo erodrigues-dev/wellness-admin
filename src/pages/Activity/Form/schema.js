@@ -14,7 +14,6 @@ const schema = yup.object().shape({
     .max(999999999.99)
     .required()
     .transform((_value, originalValue) => sanitize.number(originalValue)),
-  employeeId: yup.number().label('employee').required(),
   categoryId: yup.number().min(1, 'Select a Category').required(),
   showInApp: yup.boolean(),
   showInWeb: yup.boolean(),

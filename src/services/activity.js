@@ -45,7 +45,7 @@ export function create({
   data.append('description', description);
   data.append('price', sanitize.number(price));
   data.append('duration', sanitize.number(duration));
-  data.append('employeeId', employeeId);
+  if (employeeId) data.append('employeeId', employeeId);
   data.append('categoryId', categoryId);
   if (image) data.append('image', image);
   data.append('showInApp', showInApp);
@@ -75,7 +75,7 @@ export function update({
   data.append('description', description);
   data.append('price', sanitize.number(price));
   data.append('duration', sanitize.number(duration));
-  data.append('employeeId', employeeId);
+  if (employeeId) data.append('employeeId', employeeId);
   data.append('categoryId', categoryId);
   if (image) data.append('image', image);
   data.append('showInApp', showInApp);
