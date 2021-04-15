@@ -33,6 +33,7 @@ export const FUNCTIONALITIES = {
       list: 8192,
       create: 16384,
       update: 16384,
+      delete: 4194304,
     },
     profiles: {
       list: 32768,

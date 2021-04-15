@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
 
+import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
@@ -20,6 +21,10 @@ const Employee = () => {
   const hasPermissionToUpdate = hasPermission(
     FUNCTIONALITIES.settings.employees.update
   );
+
+  const hasPermissionToDelete = hasPermission(
+    FUNCTIONALITIES.settings.employees.delete
+  );
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
@@ -29,7 +34,7 @@ const Employee = () => {
   const [openDisplay, setOpenDisplay] = useState(false);
   const [selected, setSelected] = useState();
 
-  const listEmpĺoyees = useCallback(async () => {
+  const listEmployees = useCallback(async () => {
     try {
       const { data, headers } = await service.index(page, filter);
 
@@ -40,9 +45,21 @@ const Employee = () => {
     }
   }, [sendNotification, page, filter]);
 
+  const destroyEmployee = useCallback(
+    async (item) => {
+      try {
+        await service.destroy(item);
+        listEmployees();
+      } catch (error) {
+        sendNotification(error.message, false);
+      }
+    },
+    [sendNotification, listEmployees]
+  );
+
   useEffect(() => {
-    listEmpĺoyees();
-  }, [listEmpĺoyees]);
+    listEmployees();
+  }, [listEmployees]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -63,6 +80,13 @@ const Employee = () => {
     setSelected(item);
   }
 
+  function handleDelete(item) {
+    console.log('>> hadnle delete');
+    confirmHandler('Are you sure to delete this employee?', () =>
+      destroyEmployee(item)
+    );
+  }
+
   return (
     <Card body>
       <Card.Title>Employee</Card.Title>
@@ -75,7 +99,9 @@ const Employee = () => {
       <List
         list={list}
         allowEdit={hasPermissionToUpdate}
+        allowDelete={hasPermissionToDelete}
         handleEdit={handleEdit}
+        handleDelete={handleDelete}
         handleOpenDisplay={handleOpenDisplay}
       />
       <Paginate
@@ -88,7 +114,7 @@ const Employee = () => {
         <ModalForm
           title="New Employee"
           setClose={() => setOpenNew(false)}
-          reloadEmployees={listEmpĺoyees}
+          reloadEmployees={listEmployees}
         />
       )}
       {openEdit && (
@@ -96,7 +122,7 @@ const Employee = () => {
           title="Edit Employee"
           setClose={() => setOpenEdit(false)}
           employee={selected}
-          reloadEmployees={listEmpĺoyees}
+          reloadEmployees={listEmployees}
         />
       )}
       {openDisplay && (
@@ -104,7 +130,7 @@ const Employee = () => {
           title="Display Employee"
           setClose={() => setOpenDisplay(false)}
           employee={selected}
-          reloadEmployees={listEmpĺoyees}
+          reloadEmployees={listEmployees}
           display={openDisplay}
         />
       )}

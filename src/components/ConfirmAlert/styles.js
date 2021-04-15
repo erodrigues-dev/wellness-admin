@@ -14,7 +14,7 @@ export const Container = styled.div`
   }
 
   h1 {
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: bold;
   }
 

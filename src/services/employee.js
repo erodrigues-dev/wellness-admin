@@ -51,12 +51,17 @@ export function update({ id, name, phone, profileId, specialty, file }) {
   return api.put(ENDPOINT, formData);
 }
 
+export function destroy({ id }) {
+  return api.delete(`${ENDPOINT}/${id}`);
+}
+
 const service = {
   list: index,
   listAll,
   get,
   create,
   update,
+  destroy,
 };
 
 export default service;
