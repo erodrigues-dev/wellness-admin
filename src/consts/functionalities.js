@@ -50,5 +50,11 @@ export const FUNCTIONALITIES = {
       create: 1048576,
       update: 1048576,
     },
+    specialties: {
+      list: 8388608,
+      create: 16777216,
+      update: 16777216,
+      delete: 33554432,
+    },
   },
 };

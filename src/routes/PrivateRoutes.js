@@ -19,6 +19,7 @@ import {
   Package,
   Profile,
   NotAuthorized,
+  Specialty,
 } from '~/pages';
 
 const PrivateRoutes = () => {
@@ -125,6 +126,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.appointments.list}
           path="/appointments/:id"
           component={Appointments}
+        />
+
+        <PrivateRoute
+          exact
+          functionality={FUNCTIONALITIES.settings.specialties.list}
+          path="/specialties"
+          component={Specialty}
         />
 
         <Route path="/404" component={NotAuthorized} />

@@ -14,7 +14,7 @@ export function listAll() {
   return api.get('/specialties');
 }
 
-export function register(data) {
+export function create(data) {
   return api.post('/specialties', data);
 }
 
@@ -29,7 +29,7 @@ export function destroy(id) {
 export default {
   list,
   listAll,
-  register,
+  create,
   update,
   destroy,
 };
