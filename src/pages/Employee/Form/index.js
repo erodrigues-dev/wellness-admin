@@ -10,13 +10,15 @@ import Modal from '~/components/Modal';
 import useNotification from '~/contexts/notification';
 import * as employeeService from '~/services/employee';
 import * as profileService from '~/services/profile';
+import * as specialtyService from '~/services/specialty';
 
 import schema from './schema';
 
 const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
   const { sendNotification } = useNotification();
   const [file, setFile] = useState(null);
-  const [profiles, setProfiles] = useState();
+  const [profiles, setProfiles] = useState([]);
+  const [specialties, setSpecialties] = useState([]);
 
   const formik = useFormik({
     validationSchema: schema,
@@ -28,7 +30,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
       phone: employee?.phone ?? '',
       imageUrl: employee?.imageUrl ?? '',
       profileId: employee?.profile.id ?? '',
-      specialty: employee?.specialty ?? '',
+      specialtyId: employee?.specialty.id ?? '',
     },
   });
 
@@ -38,13 +40,26 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
 
       setProfiles(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendNotification('Unable to list profiles', false);
+    }
+  }, [sendNotification]);
+
+  const listSpecialties = useCallback(async () => {
+    try {
+      const { data } = await specialtyService.listAll();
+      setSpecialties(data);
+    } catch (error) {
+      sendNotification('Unable to list specialties', false);
     }
   }, [sendNotification]);
 
   useEffect(() => {
     listProfiles();
   }, [listProfiles]);
+
+  useEffect(() => {
+    listSpecialties();
+  }, [listSpecialties]);
 
   async function handleSubmit(data) {
     if (display) return;
@@ -128,7 +143,6 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
             <Form.Label>Profile</Form.Label>
             <Form.Control
               as="select"
-              custom
               name="profileId"
               value={formik.values.profileId}
               onChange={formik.handleChange}
@@ -155,17 +169,26 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
           <Form.Group>
             <Form.Label>Specialty</Form.Label>
             <Form.Control
-              placeholder={!display ? 'ex: Admin' : '-'}
-              name="specialty"
-              value={formik.values.specialty}
+              as="select"
+              name="specialtyId"
+              value={formik.values.specialtyId}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              isInvalid={formik.touched.specialty && formik.errors.specialty}
-              isValid={formik.touched.specialty && !formik.errors.specialty}
+              isInvalid={
+                formik.touched.specialtyId && formik.errors.specialtyId
+              }
+              isValid={formik.touched.specialtyId && !formik.errors.specialtyId}
               disabled={display}
-            />
+            >
+              <option value="">Select an option</option>
+              {specialties.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </Form.Control>
             <Form.Control.Feedback type="invalid">
-              {formik.errors.specialty}
+              {formik.errors.specialtyId}
             </Form.Control.Feedback>
           </Form.Group>
         </div>

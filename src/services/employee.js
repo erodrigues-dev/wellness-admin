@@ -3,7 +3,7 @@ import api from './api';
 const ENDPOINT = '/employees';
 const LIMIT = 10;
 
-export function index(page, filters) {
+export function list(page, filters) {
   return api.get(ENDPOINT, {
     params: {
       page,
@@ -25,27 +25,27 @@ export function get(id) {
   return api.get(`${ENDPOINT}/${id}`);
 }
 
-export function create({ name, email, phone, profileId, specialty, file }) {
+export function create({ name, email, phone, profileId, specialtyId, file }) {
   const formData = new FormData();
 
   formData.append('name', name);
   formData.append('email', email);
   formData.append('phone', phone);
   formData.append('profileId', profileId);
-  formData.append('specialty', specialty);
+  if (specialtyId) formData.append('specialtyId', specialtyId);
   if (file) formData.append('image', file);
 
   return api.post(ENDPOINT, formData);
 }
 
-export function update({ id, name, phone, profileId, specialty, file }) {
+export function update({ id, name, phone, profileId, specialtyId, file }) {
   const formData = new FormData();
 
   formData.append('id', id);
   formData.append('name', name);
   formData.append('phone', phone);
   formData.append('profileId', profileId);
-  formData.append('specialty', specialty);
+  if (specialtyId) formData.append('specialtyId', specialtyId);
   if (file) formData.append('image', file);
 
   return api.put(ENDPOINT, formData);
@@ -56,7 +56,7 @@ export function destroy({ id }) {
 }
 
 const service = {
-  list: index,
+  list,
   listAll,
   get,
   create,

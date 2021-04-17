@@ -28,7 +28,12 @@ const Employee = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
-  const [filter, setFilter] = useState({ name: '', email: '' });
+  const [filter, setFilter] = useState({
+    name: '',
+    email: '',
+    profile: '',
+    specialty: '',
+  });
   const [openNew, setOpenNew] = useState(false);
   const [openEdit, setOpenEdit] = useState(false);
   const [openDisplay, setOpenDisplay] = useState(false);
@@ -36,7 +41,7 @@ const Employee = () => {
 
   const listEmployees = useCallback(async () => {
     try {
-      const { data, headers } = await service.index(page, filter);
+      const { data, headers } = await service.list(page, filter);
 
       setList(data);
       setTotal(parseInt(headers['x-total-count']));
@@ -56,10 +61,6 @@ const Employee = () => {
     },
     [sendNotification, listEmployees]
   );
-
-  useEffect(() => {
-    listEmployees();
-  }, [listEmployees]);
 
   async function handleFilter(filterValues) {
     setFilter(filterValues);
@@ -85,6 +86,10 @@ const Employee = () => {
       destroyEmployee(item)
     );
   }
+
+  useEffect(() => {
+    listEmployees();
+  }, [listEmployees]);
 
   return (
     <Card body>
