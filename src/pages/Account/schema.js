@@ -20,7 +20,6 @@ const schema = yup.object().shape({
       [yup.ref('password')],
       'confirm password must be match with password'
     ),
-  specialty: yup.string().max(100),
 });
 
 export default schema;

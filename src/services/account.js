@@ -15,7 +15,7 @@ export function update({
   email,
   confirmationCode,
   password,
-  specialty,
+  specialtyId,
 }) {
   const formData = new FormData();
 
@@ -23,7 +23,7 @@ export function update({
   formData.append('email', email);
   formData.append('confirmationCode', confirmationCode);
   if (password && !!password.trim()) formData.append('password', password);
-  formData.append('specialty', specialty);
+  formData.append('specialtyId', specialtyId);
   if (image) formData.append('image', image);
 
   return api.put(ENDPOINT, formData);
