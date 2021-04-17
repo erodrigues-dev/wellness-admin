@@ -26,6 +26,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
       phone: '',
       imageUrl: '',
       privateNotes: '',
+      publicNotes: '',
     },
   });
 
@@ -41,6 +42,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
           phone: data?.phone ?? '',
           imageUrl: data?.imageUrl ?? '',
           privateNotes: data?.privateNotes ?? '',
+          publicNotes: data?.publicNotes ?? '',
         });
       } catch (error) {
         sendNotification(error.message, false);
@@ -136,7 +138,7 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
           <Form.Group>
             <Form.Label>Private Notes</Form.Label>
             <Form.Control
-              style={{ resize: 'none' }}
+              style={{ resize: 'vertical' }}
               placeholder={!display ? 'ex: My private notes here' : '-'}
               as="textarea"
               name="privateNotes"
@@ -153,6 +155,26 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.privateNotes}
+            </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>Public Notes</Form.Label>
+            <Form.Control
+              style={{ resize: 'vertical' }}
+              placeholder={!display ? 'ex: My public notes here' : '-'}
+              as="textarea"
+              name="publicNotes"
+              value={formik.values.publicNotes}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              isInvalid={
+                formik.touched.publicNotes && formik.errors.publicNotes
+              }
+              isValid={formik.touched.publicNotes && !formik.errors.publicNotes}
+              disabled={display}
+            />
+            <Form.Control.Feedback type="invalid">
+              {formik.errors.publicNotes}
             </Form.Control.Feedback>
           </Form.Group>
         </div>

@@ -69,4 +69,11 @@ export const MENU = [
     functionality: FUNCTIONALITIES.settings.discount.list,
     subgroup: 'settings',
   },
+  {
+    title: 'Specialties',
+    path: '/specialties',
+    Icon: FiPenTool,
+    functionality: FUNCTIONALITIES.settings.specialties.list,
+    subgroup: 'settings',
+  },
 ];

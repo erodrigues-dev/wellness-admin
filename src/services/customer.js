@@ -32,6 +32,7 @@ export function create(customer) {
   data.append('email', customer.email);
   data.append('phone', customer.phone);
   data.append('privateNotes', customer.privateNotes);
+  data.append('publicNotes', customer.publicNotes);
   if (customer.file) data.append('image', customer.file);
 
   return api.post(ENDPOINT, data);
@@ -44,6 +45,7 @@ export function update(customer) {
   data.append('name', customer.name);
   data.append('phone', customer.phone);
   data.append('privateNotes', customer.privateNotes);
+  data.append('publicNotes', customer.publicNotes);
   if (customer.file) data.append('image', customer.file);
 
   return api.put(ENDPOINT, data);

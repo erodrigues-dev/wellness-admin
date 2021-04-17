@@ -6,24 +6,26 @@ import * as dateHelper from '~/helpers/date';
 
 import { Container } from './styles';
 
-function List({
-  list,
-  allowEdit,
-  allowDelete,
-  handleDelete,
-  handleEdit,
-  handleOpenDisplay,
-}) {
+/**
+ *
+ * @param {{
+ *  list: [],
+ *  allowEdit: boolean,
+ *  allowDelete: boolean,
+ *  onEdit(item): void,
+ *  onDelete(item): void,
+ *  onDisplay(item): void,
+ * }} props
+ * @returns
+ */
+function List({ list, allowEdit, allowDelete, onEdit, onDelete, onDisplay }) {
   return (
     <Container>
-      <Table style={{ minWidth: 800 }} striped hover responsive>
+      <Table striped hover responsive>
         <thead>
           <tr>
             <th className="text-center">Actions</th>
             <th>Name</th>
-            <th>E-mail</th>
-            <th>Profile</th>
-            <th>Specialty</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -32,41 +34,45 @@ function List({
             <tr key={item.id}>
               <td className="text-center">
                 <FiEye
-                  size="18"
                   title="Display"
+                  className="ml-2"
+                  size="18"
                   cursor="pointer"
-                  onClick={() => handleOpenDisplay(item)}
+                  onClick={() => {
+                    onDisplay(item);
+                  }}
                 />
                 {allowEdit && (
                   <FiEdit
-                    size="18"
-                    onClick={() => handleEdit(item)}
-                    className="ml-2"
                     title="Edit"
+                    className="ml-2"
+                    size="18"
                     cursor="pointer"
+                    onClick={() => {
+                      onEdit(item);
+                    }}
                   />
                 )}
                 {allowDelete && (
                   <FiTrash
-                    size="18"
                     color="var(--danger)"
-                    onClick={() => handleDelete(item)}
-                    className="ml-2"
                     title="Delete"
+                    className="ml-2"
+                    size="18"
                     cursor="pointer"
+                    onClick={() => {
+                      onDelete(item);
+                    }}
                   />
                 )}
               </td>
               <td>{item.name}</td>
-              <td>{item.email}</td>
-              <td>{item.profile.name}</td>
-              <td>{item.specialty?.name || '-'}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan={6}>No record found</td>
+              <td colSpan={3}>No record found</td>
             </tr>
           )}
         </tbody>

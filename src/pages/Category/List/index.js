@@ -40,7 +40,7 @@ function List({ list, allowEdit, setOpenEdit, setSelectedCategory }) {
           ))}
           {list.length === 0 && (
             <tr>
-              <td colSpan={6}>No record found</td>
+              <td colSpan={4}>No record found</td>
             </tr>
           )}
         </tbody>

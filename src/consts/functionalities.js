@@ -33,6 +33,7 @@ export const FUNCTIONALITIES = {
       list: 8192,
       create: 16384,
       update: 16384,
+      delete: 4194304,
     },
     profiles: {
       list: 32768,
@@ -48,6 +49,12 @@ export const FUNCTIONALITIES = {
       list: 524288,
       create: 1048576,
       update: 1048576,
+    },
+    specialties: {
+      list: 8388608,
+      create: 16777216,
+      update: 16777216,
+      delete: 33554432,
     },
   },
 };
