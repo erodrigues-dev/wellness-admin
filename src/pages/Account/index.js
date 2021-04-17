@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
@@ -8,6 +9,7 @@ import ButtonLoading from '~/components/ButtonLoading';
 import useAuth from '~/contexts/auth';
 import useNotification from '~/contexts/notification';
 import account from '~/services/account';
+import specialtyService from '~/services/specialty';
 
 import schema from './schema';
 import { Container } from './styles';
@@ -17,6 +19,7 @@ const Account = () => {
   const { sendNotification } = useNotification();
   const [seconds, setSeconds] = useState(0);
   const [sendingCode, setSendingCode] = useState(false);
+  const [specialties, setSpecialties] = useState([]);
   const formik = useFormik({
     validationSchema: schema,
     onSubmit: handleSubmit,
@@ -28,7 +31,7 @@ const Account = () => {
       confirmationCode: '',
       password: '',
       confirmPassword: '',
-      specialty: user.specialty,
+      specialtyId: user.specialty?.id || '',
       imageUrl: user.imageUrl,
     },
   });
@@ -80,6 +83,13 @@ const Account = () => {
       setSendingCode(false);
     }
   }
+
+  useEffect(() => {
+    specialtyService
+      .listAll()
+      .then((response) => setSpecialties(response.data))
+      .catch(() => toast.error('Unable to list specialties'));
+  }, []);
 
   return (
     <Card body>
@@ -168,16 +178,26 @@ const Account = () => {
           <Form.Group className="mt-2">
             <Form.Label>Specialty</Form.Label>
             <Form.Control
+              as="select"
               placeholder="Speciality"
-              name="specialty"
-              value={formik.values.specialty}
+              name="specialtyId"
+              value={formik.values.specialtyId}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
-              isInvalid={formik.touched.specialty && formik.errors.specialty}
-              isValid={formik.touched.specialty && !formik.errors.specialty}
-            />
+              isInvalid={
+                formik.touched.specialtyId && formik.errors.specialtyId
+              }
+              isValid={formik.touched.specialtyId && !formik.errors.specialtyId}
+            >
+              <option value="">Select</option>
+              {specialties.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </Form.Control>
             <Form.Control.Feedback type="invalid">
-              {formik.errors.specialty}
+              {formik.errors.specialtyId}
             </Form.Control.Feedback>
           </Form.Group>
           <Row>
