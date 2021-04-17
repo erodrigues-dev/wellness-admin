@@ -60,7 +60,7 @@ function List({
               <td>{item.name}</td>
               <td>{item.email}</td>
               <td>{item.profile.name}</td>
-              <td>{item.specialty}</td>
+              <td>{item.specialty?.name || '-'}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}
