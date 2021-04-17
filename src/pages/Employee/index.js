@@ -81,7 +81,6 @@ const Employee = () => {
   }
 
   function handleDelete(item) {
-    console.log('>> hadnle delete');
     confirmHandler('Are you sure to delete this employee?', () =>
       destroyEmployee(item)
     );
