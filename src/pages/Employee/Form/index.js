@@ -30,7 +30,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
       phone: employee?.phone ?? '',
       imageUrl: employee?.imageUrl ?? '',
       profileId: employee?.profile.id ?? '',
-      specialtyId: employee?.specialty.id ?? '',
+      specialtyId: employee?.specialty?.id ?? '',
     },
   });
 
@@ -180,7 +180,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
               isValid={formik.touched.specialtyId && !formik.errors.specialtyId}
               disabled={display}
             >
-              <option value="">Select an option</option>
+              <option value="">{display ? '-' : 'Select an option'}</option>
               {specialties.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
@@ -195,6 +195,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
         <div className="buttons">
           <Form.Row className="d-flex justify-content-end">
             <Button
+              type="button"
               variant="secondary"
               className="mr-2"
               onClick={() => setClose(false)}

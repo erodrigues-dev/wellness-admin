@@ -15,16 +15,17 @@ import List from './List';
 const Employee = () => {
   const { hasPermission } = useAuth();
   const { sendNotification } = useNotification();
+
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.settings.employees.create
   );
   const hasPermissionToUpdate = hasPermission(
     FUNCTIONALITIES.settings.employees.update
   );
-
   const hasPermissionToDelete = hasPermission(
     FUNCTIONALITIES.settings.employees.delete
   );
+
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
