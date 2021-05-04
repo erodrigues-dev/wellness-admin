@@ -76,4 +76,11 @@ export const MENU = [
     functionality: FUNCTIONALITIES.settings.specialties.list,
     subgroup: 'settings',
   },
+  {
+    title: 'Waivers',
+    path: '/waivers',
+    Icon: FiPenTool,
+    functionality: FUNCTIONALITIES.settings.waivers.list,
+    subgroup: 'settings',
+  },
 ];

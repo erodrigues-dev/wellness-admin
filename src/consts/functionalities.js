@@ -56,5 +56,11 @@ export const FUNCTIONALITIES = {
       update: 16777216,
       delete: 33554432,
     },
+    waivers: {
+      list: 67108864,
+      create: 134217728,
+      update: 134217728,
+      delete: 268435456,
+    },
   },
 };
