@@ -11,7 +11,7 @@ export const Waiver = () => {
   const [list, setList] = useState([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
-  const [filters] = useState({});
+  const [filters, setFilters] = useState({});
 
   const fetchList = useCallback(async () => {
     try {
@@ -31,7 +31,7 @@ export const Waiver = () => {
     <Card body>
       <Card.Title>Waivers</Card.Title>
       <hr />
-      <Filter />
+      <Filter onFilter={setFilters} allowCreate onCreate={() => {}} />
       <List
         list={list}
         total={total}
