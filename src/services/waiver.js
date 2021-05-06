@@ -10,6 +10,8 @@ export const list = (page, filters) => {
   });
 };
 
+export const get = (id) => api.get(`/waivers/${id}`);
+
 export function listAll() {
   return api.get('/waivers');
 }
@@ -27,6 +29,7 @@ export function destroy(id) {
 }
 
 export default {
+  get,
   list,
   listAll,
   create,

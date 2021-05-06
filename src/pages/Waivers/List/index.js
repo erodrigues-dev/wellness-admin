@@ -37,6 +37,7 @@ export const List = ({
           <th>Actions</th>
           <th>Title</th>
           <th>Created At</th>
+          <th>Updated At</th>
         </tr>
       </thead>
       <tbody>
@@ -71,6 +72,7 @@ export const List = ({
             </td>
             <td>{item.title}</td>
             <td>{dateHelper.formatToList(item.createdAt)}</td>
+            <td>{dateHelper.formatToList(item.updatedAt)}</td>
           </tr>
         ))}
       </tbody>
