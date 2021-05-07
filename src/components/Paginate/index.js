@@ -9,6 +9,15 @@ const Container = styled.div`
   justify-content: flex-end;
 `;
 
+/**
+ * Paginate
+ * @param {{
+ *  activePage: number
+ *  itemsCountPerPage: number
+ *  totalItemsCount: number
+ *  onChange(page:Number):void
+ * }} props
+ */
 const Paginate = (props) => (
   <Container>
     <Pagination {...props} itemClass="page-item" linkClass="page-link" />

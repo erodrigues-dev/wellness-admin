@@ -20,6 +20,7 @@ import {
   Profile,
   NotAuthorized,
   Specialty,
+  Waiver,
 } from '~/pages';
 
 const PrivateRoutes = () => {
@@ -133,6 +134,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.settings.specialties.list}
           path="/specialties"
           component={Specialty}
+        />
+
+        <PrivateRoute
+          exact
+          functionality={FUNCTIONALITIES.settings.waivers.list}
+          path="/waivers"
+          component={Waiver}
         />
 
         <Route path="/404" component={NotAuthorized} />

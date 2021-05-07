@@ -61,7 +61,6 @@ const Activity = () => {
       <Filter
         onFilter={handleFilter}
         allowCreate={hasPermissionToCreate}
-        list={list}
         setOpenNew={setOpenNew}
       />
       <List

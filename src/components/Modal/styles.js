@@ -51,8 +51,7 @@ export const Content = styled.div`
     align-items: center;
     justify-content: space-between;
     border-bottom: 1px solid #ccc;
-    padding: 25px;
-    height: 80px;
+    padding: 16px 24px;
 
     h1 {
       font-size: 24px;

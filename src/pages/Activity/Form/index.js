@@ -12,8 +12,23 @@ import ModalCategory from '~/pages/Category/Modal';
 import * as service from '~/services/activity';
 import * as categoryService from '~/services/category';
 import * as employeeService from '~/services/employee';
+import waiverService from '~/services/waiver';
 
 import schema from './schema';
+
+const initialValues = {
+  id: 1,
+  name: '',
+  price: '',
+  duration: '',
+  description: '',
+  employeeId: '',
+  waiverId: '',
+  categoryId: 0,
+  showInApp: true,
+  showInWeb: true,
+  maxPeople: '',
+};
 
 function ModalForm({
   title,
@@ -27,22 +42,12 @@ function ModalForm({
   const [categories, setCategories] = useState();
   const [openAdd, setOpenAdd] = useState(false);
   const { sendNotification } = useNotification();
+  const [waivers, setWaivers] = useState([]);
 
   const { setValues, ...formik } = useFormik({
     validationSchema: schema,
     onSubmit: handleSubmit,
-    initialValues: {
-      id: 1,
-      name: '',
-      price: '',
-      duration: '',
-      description: '',
-      employeeId: '',
-      categoryId: 0,
-      showInApp: true,
-      showInWeb: true,
-      maxPeople: '',
-    },
+    initialValues,
   });
 
   const getActivity = useCallback(
@@ -52,7 +57,7 @@ function ModalForm({
 
         setValues({
           ...data,
-          maxPeople: data.maxPeople ?? display ? '-' : '',
+          maxPeople: data.maxPeople ?? (display ? '-' : ''),
           price: decimal.format(data.price),
         });
         setImage(data.imageUrl ?? '');
@@ -63,10 +68,6 @@ function ModalForm({
     [sendNotification, setValues, display]
   );
 
-  useEffect(() => {
-    if (activity) getActivity(activity.id);
-  }, [getActivity, activity]);
-
   const loadCategories = useCallback(async () => {
     try {
       const { data } = await categoryService.listByType('activity');
@@ -76,14 +77,6 @@ function ModalForm({
       sendNotification(error.message, false);
     }
   }, [sendNotification]);
-
-  useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
-
-  useEffect(() => {
-    employeeService.listAll().then((response) => setEmployees(response.data));
-  }, []);
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
@@ -123,6 +116,22 @@ function ModalForm({
 
     setImage({ file, url });
   }
+
+  useEffect(() => {
+    if (activity) getActivity(activity.id);
+  }, [getActivity, activity]);
+
+  useEffect(() => {
+    employeeService.listAll().then((response) => setEmployees(response.data));
+  }, []);
+
+  useEffect(() => {
+    loadCategories();
+  }, [loadCategories]);
+
+  useEffect(() => {
+    waiverService.listAll().then(({ data }) => setWaivers(data));
+  }, []);
 
   return (
     <>
@@ -203,7 +212,7 @@ function ModalForm({
                   }
                   disabled={display}
                 >
-                  <option value="">Select</option>
+                  <option value="">Select a employee</option>
                   {employees.map((item) => (
                     <option key={item.id} value={item.id}>
                       {item.name}
@@ -269,7 +278,7 @@ function ModalForm({
 
             <Form.Row>
               <Form.Group as={Col}>
-                <Form.Label>Options</Form.Label>
+                <Form.Label>Settings</Form.Label>
                 <Form.Check
                   type="checkbox"
                   name="showInApp"
@@ -317,6 +326,24 @@ function ModalForm({
                 </Form.Control.Feedback>
               </Form.Group>
             </Form.Row>
+
+            <Form.Group>
+              <Form.Label>Waiver</Form.Label>
+              <Form.Control
+                as="select"
+                name="waiverId"
+                value={formik.values.waiverId}
+                onChange={formik.handleChange}
+                disabled={display}
+              >
+                <option value="">Select a waiver</option>
+                {waivers.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.title}
+                  </option>
+                ))}
+              </Form.Control>
+            </Form.Group>
 
             <Form.Group>
               <Form.Label>Description</Form.Label>
