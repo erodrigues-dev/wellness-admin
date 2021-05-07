@@ -8,7 +8,7 @@ import { listAll as listAllEmployees } from '~/services/employee';
 
 import { Container } from './styles';
 
-function Filter({ onFilter, allowCreate, list, setOpenNew }) {
+function Filter({ onFilter, allowCreate, setOpenNew }) {
   const [employees, setEmployees] = useState([]);
   const formik = useFormik({
     initialValues: { name: '', employeeId: '' },
@@ -36,12 +36,7 @@ function Filter({ onFilter, allowCreate, list, setOpenNew }) {
               name="name"
               value={formik.values.name}
               onChange={formik.handleChange}
-              list="activities"
             />
-            <datalist id="activities">
-              {list &&
-                list.map((item) => <option key={item.id}>{item.name}</option>)}
-            </datalist>
           </Form.Group>
           <Form.Group as={Col} sm={6}>
             <Form.Control
