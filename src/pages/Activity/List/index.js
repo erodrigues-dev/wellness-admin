@@ -33,7 +33,7 @@ function List({ list, allowEdit, setOpenEdit, setOpenDisplay, setSelected }) {
         <tbody>
           {list.map((item) => (
             <tr key={item.id}>
-              <td className="text-center actions">
+              <td className="text-center actions" style={{ minWidth: 100 }}>
                 <FiEye
                   size="18"
                   title="Display"
