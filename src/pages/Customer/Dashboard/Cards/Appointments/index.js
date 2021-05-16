@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Col, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 
 import { FUNCTIONALITIES } from '~/consts/functionalities';
@@ -9,6 +9,7 @@ import Details from '~/pages/Appointments/Details';
 import ModalForm from '~/pages/Appointments/Form';
 import * as appointmentService from '~/services/appointment';
 
+import { CardLayout } from '../CardLayout';
 import List from './List';
 
 const Appointments = () => {
@@ -50,38 +51,34 @@ const Appointments = () => {
   }
 
   return (
-    <Card>
-      <Card.Header>
-        <Row>
-          <Col className="d-flex align-items-center">
-            <span>Appointments</span>
-          </Col>
-          <Col className="d-flex justify-content-end">
-            {hasPermissionToCreate && (
-              <Button
-                variant="outline-secondary"
-                className="ml-2 text-nowrap"
-                onClick={() => setOpenAdd(true)}
-              >
-                Book Now
-              </Button>
-            )}
-            <Link to={`/appointments/${id}`}>
-              <Button variant="outline-primary" className="ml-2 text-nowrap">
-                See More
-              </Button>
-            </Link>
-          </Col>
-        </Row>
-      </Card.Header>
-      <Card.Body>
-        <List
-          list={list}
-          handleDelete={handleDelete}
-          setOpenDetails={() => setOpenDetails(true)}
-          setAppointment={setAppointment}
-        />
-      </Card.Body>
+    <CardLayout
+      title="Appointments"
+      buttons={
+        <>
+          {hasPermissionToCreate && (
+            <Button
+              variant="outline-secondary"
+              className="ml-2 text-nowrap"
+              onClick={() => setOpenAdd(true)}
+            >
+              Book Now
+            </Button>
+          )}
+          <Link to={`/appointments/${id}`}>
+            <Button variant="outline-primary" className="ml-2 text-nowrap">
+              See More
+            </Button>
+          </Link>
+        </>
+      }
+    >
+      <List
+        list={list}
+        handleDelete={handleDelete}
+        setOpenDetails={() => setOpenDetails(true)}
+        setAppointment={setAppointment}
+      />
+
       {openAdd && (
         <ModalForm
           reloadAppointments={listAppointments}
@@ -97,7 +94,7 @@ const Appointments = () => {
           setAppointment={setAppointment}
         />
       )}
-    </Card>
+    </CardLayout>
   );
 };
 

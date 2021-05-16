@@ -5,7 +5,7 @@ export const CardLayout = ({ title, buttons, children }) => (
   <Card>
     <Card.Header>
       <Row>
-        <Col>
+        <Col className="d-flex align-items-center">
           <span>{title}</span>
         </Col>
         <Col className="d-flex justify-content-end align-items-center">

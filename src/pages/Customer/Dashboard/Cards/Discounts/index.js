@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Col, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 
 import { FUNCTIONALITIES } from '~/consts/functionalities';
@@ -8,6 +8,7 @@ import useNotification from '~/contexts/notification';
 import * as service from '~/services/discount';
 
 import ModalForm from '../../../../Discount/Form';
+import { CardLayout } from '../CardLayout';
 import List from './List';
 
 const Discounts = () => {
@@ -53,42 +54,37 @@ const Discounts = () => {
   }
 
   return (
-    <Card>
-      <Card.Header>
-        <Row>
-          <Col className="d-flex align-items-center">
-            <span>Discounts</span>
-          </Col>
-          <Col className="d-flex justify-content-end">
-            {hasPermissionToCreate && (
-              <Button
-                variant="outline-secondary"
-                className="ml-2"
-                onClick={() => setOpenAdd(true)}
-              >
-                Add
-              </Button>
-            )}
-            <Link to={`/discounts/${id}`}>
-              <Button variant="outline-primary" className="ml-2 text-nowrap">
-                See More
-              </Button>
-            </Link>
-          </Col>
-        </Row>
-      </Card.Header>
-      <Card.Body>
-        <List
-          list={discounts}
-          reloadList={listDiscounts}
-          handleDelete={handleDelete}
-          allowEdit={hasPermissionToUpdate}
-        />
-      </Card.Body>
+    <CardLayout
+      title="Discounts"
+      buttons={
+        <>
+          {hasPermissionToCreate && (
+            <Button
+              variant="outline-secondary"
+              className="ml-2"
+              onClick={() => setOpenAdd(true)}
+            >
+              Add
+            </Button>
+          )}
+          <Link to={`/discounts/${id}`}>
+            <Button variant="outline-primary" className="ml-2 text-nowrap">
+              See More
+            </Button>
+          </Link>
+        </>
+      }
+    >
+      <List
+        list={discounts}
+        reloadList={listDiscounts}
+        handleDelete={handleDelete}
+        allowEdit={hasPermissionToUpdate}
+      />
       {openAdd && (
         <ModalForm setClose={setOpenAdd} reloadList={listDiscounts} />
       )}
-    </Card>
+    </CardLayout>
   );
 };
 

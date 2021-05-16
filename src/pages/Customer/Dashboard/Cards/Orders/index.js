@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Button, Card, Col, Row } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Link, useParams } from 'react-router-dom';
 
 import Modal from '~/components/Modal';
@@ -10,6 +10,7 @@ import Details from '~/pages/Order/Details';
 import * as service from '~/services/order';
 
 import OrderWizard from '../../../../Order/Form';
+import { CardLayout } from '../CardLayout';
 import List from './List';
 
 const Orders = () => {
@@ -40,33 +41,28 @@ const Orders = () => {
   }, [listOrders]);
 
   return (
-    <Card>
-      <Card.Header>
-        <Row>
-          <Col className="d-flex align-items-center">
-            <span>Orders</span>
-          </Col>
-          <Col className="d-flex justify-content-end align-items-center">
-            {hasPermissionToCreate && (
-              <Button
-                variant="outline-secondary"
-                className="ml-2"
-                onClick={() => setOpenCheckout(true)}
-              >
-                Checkout
-              </Button>
-            )}
-            <Link to={`/orders/${id}`}>
-              <Button variant="outline-primary" className="ml-2 text-nowrap">
-                See More
-              </Button>
-            </Link>
-          </Col>
-        </Row>
-      </Card.Header>
-      <Card.Body>
-        <List list={list} setOrder={setOrder} setOpenDetails={setOpenDetails} />
-      </Card.Body>
+    <CardLayout
+      title="Orders"
+      buttons={
+        <>
+          {hasPermissionToCreate && (
+            <Button
+              variant="outline-secondary"
+              className="ml-2"
+              onClick={() => setOpenCheckout(true)}
+            >
+              Checkout
+            </Button>
+          )}
+          <Link to={`/orders/${id}`}>
+            <Button variant="outline-primary" className="ml-2 text-nowrap">
+              See More
+            </Button>
+          </Link>
+        </>
+      }
+    >
+      <List list={list} setOrder={setOrder} setOpenDetails={setOpenDetails} />
       {openCheckout && (
         <Modal title="Create Order" setClose={setOpenCheckout}>
           <OrderWizard reloadOrders={listOrders} setClose={setOpenCheckout} />
@@ -80,7 +76,7 @@ const Orders = () => {
           setOrder={setOrder}
         />
       )}
-    </Card>
+    </CardLayout>
   );
 };
 
