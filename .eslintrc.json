@@ -41,6 +41,7 @@
         }
       }
     ],
+    "react/no-danger": "off",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
     "global-require": "off",
