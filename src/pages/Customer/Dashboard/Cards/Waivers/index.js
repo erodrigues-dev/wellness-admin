@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
 import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
+import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
 import service from '~/services/customerWaiver';
 
 import { CardLayout } from '../CardLayout';
@@ -27,6 +28,13 @@ const Waivers = () => {
     });
   };
 
+  const handleOpenSign = (waiverId) => {
+    setModal({
+      waiverId,
+      action: 'sign',
+    });
+  };
+
   const handleCloseModal = () => setModal({});
 
   return (
@@ -41,10 +49,22 @@ const Waivers = () => {
         </>
       }
     >
-      <List list={list} onClickDetail={handleOpenDetail} />
+      <List
+        list={list}
+        onClickDetail={handleOpenDetail}
+        onClickSign={handleOpenSign}
+      />
 
       {modal.action === 'detail' && (
         <CustomerWaiverDetail
+          customerId={customerId}
+          waiverId={modal.waiverId}
+          onClose={handleCloseModal}
+        />
+      )}
+
+      {modal.action === 'sign' && (
+        <CustomerWaiverSign
           customerId={customerId}
           waiverId={modal.waiverId}
           onClose={handleCloseModal}

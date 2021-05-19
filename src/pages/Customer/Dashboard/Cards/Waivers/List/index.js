@@ -7,7 +7,7 @@ import styled from 'styled-components';
 
 import { formatToDateTime } from '~/helpers/date';
 
-export const List = ({ list, onClickDetail }) => {
+export const List = ({ list, onClickDetail, onClickSign }) => {
   return (
     <Container>
       {list.map((item) => (
@@ -31,7 +31,12 @@ export const List = ({ list, onClickDetail }) => {
                 <FiEye color="#fff" />
               </Button>
             ) : (
-              <Button variant="secondary" className="mr-2" title="Sign Waiver">
+              <Button
+                variant="secondary"
+                className="mr-2"
+                title="Sign Waiver"
+                onClick={() => onClickSign(item.waiver.id)}
+              >
                 <MdFingerprint color="#fff" />
               </Button>
             )}
