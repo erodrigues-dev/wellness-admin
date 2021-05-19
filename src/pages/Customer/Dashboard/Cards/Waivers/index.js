@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
+import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
 import service from '~/services/customerWaiver';
 
 import { CardLayout } from '../CardLayout';
@@ -11,12 +12,22 @@ const PAGE = 1;
 const LIMIT = 3;
 
 const Waivers = () => {
+  const { id: customerId } = useParams();
   const [list, setList] = useState([]);
-  const { id } = useParams();
+  const [modal, setModal] = useState({});
 
   useEffect(() => {
-    service.list(PAGE, LIMIT, id).then(({ data }) => setList(data));
-  }, [id]);
+    service.list(PAGE, LIMIT, customerId).then(({ data }) => setList(data));
+  }, [customerId]);
+
+  const handleOpenDetail = (waiverId) => {
+    setModal({
+      waiverId,
+      action: 'detail',
+    });
+  };
+
+  const handleCloseModal = () => setModal({});
 
   return (
     <CardLayout
@@ -30,7 +41,15 @@ const Waivers = () => {
         </>
       }
     >
-      <List list={list} />
+      <List list={list} onClickDetail={handleOpenDetail} />
+
+      {modal.action === 'detail' && (
+        <CustomerWaiverDetail
+          customerId={customerId}
+          waiverId={modal.waiverId}
+          onClose={handleCloseModal}
+        />
+      )}
     </CardLayout>
   );
 };
