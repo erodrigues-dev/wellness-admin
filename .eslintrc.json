@@ -58,7 +58,8 @@
     "no-bitwise": "off",
     "no-nested-ternary": "off",
     "import/no-named-as-default-member": "off",
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "jsx-a11y/label-has-associated-control": "off"
   },
   "settings": {
     "import/resolver": {
