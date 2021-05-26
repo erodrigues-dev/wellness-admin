@@ -17,9 +17,14 @@ const Waivers = () => {
   const [list, setList] = useState([]);
   const [modal, setModal] = useState({});
 
-  useEffect(() => {
-    service.list(PAGE, LIMIT, customerId).then(({ data }) => setList(data));
+  const fetchList = useCallback(async () => {
+    const { data } = await service.list(PAGE, LIMIT, customerId);
+    setList(data);
   }, [customerId]);
+
+  useEffect(() => {
+    fetchList();
+  }, [fetchList]);
 
   const handleOpenDetail = (waiverId) => {
     setModal({
