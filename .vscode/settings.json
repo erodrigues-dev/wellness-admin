@@ -16,5 +16,7 @@
     "titleBar.inactiveForeground": "#15202b99"
   },
   "peacock.color": "#61dafb",
-  "git.rebaseWhenSync": true
+  "git.rebaseWhenSync": true,
+  "autoimport.filesToScan": "**/*.{ts,tsx,js,jsx}",
+  "autoimport.showNotifications": true
 }
