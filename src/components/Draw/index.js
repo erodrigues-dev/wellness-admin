@@ -5,7 +5,7 @@ import { IoReload } from 'react-icons/io5';
 
 import styled from 'styled-components';
 
-export const Draw = ({ label, onChange, data }) => {
+export const Draw = ({ label, onChange }) => {
   const canvasDrawRef = useRef(null);
 
   const handleClear = () => {
@@ -13,8 +13,10 @@ export const Draw = ({ label, onChange, data }) => {
     canvasDrawRef.current.clear();
   };
 
-  if (onChange && data)
-    throw new Error('Dont set "onChange" and "data" at same time');
+  const handleChange = (draw) => {
+    const dataUrl = draw.canvas.drawing.toDataURL();
+    onChange(dataUrl);
+  };
 
   return (
     <Container>
@@ -22,9 +24,7 @@ export const Draw = ({ label, onChange, data }) => {
       <div className="canvas">
         <CanvasDraw
           ref={canvasDrawRef}
-          onChange={(draw) => onChange(draw.getSaveData())}
-          saveData={data}
-          disabled={Boolean(data)}
+          onChange={handleChange}
           canvasWidth="100%"
           canvasHeight="100%"
           loadTimeOffset={1}
