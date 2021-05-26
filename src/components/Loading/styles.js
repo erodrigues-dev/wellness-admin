@@ -48,7 +48,7 @@ const colorAnimation = keyframes`
 export const Container = styled.div`
   width: 200px;
   height: 200px;
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-100px, -100px);
