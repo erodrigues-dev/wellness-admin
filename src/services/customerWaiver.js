@@ -21,7 +21,7 @@ const remove = (customerId, waiverId) =>
 const sign = ({ customerId, waiverId, signImage }) => {
   const data = new FormData();
   data.append('waiverId', waiverId);
-  data.append('signImage', signImage);
+  data.append('signImage', signImage, 'sign.png');
 
   return api.put(`/customers/${customerId}/waivers`, data);
 };
