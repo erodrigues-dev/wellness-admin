@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
@@ -73,6 +73,7 @@ const Waivers = () => {
           customerId={customerId}
           waiverId={modal.waiverId}
           onClose={handleCloseModal}
+          onRefresh={fetchList}
         />
       )}
     </CardLayout>
