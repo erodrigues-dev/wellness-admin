@@ -18,8 +18,9 @@ export const CustomerWaiverSign = ({
   customerId,
   waiverId,
   onClose,
-  onRefresh,
+  onRefresh = () => {},
 }) => {
+  const [loading, setLoading] = useState(true);
   const [model, setModel] = useState();
   const [drawDataUrl, setDrawDataUrl] = useState(null);
   const [isAgree, setIsAgree] = useState(false);
@@ -48,10 +49,19 @@ export const CustomerWaiverSign = ({
   };
 
   useEffect(() => {
-    service.get(customerId, waiverId).then(({ data }) => setModel(data));
-  }, [customerId, waiverId]);
+    setLoading(true);
+    service
+      .get(customerId, waiverId)
+      .then(({ data }) => setModel(data))
+      .catch(() => {
+        toast.error('Unexpected error.');
+        onClose();
+      })
+      .finally(() => setLoading(false));
+  }, [customerId, onClose, waiverId]);
 
-  if (!model) return <Loading />;
+  if (loading) return <Loading />;
+  if (!model) return null;
 
   return (
     <Modal title="Waiver detail" setClose={onClose}>
