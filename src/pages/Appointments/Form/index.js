@@ -18,6 +18,7 @@ import {
 import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
 
+import { WaiverStatus } from '../WaiverStatus';
 import schema from './schema';
 import { Container } from './styles';
 
@@ -279,6 +280,12 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
               {formik.errors.relationId}
             </Form.Control.Feedback>
           </Form.Group>
+
+          <WaiverStatus
+            customerId={formik.values.customerId}
+            activityId={formik.values.relationId}
+          />
+
           <Form.Group>
             <Form.Label>Date</Form.Label>
             <InputDatePicker

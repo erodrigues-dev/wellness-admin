@@ -12,6 +12,9 @@ const list = (page, limit, customerId) => {
 const get = (customerId, waiverId) =>
   api.get(`/customers/${customerId}/waivers/${waiverId}`);
 
+const getByActivity = (customerId, activityId) =>
+  api.get(`/customers/${customerId}/waivers/activity/${activityId}`);
+
 const add = (customerId, waiverId) =>
   api.post(`/customers/${customerId}/waivers`, { waiverId });
 
@@ -29,6 +32,7 @@ const sign = ({ customerId, waiverId, signImage }) => {
 export default {
   list,
   get,
+  getByActivity,
   add,
   remove,
   sign,
