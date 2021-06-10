@@ -10,7 +10,7 @@ const schema = yup.object().shape({
     .number()
     .min(1, 'Select an Activity')
     .required('Select an Activity'),
-  date: yup.string().required('Select an available date'),
+  date: yup.string().nullable().required('Select an available date'),
   timeId: yup.string().required('Select an available hour'),
 });
 
