@@ -12,8 +12,10 @@ export const list = (page, filters) => {
 
 export const get = (id) => api.get(`/waivers/${id}`);
 
-export function listAll() {
-  return api.get('/waivers');
+export function listAll(ignoreOfCustomerId) {
+  return api.get('/waivers/all', {
+    params: { ignoreOfCustomerId },
+  });
 }
 
 export function create(data) {

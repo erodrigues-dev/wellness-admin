@@ -43,10 +43,10 @@ export const CustomerWaiverAdd = ({
 
   useEffect(() => {
     waiverService
-      .listAll()
+      .listAll(customerId)
       .then(({ data }) => setWaivers(data))
       .catch(() => {});
-  }, []);
+  }, [customerId]);
 
   return (
     <Modal setClose={onClose} title="Add Waiver">
