@@ -5,12 +5,12 @@ import { toast } from 'react-toastify';
 
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import { FormWaiver as WaiverModal } from '~/pages/Waivers/Form';
 import service from '~/services/customerWaiver';
 
 import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import { List } from './List';
 import { CustomerWaiverAdd } from './modals/Add';
+import { CustomerWaiverDetail } from './modals/Detail';
 
 const LIMIT = 10;
 
@@ -101,10 +101,12 @@ export const CustomerWaiver = () => {
       )}
 
       {modal.action === 'display' && (
-        <WaiverModal
-          id={modal.waiverId}
+        <CustomerWaiverDetail
+          customerId={customerId}
+          waiverId={modal.waiverId}
           onClose={() => setModal({})}
-          isDisplay
+        />
+      )}
         />
       )}
     </Card>
