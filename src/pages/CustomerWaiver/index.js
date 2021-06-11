@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
+import { FormWaiver as WaiverModal } from '~/pages/Waivers/Form';
 import service from '~/services/customerWaiver';
 
 import { List } from './List';
@@ -68,7 +69,9 @@ export const CustomerWaiver = () => {
         data={data}
         allowEdit={allowEdit}
         allowDelete={allowDelete}
-        // onDisplay={handleDisplay}
+        onDisplay={(item) =>
+          setModal({ action: 'display', waiverId: item.waiver.id })
+        }
         // onEdit={handleEdit}
         // onDelete={handleDelete}
         onPaginate={(page) => setData((current) => ({ ...current, page }))}
@@ -79,6 +82,14 @@ export const CustomerWaiver = () => {
           customerId={customerId}
           onRefresh={fetchList}
           onClose={() => setModal({})}
+        />
+      )}
+
+      {modal.action === 'display' && (
+        <WaiverModal
+          id={modal.waiverId}
+          onClose={() => setModal({})}
+          isDisplay
         />
       )}
     </Card>
