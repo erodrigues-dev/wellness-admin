@@ -49,7 +49,7 @@ const Waivers = () => {
       async () => {
         try {
           await service.remove(customerId, waiverId);
-          setList((current) => current.filter((x) => x.waiver.id !== waiverId));
+          await fetchList();
           toast.success('Waiver deleted from customer account with success.');
         } catch (error) {
           toast.error(error.message);
