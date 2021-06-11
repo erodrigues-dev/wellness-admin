@@ -14,7 +14,11 @@ import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
 import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
 import service from '~/services/customerWaiver';
 
-export const CustomerWaiverStatus = ({ customerId, activityId }) => {
+export const CustomerWaiverStatus = ({
+  customerId,
+  activityId,
+  onChange: setStatus = () => {},
+}) => {
   const [detail, setDetail] = useState(null);
   const [modal, setModal] = useState({});
 
@@ -78,6 +82,13 @@ export const CustomerWaiverStatus = ({ customerId, activityId }) => {
     fetchDetail();
   }, [customerId, activityId, fetchDetail]);
 
+  useEffect(() => {
+    setStatus({
+      hasWaiver: Boolean(detail),
+      hasSign: Boolean(detail?.customerHasSign),
+    });
+  }, [detail, setStatus]);
+
   if (!detail) return null;
 
   return (
@@ -90,6 +101,7 @@ export const CustomerWaiverStatus = ({ customerId, activityId }) => {
             defaultValue={detail.title}
             isInvalid={!signed}
             isValid={signed}
+            autoFocus
           />
           <InputGroup.Append>
             <StatusButton />
