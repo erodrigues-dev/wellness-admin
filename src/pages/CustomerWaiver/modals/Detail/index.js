@@ -31,7 +31,7 @@ export const CustomerWaiverDetail = ({ customerId, waiverId, onClose }) => {
         </div>
 
         <div className="sign-image">
-          <img src={model.signedUrl} alt="signed" />
+          {model.signedUrl && <img src={model.signedUrl} alt="signed" />}
         </div>
 
         <div className="status">
@@ -43,10 +43,12 @@ export const CustomerWaiverDetail = ({ customerId, waiverId, onClose }) => {
             <strong>Created At</strong>
             <p>{formatToDateTime(new Date(model.createdAt))}</p>
           </div>
-          <div>
-            <strong>Signed At</strong>
-            <p>{formatToDateTime(new Date(model.signedAt))}</p>
-          </div>
+          {model.signedAt && (
+            <div>
+              <strong>Signed At</strong>
+              <p>{formatToDateTime(new Date(model.signedAt))}</p>
+            </div>
+          )}
         </div>
       </Container>
     </Modal>
