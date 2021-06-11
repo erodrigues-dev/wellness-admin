@@ -61,6 +61,11 @@ export const List = ({
               <td>{formatToList(item.createdAt)}</td>
             </tr>
           ))}
+          {data.list.length === 0 && (
+            <tr>
+              <td colSpan={3}>No record found</td>
+            </tr>
+          )}
         </tbody>
       </Table>
       <Paginate
