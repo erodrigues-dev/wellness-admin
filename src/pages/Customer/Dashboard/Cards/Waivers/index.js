@@ -3,6 +3,7 @@ import { Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+import { CustomerWaiverAdd } from '~/pages/CustomerWaiver/Add';
 import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
 import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
 import service from '~/services/customerWaiver';
@@ -57,6 +58,11 @@ const Waivers = () => {
     );
   };
 
+  const handleOpenAdd = () => {
+    console.log(`>> #####`);
+    setModal({ action: 'add' });
+  };
+
   const handleCloseModal = () => setModal({});
 
   return (
@@ -64,7 +70,9 @@ const Waivers = () => {
       title="Waivers"
       buttons={
         <>
-          <Button variant="outline-secondary mr-2">Add</Button>
+          <Button variant="outline-secondary mr-2" onClick={handleOpenAdd}>
+            Add
+          </Button>
           <Button variant="outline-primary" className="text-nowrap">
             See More
           </Button>
@@ -90,6 +98,14 @@ const Waivers = () => {
         <CustomerWaiverSign
           customerId={customerId}
           waiverId={modal.waiverId}
+          onClose={handleCloseModal}
+          onRefresh={fetchList}
+        />
+      )}
+
+      {modal.action === 'add' && (
+        <CustomerWaiverAdd
+          customerId={customerId}
           onClose={handleCloseModal}
           onRefresh={fetchList}
         />
