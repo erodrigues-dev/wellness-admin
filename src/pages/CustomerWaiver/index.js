@@ -11,6 +11,7 @@ import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import { List } from './List';
 import { CustomerWaiverAdd } from './modals/Add';
 import { CustomerWaiverDetail } from './modals/Detail';
+import { CustomerWaiverSign } from './modals/Sign';
 
 const LIMIT = 10;
 
@@ -87,7 +88,9 @@ export const CustomerWaiver = () => {
         onDisplay={(item) =>
           setModal({ action: 'display', waiverId: item.waiver.id })
         }
-        // onEdit={handleEdit}
+        onSign={(item) =>
+          setModal({ action: 'sign', waiverId: item.waiver.id })
+        }
         onDelete={handleDelete}
         onPaginate={(page) => setData((current) => ({ ...current, page }))}
       />
@@ -107,6 +110,13 @@ export const CustomerWaiver = () => {
           onClose={() => setModal({})}
         />
       )}
+
+      {modal.action === 'sign' && (
+        <CustomerWaiverSign
+          customerId={customerId}
+          waiverId={modal.waiverId}
+          onClose={() => setModal({})}
+          onRefresh={fetchList}
         />
       )}
     </Card>
