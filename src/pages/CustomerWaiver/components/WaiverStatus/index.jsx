@@ -41,7 +41,6 @@ export const CustomerWaiverStatus = ({
     try {
       await service.add(customerId, detail.id);
       setDetail({ ...detail, customerHasWaiver: true });
-      await new Promise((resolve) => setTimeout(resolve, 500));
     } catch (error) {
       toast.error(error.message);
     }
