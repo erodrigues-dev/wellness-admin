@@ -14,7 +14,7 @@ import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
 import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
 import service from '~/services/customerWaiver';
 
-export const WaiverStatus = ({ customerId, activityId }) => {
+export const CustomerWaiverStatus = ({ customerId, activityId }) => {
   const [detail, setDetail] = useState(null);
   const [modal, setModal] = useState({});
 

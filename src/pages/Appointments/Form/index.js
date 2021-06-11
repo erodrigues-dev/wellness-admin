@@ -18,7 +18,7 @@ import {
 import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
 
-import { WaiverStatus } from '../WaiverStatus';
+import { CustomerWaiverStatus } from '../../CustomerWaiver/WaiverStatus';
 import schema from './schema';
 import { Container } from './styles';
 
@@ -281,7 +281,7 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
             </Form.Control.Feedback>
           </Form.Group>
 
-          <WaiverStatus
+          <CustomerWaiverStatus
             customerId={formik.values.customerId}
             activityId={formik.values.relationId}
           />
