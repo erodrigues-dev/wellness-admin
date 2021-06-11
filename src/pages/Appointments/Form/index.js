@@ -18,7 +18,7 @@ import {
 import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
 
-import { CustomerWaiverStatus } from '../../CustomerWaiver/WaiverStatus';
+import { CustomerWaiverStatus } from '../../CustomerWaiver/components/WaiverStatus';
 import schema from './schema';
 import { Container } from './styles';
 

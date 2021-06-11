@@ -10,8 +10,8 @@ import { FiEye } from 'react-icons/fi';
 import { MdFingerprint } from 'react-icons/md';
 import { toast } from 'react-toastify';
 
-import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
-import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
+import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/modals/Detail';
+import { CustomerWaiverSign } from '~/pages/CustomerWaiver/modals/Sign';
 import service from '~/services/customerWaiver';
 
 export const CustomerWaiverStatus = ({

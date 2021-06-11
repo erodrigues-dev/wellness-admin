@@ -3,9 +3,9 @@ import { Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { CustomerWaiverAdd } from '~/pages/CustomerWaiver/Add';
-import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
-import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
+import { CustomerWaiverAdd } from '~/pages/CustomerWaiver/modals/Add';
+import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/modals/Detail';
+import { CustomerWaiverSign } from '~/pages/CustomerWaiver/modals/Sign';
 import service from '~/services/customerWaiver';
 import confirmHandler from '~components/ConfirmAlert/confirmHandler';
 

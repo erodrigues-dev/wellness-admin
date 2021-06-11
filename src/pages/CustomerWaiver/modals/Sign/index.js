@@ -10,7 +10,7 @@ import Modal from '~/components/Modal';
 import { formatToDateTime } from '~/helpers/date';
 import service from '~/services/customerWaiver';
 
-import { Draw } from '../../../components/Draw';
+import { Draw } from '../../../../components/Draw';
 
 const MIN_SIGN_LENGTH = 8_000;
 
