@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   FormGroup,
   FormLabel,
@@ -8,6 +8,7 @@ import {
 } from 'react-bootstrap';
 import { FiEye } from 'react-icons/fi';
 import { MdFingerprint } from 'react-icons/md';
+import { toast } from 'react-toastify';
 
 import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
 import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
@@ -17,14 +18,40 @@ export const WaiverStatus = ({ customerId, activityId }) => {
   const [detail, setDetail] = useState(null);
   const [modal, setModal] = useState({});
 
-  const signed = Boolean(detail?.signedAt);
+  const signed = Boolean(detail?.customerHasSign);
 
-  const handleCloseModal = () => setModal({});
+  const fetchDetail = useCallback(async () => {
+    const { data } = await service.getByActivity(customerId, activityId);
+    setDetail(data);
+  }, [activityId, customerId]);
+
+  const handleCloseModal = async () => {
+    if (modal.action === 'sign') await fetchDetail();
+
+    setModal({});
+  };
+
+  const addWaiverInCustomerAccount = async () => {
+    if (detail.customerHasWaiver) return;
+
+    try {
+      await service.add(customerId, detail.id);
+      setDetail({ ...detail, customerHasWaiver: true });
+      await new Promise((resolve) => setTimeout(resolve, 500));
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  const handleAction = async (action) => {
+    if (action === 'sign') {
+      await addWaiverInCustomerAccount();
+    }
+
+    setModal({ action });
+  };
 
   const StatusButton = () => {
-    // TODO onClick devera adicionar a waiver na conta do usuario
-    // antes de chamar o modal de SIGN
-
     const title = signed ? 'View detail' : 'Sign waiver';
     const variant = signed ? 'info' : 'secondary';
     const action = signed ? 'detail' : 'sign';
@@ -35,7 +62,7 @@ export const WaiverStatus = ({ customerId, activityId }) => {
         style={{
           borderRadius: '0 4px 4px 0',
         }}
-        onClick={() => setModal({ action })}
+        onClick={() => handleAction(action)}
       >
         {signed ? <FiEye color="#fff" /> : <MdFingerprint color="#fff" />}
       </Button>
@@ -48,11 +75,8 @@ export const WaiverStatus = ({ customerId, activityId }) => {
       return;
     }
 
-    service
-      .getByActivity(customerId, activityId)
-      .then(({ data }) => setDetail(data))
-      .catch();
-  }, [customerId, activityId]);
+    fetchDetail();
+  }, [customerId, activityId, fetchDetail]);
 
   if (!detail) return null;
 
