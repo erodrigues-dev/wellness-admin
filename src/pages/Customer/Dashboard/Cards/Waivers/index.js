@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { CustomerWaiverAdd } from '~/pages/CustomerWaiver/modals/Add';
@@ -72,9 +72,11 @@ const Waivers = () => {
           <Button variant="outline-secondary mr-2" onClick={handleOpenAdd}>
             Add
           </Button>
-          <Button variant="outline-primary" className="text-nowrap">
-            See More
-          </Button>
+          <Link to={`/customers/${customerId}/waivers`}>
+            <Button variant="outline-primary" className="text-nowrap">
+              See More
+            </Button>
+          </Link>
         </>
       }
     >
