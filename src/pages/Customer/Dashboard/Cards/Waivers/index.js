@@ -7,8 +7,8 @@ import { CustomerWaiverAdd } from '~/pages/CustomerWaiver/Add';
 import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
 import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
 import service from '~/services/customerWaiver';
+import confirmHandler from '~components/ConfirmAlert/confirmHandler';
 
-import confirmHandler from '../../../../../components/ConfirmAlert/confirmHandler';
 import { CardLayout } from '../CardLayout';
 import { List } from './List';
 
@@ -59,7 +59,6 @@ const Waivers = () => {
   };
 
   const handleOpenAdd = () => {
-    console.log(`>> #####`);
     setModal({ action: 'add' });
   };
 
