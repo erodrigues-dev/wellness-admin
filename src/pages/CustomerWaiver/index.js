@@ -8,6 +8,7 @@ import useAuth from '~/contexts/auth';
 import { FormWaiver as WaiverModal } from '~/pages/Waivers/Form';
 import service from '~/services/customerWaiver';
 
+import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import { List } from './List';
 import { CustomerWaiverAdd } from './modals/Add';
 
@@ -46,6 +47,20 @@ export const CustomerWaiver = () => {
     }
   }, [customerId, data.limit, data.page]);
 
+  const handleDelete = (item) => {
+    confirmHandler(
+      'Are you sure to delete this waiver for customer account?',
+      async () => {
+        try {
+          await service.remove(customerId, item.waiver.id);
+          await fetchList();
+        } catch (error) {
+          toast.error(error.message);
+        }
+      }
+    );
+  };
+
   useEffect(() => {
     fetchList();
   }, [fetchList]);
@@ -73,7 +88,7 @@ export const CustomerWaiver = () => {
           setModal({ action: 'display', waiverId: item.waiver.id })
         }
         // onEdit={handleEdit}
-        // onDelete={handleDelete}
+        onDelete={handleDelete}
         onPaginate={(page) => setData((current) => ({ ...current, page }))}
       />
 
