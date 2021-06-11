@@ -21,6 +21,7 @@ import {
   NotAuthorized,
   Specialty,
   Waiver,
+  CustomerWaiver,
 } from '~/pages';
 
 const PrivateRoutes = () => {
@@ -53,6 +54,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.customers.list}
           path="/customers/:id/dashboard"
           component={CustomerDashboard}
+        />
+
+        <PrivateRoute
+          exact
+          functionality={FUNCTIONALITIES.settings.waivers.list}
+          path="/customers/:id/waivers"
+          component={CustomerWaiver}
         />
 
         <PrivateRoute

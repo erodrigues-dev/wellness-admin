@@ -1,3 +1,10 @@
 import React from 'react';
 
-export const CustomerWaiverPage = () => <h2>CustomerWaiverPage works!</h2>;
+import { List } from './List';
+
+export const CustomerWaiver = () => (
+  <div>
+    <h2>CustomerWaiverPage works!</h2>
+    <List />
+  </div>
+);

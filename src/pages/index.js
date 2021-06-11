@@ -25,3 +25,4 @@ export { default as Profile } from './Profile';
 export { default as NotAuthorized } from './NotAuthorized';
 export * from './Specialty';
 export * from './Waivers';
+export * from './CustomerWaiver';
