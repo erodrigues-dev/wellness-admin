@@ -1,11 +1,13 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import { CustomerWaiverDetail } from '~/pages/CustomerWaiver/Detail';
 import { CustomerWaiverSign } from '~/pages/CustomerWaiver/Sign';
 import service from '~/services/customerWaiver';
 
+import confirmHandler from '../../../../../components/ConfirmAlert/confirmHandler';
 import { CardLayout } from '../CardLayout';
 import { List } from './List';
 
@@ -40,6 +42,21 @@ const Waivers = () => {
     });
   };
 
+  const handleDelete = (waiverId) => {
+    confirmHandler(
+      'Are you sure to delete this waiver for customer account?',
+      async () => {
+        try {
+          await service.remove(customerId, waiverId);
+          setList((current) => current.filter((x) => x.waiver.id !== waiverId));
+          toast.success('Waiver deleted from customer account with success.');
+        } catch (error) {
+          toast.error(error.message);
+        }
+      }
+    );
+  };
+
   const handleCloseModal = () => setModal({});
 
   return (
@@ -58,6 +75,7 @@ const Waivers = () => {
         list={list}
         onClickDetail={handleOpenDetail}
         onClickSign={handleOpenSign}
+        onClickDelete={handleDelete}
       />
 
       {modal.action === 'detail' && (
