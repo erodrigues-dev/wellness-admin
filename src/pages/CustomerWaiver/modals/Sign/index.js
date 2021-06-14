@@ -3,7 +3,6 @@ import { Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import dataURLtoBlob from 'dataurl-to-blob';
-import styled from 'styled-components';
 
 import Loading from '~/components/Loading';
 import Modal from '~/components/Modal';
@@ -11,6 +10,7 @@ import { formatToDateTime } from '~/helpers/date';
 import service from '~/services/customerWaiver';
 
 import { Draw } from '../../../../components/Draw';
+import { Container } from './style';
 
 const MIN_SIGN_LENGTH = 8_000;
 
@@ -115,49 +115,3 @@ export const CustomerWaiverSign = ({
     </Modal>
   );
 };
-
-const Container = styled.div`
-  padding: 16px;
-
-  h2 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    margin: 0;
-    margin-bottom: 1rem;
-  }
-
-  .text-container {
-    max-height: 360px;
-    overflow: auto;
-    margin-bottom: 1rem;
-
-    p {
-      font-size: 0.9rem;
-      line-height: 1rem;
-    }
-  }
-
-  .agree {
-    input {
-      width: 16px;
-      height: 16px;
-      margin-right: 4px;
-    }
-  }
-
-  .info {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-
-    p {
-      white-space: nowrap;
-    }
-  }
-
-  .buttons {
-    display: flex;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-`;
