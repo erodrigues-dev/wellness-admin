@@ -12,7 +12,7 @@ import service from '~/services/customerWaiver';
 import { Draw } from '../../../../components/Draw';
 import { Container } from './style';
 
-const MIN_SIGN_LENGTH = 8_000;
+const MIN_SIGN_LENGTH = 6_000;
 
 export const CustomerWaiverSign = ({
   customerId,
