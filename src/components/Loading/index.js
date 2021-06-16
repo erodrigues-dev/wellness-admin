@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Container, Wrapper, Ellipsis } from './styles';
 
-const Loding = () => {
+const Loading = () => {
   return (
     <Container>
       <Wrapper>
@@ -16,4 +16,4 @@ const Loding = () => {
   );
 };
 
-export default Loding;
+export default Loading;

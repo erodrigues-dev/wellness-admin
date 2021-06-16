@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -18,6 +18,7 @@ import {
 import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
 
+import { CustomerWaiverStatus } from '../../CustomerWaiver/components/WaiverStatus';
 import schema from './schema';
 import { Container } from './styles';
 
@@ -33,6 +34,10 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
   const [dateRange, setDateRange] = useState();
   const [availableDates, setAvailableDates] = useState([]);
   const [availableTimeSlots, setAvailableTimeSlots] = useState([]);
+  const [waiverStatus, setWaiverStatus] = useState({
+    hasWaiver: false,
+    hasSign: false,
+  });
 
   const formik = useFormik({
     validationSchema: schema,
@@ -219,6 +224,12 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
     );
   }
 
+  const formIsValid = useMemo(() => {
+    if (!formik.isValid) return false;
+    if (waiverStatus.hasWaiver && !waiverStatus.hasSign) return false;
+    return true;
+  }, [formik.isValid, waiverStatus]);
+
   return (
     <Modal setClose={setClose} title="Add Appointments">
       <Form onSubmit={formik.handleSubmit} className="modal-form">
@@ -279,6 +290,13 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
               {formik.errors.relationId}
             </Form.Control.Feedback>
           </Form.Group>
+
+          <CustomerWaiverStatus
+            customerId={formik.values.customerId}
+            activityId={formik.values.relationId}
+            onChange={setWaiverStatus}
+          />
+
           <Form.Group>
             <Form.Label>Date</Form.Label>
             <InputDatePicker
@@ -346,7 +364,9 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
             >
               Cancel
             </Button>
-            <ButtonLoading type="submit">Save</ButtonLoading>
+            <ButtonLoading type="submit" disabled={!formIsValid}>
+              Save
+            </ButtonLoading>
           </Form.Row>
         </div>
       </Form>
