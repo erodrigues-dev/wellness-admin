@@ -26,3 +26,4 @@ export { default as NotAuthorized } from './NotAuthorized';
 export * from './Specialty';
 export * from './Waivers';
 export * from './CustomerWaiver';
+export * from './WorkoutProfile';

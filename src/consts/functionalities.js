@@ -28,6 +28,11 @@ export const FUNCTIONALITIES = {
     create: 4096,
     update: 4096,
   },
+  workoutProfile: {
+    list: 536870912,
+    createUpdate: 1073741824,
+    delete: 2147483648,
+  },
   settings: {
     employees: {
       list: 8192,
