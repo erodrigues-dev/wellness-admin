@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
-export function Filter({ onFilter }) {
+export function Filter({ onFilter, onCreate, allowCreate }) {
   const customerRef = useRef(null);
 
   function onSubmit(e) {
@@ -16,9 +16,11 @@ export function Filter({ onFilter }) {
 
       <div className="mt-2 d-flex justify-content-end align-items-start">
         <Button type="submit">Filter</Button>
-        <Button variant="secondary" className="ml-2">
-          Add Workout Profile
-        </Button>
+        {allowCreate && (
+          <Button variant="secondary" className="ml-2" onClick={onCreate}>
+            Add Workout Profile
+          </Button>
+        )}
       </div>
     </Form>
   );
