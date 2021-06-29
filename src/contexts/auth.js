@@ -6,6 +6,7 @@ import React, {
   useCallback,
 } from 'react';
 
+import bitwise from 'bitwise-operator';
 import JwtDecode from 'jwt-decode';
 
 import { MENU } from '~/consts/menu';
@@ -25,7 +26,9 @@ export const AuthProvider = ({ children }) => {
     (functionality) => {
       if (user !== undefined && permissions !== undefined) {
         const allowed = permissions?.find(
-          (x) => (x.id & user?.permissions) === functionality
+          (x) =>
+            bitwise.and(Number(x.id), Number(user.permissions)) ===
+            functionality
         );
 
         return !!allowed;
