@@ -2,17 +2,27 @@ import React, { useEffect, useState, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
+import { FUNCTIONALITIES } from '~/consts/functionalities';
+import useAuth from '~/contexts/auth';
 import service from '~/services/workout-profile';
 
 import { List, Filter } from './List';
 
 export function WorkoutProfile() {
+  const { hasPermission } = useAuth();
   const [list, setList] = useState({
     rows: [],
     filter: {},
     page: 1,
     total: 0,
   });
+
+  const hasCreateUpdatePermission = hasPermission(
+    FUNCTIONALITIES.workoutProfile.createUpdate
+  );
+  const hasDeletePermission = hasPermission(
+    FUNCTIONALITIES.workoutProfile.delete
+  );
 
   const fetchList = useCallback(async (page, filter) => {
     try {
@@ -37,6 +47,22 @@ export function WorkoutProfile() {
     setList((state) => ({ ...state, filter }));
   }
 
+  function onDisplay(id) {
+    console.log('>>> onDisplay is called', id);
+  }
+
+  function onCreate() {
+    console.log('>>> onCreate is called!');
+  }
+
+  function onEdit(id) {
+    console.log('>>> onEdit is called!', id);
+  }
+
+  function onDelete(id) {
+    console.log('>>> onDelete is called!', id);
+  }
+
   useEffect(() => {
     fetchList(list.page, list.filter);
   }, [fetchList, list.page, list.filter]);
@@ -45,8 +71,20 @@ export function WorkoutProfile() {
     <Card body>
       <Card.Title>Workout Profiles</Card.Title>
       <hr />
-      <Filter onFilter={onFilter} />
-      <List list={list} onPaginate={onPaginate} />
+      <Filter
+        onFilter={onFilter}
+        allowCreate={hasCreateUpdatePermission}
+        onCreate={onCreate}
+      />
+      <List
+        list={list}
+        onPaginate={onPaginate}
+        onDisplay={onDisplay}
+        onEdit={onEdit}
+        onDelete={onDelete}
+        allowEdit={hasCreateUpdatePermission}
+        allowDelete={hasDeletePermission}
+      />
     </Card>
   );
 }

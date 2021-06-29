@@ -5,7 +5,15 @@ import { FiEdit, FiEye, FiTrash } from 'react-icons/fi';
 import Paginate from '~/components/Paginate';
 import { formatToList } from '~/helpers/date';
 
-export function List({ list, onPaginate }) {
+export function List({
+  list,
+  onPaginate,
+  onDisplay,
+  onEdit,
+  onDelete,
+  allowEdit,
+  allowDelete,
+}) {
   return (
     <div className="mt-4">
       <Table striped hover responsive>
@@ -25,20 +33,31 @@ export function List({ list, onPaginate }) {
           {list.rows.map((item) => (
             <tr key={item.id}>
               <td>
-                <FiEye title="Display" size={18} cursor="pointer" />
-                <FiEdit
-                  className="ml-2"
-                  title="Edit"
+                <FiEye
+                  title="Display"
                   size={18}
                   cursor="pointer"
+                  onClick={() => onDisplay(item.id)}
                 />
-                <FiTrash
-                  color="var(--danger)"
-                  className="ml-2"
-                  title="Delete"
-                  size={18}
-                  cursor="pointer"
-                />
+                {allowEdit && (
+                  <FiEdit
+                    className="ml-2"
+                    title="Edit"
+                    size={18}
+                    cursor="pointer"
+                    onClick={() => onEdit(item.id)}
+                  />
+                )}
+                {allowDelete && (
+                  <FiTrash
+                    color="var(--danger)"
+                    className="ml-2"
+                    title="Delete"
+                    size={18}
+                    cursor="pointer"
+                    onClick={() => onDelete(item.id)}
+                  />
+                )}
               </td>
               <td>{item.customer.name}</td>
               <td>{item.experienceLevel}</td>
