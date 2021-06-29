@@ -155,7 +155,7 @@ const PrivateRoutes = () => {
         <PrivateRoute
           exact
           functionality={FUNCTIONALITIES.workoutProfile.list}
-          path="/workout-profile"
+          path="/workout-profiles"
           component={WorkoutProfile}
         />
 
