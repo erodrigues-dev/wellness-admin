@@ -57,6 +57,7 @@ export function destroy(id) {
 
 export default {
   index,
+  listAll,
   get,
   create,
   update,

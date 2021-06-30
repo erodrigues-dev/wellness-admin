@@ -6,6 +6,7 @@ import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import service from '~/services/workout-profile';
 
+import { FormWorkoutProfile } from './Form';
 import { List, Filter } from './List';
 
 export function WorkoutProfile() {
@@ -16,6 +17,7 @@ export function WorkoutProfile() {
     page: 1,
     total: 0,
   });
+  const [modal, setModal] = useState({});
 
   const hasCreateUpdatePermission = hasPermission(
     FUNCTIONALITIES.workoutProfile.createUpdate
@@ -53,6 +55,10 @@ export function WorkoutProfile() {
 
   function onCreate() {
     console.log('>>> onCreate is called!');
+    setModal({
+      action: 'create',
+      isCreate: true,
+    });
   }
 
   function onEdit(id) {
@@ -61,6 +67,18 @@ export function WorkoutProfile() {
 
   function onDelete(id) {
     console.log('>>> onDelete is called!', id);
+  }
+
+  function onCloseModal(role) {
+    if (modal.action === 'create' && role === 'success') {
+      setList((state) => ({
+        ...state,
+        page: 1,
+        filter: {},
+      }));
+    }
+
+    setModal({});
   }
 
   useEffect(() => {
@@ -85,6 +103,14 @@ export function WorkoutProfile() {
         allowEdit={hasCreateUpdatePermission}
         allowDelete={hasDeletePermission}
       />
+
+      {modal.action === 'create' && (
+        <FormWorkoutProfile
+          isCreate={modal.isCreate}
+          isDisplay={false}
+          onClose={onCloseModal}
+        />
+      )}
     </Card>
   );
 }
