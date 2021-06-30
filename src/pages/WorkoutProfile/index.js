@@ -50,7 +50,6 @@ export function WorkoutProfile() {
   }
 
   function onDisplay(id) {
-    console.log('>>> onDisplay is called', id);
     setModal({
       id,
       isOpen: true,
@@ -59,7 +58,6 @@ export function WorkoutProfile() {
   }
 
   function onCreate() {
-    console.log('>>> onCreate is called!');
     setModal({
       isOpen: true,
       isCreate: true,
@@ -67,7 +65,6 @@ export function WorkoutProfile() {
   }
 
   function onEdit(id) {
-    console.log('>>> onEdit is called!', id);
     setModal({
       id,
       isOpen: true,
