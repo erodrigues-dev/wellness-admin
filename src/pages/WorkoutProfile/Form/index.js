@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Form, Button, Col, Row } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -11,19 +11,56 @@ import service from '~/services/workout-profile';
 
 import { validationSchema, initialValues } from './schema';
 
-export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
+export function FormWorkoutProfile({
+  onClose,
+  isDisplay,
+  isCreate,
+  isEdit,
+  workoutProfileId,
+}) {
   const [customers, setCustomers] = useState([]);
-  const formik = useFormik({
+  const { setValues, ...formik } = useFormik({
     initialValues,
     validationSchema,
     onSubmit,
   });
+  const fetchWorkoutProfile = useCallback(async () => {
+    try {
+      if (!workoutProfileId) return;
+      const { data } = await service.get(workoutProfileId);
+      const { customer, ...values } = data;
+      setCustomers([customer]);
+      setValues(parseDataToFormValues(values));
+    } catch (error) {
+      toast.error('Unable to load workout profile.');
+    }
+  }, [setValues, workoutProfileId]);
+
+  function parseDataToFormValues(data) {
+    return {
+      id: data.id,
+      customerId: data.customerId,
+      age: data.age,
+      height: data.height,
+      weight: data.weight,
+      goal: data.goal,
+      test1: data.test1,
+      test2: data.test2,
+      injuriesLimitations: data.injuriesLimitations,
+      experienceLevel: data.experienceLevel,
+      notes: data.notes,
+    };
+  }
 
   async function onSubmit({ id, ...values }, { setSubmitting }) {
     try {
       if (isCreate) {
         await service.create(values);
         toast.success('Workout profile created with success.');
+      }
+      if (isEdit) {
+        await service.update({ id, ...values });
+        toast.success('Workout profile updated with success.');
       }
       onClose('success');
     } catch (error) {
@@ -33,9 +70,13 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
   }
 
   useEffect(() => {
-    if (isCreate || isDisplay)
+    if (isCreate)
       customerService.listAll().then(({ data }) => setCustomers(data));
-  }, [isCreate, isDisplay]);
+  }, [isCreate]);
+
+  useEffect(() => {
+    fetchWorkoutProfile();
+  }, [fetchWorkoutProfile]);
 
   return (
     <Modal title="Workout Profile" setClose={onClose}>
@@ -48,8 +89,10 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
             name="customerId"
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
+            value={formik.values.customerId}
             isInvalid={formik.touched.customerId && formik.errors.customerId}
             isValid={formik.touched.customerId && !formik.errors.customerId}
+            disabled={isDisplay || isEdit}
           >
             <option value="">Select</option>
             {customers.map((item) => (
@@ -77,6 +120,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
             isValid={
               formik.touched.experienceLevel && !formik.errors.experienceLevel
             }
+            disabled={isDisplay}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.experienceLevel}
@@ -94,6 +138,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.age && formik.errors.age}
               isValid={formik.touched.age && !formik.errors.age}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.age}
@@ -111,6 +156,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
               isInvalid={formik.touched.height && formik.errors.height}
               isValid={formik.touched.height && !formik.errors.height}
               maxLength={10}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.height}
@@ -127,6 +173,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.weight && formik.errors.weight}
               isValid={formik.touched.weight && !formik.errors.weight}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.weight}
@@ -145,6 +192,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
             isInvalid={formik.touched.goal && formik.errors.goal}
             isValid={formik.touched.goal && !formik.errors.goal}
             maxLength={60}
+            disabled={isDisplay}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.goal}
@@ -163,6 +211,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
               isInvalid={formik.touched.test1 && formik.errors.test1}
               isValid={formik.touched.test1 && !formik.errors.test1}
               maxLength={60}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.test1}
@@ -180,6 +229,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
               isInvalid={formik.touched.test2 && formik.errors.test2}
               isValid={formik.touched.test2 && !formik.errors.test2}
               maxLength={60}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.test2}
@@ -204,6 +254,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
               !formik.errors.injuriesLimitations
             }
             maxLength={60}
+            disabled={isDisplay}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.injuriesLimitations}
@@ -222,6 +273,7 @@ export function FormWorkoutProfile({ onClose, isDisplay, isCreate }) {
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.notes && formik.errors.notes}
             isValid={formik.touched.notes && !formik.errors.notes}
+            disabled={isDisplay}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.notes}

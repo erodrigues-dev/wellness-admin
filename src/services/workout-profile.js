@@ -17,7 +17,9 @@ export function create(data) {
 }
 
 export function update({ id, ...data }) {
-  return api.put(`/workout-profiles/${id}`, data);
+  const payload = { ...data };
+  delete payload.customerId;
+  return api.put(`/workout-profiles/${id}`, payload);
 }
 
 export function destroy(id) {

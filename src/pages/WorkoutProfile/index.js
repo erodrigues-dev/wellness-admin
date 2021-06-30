@@ -51,18 +51,28 @@ export function WorkoutProfile() {
 
   function onDisplay(id) {
     console.log('>>> onDisplay is called', id);
+    setModal({
+      id,
+      isOpen: true,
+      isDisplay: true,
+    });
   }
 
   function onCreate() {
     console.log('>>> onCreate is called!');
     setModal({
-      action: 'create',
+      isOpen: true,
       isCreate: true,
     });
   }
 
   function onEdit(id) {
     console.log('>>> onEdit is called!', id);
+    setModal({
+      id,
+      isOpen: true,
+      isEdit: true,
+    });
   }
 
   function onDelete(id) {
@@ -70,12 +80,12 @@ export function WorkoutProfile() {
   }
 
   function onCloseModal(role) {
-    if (modal.action === 'create' && role === 'success') {
-      setList((state) => ({
-        ...state,
-        page: 1,
-        filter: {},
-      }));
+    if (modal.isCreate && role === 'success') {
+      fetchList(1, {});
+    }
+
+    if (modal.isEdit && role === 'success') {
+      fetchList(list.page, list.filter);
     }
 
     setModal({});
@@ -104,10 +114,12 @@ export function WorkoutProfile() {
         allowDelete={hasDeletePermission}
       />
 
-      {modal.action === 'create' && (
+      {modal.isOpen && (
         <FormWorkoutProfile
+          workoutProfileId={modal.id}
           isCreate={modal.isCreate}
-          isDisplay={false}
+          isEdit={modal.isEdit}
+          isDisplay={modal.isDisplay}
           onClose={onCloseModal}
         />
       )}
