@@ -5,19 +5,20 @@ import { toast } from 'react-toastify';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import service from '~/services/workout-profile';
+import confirmHandler from '~components/ConfirmAlert/confirmHandler';
 
 import { FormWorkoutProfile } from './Form';
 import { List, Filter } from './List';
 
 export function WorkoutProfile() {
   const { hasPermission } = useAuth();
+  const [modal, setModal] = useState({});
   const [list, setList] = useState({
     rows: [],
     filter: {},
     page: 1,
     total: 0,
   });
-  const [modal, setModal] = useState({});
 
   const hasCreateUpdatePermission = hasPermission(
     FUNCTIONALITIES.workoutProfile.createUpdate
@@ -73,7 +74,17 @@ export function WorkoutProfile() {
   }
 
   function onDelete(id) {
-    console.log('>>> onDelete is called!', id);
+    const callback = async () => {
+      try {
+        await service.destroy(id);
+        await fetchList(list.page, list.filter);
+        toast.success('Workout profile deleted with success.');
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+
+    confirmHandler('Are you sure delete this workout profile?', callback);
   }
 
   function onCloseModal(role) {
