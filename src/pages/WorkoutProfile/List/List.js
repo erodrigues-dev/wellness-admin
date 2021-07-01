@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 import { FiEdit, FiEye, FiTrash } from 'react-icons/fi';
+import { GiWeightLiftingUp } from 'react-icons/gi';
 
 import Paginate from '~/components/Paginate';
 import { formatToList } from '~/helpers/date';
@@ -11,6 +12,7 @@ export function List({
   onDisplay,
   onEdit,
   onDelete,
+  onLog,
   allowEdit,
   allowDelete,
 }) {
@@ -38,6 +40,13 @@ export function List({
                   size={18}
                   cursor="pointer"
                   onClick={() => onDisplay(item.id)}
+                />
+                <GiWeightLiftingUp
+                  className="ml-2"
+                  title="Log"
+                  size={18}
+                  cursor="pointer"
+                  onClick={() => onLog(item.id)}
                 />
                 {allowEdit && (
                   <FiEdit

@@ -7,6 +7,7 @@ import useAuth from '~/contexts/auth';
 import service from '~/services/workout-profile';
 import confirmHandler from '~components/ConfirmAlert/confirmHandler';
 
+import { WorkoutLog } from '../WorkoutLog';
 import { FormWorkoutProfile } from './Form';
 import { List, Filter } from './List';
 
@@ -55,6 +56,7 @@ export function WorkoutProfile() {
       id,
       isOpen: true,
       isDisplay: true,
+      type: 'workout-profile',
     });
   }
 
@@ -62,6 +64,7 @@ export function WorkoutProfile() {
     setModal({
       isOpen: true,
       isCreate: true,
+      type: 'workout-profile',
     });
   }
 
@@ -70,6 +73,7 @@ export function WorkoutProfile() {
       id,
       isOpen: true,
       isEdit: true,
+      type: 'workout-profile',
     });
   }
 
@@ -85,6 +89,14 @@ export function WorkoutProfile() {
     };
 
     confirmHandler('Are you sure delete this workout profile?', callback);
+  }
+
+  function onLog(id) {
+    setModal({
+      id,
+      isOpen: true,
+      type: 'workout-log',
+    });
   }
 
   function onCloseModal(role) {
@@ -118,11 +130,12 @@ export function WorkoutProfile() {
         onDisplay={onDisplay}
         onEdit={onEdit}
         onDelete={onDelete}
+        onLog={onLog}
         allowEdit={hasCreateUpdatePermission}
         allowDelete={hasDeletePermission}
       />
 
-      {modal.isOpen && (
+      {modal.type === 'workout-profile' && modal.isOpen && (
         <FormWorkoutProfile
           workoutProfileId={modal.id}
           isCreate={modal.isCreate}
@@ -130,6 +143,10 @@ export function WorkoutProfile() {
           isDisplay={modal.isDisplay}
           onClose={onCloseModal}
         />
+      )}
+
+      {modal.type === 'workout-log' && modal.isOpen && (
+        <WorkoutLog workoutProfileId={modal.id} onClose={onCloseModal} />
       )}
     </Card>
   );
