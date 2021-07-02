@@ -35,18 +35,18 @@ export function List({
           {list.rows.map((item) => (
             <tr key={item.id}>
               <td>
-                <FiEye
-                  title="Display"
-                  size={18}
-                  cursor="pointer"
-                  onClick={() => onDisplay(item.id)}
-                />
                 <GiWeightLiftingUp
-                  className="ml-2"
                   title="Log"
                   size={18}
                   cursor="pointer"
-                  onClick={() => onLog(item.id)}
+                  onClick={() => onLog(item)}
+                />
+                <FiEye
+                  title="Display"
+                  className="ml-2"
+                  size={18}
+                  cursor="pointer"
+                  onClick={() => onDisplay(item.id)}
                 />
                 {allowEdit && (
                   <FiEdit

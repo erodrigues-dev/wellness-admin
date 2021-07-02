@@ -91,9 +91,9 @@ export function WorkoutProfile() {
     confirmHandler('Are you sure delete this workout profile?', callback);
   }
 
-  function onLog(id) {
+  function onLog(item) {
     setModal({
-      id,
+      item,
       isOpen: true,
       type: 'workout-log',
     });
@@ -146,7 +146,7 @@ export function WorkoutProfile() {
       )}
 
       {modal.type === 'workout-log' && modal.isOpen && (
-        <WorkoutLog workoutProfileId={modal.id} onClose={onCloseModal} />
+        <WorkoutLog workoutProfile={modal.item} onClose={onCloseModal} />
       )}
     </Card>
   );
