@@ -29,13 +29,28 @@ export function WorkoutLogExerciseForm({
     try {
       if (!workoutExerciseId) return;
       const { data } = await service.get(workoutExerciseId);
-      delete data.createdAt;
-      delete data.updatedAt;
-      setValues(data);
+      setValues(parseDataToFormValues(data));
     } catch (error) {
       toast.error(error.message);
     }
   }, [setValues, workoutExerciseId]);
+
+  function parseDataToFormValues(data) {
+    return {
+      workoutLogId: data.workoutLogId,
+      id: data.id,
+      name: data.name,
+      set1Reps: data.set1Reps || '',
+      set1Weight: data.set1Weight || '',
+      set2Reps: data.set2Reps || '',
+      set2Weight: data.set2Weight || '',
+      set3Reps: data.set3Reps || '',
+      set3Weight: data.set3Weight || '',
+      set4Reps: data.set4Reps || '',
+      set4Weight: data.set4Weight || '',
+      notes: data.notes || '',
+    };
+  }
 
   async function onSubmit(data, { setSubmiting }) {
     try {
