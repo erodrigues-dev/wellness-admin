@@ -29,31 +29,36 @@ export function WorkoutLogForm({
     try {
       if (!workoutLogId) return;
       const { data } = await service.get(workoutLogId);
-      setValues({
-        id: data.id,
-        workoutProfileId: data.workoutProfileId,
-        resume: data.resume,
-        date: data.date,
-        notes: data.notes,
-      });
+      setValues(parseDataToFormValues(data));
     } catch (error) {
       toast.error(error.message);
     }
   }, [setValues, workoutLogId]);
+
+  function parseDataToFormValues(data) {
+    return {
+      id: data.id,
+      workoutProfileId: data.workoutProfileId,
+      resume: data.resume || '',
+      date: data.date || '',
+      notes: data.notes || '',
+    };
+  }
 
   async function onSubmit({ id, ...values }, { setSubmiting }) {
     try {
       if (isDisplay) return;
 
       if (isCreate) {
-        await service.create(values);
+        const { data: createdItem } = await service.create(values);
         toast.success('Workout Log created with success.');
+        onClose({ role: 'created', createdItem });
       }
       if (isEdit) {
         await service.update({ id, ...values });
         toast.success('Workout Log updated with success.');
+        onClose({ role: 'updated' });
       }
-      onClose('success');
     } catch (error) {
       toast.error(error.message);
       setSubmiting(false);

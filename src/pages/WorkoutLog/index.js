@@ -28,20 +28,23 @@ export function WorkoutLog({
 
   const workoutProfileId = workoutProfile.id;
 
-  const fetchList = useCallback(async () => {
-    try {
-      const { data, headers } = await service.list(list.page, {
-        workoutProfileId,
-      });
-      setListState({
-        page: list.page,
-        rows: data,
-        total: Number(headers['x-total-count']),
-      });
-    } catch (error) {
-      toast.error(error.message);
-    }
-  }, [list.page, workoutProfileId]);
+  const fetchList = useCallback(
+    async (page) => {
+      try {
+        const { data, headers } = await service.list(page, {
+          workoutProfileId,
+        });
+        setListState({
+          page,
+          rows: data,
+          total: Number(headers['x-total-count']),
+        });
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+    [workoutProfileId]
+  );
 
   function onExercises(log) {
     setModal({
@@ -90,14 +93,21 @@ export function WorkoutLog({
       page,
     }));
   }
-  function onCloseModal(role) {
-    if (role === 'success') fetchList();
-    setModal({});
+  function onCloseModal({ role, ...data }) {
+    if (role === 'created') {
+      fetchList(1);
+      onExercises(data.createdItem);
+    } else if (role === 'updated') {
+      fetchList();
+      setModal({});
+    } else {
+      setModal({});
+    }
   }
 
   useEffect(() => {
-    fetchList();
-  }, [fetchList]);
+    fetchList(list.page);
+  }, [fetchList, list.page]);
 
   return (
     <Modal title="Workout Logs" setClose={onClose}>
