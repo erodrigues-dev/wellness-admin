@@ -12,7 +12,11 @@ import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import Paginate from '../../components/Paginate';
 import { WorkoutLogExerciseForm } from './WorkoutLogExerciseForm';
 
-export function WorkoutLogExercises({ workoutLog, onClose }) {
+export function WorkoutLogExercises({
+  hasCreateUpdatePermission,
+  workoutLog,
+  onClose,
+}) {
   const [modal, setModal] = useState({});
   const [list, setList] = useState({
     rows: [],
@@ -89,11 +93,13 @@ export function WorkoutLogExercises({ workoutLog, onClose }) {
         <p style={{ fontWeight: 600, fontSize: '1.2em' }}>
           {workoutLog.resume} <small>{formatToDisplay(workoutLog.date)}</small>
         </p>
-        <ButtonsRight>
-          <Button variant="secondary" onClick={onCreate}>
-            Add Exercise
-          </Button>
-        </ButtonsRight>
+        {hasCreateUpdatePermission && (
+          <ButtonsRight>
+            <Button variant="secondary" onClick={onCreate}>
+              Add Exercise
+            </Button>
+          </ButtonsRight>
+        )}
       </div>
       <Table striped hover responsive>
         <thead>
@@ -128,21 +134,25 @@ export function WorkoutLogExercises({ workoutLog, onClose }) {
                   cursor="pointer"
                   onClick={() => onDisplay(item.id)}
                 />
-                <FiEdit
-                  className="m-1"
-                  title="Edit"
-                  size={18}
-                  cursor="pointer"
-                  onClick={() => onEdit(item.id)}
-                />
-                <FiTrash
-                  color="var(--danger)"
-                  className="m-1"
-                  title="Delete"
-                  size={18}
-                  cursor="pointer"
-                  onClick={() => onDelete(item.id)}
-                />
+                {hasCreateUpdatePermission && (
+                  <>
+                    <FiEdit
+                      className="m-1"
+                      title="Edit"
+                      size={18}
+                      cursor="pointer"
+                      onClick={() => onEdit(item.id)}
+                    />
+                    <FiTrash
+                      color="var(--danger)"
+                      className="m-1"
+                      title="Delete"
+                      size={18}
+                      cursor="pointer"
+                      onClick={() => onDelete(item.id)}
+                    />
+                  </>
+                )}
               </td>
               <td>{item.name}</td>
               <td className="text-center">{item.set1Reps || '-'}</td>

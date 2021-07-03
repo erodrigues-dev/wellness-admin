@@ -7,14 +7,18 @@ import { toast } from 'react-toastify';
 import Modal from '~/components/Modal';
 import { formatToDisplay, formatToList } from '~/helpers/date';
 import service from '~/services/workout-log';
+import { ButtonsRight } from '~assets/styleds';
+import confirmHandler from '~components/ConfirmAlert/confirmHandler';
+import Paginate from '~components/Paginate';
 
-import { ButtonsRight } from '../../assets/styleds';
-import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
-import Paginate from '../../components/Paginate';
 import { WorkoutLogExercises } from '../WorkoutLogExercises';
 import { WorkoutLogForm } from './WorkoutLogForm';
 
-export function WorkoutLog({ workoutProfile, onClose }) {
+export function WorkoutLog({
+  hasCreateUpdatePermission,
+  workoutProfile,
+  onClose,
+}) {
   const [modal, setModal] = useState({});
   const [list, setListState] = useState({
     rows: [],
@@ -96,17 +100,19 @@ export function WorkoutLog({ workoutProfile, onClose }) {
   }, [fetchList]);
 
   return (
-    <Modal width="1200px" title="Workout Logs" setClose={onClose}>
+    <Modal title="Workout Logs" setClose={onClose}>
       <div className="p-4">
         <p style={{ fontWeight: 600, fontSize: '1.2em' }}>
           {workoutProfile.customer.name}{' '}
           <small>{workoutProfile.experienceLevel}</small>
         </p>
-        <ButtonsRight>
-          <Button variant="secondary" onClick={onCreate}>
-            Add Log
-          </Button>
-        </ButtonsRight>
+        {hasCreateUpdatePermission && (
+          <ButtonsRight>
+            <Button variant="secondary" onClick={onCreate}>
+              Add Log
+            </Button>
+          </ButtonsRight>
+        )}
       </div>
       <Table striped hover responsive>
         <thead>
@@ -135,21 +141,25 @@ export function WorkoutLog({ workoutProfile, onClose }) {
                   cursor="pointer"
                   onClick={() => onDisplay(item.id)}
                 />
-                <FiEdit
-                  className="m-1"
-                  title="Edit"
-                  size={18}
-                  cursor="pointer"
-                  onClick={() => onEdit(item.id)}
-                />
-                <FiTrash
-                  color="var(--danger)"
-                  className="m-1"
-                  title="Delete"
-                  size={18}
-                  cursor="pointer"
-                  onClick={() => onDelete(item.id)}
-                />
+                {hasCreateUpdatePermission && (
+                  <>
+                    <FiEdit
+                      className="m-1"
+                      title="Edit"
+                      size={18}
+                      cursor="pointer"
+                      onClick={() => onEdit(item.id)}
+                    />
+                    <FiTrash
+                      color="var(--danger)"
+                      className="m-1"
+                      title="Delete"
+                      size={18}
+                      cursor="pointer"
+                      onClick={() => onDelete(item.id)}
+                    />
+                  </>
+                )}
               </td>
               <td>{item.resume}</td>
               <td>{formatToDisplay(new Date(item.date))}</td>
@@ -177,7 +187,11 @@ export function WorkoutLog({ workoutProfile, onClose }) {
       )}
 
       {modal.type === 'exercises' && modal.isOpen && (
-        <WorkoutLogExercises workoutLog={modal.log} onClose={onCloseModal} />
+        <WorkoutLogExercises
+          hasCreateUpdatePermission={hasCreateUpdatePermission}
+          workoutLog={modal.log}
+          onClose={onCloseModal}
+        />
       )}
     </Modal>
   );

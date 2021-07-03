@@ -102,10 +102,12 @@ export function WorkoutProfile() {
   function onCloseModal(role) {
     if (modal.isCreate && role === 'success') {
       fetchList(1, {});
+      setModal({});
     }
 
     if (modal.isEdit && role === 'success') {
       fetchList(list.page, list.filter);
+      setModal({});
     }
 
     setModal({});
@@ -146,7 +148,11 @@ export function WorkoutProfile() {
       )}
 
       {modal.type === 'workout-log' && modal.isOpen && (
-        <WorkoutLog workoutProfile={modal.item} onClose={onCloseModal} />
+        <WorkoutLog
+          hasCreateUpdatePermission={hasCreateUpdatePermission}
+          workoutProfile={modal.item}
+          onClose={onCloseModal}
+        />
       )}
     </Card>
   );
