@@ -37,20 +37,21 @@ export function List({
               <td>
                 <GiWeightLiftingUp
                   title="Log"
+                  className="m-1"
                   size={18}
                   cursor="pointer"
                   onClick={() => onLog(item)}
                 />
                 <FiEye
                   title="Display"
-                  className="ml-2"
+                  className="m-1"
                   size={18}
                   cursor="pointer"
                   onClick={() => onDisplay(item.id)}
                 />
                 {allowEdit && (
                   <FiEdit
-                    className="ml-2"
+                    className="m-1"
                     title="Edit"
                     size={18}
                     cursor="pointer"
@@ -60,7 +61,7 @@ export function List({
                 {allowDelete && (
                   <FiTrash
                     color="var(--danger)"
-                    className="ml-2"
+                    className="m-1"
                     title="Delete"
                     size={18}
                     cursor="pointer"
