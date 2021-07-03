@@ -4,7 +4,6 @@ import {
   format,
   parseISO,
   startOfDay,
-  isValid,
   parse,
 } from 'date-fns';
 
@@ -15,9 +14,8 @@ export function formatToList(value) {
   return formatDistanceToNow(date, { addSuffix: true });
 }
 
-export function formatToDisplay(date) {
-  if (!isValid(date)) return '';
-
+export function formatToDisplay(value) {
+  const date = parseJSON(value);
   return format(date, 'MM/dd/y');
 }
 
