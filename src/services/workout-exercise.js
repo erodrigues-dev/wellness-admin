@@ -1,7 +1,7 @@
 import api from './api';
 
 export const list = (page, filters) => {
-  return api.get('/workout-logs', {
+  return api.get('/workout-exercises', {
     params: {
       page,
       limit: 10,
@@ -10,19 +10,20 @@ export const list = (page, filters) => {
   });
 };
 
-export const get = (id) => api.get(`/workout-logs/${id}`);
+export const get = (id) => api.get(`/workout-exercises/${id}`);
 
 export function create(data) {
-  return api.post('/workout-logs', data);
+  return api.post('/workout-exercises', data);
 }
 
 export function update({ id, ...data }) {
   const payload = { ...data };
-  return api.put(`/workout-logs/${id}`, payload);
+  delete payload.workoutLogId;
+  return api.put(`/workout-exercises/${id}`, payload);
 }
 
 export function destroy(id) {
-  return api.delete(`/workout-logs/${id}`);
+  return api.delete(`/workout-exercises/${id}`);
 }
 
 export default {

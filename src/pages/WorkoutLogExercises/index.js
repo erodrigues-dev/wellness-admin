@@ -1,35 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { FiEdit, FiEye, FiTrash } from 'react-icons/fi';
-import { GiWeightLiftingUp } from 'react-icons/gi';
 import { toast } from 'react-toastify';
 
 import Modal from '~/components/Modal';
-import { formatToDisplay, formatToList } from '~/helpers/date';
-import service from '~/services/workout-log';
+import { formatToDisplay } from '~/helpers/date';
+import service from '~/services/workout-exercise';
 
 import { ButtonsRight } from '../../assets/styleds';
 import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import Paginate from '../../components/Paginate';
-import { WorkoutLogExercises } from '../WorkoutLogExercises';
-import { WorkoutLogForm } from './WorkoutLogForm';
+import { WorkoutLogExerciseForm } from './WorkoutLogExerciseForm';
 
-export function WorkoutLog({ workoutProfile, onClose }) {
+export function WorkoutLogExercises({ workoutLog, onClose }) {
   const [modal, setModal] = useState({});
-  const [list, setListState] = useState({
+  const [list, setList] = useState({
     rows: [],
     page: 1,
     total: 0,
   });
 
-  const workoutProfileId = workoutProfile.id;
+  const workoutLogId = useMemo(() => workoutLog.id, [workoutLog.id]);
 
   const fetchList = useCallback(async () => {
     try {
       const { data, headers } = await service.list(list.page, {
-        workoutProfileId,
+        workoutLogId,
       });
-      setListState({
+      setList({
         page: list.page,
         rows: data,
         total: Number(headers['x-total-count']),
@@ -37,18 +35,10 @@ export function WorkoutLog({ workoutProfile, onClose }) {
     } catch (error) {
       toast.error(error.message);
     }
-  }, [list.page, workoutProfileId]);
+  }, [list.page, workoutLogId]);
 
-  function onExercises(log) {
-    setModal({
-      log,
-      type: 'exercises',
-      isOpen: true,
-    });
-  }
   function onCreate() {
     setModal({
-      type: 'logs',
       isOpen: true,
       isCreate: true,
     });
@@ -56,32 +46,30 @@ export function WorkoutLog({ workoutProfile, onClose }) {
   function onDisplay(id) {
     setModal({
       id,
-      type: 'logs',
-      isDisplay: true,
       isOpen: true,
+      isDisplay: true,
     });
   }
   function onEdit(id) {
     setModal({
       id,
-      type: 'logs',
-      isEdit: true,
       isOpen: true,
+      isEdit: true,
     });
   }
   function onDelete(id) {
-    confirmHandler('Are you sure delete this workout log?', async () => {
+    confirmHandler('Are you sure delete this exercise?', async () => {
       try {
         await service.destroy(id);
         fetchList();
-        toast.success('Workout log deleted with success.');
+        toast.success('Exercise deleted with success.');
       } catch (error) {
         toast.error(error.message);
       }
     });
   }
   function onPaginate(page) {
-    setListState((state) => ({
+    setList((state) => ({
       ...state,
       page,
     }));
@@ -96,38 +84,43 @@ export function WorkoutLog({ workoutProfile, onClose }) {
   }, [fetchList]);
 
   return (
-    <Modal width="1200px" title="Workout Logs" setClose={onClose}>
+    <Modal width="1200px" title="Workout Exercises" setClose={onClose}>
       <div className="p-4">
         <p style={{ fontWeight: 600, fontSize: '1.2em' }}>
-          {workoutProfile.customer.name}{' '}
-          <small>{workoutProfile.experienceLevel}</small>
+          {workoutLog.resume} <small>{formatToDisplay(workoutLog.date)}</small>
         </p>
         <ButtonsRight>
           <Button variant="secondary" onClick={onCreate}>
-            Add Log
+            Add Exercise
           </Button>
         </ButtonsRight>
       </div>
       <Table striped hover responsive>
         <thead>
           <tr>
+            <th colSpan={2} />
+            <th colSpan={2}>Set 1</th>
+            <th colSpan={2}>Set 2</th>
+            <th colSpan={2}>Set 3</th>
+            <th colSpan={2}>Set 4</th>
+          </tr>
+          <tr>
             <th>Actions</th>
-            <th>Resume</th>
-            <th>Date</th>
-            <th>Created At</th>
+            <th>Exercise</th>
+            <th>Reps</th>
+            <th>Weight</th>
+            <th>Reps</th>
+            <th>Weight</th>
+            <th>Reps</th>
+            <th>Weight</th>
+            <th>Reps</th>
+            <th>Weight</th>
           </tr>
         </thead>
         <tbody>
           {list.rows.map((item) => (
             <tr key={item.id}>
               <td>
-                <GiWeightLiftingUp
-                  title="Exercises"
-                  className="m-1"
-                  size={18}
-                  cursor="pointer"
-                  onClick={() => onExercises(item)}
-                />
                 <FiEye
                   title="Display"
                   className="m-1"
@@ -151,11 +144,22 @@ export function WorkoutLog({ workoutProfile, onClose }) {
                   onClick={() => onDelete(item.id)}
                 />
               </td>
-              <td>{item.resume}</td>
-              <td>{formatToDisplay(new Date(item.date))}</td>
-              <td>{formatToList(item.createdAt)}</td>
+              <td>{item.name}</td>
+              <td className="text-center">{item.set1Reps || '-'}</td>
+              <td className="text-center">{item.set1Weight || '-'}</td>
+              <td className="text-center">{item.set2Reps || '-'}</td>
+              <td className="text-center">{item.set2Weight || '-'}</td>
+              <td className="text-center">{item.set3Reps || '-'}</td>
+              <td className="text-center">{item.set3Weight || '-'}</td>
+              <td className="text-center">{item.set4Reps || '-'}</td>
+              <td className="text-center">{item.set4Weight || '-'}</td>
             </tr>
           ))}
+          {list.total === 0 && (
+            <tr>
+              <td colSpan={10}>No records found</td>
+            </tr>
+          )}
         </tbody>
       </Table>
       <Paginate
@@ -165,19 +169,15 @@ export function WorkoutLog({ workoutProfile, onClose }) {
         onChange={onPaginate}
       />
 
-      {modal.type === 'logs' && modal.isOpen && (
-        <WorkoutLogForm
-          workoutLogId={modal.id}
-          workoutProfileId={workoutProfileId}
+      {modal.isOpen && (
+        <WorkoutLogExerciseForm
+          workoutLogId={workoutLogId}
+          workoutExerciseId={modal.id}
           isCreate={modal.isCreate}
           isEdit={modal.isEdit}
           isDisplay={modal.isDisplay}
           onClose={onCloseModal}
         />
-      )}
-
-      {modal.type === 'exercises' && modal.isOpen && (
-        <WorkoutLogExercises workoutLog={modal.log} onClose={onCloseModal} />
       )}
     </Modal>
   );
