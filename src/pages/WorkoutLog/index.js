@@ -166,6 +166,11 @@ export function WorkoutLog({
               <td>{formatToList(item.createdAt)}</td>
             </tr>
           ))}
+          {list.total === 0 && (
+            <tr>
+              <td colSpan={4}>No records found.</td>
+            </tr>
+          )}
         </tbody>
       </Table>
       <Paginate
