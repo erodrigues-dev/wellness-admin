@@ -99,18 +99,14 @@ export function WorkoutProfile() {
     });
   }
 
-  function onCloseModal(role) {
-    if (modal.isCreate && role === 'success') {
+  function onCloseModal({ role, ...data }) {
+    if (modal.isCreate && role === 'created') {
       fetchList(1, {});
-      setModal({});
-    }
-
-    if (modal.isEdit && role === 'success') {
+      onLog(data.createdItem);
+    } else if (modal.isEdit && role === 'updated') {
       fetchList(list.page, list.filter);
       setModal({});
-    }
-
-    setModal({});
+    } else setModal({});
   }
 
   useEffect(() => {
