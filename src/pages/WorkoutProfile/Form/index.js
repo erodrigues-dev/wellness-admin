@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 
 import { ButtonsRight } from '~/assets/styleds';
 import Modal from '~/components/Modal';
+import { clearEmptyFields } from '~/helpers/forms';
 import customerService from '~/services/customer';
 import service from '~/services/workout-profile';
 
@@ -40,29 +41,31 @@ export function FormWorkoutProfile({
     return {
       id: data.id,
       customerId: data.customerId,
-      age: data.age,
-      height: data.height,
-      weight: data.weight,
-      goal: data.goal,
-      test1: data.test1,
-      test2: data.test2,
-      injuriesLimitations: data.injuriesLimitations,
-      experienceLevel: data.experienceLevel,
-      notes: data.notes,
+      age: data.age || '',
+      height: data.height || '',
+      weight: data.weight || '',
+      goal: data.goal || '',
+      test1: data.test1 || '',
+      test2: data.test2 || '',
+      injuriesLimitations: data.injuriesLimitations || '',
+      experienceLevel: data.experienceLevel || '',
+      notes: data.notes || '',
     };
   }
 
-  async function onSubmit({ id, ...values }, { setSubmitting }) {
+  async function onSubmit({ id, ...data }, { setSubmitting }) {
     try {
+      const values = clearEmptyFields(data);
       if (isCreate) {
-        await service.create(values);
+        const { data: createdItem } = await service.create(values);
         toast.success('Workout profile created with success.');
+        onClose({ role: 'created', createdItem });
       }
       if (isEdit) {
         await service.update({ id, ...values });
         toast.success('Workout profile updated with success.');
+        onClose({ role: 'updated' });
       }
-      onClose('success');
     } catch (error) {
       toast.error(error.message);
       setSubmitting(false);
