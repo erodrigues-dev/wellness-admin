@@ -2640,6 +2640,11 @@ bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
+bitwise-operator@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/bitwise-operator/-/bitwise-operator-1.0.0.tgz#20680386fd9426e4aec269d6dc3d066d556edfb5"
+  integrity sha1-IGgDhv2UJuSuwmnW3D0GbVVu37U=
+
 block-stream@*:
   version "0.0.9"
   resolved "https://registry.yarnpkg.com/block-stream/-/block-stream-0.0.9.tgz#13ebfe778a03205cfe03751481ebb4b3300c126a"

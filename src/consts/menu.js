@@ -7,6 +7,7 @@ import {
   FiCalendar,
   FiShoppingCart,
 } from 'react-icons/fi';
+import { GiWeightLiftingUp } from 'react-icons/gi';
 
 import { FUNCTIONALITIES } from './functionalities';
 
@@ -40,6 +41,12 @@ export const MENU = [
     path: '/packages',
     Icon: FiPackage,
     functionality: FUNCTIONALITIES.packages.list,
+  },
+  {
+    title: 'Workout',
+    path: '/workout-profiles',
+    Icon: GiWeightLiftingUp,
+    functionality: FUNCTIONALITIES.workoutProfile.list,
   },
   {
     title: 'Employees',

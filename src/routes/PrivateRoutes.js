@@ -22,6 +22,7 @@ import {
   Specialty,
   Waiver,
   CustomerWaiver,
+  WorkoutProfile,
 } from '~/pages';
 
 const PrivateRoutes = () => {
@@ -149,6 +150,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.settings.waivers.list}
           path="/waivers"
           component={Waiver}
+        />
+
+        <PrivateRoute
+          exact
+          functionality={FUNCTIONALITIES.workoutProfile.list}
+          path="/workout-profiles"
+          component={WorkoutProfile}
         />
 
         <Route path="/404" component={NotAuthorized} />

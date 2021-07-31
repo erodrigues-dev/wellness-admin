@@ -17,6 +17,7 @@ function InputDatePicker({
   tileDisabled,
   onActiveStartDateChange,
   placeholder,
+  disabled,
   ...props
 }) {
   const [open, setOpen] = useState(false);
@@ -24,12 +25,18 @@ function InputDatePicker({
   const [formated, setFormated] = useState('');
 
   useEffect(() => {
-    setDate(value);
+    if (!value) return;
+    setDate(typeof value === 'string' ? new Date(value) : value);
   }, [value]);
 
   useEffect(() => {
     setFormated(date instanceof Date ? formatToDisplay(date) : '');
   }, [date]);
+
+  function handleOpen() {
+    if (disabled) return;
+    setOpen(true);
+  }
 
   function handleChangeDate(selectedDate) {
     setOpen(false);
@@ -46,7 +53,7 @@ function InputDatePicker({
   }
 
   return (
-    <Container onClick={() => setOpen(true)}>
+    <Container onClick={handleOpen}>
       <InputGroup>
         <FormControl
           {...props}
@@ -55,9 +62,10 @@ function InputDatePicker({
           onBlur={onBlur}
           placeholder={placeholder ?? 'mm/dd/yyyy'}
           autoComplete="off"
+          disabled={disabled}
         />
         <InputGroup.Append>
-          {date && (
+          {date && !disabled && (
             <InputGroup.Text onClick={handleClear}>
               <FiXCircle />
             </InputGroup.Text>

@@ -67,6 +67,7 @@
     "import/no-named-as-default-member": "off",
     "prettier/prettier": "error",
     "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/control-has-associated-label": "off",
     "react-hooks/exhaustive-deps": "error"
   },
   "settings": {
