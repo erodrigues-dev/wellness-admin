@@ -44,6 +44,7 @@ const Item = styled.div`
   justify-content: space-between;
   align-items: center;
   min-height: 42px;
+  cursor: pointer;
 `;
 const Detail = styled.div`
   font-weight: 600;
