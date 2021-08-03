@@ -157,14 +157,10 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
 
   async function handleSubmit(data) {
     try {
-      const { orderActivityId } = activities.find(
-        (x) => x.id === +data.relationId
-      );
-
       await appointmentService.create({
-        customerId: +data.customerId,
-        orderActivityId,
-        activityScheduleId: +data.timeId,
+        customerId: Number(data.customerId),
+        activityId: Number(data.relationId),
+        activityScheduleId: Number(data.timeId),
         date: toInputValue(data.date),
       });
 
