@@ -55,6 +55,8 @@ const Details = ({ orderId, setClose, reloadOrders }) => {
     cancelOrder(orderId);
   }
 
+  if (!order) return null;
+
   return (
     <Modal title="Details" setClose={setClose}>
       <Container>
@@ -97,7 +99,7 @@ const Details = ({ orderId, setClose, reloadOrders }) => {
           </li>
           <li>
             <span>Created By:</span>
-            <span className="order">{order?.user.name}</span>
+            <span className="order">{order?.user?.name || 'customer'}</span>
           </li>
           <li>
             <span>Payment Type:</span>
