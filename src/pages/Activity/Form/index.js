@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Form, Col, Button, Image, InputGroup } from 'react-bootstrap';
+import { Form, Col, Button, Image, InputGroup, Table } from 'react-bootstrap';
+import { FaTrash } from 'react-icons/fa';
 
 import { useFormik } from 'formik';
 
@@ -22,12 +23,12 @@ const initialValues = {
   price: '',
   duration: '',
   description: '',
-  employeeId: '',
   waiverId: '',
   categoryId: 0,
   showInApp: true,
   showInWeb: true,
   maxPeople: '',
+  employees: [],
 };
 
 function ModalForm({
@@ -41,8 +42,10 @@ function ModalForm({
   const [employees, setEmployees] = useState([]);
   const [categories, setCategories] = useState();
   const [openAdd, setOpenAdd] = useState(false);
-  const { sendNotification } = useNotification();
   const [waivers, setWaivers] = useState([]);
+  const [employeeId, setEmployeeId] = useState('');
+
+  const { sendNotification } = useNotification();
 
   const { setValues, ...formik } = useFormik({
     validationSchema: schema,
@@ -50,7 +53,7 @@ function ModalForm({
     initialValues,
   });
 
-  const getActivity = useCallback(
+  const fetch = useCallback(
     async (activityId) => {
       try {
         const { data } = await service.get(activityId);
@@ -68,29 +71,26 @@ function ModalForm({
     [sendNotification, setValues, display]
   );
 
-  const loadCategories = useCallback(async () => {
-    try {
-      const { data } = await categoryService.listByType('activity');
+  const fetchCategories = useCallback(async () => {
+    const { data } = await categoryService.listByType('activity');
+    setCategories(data);
+  }, []);
 
-      setCategories(data);
-    } catch (error) {
-      sendNotification(error.message, false);
-    }
-  }, [sendNotification]);
+  const fetchLists = useCallback(() => {
+    employeeService.listAll().then((response) => setEmployees(response.data));
+    waiverService.listAll().then(({ data }) => setWaivers(data));
+    fetchCategories();
+  }, [fetchCategories]);
 
   async function handleSubmit(values, { setSubmitting }) {
     try {
-      if (activity === undefined) {
-        await service.create({
-          ...values,
-          image: image.file,
-        });
-      } else {
-        await service.update({
-          ...values,
-          image: image.file,
-        });
-      }
+      const data = {
+        ...values,
+        image: image.file,
+        employees: values.employees.map((x) => x.id),
+      };
+      if (activity === undefined) await service.create(data);
+      else await service.update(data);
 
       sendNotification('Activity saved successfully');
       reloadActivities();
@@ -117,21 +117,28 @@ function ModalForm({
     setImage({ file, url });
   }
 
-  useEffect(() => {
-    if (activity) getActivity(activity.id);
-  }, [getActivity, activity]);
+  function selectEmployee() {
+    const employee = employees.find((x) => x.id === Number(employeeId));
+    const selecteds = formik.values.employees;
+    formik.setFieldValue('employees', [...selecteds, employee]);
+    setEmployeeId('');
+  }
+
+  function unselectEmployee(item) {
+    const selecteds = formik.values.employees;
+    formik.setFieldValue(
+      'employees',
+      selecteds.filter((selected) => selected.id !== item.id)
+    );
+  }
 
   useEffect(() => {
-    employeeService.listAll().then((response) => setEmployees(response.data));
-  }, []);
+    if (activity) fetch(activity.id);
+  }, [fetch, activity]);
 
   useEffect(() => {
-    loadCategories();
-  }, [loadCategories]);
-
-  useEffect(() => {
-    waiverService.listAll().then(({ data }) => setWaivers(data));
-  }, []);
+    fetchLists();
+  }, [fetchLists]);
 
   return (
     <>
@@ -195,36 +202,7 @@ function ModalForm({
             </Form.Row>
 
             <Form.Row>
-              <Form.Group as={Col} md="6">
-                <Form.Label>Employee</Form.Label>
-                <Form.Control
-                  as="select"
-                  custom
-                  name="employeeId"
-                  value={formik.values.employeeId}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  isInvalid={
-                    formik.touched.employeeId && formik.errors.employeeId
-                  }
-                  isValid={
-                    formik.touched.employeeId && !formik.errors.employeeId
-                  }
-                  disabled={display}
-                >
-                  <option value="">Select a employee</option>
-                  {employees.map((item) => (
-                    <option key={item.id} value={item.id}>
-                      {item.name}
-                    </option>
-                  ))}
-                </Form.Control>
-                <Form.Control.Feedback type="invalid">
-                  {formik.errors.employeeId}
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group as={Col} md="6">
+              <Form.Group as={Col} md={6}>
                 <Form.Label>Category</Form.Label>
                 {categories && (
                   <InputGroup>
@@ -248,18 +226,14 @@ function ModalForm({
                       <option value={0} disabled>
                         Select a Category
                       </option>
-                      {categories.map((loadedCategory) => (
-                        <option
-                          key={loadedCategory.id}
-                          value={loadedCategory.id}
-                        >
-                          {loadedCategory.name}
+                      {categories.map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.name}
                         </option>
                       ))}
                     </Form.Control>
                     <InputGroup.Append>
                       <Button
-                        variant="primary"
                         onClick={() => setOpenAdd(true)}
                         disabled={display}
                       >
@@ -274,33 +248,7 @@ function ModalForm({
                   </InputGroup>
                 )}
               </Form.Group>
-            </Form.Row>
-
-            <Form.Row>
-              <Form.Group as={Col}>
-                <Form.Label>Settings</Form.Label>
-                <Form.Check
-                  type="checkbox"
-                  name="showInApp"
-                  id="showInApp"
-                  custom
-                  checked={formik.values.showInApp}
-                  onChange={formik.handleChange}
-                  label="Show in App"
-                  disabled={display}
-                />
-                <Form.Check
-                  type="checkbox"
-                  name="showInWeb"
-                  id="showInWeb"
-                  custom
-                  checked={formik.values.showInWeb}
-                  onChange={formik.handleChange}
-                  label="Show in Web"
-                  disabled={display}
-                />
-              </Form.Group>
-              <Form.Group as={Col}>
+              <Form.Group as={Col} md={6}>
                 <Form.Label>Max Number of People</Form.Label>
                 <Form.Control
                   type="text"
@@ -346,6 +294,70 @@ function ModalForm({
             </Form.Group>
 
             <Form.Group>
+              <Form.Label>Employees</Form.Label>
+              {display || (
+                <InputGroup>
+                  <Form.Control
+                    as="select"
+                    custom
+                    disabled={display}
+                    value={employeeId}
+                    onChange={(e) => setEmployeeId(e.target.value)}
+                  >
+                    <option value="">Select a employee</option>
+                    {employees
+                      .filter(
+                        (item) =>
+                          !formik.values.employees.some(
+                            (selected) => selected.id === item.id
+                          )
+                      )
+                      .map((item) => (
+                        <option key={item.id} value={item.id}>
+                          {item.name}
+                        </option>
+                      ))}
+                  </Form.Control>
+                  <InputGroup.Append>
+                    <Button
+                      disabled={!employeeId || display}
+                      onClick={selectEmployee}
+                    >
+                      Add
+                    </Button>
+                  </InputGroup.Append>
+                </InputGroup>
+              )}
+              <Table striped hover className="mt-1 mb-0">
+                <tbody>
+                  {formik.values.employees.map((item, i) => (
+                    <tr key={item.id}>
+                      <td width="40px" className="p-1 text-center">
+                        #{i + 1}
+                      </td>
+                      <td className="p-1">{item.name}</td>
+                      {display || (
+                        <td width="40px" className="p-1 text-center">
+                          <FaTrash
+                            title="Remove"
+                            cursor="pointer"
+                            color="var(--danger)"
+                            onClick={() => unselectEmployee(item)}
+                          />
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                  {display && formik.values.employees.length === 0 && (
+                    <tr>
+                      <td className="p-1">No employee selected</td>
+                    </tr>
+                  )}
+                </tbody>
+              </Table>
+            </Form.Group>
+
+            <Form.Group>
               <Form.Label>Description</Form.Label>
               <Form.Control
                 as="textarea"
@@ -368,24 +380,51 @@ function ModalForm({
               </Form.Control.Feedback>
             </Form.Group>
 
-            <Form.Group>
-              <Form.Label>Image</Form.Label>
-              <Form.Control
-                type="file"
-                onChange={handleImage}
-                disabled={display}
-              />
-              {image.url && (
-                <Image
-                  className="mt-2"
-                  src={image.url}
-                  alt="cover"
-                  rounded
-                  fluid
-                  style={{ maxWidth: 400, maxHeight: 400 }}
+            <Form.Row>
+              <Form.Group as={Col} md="4">
+                <Form.Label>Settings</Form.Label>
+                <Form.Check
+                  type="checkbox"
+                  name="showInApp"
+                  id="showInApp"
+                  custom
+                  checked={formik.values.showInApp}
+                  onChange={formik.handleChange}
+                  label="Show in App"
+                  disabled={display}
                 />
+                <Form.Check
+                  type="checkbox"
+                  name="showInWeb"
+                  id="showInWeb"
+                  custom
+                  checked={formik.values.showInWeb}
+                  onChange={formik.handleChange}
+                  label="Show in Web"
+                  disabled={display}
+                />
+              </Form.Group>
+              {display || (
+                <Form.Group as={Col}>
+                  <Form.Label>Image</Form.Label>
+                  <Form.Control
+                    type="file"
+                    onChange={handleImage}
+                    disabled={display}
+                  />
+                  {image.url && (
+                    <Image
+                      className="mt-2"
+                      src={image.url}
+                      alt="cover"
+                      rounded
+                      fluid
+                      style={{ maxWidth: 400, maxHeight: 400 }}
+                    />
+                  )}
+                </Form.Group>
               )}
-            </Form.Group>
+            </Form.Row>
           </div>
           <div className="buttons">
             <Form.Row className="d-flex justify-content-end">
@@ -412,7 +451,7 @@ function ModalForm({
             handleOpenModal={setOpenAdd}
             handleValue={(e) => formik.setFieldValue('categoryId', e)}
             addComponent="activity"
-            loadCategories={loadCategories}
+            loadCategories={fetchCategories}
           />
         </Modal>
       )}
