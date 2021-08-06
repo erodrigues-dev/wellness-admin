@@ -32,13 +32,13 @@ export function create({
   description,
   price,
   duration,
-  employeeId,
   categoryId,
   image,
   showInApp,
   showInWeb,
   maxPeople,
   waiverId,
+  employees,
 }) {
   const data = new FormData();
 
@@ -46,13 +46,13 @@ export function create({
   data.append('description', description);
   data.append('price', sanitize.number(price));
   data.append('duration', sanitize.number(duration));
-  if (employeeId) data.append('employeeId', employeeId);
   data.append('categoryId', categoryId);
   if (image) data.append('image', image);
   data.append('showInApp', showInApp);
   data.append('showInWeb', showInWeb);
   if (maxPeople > 0) data.append('maxPeople', maxPeople);
   if (waiverId) data.append('waiverId', waiverId);
+  if (employees) employees.map((id) => data.append('employees[]', id));
 
   return api.post(ENDPOINT, data);
 }
@@ -63,13 +63,13 @@ export function update({
   description,
   price,
   duration,
-  employeeId,
   categoryId,
   image,
   showInApp,
   showInWeb,
   maxPeople,
   waiverId,
+  employees,
 }) {
   const data = new FormData();
 
@@ -78,13 +78,14 @@ export function update({
   data.append('description', description);
   data.append('price', sanitize.number(price));
   data.append('duration', sanitize.number(duration));
-  if (employeeId) data.append('employeeId', employeeId);
   data.append('categoryId', categoryId);
   if (image) data.append('image', image);
   data.append('showInApp', showInApp);
   data.append('showInWeb', showInWeb);
   if (maxPeople) data.append('maxPeople', maxPeople);
   if (waiverId) data.append('waiverId', waiverId);
+  if (employees)
+    employees.map((employeeId) => data.append('employees[]', employeeId));
 
   return api.put(ENDPOINT, data);
 }

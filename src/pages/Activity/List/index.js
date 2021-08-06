@@ -16,6 +16,11 @@ function List({ list, allowEdit, setOpenEdit, setOpenDisplay, setSelected }) {
     setSelected(item);
   }
 
+  function getEmployeeNames(employees) {
+    if (!employees) return '-';
+    return employees.map((x) => x.name).join(', ');
+  }
+
   return (
     <Container>
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -60,7 +65,7 @@ function List({ list, allowEdit, setOpenEdit, setOpenDisplay, setSelected }) {
               <td>{item.category.name}</td>
               <td>{formatCurrency(item.price)}</td>
               <td>{`${item.duration}min`}</td>
-              <td>{item.employee?.name || '-'}</td>
+              <td>{getEmployeeNames(item.employees)}</td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}
