@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import { Card } from 'react-bootstrap';
+import { Button, Card } from 'react-bootstrap';
 
 import service from '~/services/notification';
 
@@ -32,6 +32,10 @@ export function Notifications() {
     <Card body>
       <Card.Title>Notifications</Card.Title>
       <hr />
+
+      <div className="mt-4 d-flex justify-content-end">
+        <Button variant="secondary">Add Notification</Button>
+      </div>
 
       <List
         list={list}
