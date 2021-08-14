@@ -18,6 +18,9 @@ export function Notifications() {
   });
   const [modal, setModal] = useState({});
   const { hasPermission } = useAuth();
+  const allowCreate = hasPermission(
+    FUNCTIONALITIES.notifications.createOrUpdate
+  );
   const allowDelete = hasPermission(FUNCTIONALITIES.notifications.delete);
 
   const fetch = useCallback(async (page) => {
@@ -71,11 +74,13 @@ export function Notifications() {
       <Card.Title>Notifications</Card.Title>
       <hr />
 
-      <div className="mt-4 d-flex justify-content-end">
-        <Button variant="secondary" onClick={onCreate}>
-          Add Notification
-        </Button>
-      </div>
+      {allowCreate && (
+        <div className="mt-4 d-flex justify-content-end">
+          <Button variant="secondary" onClick={onCreate}>
+            Add Notification
+          </Button>
+        </div>
+      )}
 
       <List
         list={list}
