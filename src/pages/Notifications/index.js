@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Button, Card } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import service from '~/services/notification';
 
+import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import { NotificationModalForm } from './Form';
 import { List } from './List';
 
@@ -44,9 +46,14 @@ export function Notifications() {
   }
 
   function onDelete(data) {
-    setModal({
-      isOpen: true,
-      data,
+    confirmHandler('Are you sure delete this notification?', async () => {
+      try {
+        await service.destroy(data.id);
+        fetch(list.page);
+        toast.success('Notification deleted with success.');
+      } catch (error) {
+        toast.error(error.message);
+      }
     });
   }
 
