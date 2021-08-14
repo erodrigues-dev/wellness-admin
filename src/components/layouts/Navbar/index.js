@@ -2,6 +2,7 @@ import React from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
+import { NotificationNavbarButton } from '../../Notification/NavbarButton';
 import { Container, Brand, Buttons, Button } from './styles';
 
 const Navbar = ({ sidebarOpen, toggleSidebar }) => (
@@ -12,6 +13,7 @@ const Navbar = ({ sidebarOpen, toggleSidebar }) => (
       </Link>
     </Brand>
     <Buttons>
+      <NotificationNavbarButton />
       <Button onClick={toggleSidebar}>
         <FiMenu size={22} />
       </Button>

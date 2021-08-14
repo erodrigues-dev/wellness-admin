@@ -20,9 +20,19 @@ export function destroy(id) {
   return api.delete(`/notifications/${id}`);
 }
 
+export function listUnreads({ page, limit }) {
+  return api.get('/notifications/unreads', {
+    params: {
+      page,
+      limit,
+    },
+  });
+}
+
 export default {
   get,
   list,
   create,
   destroy,
+  listUnreads,
 };

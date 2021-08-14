@@ -25,6 +25,7 @@ export const Brand = styled.div`
 
 export const Buttons = styled.div`
   display: flex;
+  gap: 8px;
 `;
 
 export const Button = styled.div`
