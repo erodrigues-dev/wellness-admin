@@ -1,8 +1,11 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Button, Card } from 'react-bootstrap';
 
+import { FUNCTIONALITIES } from '~/consts/functionalities';
+import useAuth from '~/contexts/auth';
 import service from '~/services/notification';
 
+import { NotificationModalForm } from './Form';
 import { List } from './List';
 
 export function Notifications() {
@@ -11,9 +14,9 @@ export function Notifications() {
     total: 0,
     rows: [],
   });
-
-  const allowEdit = true;
-  const allowDelete = true;
+  const [modal, setModal] = useState({});
+  const { hasPermission } = useAuth();
+  const allowDelete = hasPermission(FUNCTIONALITIES.notifications.delete);
 
   const fetch = useCallback(async (page) => {
     const { data, headers } = await service.list(page);
@@ -23,6 +26,34 @@ export function Notifications() {
       total: Number(headers['x-total-count']),
     });
   }, []);
+
+  function onDisplay(data) {
+    setModal({
+      isOpen: true,
+      isDisplay: true,
+      data,
+    });
+  }
+
+  function onCreate(data) {
+    setModal({
+      isOpen: true,
+      isCreate: true,
+      data,
+    });
+  }
+
+  function onDelete(data) {
+    setModal({
+      isOpen: true,
+      data,
+    });
+  }
+
+  function onClose(event) {
+    setModal({});
+    if (event?.role === 'created') fetch(1);
+  }
 
   useEffect(() => {
     fetch(1);
@@ -34,15 +65,22 @@ export function Notifications() {
       <hr />
 
       <div className="mt-4 d-flex justify-content-end">
-        <Button variant="secondary">Add Notification</Button>
+        <Button variant="secondary" onClick={onCreate}>
+          Add Notification
+        </Button>
       </div>
 
       <List
         list={list}
-        allowEdit={allowEdit}
         allowDelete={allowDelete}
         onPaginate={fetch}
+        onDisplay={onDisplay}
+        onDelete={onDelete}
       />
+
+      {modal.isOpen && (
+        <NotificationModalForm state={modal} onClose={onClose} />
+      )}
     </Card>
   );
 }

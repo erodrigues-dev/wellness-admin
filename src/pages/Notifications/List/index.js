@@ -1,19 +1,11 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit, FiEye, FiTrash } from 'react-icons/fi';
+import { FiEye, FiTrash } from 'react-icons/fi';
 
 import Paginate from '~/components/Paginate';
 import { formatToList } from '~/helpers/date';
 
-export function List({
-  list,
-  allowEdit,
-  allowDelete,
-  onDisplay,
-  onEdit,
-  onDelete,
-  onPaginate,
-}) {
+export function List({ list, allowDelete, onDisplay, onDelete, onPaginate }) {
   return (
     <div className="mt-4">
       <Table striped hover responsive>
@@ -21,6 +13,7 @@ export function List({
           <tr>
             <th>Actions</th>
             <th>Title</th>
+            <th>Created By</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -33,17 +26,8 @@ export function List({
                   className="m-1"
                   size={18}
                   cursor="pointer"
-                  onClick={() => onDisplay(item.id)}
+                  onClick={() => onDisplay(item)}
                 />
-                {allowEdit && (
-                  <FiEdit
-                    className="m-1"
-                    title="Edit"
-                    size={18}
-                    cursor="pointer"
-                    onClick={() => onEdit(item.id)}
-                  />
-                )}
                 {allowDelete && (
                   <FiTrash
                     color="var(--danger)"
@@ -51,17 +35,18 @@ export function List({
                     title="Delete"
                     size={18}
                     cursor="pointer"
-                    onClick={() => onDelete(item.id)}
+                    onClick={() => onDelete(item)}
                   />
                 )}
               </td>
               <td>{item.title}</td>
+              <td>{item.createdBy.name}</td>
               <td>{formatToList(item.createdAt)}</td>
             </tr>
           ))}
           {list.total === 0 && (
             <tr>
-              <td colSpan={3}>No records found</td>
+              <td colSpan={4}>No records found</td>
             </tr>
           )}
         </tbody>
