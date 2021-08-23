@@ -20,8 +20,8 @@ export function destroy(id) {
   return api.delete(`/notifications/${id}`);
 }
 
-export function listUnreads({ page, limit }) {
-  return api.get('/notifications/unreads', {
+export function listByEmployee({ page, limit }) {
+  return api.get('/notifications/by-employee', {
     params: {
       page,
       limit,
@@ -29,10 +29,30 @@ export function listUnreads({ page, limit }) {
   });
 }
 
+export function markAsRead(id) {
+  return api.put(`/notifications/${id}/mark-as-read`);
+}
+
+export function markAsUnread(id) {
+  return api.put(`/notifications/${id}/mark-as-unread`);
+}
+
+export function markAllAsRead() {
+  return api.put(`/notifications/mark-all-as-read`);
+}
+
+export function markAllAsUnread() {
+  return api.put(`/notifications/mark-all-as-unread`);
+}
+
 export default {
   get,
   list,
   create,
   destroy,
-  listUnreads,
+  listByEmployee,
+  markAsRead,
+  markAsUnread,
+  markAllAsRead,
+  markAllAsUnread,
 };

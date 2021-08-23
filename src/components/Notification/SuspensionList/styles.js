@@ -29,11 +29,26 @@ export const Header = styled.div`
   }
 `;
 
+export const Buttons = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+
+  button {
+    background: transparent;
+    font-size: 0.8rem;
+    font-weight: 400;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 export const List = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  margin-top: 8px;
 `;
 
 export const EmptyList = styled.div`
@@ -55,16 +70,38 @@ export const Item = styled.div`
   border-bottom: 1px solid #f0f0f0;
   padding: 16px;
   gap: 16px;
+  align-items: center;
+  background: #fff;
+  transition: background 300ms;
+  border-radius: 4px;
 
-  h2 {
-    font-size: 1rem;
-    font-weight: 400;
-    margin: 0;
+  .avatar {
+    align-self: flex-start;
+    width: 36px;
+    height: 36px;
+
+    img {
+      width: 100%;
+    }
   }
 
-  p {
-    font-size: 0.7rem;
-    margin: 0;
+  .content {
+    flex: 1;
+
+    h2 {
+      font-size: 1rem;
+      font-weight: 400;
+      margin: 0;
+    }
+
+    p {
+      font-size: 0.7rem;
+      margin: 0;
+    }
+  }
+
+  &:hover {
+    background: #0001;
   }
 
   &:last-child {
@@ -83,7 +120,7 @@ export const ReadStatus = styled.div`
 
   cursor: pointer;
 
-  background: ${({ read }) => (read ? 'var(--secondary)' : 'var(--gray)')};
+  background: ${({ read }) => (read ? 'var(--gray)' : 'var(--secondary)')};
 `;
 
 export const CloseButton = styled.div`

@@ -6,18 +6,16 @@ import styled from 'styled-components';
 import useNotification from '../../../contexts/notification';
 
 export const NotificationNavbarButton = () => {
-  const { unreads, toggleNotifications } = useNotification();
+  const { list, toggleNotifications } = useNotification();
 
   return (
     <Container
       title={
-        unreads.total > 0
-          ? `You have ${unreads.total} unreads notifications`
-          : ''
+        list.unreads > 0 ? `You have ${list.unreads} unreads notifications` : ''
       }
       onClick={toggleNotifications}
     >
-      {unreads.total > 0 && <Badge>{unreads.total}</Badge>}
+      {list.unreads > 0 && <Badge>{list.unreads}</Badge>}
       <FiBell size={22} />
     </Container>
   );
