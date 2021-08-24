@@ -14,10 +14,12 @@ import {
   Item,
   ReadStatus,
   EmptyList,
+  LoadMore,
 } from './styles';
 
 export function NotificationSuspensionList({
   list,
+  onLoadMore,
   onToggleItem,
   onToggleAll,
   onClose,
@@ -68,6 +70,9 @@ export function NotificationSuspensionList({
               />
             </Item>
           ))}
+          {list.total > list.rows.length && (
+            <LoadMore onClick={onLoadMore}>Load more</LoadMore>
+          )}
           {list.total === 0 && (
             <EmptyList>
               <p>No unread notifications</p>

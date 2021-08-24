@@ -17,6 +17,7 @@ const NotificationContext = createContext({});
 const LIMIT = 20;
 
 export const NotificationProvider = ({ children }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(true);
   const [list, setList] = useState({
     page: 1,
@@ -38,18 +39,21 @@ export const NotificationProvider = ({ children }) => {
 
   const fetchList = useCallback(async (page) => {
     try {
+      setIsLoading(true);
       const { data } = await service.listByEmployee({
         page,
         limit: LIMIT,
       });
-      setList({
+      setList((state) => ({
         page,
         total: data.total,
-        rows: data.rows,
+        rows: state.rows.concat(data.rows),
         unreads: data.unreads,
-      });
+      }));
     } catch (error) {
       toast.error(error.message);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -82,7 +86,7 @@ export const NotificationProvider = ({ children }) => {
         ...state,
         rows: state.rows.map((row) => ({
           ...row,
-          read: !hasUnreads,
+          read: hasUnreads,
         })),
         unreads: hasUnreads ? 0 : state.total,
       }));
@@ -93,9 +97,17 @@ export const NotificationProvider = ({ children }) => {
 
   const onClose = () => setIsOpen(false);
 
+  function loadMore() {
+    if (isLoading) return;
+    setList((state) => ({
+      ...state,
+      page: state.page + 1,
+    }));
+  }
+
   useEffect(() => {
-    if (signed) fetchList();
-  }, [fetchList, signed]);
+    if (signed) fetchList(list.page);
+  }, [fetchList, list.page, signed]);
 
   return (
     <NotificationContext.Provider
@@ -108,6 +120,7 @@ export const NotificationProvider = ({ children }) => {
           list={list}
           onToggleItem={toggleItem}
           onToggleAll={toggleAll}
+          onLoadMore={loadMore}
           onClose={onClose}
         />
       )}

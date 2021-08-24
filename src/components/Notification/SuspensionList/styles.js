@@ -134,3 +134,21 @@ export const CloseButton = styled.div`
     background: #0001;
   }
 `;
+
+export const LoadMore = styled.button`
+  align-self: center;
+  justify-self: center;
+
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+
+  border-radius: 4px;
+  background: var(--primary);
+  color: #fff;
+  outline: 0 !important;
+  border: 0 !important;
+`;
