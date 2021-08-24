@@ -82,6 +82,8 @@ export const Item = styled.div`
 
     img {
       width: 100%;
+      border-radius: 50%;
+      object-fit: cover;
     }
   }
 

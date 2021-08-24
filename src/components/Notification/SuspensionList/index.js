@@ -53,7 +53,7 @@ export function NotificationSuspensionList({
             <Item className="item" key={item.id}>
               <div className="avatar">
                 <img
-                  src={item.createdBy.avatar || avatarDefaultImage}
+                  src={item.createdBy.imageUrl || avatarDefaultImage}
                   alt="avatar"
                 />
               </div>
