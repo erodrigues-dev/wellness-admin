@@ -74,6 +74,7 @@ export const Item = styled.div`
   background: #fff;
   transition: background 300ms;
   border-radius: 4px;
+  cursor: pointer;
 
   .avatar {
     align-self: flex-start;

@@ -7,9 +7,10 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 
+import { NotificationDetail } from '~/components/Notification/Detail';
+import { NotificationSuspensionList } from '~/components/Notification/SuspensionList';
 import service from '~/services/notification';
 
-import { NotificationSuspensionList } from '../components/Notification/SuspensionList';
 import useAuth from './auth';
 
 const NotificationContext = createContext({});
@@ -17,6 +18,7 @@ const NotificationContext = createContext({});
 const LIMIT = 20;
 
 export const NotificationProvider = ({ children }) => {
+  const { signed } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [list, setList] = useState({
@@ -25,7 +27,7 @@ export const NotificationProvider = ({ children }) => {
     unreads: 0,
     rows: [],
   });
-  const { signed } = useAuth();
+  const [detail, setDetail] = useState(null);
 
   const sendNotification = (message, success = true) => {
     toast(message, {
@@ -121,8 +123,13 @@ export const NotificationProvider = ({ children }) => {
           onToggleItem={toggleItem}
           onToggleAll={toggleAll}
           onLoadMore={loadMore}
+          onDetail={setDetail}
           onClose={onClose}
         />
+      )}
+
+      {detail && (
+        <NotificationDetail item={detail} onClose={() => setDetail(null)} />
       )}
     </NotificationContext.Provider>
   );

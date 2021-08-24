@@ -22,6 +22,7 @@ export function NotificationSuspensionList({
   onLoadMore,
   onToggleItem,
   onToggleAll,
+  onDetail,
   onClose,
 }) {
   function getReadStatusTitle(read) {
@@ -50,7 +51,7 @@ export function NotificationSuspensionList({
       <Scrollbars autoHeightMax="400px" autoHeight>
         <List className="list">
           {list.rows.map((item) => (
-            <Item className="item" key={item.id}>
+            <Item className="item" key={item.id} onClick={() => onDetail(item)}>
               <div className="avatar">
                 <img
                   src={item.createdBy.imageUrl || avatarDefaultImage}
