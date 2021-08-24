@@ -18,7 +18,7 @@ const LIMIT = 20;
 
 export const NotificationProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [list, setList] = useState({
     page: 1,
     total: 0,
