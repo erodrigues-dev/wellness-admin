@@ -11,6 +11,7 @@ import { NotificationDetail } from '~/components/Notification/Detail';
 import { NotificationSuspensionList } from '~/components/Notification/SuspensionList';
 import service from '~/services/notification';
 
+import { useSocket } from '../hooks/useSocket';
 import useAuth from './auth';
 
 const NotificationContext = createContext({});
@@ -18,7 +19,9 @@ const NotificationContext = createContext({});
 const LIMIT = 20;
 
 export const NotificationProvider = ({ children }) => {
-  const { signed } = useAuth();
+  const { signed, user } = useAuth();
+  const socket = useSocket();
+
   const [isLoading, setIsLoading] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [list, setList] = useState({
@@ -28,6 +31,7 @@ export const NotificationProvider = ({ children }) => {
     rows: [],
   });
   const [detail, setDetail] = useState(null);
+  const [refreshOnOpen, setRefreshOnOpen] = useState(false);
 
   const sendNotification = (message, success = true) => {
     toast(message, {
@@ -35,11 +39,7 @@ export const NotificationProvider = ({ children }) => {
     });
   };
 
-  const toggleNotifications = () => {
-    setIsOpen((open) => !open);
-  };
-
-  const fetchList = useCallback(async (page) => {
+  const fetchList = useCallback(async (page, append = false) => {
     try {
       setIsLoading(true);
       const { data } = await service.listByEmployee({
@@ -49,7 +49,7 @@ export const NotificationProvider = ({ children }) => {
       setList((state) => ({
         page,
         total: data.total,
-        rows: state.rows.concat(data.rows),
+        rows: append ? state.rows.concat(data.rows) : data.rows,
         unreads: data.unreads,
       }));
     } catch (error) {
@@ -101,19 +101,51 @@ export const NotificationProvider = ({ children }) => {
 
   function loadMore() {
     if (isLoading) return;
-    setList((state) => ({
-      ...state,
-      page: state.page + 1,
-    }));
+    fetchList(list.page + 1, true);
   }
 
+  const toggleNotifications = () => {
+    if (refreshOnOpen && !isOpen) {
+      fetchList(1);
+      setRefreshOnOpen(false);
+    }
+
+    setIsOpen((open) => !open);
+  };
+
+  const notificationCreatedListener = useCallback(
+    ({ createdBy }) => {
+      if (!user.id || user.id === createdBy) return;
+
+      setList((state) => ({
+        ...state,
+        total: state.total + 1,
+        unreads: state.unreads + 1,
+      }));
+
+      if (isOpen) fetchList(1);
+      else setRefreshOnOpen(true);
+    },
+    [fetchList, isOpen, user.id]
+  );
+
   useEffect(() => {
-    if (signed) fetchList(list.page);
-  }, [fetchList, list.page, signed]);
+    if (signed) fetchList(1);
+  }, [fetchList, signed]);
+
+  useEffect(() => {
+    if (!socket) return undefined;
+
+    socket.on('notification:created', notificationCreatedListener);
+
+    return () => {
+      socket.off('notification:created');
+    };
+  }, [notificationCreatedListener, socket]);
 
   return (
     <NotificationContext.Provider
-      value={{ sendNotification, toggleNotifications, list }}
+      value={{ sendNotification, toggleNotifications, isLoading, list }}
     >
       {children}
 
