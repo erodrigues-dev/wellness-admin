@@ -35,6 +35,12 @@ export function NotificationSuspensionList({
     return 'Mark all as unread';
   }
 
+  function toggleReadStatus(e, item) {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleItem(item);
+  }
+
   return (
     <Container>
       <Header>
@@ -65,7 +71,7 @@ export function NotificationSuspensionList({
                 <h2>{item.title}</h2>
               </div>
               <ReadStatus
-                onClick={() => onToggleItem(item)}
+                onClick={(e) => toggleReadStatus(e, item)}
                 title={getReadStatusTitle(item.read)}
                 read={item.read}
               />
