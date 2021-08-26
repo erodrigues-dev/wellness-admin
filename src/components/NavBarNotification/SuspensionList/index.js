@@ -45,7 +45,7 @@ export function NotificationSuspensionList({
     <Container>
       <Header>
         <h1>Notifications</h1>
-        <CloseButton onClick={onClose}>
+        <CloseButton onClick={onClose} title="Close">
           <FiX size={22} />
         </CloseButton>
       </Header>

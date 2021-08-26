@@ -2,7 +2,7 @@ import React from 'react';
 import { FiMenu } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 
-import { NotificationNavbarButton } from '../../Notification/NavbarButton';
+import { NotificationNavbarButton } from '../../NavBarNotification/NavbarButton';
 import { Container, Brand, Buttons, Button } from './styles';
 
 const Navbar = ({ sidebarOpen, toggleSidebar }) => (

@@ -15,6 +15,7 @@ export const Container = styled.div`
 
   display: flex;
   flex-direction: column;
+  color: #212529;
 `;
 
 export const Header = styled.div`
@@ -83,6 +84,7 @@ export const Item = styled.div`
 
     img {
       width: 100%;
+      height: 100%;
       border-radius: 50%;
       object-fit: cover;
     }
@@ -92,7 +94,7 @@ export const Item = styled.div`
     flex: 1;
 
     h2 {
-      font-size: 1rem;
+      font-size: 0.85rem;
       font-weight: 400;
       margin: 0;
     }
