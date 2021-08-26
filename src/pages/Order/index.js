@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as service from '~/services/order';
 
 import Details from './Details';
@@ -14,7 +14,7 @@ import OrderWizard from './Form';
 import List from './List';
 
 const Order = () => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.orders.create);
   const hasPermissionToUpdate = hasPermission(FUNCTIONALITIES.orders.create);
@@ -35,9 +35,9 @@ const Order = () => {
       setList(response.data);
       setTotal(parseInt(response.headers['x-total-count']));
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [page, filter, sendNotification]);
+  }, [page, filter, sendToast]);
 
   useEffect(() => {
     listOrders();

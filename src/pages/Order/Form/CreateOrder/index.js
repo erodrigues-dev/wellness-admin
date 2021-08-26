@@ -7,7 +7,7 @@ import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
 import * as discountService from '~/services/discount';
@@ -18,7 +18,7 @@ import schema from './schema';
 
 const CreateOrder = ({ setClose, setPage, setOrder }) => {
   const { id } = useParams();
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [activities, setActivities] = useState();
   const [packages, setPackages] = useState();
   const [selectedItem, setSelectedItem] = useState(null);
@@ -51,10 +51,10 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
 
         setDiscount(data);
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification]
+    [sendToast]
   );
 
   useEffect(() => {
@@ -77,10 +77,10 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
 
         setCustomers(data);
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     }
-  }, [id, sendNotification]);
+  }, [id, sendToast]);
 
   const listActivities = useCallback(async () => {
     try {
@@ -88,9 +88,9 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
 
       setActivities(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification]);
+  }, [sendToast]);
 
   const listPackages = useCallback(async () => {
     try {
@@ -98,9 +98,9 @@ const CreateOrder = ({ setClose, setPage, setOrder }) => {
 
       setPackages(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification]);
+  }, [sendToast]);
 
   useEffect(() => {
     listCustomers();

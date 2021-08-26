@@ -6,7 +6,7 @@ import {
   RiBankCard2Fill,
 } from 'react-icons/ri';
 
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as checkoutService from '~/services/checkout';
 
 import { Container, CardItem } from './style';
@@ -26,7 +26,7 @@ export const Menu = (cards, selected) =>
   });
 
 const CardSelection = ({ customerId, setCard, setFormikCard }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [selected, setSelected] = useState('');
   const [menuItems, setMenuItems] = useState();
   const [cards, setCards] = useState([{ last_4: 'New', id: '' }]);
@@ -39,9 +39,9 @@ const CardSelection = ({ customerId, setCard, setFormikCard }) => {
 
       setCards((prevState) => [...prevState, ...data]);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [customerId, sendNotification]);
+  }, [customerId, sendToast]);
 
   useEffect(() => {
     listCards();

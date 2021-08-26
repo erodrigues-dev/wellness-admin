@@ -3,7 +3,6 @@ import { ToastContainer } from 'react-toastify';
 
 import { AuthProvider } from '~/contexts/auth';
 import { LoadingProvider } from '~/contexts/loading';
-import { NotificationProvider } from '~/contexts/notification';
 
 import Routes from './routes/Routes';
 
@@ -14,9 +13,7 @@ const App = () => (
   <LoadingProvider>
     <ToastContainer />
     <AuthProvider>
-      <NotificationProvider>
-        <Routes />
-      </NotificationProvider>
+      <Routes />
     </AuthProvider>
   </LoadingProvider>
 );

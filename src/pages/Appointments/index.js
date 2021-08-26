@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as appointmentService from '~/services/appointment';
 
 import Details from './Details';
@@ -14,7 +14,7 @@ import ModalForm from './Form';
 import List from './List';
 
 const Appointments = () => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.appointments.create
@@ -42,9 +42,9 @@ const Appointments = () => {
       setList(data);
       setTotal(parseInt(headers['x-total-count']));
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [page, filter, sendNotification]);
+  }, [page, filter, sendToast]);
 
   useEffect(() => {
     listAppointments();

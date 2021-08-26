@@ -7,7 +7,7 @@ import { useFormik } from 'formik';
 import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import account from '~/services/account';
 import specialtyService from '~/services/specialty';
 
@@ -16,7 +16,7 @@ import { Container } from './styles';
 
 const Account = () => {
   const { user, updateUserFromToken } = useAuth();
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [seconds, setSeconds] = useState(0);
   const [sendingCode, setSendingCode] = useState(false);
   const [specialties, setSpecialties] = useState([]);
@@ -44,11 +44,11 @@ const Account = () => {
 
       updateUserFromToken(response.data.token);
 
-      sendNotification('Account updated.');
+      sendToast('Account updated.');
       formik.setFieldValue('confirmationCode', '');
       formik.setFieldValue('oldEmail', data.email);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 
@@ -68,7 +68,7 @@ const Account = () => {
 
   async function handleSendConfirmation() {
     if (formik.errors.name || !formik.values.name) {
-      sendNotification('Name must be valid to send a confirmation code', false);
+      sendToast('Name must be valid to send a confirmation code', false);
 
       return;
     }
@@ -78,7 +78,7 @@ const Account = () => {
       await account.sendConfirmation(formik.values);
       setSeconds(60);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     } finally {
       setSendingCode(false);
     }

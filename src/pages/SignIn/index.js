@@ -6,7 +6,7 @@ import * as yup from 'yup';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 
 import RecoverPassword from './RecoverPassword';
 import { Container, Box, Logo } from './styles';
@@ -17,7 +17,7 @@ const schema = yup.object().shape({
 });
 
 const SignIn = () => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { signIn } = useAuth();
   const [recovery, setRecovery] = useState(false);
   const [seconds, setSeconds] = useState(0);
@@ -27,9 +27,9 @@ const SignIn = () => {
       const { email, password } = values;
       setSubmitting(true);
       await signIn({ email, password });
-      sendNotification('Welcome! You are signed with success!');
+      sendToast('Welcome! You are signed with success!');
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
       setSubmitting(false);
     }
   };

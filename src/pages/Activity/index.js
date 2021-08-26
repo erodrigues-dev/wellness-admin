@@ -6,13 +6,13 @@ import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import * as service from '~/services/activity';
 
-import useNotification from '../../contexts/notification';
+import useToast from '../../hooks/useToast';
 import Filter from './Filter';
 import ModalForm from './Form';
 import List from './List';
 
 const Activity = () => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.activities.create
@@ -37,9 +37,9 @@ const Activity = () => {
       setList(response.data);
       setTotal(parseInt(response.headers['x-total-count']));
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [page, filter, sendNotification]);
+  }, [page, filter, sendToast]);
 
   useEffect(() => {
     listActivities();

@@ -6,10 +6,10 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import Modal from '~/components/Modal';
-import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import masks from '~/helpers/masks';
 import { sanitize } from '~/helpers/sanitize';
+import useToast from '~/hooks/useToast';
 import ModalCategory from '~/pages/Category/Modal';
 import * as categoryService from '~/services/category';
 import service from '~/services/package';
@@ -23,7 +23,7 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
   const [image, setImage] = useState({ file: null, url: null });
   const [categories, setCategories] = useState();
   const [openAdd, setOpenAdd] = useState(false);
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
 
   const { setValues, ...formik } = useFormik({
     validationSchema: schema,
@@ -58,10 +58,10 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
         });
         setImage({ file: null, url: data.imageUrl });
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification, setValues]
+    [sendToast, setValues]
   );
 
   useEffect(() => {
@@ -74,9 +74,9 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
 
       setCategories(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification]);
+  }, [sendToast]);
 
   useEffect(() => {
     loadCategories();
@@ -94,16 +94,16 @@ function ModalForm({ title, setClose, selected, display, reloadPackages }) {
 
       if (selected === undefined) {
         await service.create(data);
-        sendNotification('Package created with success.');
+        sendToast('Package created with success.');
       } else {
         await service.update(data);
-        sendNotification('Package updated with success.');
+        sendToast('Package updated with success.');
       }
 
       reloadPackages();
       setClose();
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
       setSubmitting(false);
     }
   }
