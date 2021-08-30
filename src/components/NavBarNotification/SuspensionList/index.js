@@ -50,9 +50,11 @@ export function NotificationSuspensionList({
         </CloseButton>
       </Header>
       <Buttons>
-        <button type="button" onClick={onToggleAll}>
-          {getTextToMarkAll()}
-        </button>
+        {list.total > 0 && (
+          <button type="button" onClick={onToggleAll}>
+            {getTextToMarkAll()}
+          </button>
+        )}
       </Buttons>
       <Scrollbars autoHeightMax="400px" autoHeight>
         <List className="list">
