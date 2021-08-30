@@ -31,13 +31,6 @@ export const NavBarNotificationProvider = ({ children }) => {
     rows: [],
   });
   const [detail, setDetail] = useState(null);
-  const [refreshOnOpen, setRefreshOnOpen] = useState(false);
-
-  const sendToast = (message, success = true) => {
-    toast(message, {
-      type: success ? toast.TYPE.SUCCESS : toast.TYPE.ERROR,
-    });
-  };
 
   const fetchList = useCallback(async (page, append = false) => {
     try {
@@ -105,11 +98,7 @@ export const NavBarNotificationProvider = ({ children }) => {
   }
 
   const toggleNotifications = () => {
-    if (refreshOnOpen && !isOpen) {
-      fetchList(1);
-      setRefreshOnOpen(false);
-    }
-
+    if (!isOpen) fetchList(1);
     setIsOpen((open) => !open);
   };
 
@@ -124,7 +113,6 @@ export const NavBarNotificationProvider = ({ children }) => {
       }));
 
       if (isOpen) fetchList(1);
-      else setRefreshOnOpen(true);
     },
     [fetchList, isOpen, user.id]
   );
@@ -145,7 +133,7 @@ export const NavBarNotificationProvider = ({ children }) => {
 
   return (
     <NavBarNotificationContext.Provider
-      value={{ sendToast, toggleNotifications, isLoading, list }}
+      value={{ toggleNotifications, isLoading, list }}
     >
       {children}
 
