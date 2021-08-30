@@ -3,7 +3,7 @@ import { Col, Form, Row, Button } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import service from '~/services/specialty';
 
 import schema from './schema';
@@ -20,7 +20,7 @@ import schema from './schema';
  */
 const FormSpecialty = ({ onClose, refreshList, model, action }) => {
   const isEdit = action === 'edit';
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {
@@ -35,14 +35,12 @@ const FormSpecialty = ({ onClose, refreshList, model, action }) => {
       if (isEdit) await service.update(values);
       else await service.create({ name: values.name });
 
-      sendNotification(
-        `Specialty ${isEdit ? 'edited' : 'created'} successfuly.`
-      );
+      sendToast(`Specialty ${isEdit ? 'edited' : 'created'} successfuly.`);
 
       if (refreshList) refreshList();
       onClose();
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

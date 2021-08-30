@@ -5,7 +5,7 @@ import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import { index, destroy } from '~/services/customer';
 
 import Filter from './Filter';
@@ -13,7 +13,7 @@ import ModalForm from './Form';
 import List from './List';
 
 const Customer = () => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.customers.create);
   const hasPermissionToUpdate = hasPermission(FUNCTIONALITIES.customers.update);
@@ -33,21 +33,21 @@ const Customer = () => {
       setList(data);
       setTotal(parseInt(headers['x-total-count']));
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification, filter, page]);
+  }, [sendToast, filter, page]);
 
   const destroyCustomer = useCallback(
     async (id) => {
       try {
         await destroy(id);
-        sendNotification('Customer deleted with success');
+        sendToast('Customer deleted with success');
         await listCustomers();
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification, listCustomers]
+    [sendToast, listCustomers]
   );
 
   async function handleFilter(filterValues) {

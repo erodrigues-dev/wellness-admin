@@ -5,16 +5,16 @@ import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import { Status } from '~/components/Label/styles';
 import Modal from '~/components/Modal';
 import { ORDER_STATUS_COLOR } from '~/consts/labelColors';
-import useNotification from '~/contexts/notification';
 import * as dateHelper from '~/helpers/date';
 import { currency } from '~/helpers/intl';
 import masks from '~/helpers/masks';
+import useToast from '~/hooks/useToast';
 import * as orderService from '~/services/order';
 
 import { Container } from './styles';
 
 const Details = ({ orderId, setClose, reloadOrders }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const formatCurrency = (value) => currency.format(value);
   const [order, setOrder] = useState();
 
@@ -25,10 +25,10 @@ const Details = ({ orderId, setClose, reloadOrders }) => {
 
         setOrder(data);
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification]
+    [sendToast]
   );
 
   const cancelOrder = useCallback(
@@ -36,15 +36,15 @@ const Details = ({ orderId, setClose, reloadOrders }) => {
       try {
         await orderService.cancel(id);
 
-        sendNotification('Order canceled successfully');
+        sendToast('Order canceled successfully');
         reloadOrders();
 
         setOrder((prevState) => ({ ...prevState, canceledDate: new Date() }));
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [reloadOrders, sendNotification]
+    [reloadOrders, sendToast]
   );
 
   useEffect(() => {

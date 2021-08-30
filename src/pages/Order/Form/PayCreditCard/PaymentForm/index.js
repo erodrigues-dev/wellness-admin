@@ -3,9 +3,9 @@ import { Button, Col, Form, Row } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
-import useNotification from '~/contexts/notification';
 import masks from '~/helpers/masks';
 import { number } from '~/helpers/sanitize';
+import useToast from '~/hooks/useToast';
 import * as checkoutService from '~/services/checkout';
 import * as discountService from '~/services/discount';
 
@@ -25,7 +25,7 @@ const messages = {
 };
 
 const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [discount, setDiscount] = useState(0);
   const [paymentForm, setPaymentForm] = useState(null);
   const [selectedCard, setSelectedCard] = useState('');
@@ -102,9 +102,9 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
 
       setDiscount(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification, order.customerId, order.itemType, order.item.id]);
+  }, [sendToast, order.customerId, order.itemType, order.item.id]);
 
   useEffect(() => {
     findDiscount();
@@ -128,7 +128,7 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
         });
 
         reloadOrders();
-        sendNotification('Order created successfully.', true);
+        sendToast('Order created successfully.', true);
         setClose(false);
       } catch (error) {
         if (error.length > 0) {
@@ -136,14 +136,14 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
             if (er.code === 'CARD_TOKEN_USED') {
               setCardId('');
             }
-            sendNotification(messages[er.code], false);
+            sendToast(messages[er.code], false);
           });
         } else {
-          sendNotification(error.message, false);
+          sendToast(error.message, false);
         }
       }
     },
-    [order, sendNotification, reloadOrders, setClose]
+    [order, sendToast, reloadOrders, setClose]
   );
 
   useEffect(() => {
@@ -167,10 +167,10 @@ const PaymentForm = ({ SqPaymentForm, order, reloadOrders, setClose }) => {
   useEffect(() => {
     if (squareErrors.length > 0 && !selectedCard) {
       squareErrors.forEach((error) => {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       });
     }
-  }, [squareErrors, selectedCard, sendNotification]);
+  }, [squareErrors, selectedCard, sendToast]);
 
   function handleSubmit(data) {
     setFormikData(data);

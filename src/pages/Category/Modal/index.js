@@ -3,7 +3,7 @@ import { Col, Form, Row, Button } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import service from '~/services/category';
 
 import schema from './schema';
@@ -16,7 +16,7 @@ const ModalCategory = ({
   handleValue,
 }) => {
   const isEdit = selectedCategory !== undefined;
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const formik = useFormik({
     validationSchema: schema,
     initialValues: {
@@ -43,14 +43,12 @@ const ModalCategory = ({
         if (addComponent) handleValue(data.id);
       }
 
-      sendNotification(
-        `Category ${isEdit ? 'edited' : 'created'} successfuly.`
-      );
+      sendToast(`Category ${isEdit ? 'edited' : 'created'} successfuly.`);
 
       loadCategories();
       handleOpenModal(false);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

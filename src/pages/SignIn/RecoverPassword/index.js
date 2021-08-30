@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import ButtonLoading from '~/components/ButtonLoading';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as authService from '~/services/auth';
 
 const schema = yup.object().shape({
@@ -19,7 +19,7 @@ const RecoverPassword = ({
   recoverEmail,
   setRecoverEmail,
 }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
 
   const { setValues, ...formik } = useFormik({
     validationSchema: schema,
@@ -38,16 +38,14 @@ const RecoverPassword = ({
       if (seconds <= 0) {
         await authService.recoverPassword(data);
 
-        sendNotification(
+        sendToast(
           'A temporary password has been sent to your email, wait a few moments and check your inbox'
         );
       } else {
-        sendNotification(
-          'You must wait 60 seconds to sent a new temporary password'
-        );
+        sendToast('You must wait 60 seconds to sent a new temporary password');
       }
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

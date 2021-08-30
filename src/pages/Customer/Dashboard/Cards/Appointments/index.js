@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import Details from '~/pages/Appointments/Details';
 import ModalForm from '~/pages/Appointments/Form';
 import * as appointmentService from '~/services/appointment';
@@ -19,7 +19,7 @@ const Appointments = () => {
   const [openDetails, setOpenDetails] = useState(false);
   const [filter] = useState({ customerId: id });
   const [appointment, setAppointment] = useState();
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.appointments.create
@@ -31,9 +31,9 @@ const Appointments = () => {
 
       setList(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [filter, sendNotification]);
+  }, [filter, sendToast]);
 
   useEffect(() => {
     listAppointments();
@@ -44,9 +44,9 @@ const Appointments = () => {
       await appointmentService.changeStatus(appointmentId, 'canceled');
 
       listAppointments();
-      sendNotification('Appointment canceled successfully');
+      sendToast('Appointment canceled successfully');
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

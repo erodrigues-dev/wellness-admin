@@ -2,13 +2,13 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Form, Col, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import { listAll } from '~/services/activity';
 
 import List from './List';
 
 const Activities = ({ formik, packageType, display }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const activityRef = useRef(null);
   const [activities, setActivities] = useState([]);
 
@@ -31,7 +31,7 @@ const Activities = ({ formik, packageType, display }) => {
       formik.setFieldValue('activities', newList);
       formik.setFieldTouched('activities', true);
       activityRef.current.value = '';
-    } else sendNotification('Select an activity', false);
+    } else sendToast('Select an activity', false);
   };
 
   const removeItem = (id) => {

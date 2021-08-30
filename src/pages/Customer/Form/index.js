@@ -7,13 +7,13 @@ import Avatar from '~/components/Avatar';
 import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as customerService from '~/services/customer';
 
 import schema from './schema';
 
 const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [file, setFile] = useState(null);
 
   const { setValues, ...formik } = useFormik({
@@ -45,10 +45,10 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
           publicNotes: data?.publicNotes ?? '',
         });
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification, setValues]
+    [sendToast, setValues]
   );
 
   useEffect(() => {
@@ -67,11 +67,11 @@ const ModalForm = ({ title, customer, setClose, reloadCustomers, display }) => {
         await customerService.create({ ...data, file });
       }
 
-      sendNotification('Customer saved successfully');
+      sendToast('Customer saved successfully');
       reloadCustomers();
       setClose(false);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

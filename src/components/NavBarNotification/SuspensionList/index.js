@@ -35,18 +35,26 @@ export function NotificationSuspensionList({
     return 'Mark all as unread';
   }
 
+  function toggleReadStatus(e, item) {
+    e.preventDefault();
+    e.stopPropagation();
+    onToggleItem(item);
+  }
+
   return (
     <Container>
       <Header>
         <h1>Notifications</h1>
-        <CloseButton onClick={onClose}>
+        <CloseButton onClick={onClose} title="Close">
           <FiX size={22} />
         </CloseButton>
       </Header>
       <Buttons>
-        <button type="button" onClick={onToggleAll}>
-          {getTextToMarkAll()}
-        </button>
+        {list.total > 0 && (
+          <button type="button" onClick={onToggleAll}>
+            {getTextToMarkAll()}
+          </button>
+        )}
       </Buttons>
       <Scrollbars autoHeightMax="400px" autoHeight>
         <List className="list">
@@ -65,7 +73,7 @@ export function NotificationSuspensionList({
                 <h2>{item.title}</h2>
               </div>
               <ReadStatus
-                onClick={() => onToggleItem(item)}
+                onClick={(e) => toggleReadStatus(e, item)}
                 title={getReadStatusTitle(item.read)}
                 read={item.read}
               />

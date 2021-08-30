@@ -7,7 +7,7 @@ import Avatar from '~/components/Avatar';
 import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as employeeService from '~/services/employee';
 import * as profileService from '~/services/profile';
 import * as specialtyService from '~/services/specialty';
@@ -15,7 +15,7 @@ import * as specialtyService from '~/services/specialty';
 import schema from './schema';
 
 const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [file, setFile] = useState(null);
   const [profiles, setProfiles] = useState([]);
   const [specialties, setSpecialties] = useState([]);
@@ -40,18 +40,18 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
 
       setProfiles(data);
     } catch (error) {
-      sendNotification('Unable to list profiles', false);
+      sendToast('Unable to list profiles', false);
     }
-  }, [sendNotification]);
+  }, [sendToast]);
 
   const listSpecialties = useCallback(async () => {
     try {
       const { data } = await specialtyService.listAll();
       setSpecialties(data);
     } catch (error) {
-      sendNotification('Unable to list specialties', false);
+      sendToast('Unable to list specialties', false);
     }
-  }, [sendNotification]);
+  }, [sendToast]);
 
   useEffect(() => {
     listProfiles();
@@ -71,11 +71,11 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
         await employeeService.create({ ...data, file });
       }
 
-      sendNotification('Employee saved successfully');
+      sendToast('Employee saved successfully');
       setClose();
       reloadEmployees();
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

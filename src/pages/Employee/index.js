@@ -5,7 +5,7 @@ import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as service from '~/services/employee';
 
 import Filter from './Filter';
@@ -14,7 +14,7 @@ import List from './List';
 
 const Employee = () => {
   const { hasPermission } = useAuth();
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
 
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.settings.employees.create
@@ -47,9 +47,9 @@ const Employee = () => {
       setList(data);
       setTotal(parseInt(headers['x-total-count']));
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification, page, filter]);
+  }, [sendToast, page, filter]);
 
   const destroyEmployee = useCallback(
     async (item) => {
@@ -57,10 +57,10 @@ const Employee = () => {
         await service.destroy(item);
         listEmployees();
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification, listEmployees]
+    [sendToast, listEmployees]
   );
 
   async function handleFilter(filterValues) {
