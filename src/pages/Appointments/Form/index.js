@@ -8,13 +8,13 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import InputDatePicker from '~/components/InputDatePicker';
 import Modal from '~/components/Modal';
-import useNotification from '~/contexts/notification';
 import {
   toDate,
   formatTime24To12,
   toInputValue,
   formatToSubmit,
 } from '~/helpers/date';
+import useToast from '~/hooks/useToast';
 import * as appointmentService from '~/services/appointment';
 import * as customerService from '~/services/customer';
 
@@ -25,7 +25,7 @@ import { Container } from './styles';
 const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
   const { id: routeId } = useParams();
   const customerId = routeId || '';
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
   const [activeStartDate, setActiveStartDate] = useState(
@@ -74,10 +74,10 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
 
         setCustomers(data);
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     }
-  }, [dashboard, sendNotification]);
+  }, [dashboard, sendToast]);
 
   const listActivities = useCallback(
     async (id) => {
@@ -86,10 +86,10 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
 
         setActivities(data);
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification]
+    [sendToast]
   );
 
   useEffect(() => {
@@ -111,10 +111,10 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
 
         setAvailableDates(data.map((item) => toDate(item)));
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification]
+    [sendToast]
   );
 
   useEffect(() => {
@@ -144,10 +144,10 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
         }
         setAvailableTimeSlots(data);
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification]
+    [sendToast]
   );
 
   useEffect(() => {
@@ -168,7 +168,7 @@ const ModalForm = ({ setClose, reloadAppointments, dashboard = false }) => {
       setClose(false);
       toast.success(`Appointments created successfully.`);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

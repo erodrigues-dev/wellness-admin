@@ -7,8 +7,8 @@ import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
 import { Status } from '~/components/Label/styles';
 import Modal from '~/components/Modal';
 import { APPOINTMENTS_STATUS_COLOR } from '~/consts/labelColors';
-import useNotification from '~/contexts/notification';
 import { formatToDisplay, toDate, formatTime24To12 } from '~/helpers/date';
+import useToast from '~/hooks/useToast';
 import * as appointmentService from '~/services/appointment';
 
 import { Container } from './styles';
@@ -19,18 +19,18 @@ const Details = ({
   setClose,
   reloadAppointments,
 }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
 
   async function changeStatus(appointmentId, status) {
     try {
       await appointmentService.changeStatus(appointmentId, status);
 
-      sendNotification(`Appointment set as ${status} successfully`);
+      sendToast(`Appointment set as ${status} successfully`);
       reloadAppointments();
 
       setAppointment({ ...appointment, status });
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

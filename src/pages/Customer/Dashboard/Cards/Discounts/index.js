@@ -4,7 +4,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as service from '~/services/discount';
 
 import ModalForm from '../../../../Discount/Form';
@@ -20,7 +20,7 @@ const Discounts = () => {
     FUNCTIONALITIES.settings.discount.update
   );
   const { id } = useParams();
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [openAdd, setOpenAdd] = useState(false);
   const [discounts, setDiscounts] = useState();
 
@@ -34,9 +34,9 @@ const Discounts = () => {
 
       setDiscounts(data);
     } catch (error) {
-      sendNotification(error.message);
+      sendToast(error.message);
     }
-  }, [sendNotification, id]);
+  }, [sendToast, id]);
 
   useEffect(() => {
     listDiscounts();
@@ -46,10 +46,10 @@ const Discounts = () => {
     try {
       await service.destroy(item);
 
-      sendNotification('Discount deleted.');
+      sendToast('Discount deleted.');
       listDiscounts();
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

@@ -11,8 +11,7 @@ export const Container = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #fff;
-  z-index: 100;
+  z-index: 200;
 `;
 
 export const Brand = styled.div`
@@ -25,9 +24,11 @@ export const Brand = styled.div`
 
 export const Buttons = styled.div`
   display: flex;
+  gap: 8px;
 `;
 
 export const Button = styled.div`
+  color: #fff;
   cursor: pointer;
   width: 32px;
   height: 32px;

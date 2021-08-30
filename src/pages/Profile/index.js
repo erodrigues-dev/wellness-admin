@@ -4,7 +4,7 @@ import { Card } from 'react-bootstrap';
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as service from '~/services/profile';
 
 import Filter from './Filter';
@@ -13,7 +13,7 @@ import List from './List';
 
 function Profile() {
   const { hasPermission } = useAuth();
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.settings.profiles.create
   );
@@ -35,9 +35,9 @@ function Profile() {
       setList(data);
       setTotal(parseInt(headers['x-total-count']));
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [filter, page, sendNotification]);
+  }, [filter, page, sendToast]);
 
   useEffect(() => {
     listProfiles();

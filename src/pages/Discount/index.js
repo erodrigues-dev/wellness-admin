@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import Paginate from '~/components/Paginate';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as service from '~/services/discount';
 
 import Filter from './Filter';
@@ -13,7 +13,7 @@ import ModalForm from './Form';
 import List from './List';
 
 const Discount = () => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(
     FUNCTIONALITIES.settings.discount.create
@@ -36,9 +36,9 @@ const Discount = () => {
       setList(data);
       setTotal(parseInt(headers['x-total-count']));
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [page, filter, sendNotification]);
+  }, [page, filter, sendToast]);
 
   useEffect(() => {
     listDiscounts();
@@ -57,10 +57,10 @@ const Discount = () => {
     try {
       await service.destroy(discountId);
 
-      sendNotification('Discount deleted.');
+      sendToast('Discount deleted.');
       listDiscounts();
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 

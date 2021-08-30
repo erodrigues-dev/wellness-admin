@@ -6,9 +6,9 @@ import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
-import useNotification from '~/contexts/notification';
 import { decimal } from '~/helpers/intl';
 import masks from '~/helpers/masks';
+import useToast from '~/hooks/useToast';
 import ModalCategory from '~/pages/Category/Modal';
 import * as service from '~/services/activity';
 import * as categoryService from '~/services/category';
@@ -45,7 +45,7 @@ function ModalForm({
   const [waivers, setWaivers] = useState([]);
   const [employeeId, setEmployeeId] = useState('');
 
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
 
   const { setValues, ...formik } = useFormik({
     validationSchema: schema,
@@ -65,10 +65,10 @@ function ModalForm({
         });
         setImage(data.imageUrl ?? '');
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification, setValues, display]
+    [sendToast, setValues, display]
   );
 
   const fetchCategories = useCallback(async () => {
@@ -92,11 +92,11 @@ function ModalForm({
       if (activity === undefined) await service.create(data);
       else await service.update(data);
 
-      sendNotification('Activity saved successfully');
+      sendToast('Activity saved successfully');
       reloadActivities();
       setClose();
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
       setSubmitting(false);
     }
   }

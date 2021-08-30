@@ -33,6 +33,11 @@ export const FUNCTIONALITIES = {
     createUpdate: 1073741824,
     delete: 2147483648,
   },
+  notifications: {
+    list: 2 ** 32,
+    createOrUpdate: 2 ** 33,
+    delete: 2 ** 34,
+  },
   settings: {
     employees: {
       list: 8192,

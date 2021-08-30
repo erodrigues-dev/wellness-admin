@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import Modal from '~/components/Modal';
 import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import Details from '~/pages/Order/Details';
 import * as service from '~/services/order';
 
@@ -15,7 +15,7 @@ import List from './List';
 
 const Orders = () => {
   const { id } = useParams();
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.orders.create);
   const [openCheckout, setOpenCheckout] = useState(false);
@@ -32,9 +32,9 @@ const Orders = () => {
 
       setList(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [filter, sendNotification]);
+  }, [filter, sendToast]);
 
   useEffect(() => {
     listOrders();

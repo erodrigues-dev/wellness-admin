@@ -6,7 +6,7 @@ import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as domainService from '~/services/domain';
 import * as profileService from '~/services/profile';
 
@@ -14,7 +14,7 @@ import schema from './schema';
 import { Container } from './styles';
 
 const ProfileForm = ({ profileId, setClose, reloadProfiles }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [groups, setGroups] = useState([]);
   const [subgroups, setSubgroups] = useState([]);
   const [profile, setProfile] = useState();
@@ -45,13 +45,13 @@ const ProfileForm = ({ profileId, setClose, reloadProfiles }) => {
 
         toast.success('Profile saved successfully');
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
 
       reloadProfiles();
       setClose(false);
     },
-    [sendNotification, profile, setClose, reloadProfiles]
+    [sendToast, profile, setClose, reloadProfiles]
   );
 
   const listPermissions = useCallback(async () => {
@@ -60,9 +60,9 @@ const ProfileForm = ({ profileId, setClose, reloadProfiles }) => {
 
       handleGroups(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification, handleGroups]);
+  }, [sendToast, handleGroups]);
 
   const getProfile = useCallback(
     async (id) => {
@@ -82,10 +82,10 @@ const ProfileForm = ({ profileId, setClose, reloadProfiles }) => {
           permissions,
         });
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification, handleGroups, setValues]
+    [sendToast, handleGroups, setValues]
   );
 
   useEffect(() => {

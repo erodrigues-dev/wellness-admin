@@ -2,14 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 
 import ButtonLoading from '~/components/ButtonLoading';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import * as checkoutService from '~/services/checkout';
 import * as discountService from '~/services/discount';
 
 import OrderSummary from '../OrderSummary';
 
 const PayMoney = ({ setClose, order, reloadOrders }) => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [discount, setDiscount] = useState(0);
 
   const findDiscount = useCallback(async () => {
@@ -22,9 +22,9 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
 
       setDiscount(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification, order]);
+  }, [sendToast, order]);
 
   useEffect(() => {
     findDiscount();
@@ -39,11 +39,11 @@ const PayMoney = ({ setClose, order, reloadOrders }) => {
         quantity: order.quantity,
       });
 
-      sendNotification('Order created successfully.');
+      sendToast('Order created successfully.');
       setClose(false);
       reloadOrders();
     } catch (error) {
-      sendNotification(error, false);
+      sendToast(error, false);
     }
   }
 

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import service from '~/services/customer';
 
 import Cards from './Cards';
@@ -10,7 +10,7 @@ import Customer from './Customer';
 import { Container } from './styles';
 
 const Dashboard = () => {
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const { id } = useParams();
   const [user, setUser] = useState();
 
@@ -21,7 +21,7 @@ const Dashboard = () => {
       .then((response) => {
         setUser(response.data);
       })
-      .catch(({ message }) => sendNotification(message, false));
+      .catch(({ message }) => sendToast(message, false));
 
     // eslint-disable-next-line
   }, [id]);

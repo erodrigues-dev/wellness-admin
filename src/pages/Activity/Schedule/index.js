@@ -5,7 +5,7 @@ import { useParams } from 'react-router-dom';
 import FullCalendar from '@fullcalendar/react';
 
 import { FULLCALENDAR_CONFIG } from '~/consts/fullcalendar';
-import useNotification from '~/contexts/notification';
+import useToast from '~/hooks/useToast';
 import { get } from '~/services/activity';
 import * as service from '~/services/schedule';
 
@@ -19,7 +19,7 @@ function Schedule() {
   const [events, setEvents] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState(null);
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
 
   const getActivity = useCallback(
     async (activityId) => {
@@ -28,10 +28,10 @@ function Schedule() {
 
         setActivity(response.data);
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     },
-    [sendNotification]
+    [sendToast]
   );
 
   useEffect(() => {
@@ -131,7 +131,7 @@ function Schedule() {
 
       setShowForm(false);
     } catch (error) {
-      sendNotification('Unexpected error has ocurred', false);
+      sendToast('Unexpected error has ocurred', false);
     }
   }
 

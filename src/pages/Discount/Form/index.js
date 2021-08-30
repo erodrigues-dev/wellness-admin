@@ -8,10 +8,10 @@ import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
-import useNotification from '~/contexts/notification';
 import { currency } from '~/helpers/intl';
 import masks from '~/helpers/masks';
 import { sanitize } from '~/helpers/sanitize';
+import useToast from '~/hooks/useToast';
 import * as activityService from '~/services/activity';
 import * as customerService from '~/services/customer';
 import * as service from '~/services/discount';
@@ -23,7 +23,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
   const isAdd = !selected;
   const { id: routeId } = useParams();
   const id = routeId || '';
-  const { sendNotification } = useNotification();
+  const { sendToast } = useToast();
   const [customers, setCustomers] = useState();
   const [activities, setActivities] = useState();
   const [packages, setPackages] = useState();
@@ -49,10 +49,10 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
 
         setCustomers(data);
       } catch (error) {
-        sendNotification(error.message, false);
+        sendToast(error.message, false);
       }
     }
-  }, [id, sendNotification]);
+  }, [id, sendToast]);
 
   const listActivities = useCallback(async () => {
     try {
@@ -60,9 +60,9 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
 
       setActivities(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification]);
+  }, [sendToast]);
 
   const listPackages = useCallback(async () => {
     try {
@@ -70,9 +70,9 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
 
       setPackages(data);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
-  }, [sendNotification]);
+  }, [sendToast]);
 
   useEffect(() => {
     listCustomers();
@@ -110,7 +110,7 @@ const ModalForm = ({ setClose, reloadList, selected }) => {
       setClose(false);
       toast.success(`Discount ${isAdd ? 'created' : 'edited'} successfully.`);
     } catch (error) {
-      sendNotification(error.message, false);
+      sendToast(error.message, false);
     }
   }
 
