@@ -24,7 +24,7 @@ const NavbarButton = () => {
       onClick={toggleNotifications}
     >
       {list.unreads > 0 && <Badge>{list.unreads}</Badge>}
-      <FiBell size={22} />
+      <FiBell size={22} color="#fff" />
     </Container>
   );
 };
