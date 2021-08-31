@@ -1,29 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Form, Col, Row, Button } from 'react-bootstrap';
 import { useHistory } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
-
-import * as customerService from '~/services/customer';
 
 import { Container } from './styles';
 
 function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
-  const [customers, setCustomers] = useState([]);
   const history = useHistory();
   const formik = useFormik({
-    initialValues: { customerId: customerId ?? '' },
+    initialValues: {
+      customerId: customerId ?? '',
+      customerName: '',
+    },
     onSubmit: handleSubmit,
     onReset: handleSubmit,
   });
-
-  useEffect(() => {
-    customerService
-      .listAll()
-      .then((response) => setCustomers(response.data))
-      .catch((error) => toast.error(error.message));
-  }, []);
 
   function handleSubmit(values) {
     onFilter(values);
@@ -31,23 +23,19 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
   }
 
   function resetFilter() {
-    onFilter('');
-
+    onFilter(null);
     if (customerId) history.push('/orders');
-
     formik.setFieldValue('customerId', '');
   }
 
   function handleClear(e) {
     formik.handleReset(e);
-    onFilter('');
-
+    onFilter(null);
     resetFilter();
   }
 
   function handleOpenAdd() {
     resetFilter();
-
     setOpenAdd(true);
   }
 
@@ -57,19 +45,13 @@ function Filter({ onFilter, allowCreate, setOpenAdd, customerId }) {
         <Row>
           <Form.Group as={Col} sm={6} md={12}>
             <Form.Control
-              as="select"
-              custom
-              name="customerId"
-              value={formik.values.customerId}
+              type="text"
+              name="customerName"
+              value={formik.values.customerName}
               onChange={formik.handleChange}
-            >
-              <option value="">All Customers</option>
-              {customers?.map((customer) => (
-                <option key={customer.id} value={customer.id}>
-                  {customer.name}
-                </option>
-              ))}
-            </Form.Control>
+              placeholder="Customer name"
+              disabled={Boolean(customerId)}
+            />
           </Form.Group>
         </Row>
         <Row>

@@ -23,7 +23,7 @@ const Order = () => {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
-  const [filter, setFilter] = useState({ customerId: id });
+  const [filter, setFilter] = useState({ customerId: id, customerName: '' });
   const [openAdd, setOpenAdd] = useState(false);
   const [openDetails, setOpenDetails] = useState(false);
   const [orderId, setOrderId] = useState();
