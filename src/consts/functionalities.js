@@ -27,6 +27,7 @@ export const FUNCTIONALITIES = {
     list: 2048,
     create: 4096,
     update: 4096,
+    delete: 2 ** 35,
   },
   workoutProfile: {
     list: 536870912,
