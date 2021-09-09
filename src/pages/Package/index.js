@@ -7,6 +7,7 @@ import { FUNCTIONALITIES } from '~/consts/functionalities';
 import useAuth from '~/contexts/auth';
 import service from '~/services/package';
 
+import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import Filter from './Filter';
 import ModalForm from './Form';
 import List from './List';
@@ -15,6 +16,7 @@ const Package = () => {
   const { hasPermission } = useAuth();
   const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.packages.create);
   const hasPermissionToUpdate = hasPermission(FUNCTIONALITIES.packages.update);
+  const hasPermissionToDelete = hasPermission(FUNCTIONALITIES.packages.delete);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [list, setList] = useState([]);
@@ -35,6 +37,18 @@ const Package = () => {
     }
   }, [page, filter]);
 
+  const destroyPackage = useCallback(
+    async (id) => {
+      try {
+        await service.destroy(id);
+        await listPackages();
+      } catch (error) {
+        toast.error(error.message);
+      }
+    },
+    [listPackages]
+  );
+
   useEffect(() => {
     listPackages();
   }, [listPackages]);
@@ -46,6 +60,12 @@ const Package = () => {
 
   function handlePagination(current) {
     setPage(current);
+  }
+
+  function handleDelete(item) {
+    confirmHandler('Are you sure to delete this package?', () =>
+      destroyPackage(item.id)
+    );
   }
 
   return (
@@ -60,6 +80,8 @@ const Package = () => {
       <List
         list={list}
         allowEdit={hasPermissionToUpdate}
+        allowDelete={hasPermissionToDelete}
+        onDelete={handleDelete}
         setOpenDisplay={setOpenDisplay}
         setOpenEdit={setOpenEdit}
         setSelected={setSelected}

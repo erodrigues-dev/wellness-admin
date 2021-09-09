@@ -1,13 +1,21 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit, FiEye } from 'react-icons/fi';
+import { FiEdit, FiEye, FiTrash } from 'react-icons/fi';
 
 import * as dateHelper from '~/helpers/date';
 import { currency } from '~/helpers/intl';
 
 import { Container } from './styles';
 
-function List({ list, allowEdit, setSelected, setOpenEdit, setOpenDisplay }) {
+function List({
+  list,
+  allowEdit,
+  allowDelete,
+  onDelete,
+  setSelected,
+  setOpenEdit,
+  setOpenDisplay,
+}) {
   const formatCurrency = (value) => currency.format(value);
 
   function handleOpen(callback, item) {
@@ -15,12 +23,27 @@ function List({ list, allowEdit, setSelected, setOpenEdit, setOpenDisplay }) {
     setSelected(item);
   }
 
+  function getActionColumnWidth() {
+    let value = 34;
+
+    if (allowEdit) value += 34;
+
+    if (allowDelete) value += 34;
+
+    return value;
+  }
+
   return (
     <Container>
       <Table style={{ minWidth: 800 }} striped hover responsive>
         <thead>
           <tr>
-            <th className="text-center">Actions</th>
+            <th
+              className="text-center"
+              style={{ minWidth: getActionColumnWidth() }}
+            >
+              Actions
+            </th>
             <th>Name</th>
             <th>Price</th>
             <th>Category</th>
@@ -38,7 +61,6 @@ function List({ list, allowEdit, setSelected, setOpenEdit, setOpenDisplay }) {
                   size="18"
                   title="Display"
                   cursor="pointer"
-                  className="mr-2"
                   onClick={() => handleOpen(setOpenDisplay, item)}
                 />
                 {allowEdit && (
@@ -47,6 +69,16 @@ function List({ list, allowEdit, setSelected, setOpenEdit, setOpenDisplay }) {
                     onClick={() => handleOpen(setOpenEdit, item)}
                     className="ml-2"
                     title="Edit"
+                    cursor="pointer"
+                  />
+                )}
+                {allowDelete && (
+                  <FiTrash
+                    size="18"
+                    color="var(--danger)"
+                    onClick={() => onDelete(item)}
+                    className="ml-2"
+                    title="Delete"
                     cursor="pointer"
                   />
                 )}

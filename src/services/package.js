@@ -120,11 +120,16 @@ function update({
   return api.put(ENDPOINT, data);
 }
 
+function destroy(id) {
+  return api.delete(`${ENDPOINT}/${id}`);
+}
+
 const service = {
   index,
   get,
   create,
   update,
+  destroy,
 };
 
 export default service;
