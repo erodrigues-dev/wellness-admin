@@ -7,7 +7,7 @@ export const Full = styled.div`
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.2);
-  z-index: 100;
+  z-index: 200;
   overflow-x: hidden;
   overflow-y: auto;
 `;
