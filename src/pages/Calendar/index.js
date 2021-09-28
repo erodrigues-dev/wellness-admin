@@ -15,9 +15,9 @@ export function Calendar() {
     total: 0,
   });
 
-  const fetchList = useCallback(async (page) => {
+  const fetchList = useCallback(async (page, filters = {}) => {
     try {
-      const { headers, data } = await service.index({ page });
+      const { headers, data } = await service.index({ page, filters });
 
       setList({
         page,
@@ -28,6 +28,10 @@ export function Calendar() {
       toast.error(error.message);
     }
   }, []);
+
+  function handleFilter(filters) {
+    fetchList(1, filters);
+  }
 
   function handlePaginate(page) {
     fetchList(page);
@@ -41,7 +45,7 @@ export function Calendar() {
     <Card body>
       <Card.Title>Calendars</Card.Title>
       <hr />
-      <Filter />
+      <Filter onFilter={handleFilter} />
       <List list={list} onPaginate={handlePaginate} />
     </Card>
   );
