@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build"
+    "build": "react-app-rewired build",
+    "lint": "eslint src"
   },
   "dependencies": {
     "@fullcalendar/daygrid": "^5.3.0",
