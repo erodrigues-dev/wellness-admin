@@ -18,7 +18,12 @@ function get(id) {
   return api.get(`/calendars/${id}`);
 }
 
+function create(data) {
+  return api.post('/calendars', data);
+}
+
 export default {
   index,
   get,
+  create,
 };

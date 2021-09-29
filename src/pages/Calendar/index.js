@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import service from '~/services/calendar';
 
 import { Filter } from './Filter';
+import { CalendarForm } from './Form';
 import { List } from './List';
 
 export function Calendar() {
@@ -14,6 +15,7 @@ export function Calendar() {
     rows: [],
     total: 0,
   });
+  const [modal, setModal] = useState({});
 
   const fetchList = useCallback(async (page, filters = {}) => {
     try {
@@ -21,6 +23,7 @@ export function Calendar() {
 
       setList({
         page,
+        filters,
         total: Number(headers['x-total-count']),
         rows: data,
       });
@@ -37,6 +40,15 @@ export function Calendar() {
     fetchList(page);
   }
 
+  function handleCreate() {
+    setModal({ isCreate: true, isOpen: true });
+  }
+
+  function handleCloseModal({ role }) {
+    if (modal.isCreate && role === 'success') fetchList(1, list.filters);
+    setModal({});
+  }
+
   useEffect(() => {
     fetchList(1);
   }, [fetchList]);
@@ -45,8 +57,10 @@ export function Calendar() {
     <Card body>
       <Card.Title>Calendars</Card.Title>
       <hr />
-      <Filter onFilter={handleFilter} />
+      <Filter onFilter={handleFilter} onCreate={handleCreate} />
       <List list={list} onPaginate={handlePaginate} />
+
+      {modal.isOpen && <CalendarForm onClose={handleCloseModal} />}
     </Card>
   );
 }

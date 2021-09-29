@@ -3,7 +3,7 @@ import { Col, Form, Row, Button } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
-export function Filter({ allowCreate = true, onAdd = () => {}, onFilter }) {
+export function Filter({ allowCreate = true, onCreate, onFilter }) {
   const formik = useFormik({
     initialValues: {
       name: '',
@@ -41,7 +41,7 @@ export function Filter({ allowCreate = true, onAdd = () => {}, onFilter }) {
               Clear Filters
             </Button>
             {allowCreate && (
-              <Button variant="secondary" className="ml-2" onClick={onAdd}>
+              <Button variant="secondary" className="ml-2" onClick={onCreate}>
                 Add Calendar
               </Button>
             )}
