@@ -90,6 +90,7 @@ const ModalCategory = ({
                 </option>
                 <option value="activity">Activity</option>
                 <option value="package">Package</option>
+                <option value="calendar">Calendar</option>
               </Form.Control>
               <Form.Control.Feedback type="invalid">
                 {formik.errors.type}

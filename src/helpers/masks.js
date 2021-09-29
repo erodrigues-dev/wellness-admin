@@ -29,6 +29,12 @@ const masks = {
 
     return value;
   },
+
+  onlyNumbers(e) {
+    const { value } = e.target;
+    e.target.value = value.replace(/[^0-9]/g, '');
+    return e;
+  },
 };
 
 export default masks;
