@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 import service from '~/services/calendar';
 
+import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import { Filter } from './Filter';
 import { CalendarForm } from './Form';
 import { List } from './List';
@@ -49,6 +50,19 @@ export function Calendar() {
     setModal({});
   }
 
+  function handleDelete(id) {
+    confirmHandler('Are you sure delete this calendar?', async () => {
+      try {
+        await service.destroy(id);
+        const page = list.rows.length === 1 ? 1 : list.page;
+        fetchList(page, list.filters);
+        toast.success('Calendar deleted with success');
+      } catch (error) {
+        toast.error(error.message);
+      }
+    });
+  }
+
   useEffect(() => {
     fetchList(1);
   }, [fetchList]);
@@ -58,7 +72,7 @@ export function Calendar() {
       <Card.Title>Calendars</Card.Title>
       <hr />
       <Filter onFilter={handleFilter} onCreate={handleCreate} />
-      <List list={list} onPaginate={handlePaginate} />
+      <List list={list} onPaginate={handlePaginate} onDelete={handleDelete} />
 
       {modal.isOpen && <CalendarForm onClose={handleCloseModal} />}
     </Card>

@@ -6,7 +6,7 @@ import Paginate from '~/components/Paginate';
 import { config } from '~/helpers/config';
 import { formatToList } from '~/helpers/date';
 
-export function List({ list, onPaginate }) {
+export function List({ list, onPaginate, onDelete }) {
   return (
     <div className="mt-4">
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -35,6 +35,7 @@ export function List({ list, onPaginate }) {
                   size={18}
                   cursor="pointer"
                   className="ml-2"
+                  onClick={() => onDelete(item.id)}
                 />
               </td>
               <td>{item.name}</td>
