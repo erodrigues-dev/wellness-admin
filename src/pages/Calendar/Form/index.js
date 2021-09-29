@@ -13,11 +13,13 @@ import categoryService from '~/services/category';
 
 import { initialValues, validationSchema } from './schema';
 
-export function CalendarForm({ onClose, display = false }) {
+export function CalendarForm({ onClose, action, model }) {
   const [categories, setCategories] = useState([]);
   const [addCategory, setAddCategory] = useState(false);
 
-  const formik = useFormik({
+  const isDisplay = action === 'display';
+
+  const { setValues, ...formik } = useFormik({
     initialValues,
     validationSchema,
     onSubmit: handleSubmit,
@@ -30,13 +32,34 @@ export function CalendarForm({ onClose, display = false }) {
 
   async function handleSubmit(values) {
     try {
-      await service.create(values);
-      toast.success('Calendar saved with success');
+      if (action === 'create') {
+        await service.create(values);
+        toast.success('Calendar created with success');
+      }
+
+      if (action === 'edit') {
+        await service.update({ id: model.id, ...values });
+        toast.success('Calendar updated with success');
+      }
+
       onClose({ role: 'success' });
     } catch (error) {
       toast.error(error.message);
     }
   }
+
+  useEffect(() => {
+    if (model) {
+      setValues({
+        name: model.name,
+        categoryId: model.category.id,
+        minHoursToSchedule: model.minHoursToSchedule,
+        minHoursToCancel: model.minHoursToCancel,
+        maxDaysInFuture: model.maxDaysInFuture,
+        maxEntryPerSlot: model.maxEntryPerSlot,
+      });
+    }
+  }, [model, setValues]);
 
   useEffect(() => {
     fetchCategories();
@@ -55,7 +78,7 @@ export function CalendarForm({ onClose, display = false }) {
             onBlur={formik.handleBlur}
             isInvalid={formik.touched.name && formik.errors.name}
             isValid={formik.touched.name && !formik.errors.name}
-            disabled={display}
+            disabled={isDisplay}
           />
           <Form.Control.Feedback type="invalid">
             {formik.errors.name}
@@ -73,7 +96,7 @@ export function CalendarForm({ onClose, display = false }) {
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.categoryId && formik.errors.categoryId}
               isValid={formik.touched.categoryId && !formik.errors.categoryId}
-              disabled={display}
+              disabled={isDisplay}
             >
               <option value="">Select</option>
               {categories.map((item) => (
@@ -82,9 +105,11 @@ export function CalendarForm({ onClose, display = false }) {
                 </option>
               ))}
             </Form.Control>
-            <InputGroup.Append>
-              <Button onClick={() => setAddCategory(true)}>Add</Button>
-            </InputGroup.Append>
+            {isDisplay || (
+              <InputGroup.Append>
+                <Button onClick={() => setAddCategory(true)}>Add</Button>
+              </InputGroup.Append>
+            )}
             <Form.Control.Feedback type="invalid">
               {formik.errors.categoryId}
             </Form.Control.Feedback>
@@ -107,7 +132,7 @@ export function CalendarForm({ onClose, display = false }) {
                 formik.touched.minHoursToSchedule &&
                 !formik.errors.minHoursToSchedule
               }
-              disabled={display}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.minHoursToSchedule}
@@ -128,7 +153,7 @@ export function CalendarForm({ onClose, display = false }) {
                 formik.touched.minHoursToCancel &&
                 !formik.errors.minHoursToCancel
               }
-              disabled={display}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.minHoursToCancel}
@@ -150,7 +175,7 @@ export function CalendarForm({ onClose, display = false }) {
               isValid={
                 formik.touched.maxDaysInFuture && !formik.errors.maxDaysInFuture
               }
-              disabled={display}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.maxDaysInFuture}
@@ -170,7 +195,7 @@ export function CalendarForm({ onClose, display = false }) {
               isValid={
                 formik.touched.maxEntryPerSlot && !formik.errors.maxEntryPerSlot
               }
-              disabled={display}
+              disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
               {formik.errors.maxEntryPerSlot}
@@ -179,16 +204,22 @@ export function CalendarForm({ onClose, display = false }) {
         </Row>
 
         <div className="d-flex justify-content-end align-items-start">
-          <Button variant="secondary" disabled={formik.isSubmitting}>
-            {display ? 'Close' : 'Cancel'}
-          </Button>
-          <ButtonLoading
-            type="submit"
-            className="ml-2"
-            loading={formik.isSubmitting}
+          <Button
+            variant="secondary"
+            disabled={formik.isSubmitting}
+            onClick={onClose}
           >
-            Save
-          </ButtonLoading>
+            {isDisplay ? 'Close' : 'Cancel'}
+          </Button>
+          {isDisplay || (
+            <ButtonLoading
+              type="submit"
+              className="ml-2"
+              loading={formik.isSubmitting}
+            >
+              Save
+            </ButtonLoading>
+          )}
         </div>
       </Form>
       {addCategory && (

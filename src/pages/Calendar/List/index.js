@@ -6,7 +6,7 @@ import Paginate from '~/components/Paginate';
 import { config } from '~/helpers/config';
 import { formatToList } from '~/helpers/date';
 
-export function List({ list, onPaginate, onDelete }) {
+export function List({ list, onPaginate, onDisplay, onEdit, onDelete }) {
   return (
     <div className="mt-4">
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -22,12 +22,18 @@ export function List({ list, onPaginate, onDelete }) {
           {list.rows.map((item) => (
             <tr key={item.id}>
               <td>
-                <FiEye title="Display" size={18} cursor="pointer" />
+                <FiEye
+                  title="Display"
+                  size={18}
+                  cursor="pointer"
+                  onClick={() => onDisplay(item)}
+                />
                 <FiEdit
                   title="Edit"
                   size={18}
                   cursor="pointer"
                   className="ml-2"
+                  onClick={() => onEdit(item)}
                 />
                 <FiTrash
                   color="var(--danger)"

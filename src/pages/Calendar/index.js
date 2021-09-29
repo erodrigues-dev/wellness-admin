@@ -42,11 +42,23 @@ export function Calendar() {
   }
 
   function handleCreate() {
-    setModal({ isCreate: true, isOpen: true });
+    setModal({ action: 'create', isOpen: true });
+  }
+
+  function handleEdit(model) {
+    setModal({ action: 'edit', isOpen: true, model });
+  }
+
+  function handleDisplay(model) {
+    setModal({ action: 'display', isOpen: true, model });
   }
 
   function handleCloseModal({ role }) {
-    if (modal.isCreate && role === 'success') fetchList(1, list.filters);
+    if (role === 'success') {
+      if (modal.action === 'create') fetchList(1);
+      if (modal.action === 'edit') fetchList(list.page, list.filters);
+    }
+
     setModal({});
   }
 
@@ -72,9 +84,21 @@ export function Calendar() {
       <Card.Title>Calendars</Card.Title>
       <hr />
       <Filter onFilter={handleFilter} onCreate={handleCreate} />
-      <List list={list} onPaginate={handlePaginate} onDelete={handleDelete} />
+      <List
+        list={list}
+        onPaginate={handlePaginate}
+        onDisplay={handleDisplay}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
 
-      {modal.isOpen && <CalendarForm onClose={handleCloseModal} />}
+      {modal.isOpen && (
+        <CalendarForm
+          onClose={handleCloseModal}
+          action={modal.action}
+          model={modal.model}
+        />
+      )}
     </Card>
   );
 }
