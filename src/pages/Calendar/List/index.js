@@ -6,7 +6,15 @@ import Paginate from '~/components/Paginate';
 import { config } from '~/helpers/config';
 import { formatToList } from '~/helpers/date';
 
-export function List({ list, onPaginate, onDisplay, onEdit, onDelete }) {
+export function List({
+  list,
+  allowUpdate,
+  allowDelete,
+  onPaginate,
+  onDisplay,
+  onEdit,
+  onDelete,
+}) {
   return (
     <div className="mt-4">
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -28,21 +36,25 @@ export function List({ list, onPaginate, onDisplay, onEdit, onDelete }) {
                   cursor="pointer"
                   onClick={() => onDisplay(item)}
                 />
-                <FiEdit
-                  title="Edit"
-                  size={18}
-                  cursor="pointer"
-                  className="ml-2"
-                  onClick={() => onEdit(item)}
-                />
-                <FiTrash
-                  color="var(--danger)"
-                  title="Delete"
-                  size={18}
-                  cursor="pointer"
-                  className="ml-2"
-                  onClick={() => onDelete(item.id)}
-                />
+                {allowUpdate && (
+                  <FiEdit
+                    title="Edit"
+                    size={18}
+                    cursor="pointer"
+                    className="ml-2"
+                    onClick={() => onEdit(item)}
+                  />
+                )}
+                {allowDelete && (
+                  <FiTrash
+                    color="var(--danger)"
+                    title="Delete"
+                    size={18}
+                    cursor="pointer"
+                    className="ml-2"
+                    onClick={() => onDelete(item.id)}
+                  />
+                )}
               </td>
               <td>{item.name}</td>
               <td>{item.category.name}</td>

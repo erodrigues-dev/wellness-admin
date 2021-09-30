@@ -74,10 +74,10 @@ export const FUNCTIONALITIES = {
       delete: 268435456,
     },
     calendar: {
-      list: 1,
-      create: 1,
-      update: 1,
-      delete: 1,
+      list: 68719476736,
+      create: 137438953472,
+      update: 137438953472,
+      delete: 274877906944,
     },
   },
 };

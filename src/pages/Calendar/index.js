@@ -2,9 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Card } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
+import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
+import useAuth from '~/contexts/auth';
 import service from '~/services/calendar';
 
-import confirmHandler from '../../components/ConfirmAlert/confirmHandler';
 import { Filter } from './Filter';
 import { CalendarForm } from './Form';
 import { List } from './List';
@@ -17,6 +19,11 @@ export function Calendar() {
     total: 0,
   });
   const [modal, setModal] = useState({});
+  const { hasPermission } = useAuth();
+
+  const allowCreate = hasPermission(FUNCTIONALITIES.settings.calendar.create);
+  const allowUpdate = hasPermission(FUNCTIONALITIES.settings.calendar.update);
+  const allowDelete = hasPermission(FUNCTIONALITIES.settings.calendar.delete);
 
   const fetchList = useCallback(async (page, filters = {}) => {
     try {
@@ -83,9 +90,15 @@ export function Calendar() {
     <Card body>
       <Card.Title>Calendars</Card.Title>
       <hr />
-      <Filter onFilter={handleFilter} onCreate={handleCreate} />
+      <Filter
+        allowCreate={allowCreate}
+        onFilter={handleFilter}
+        onCreate={handleCreate}
+      />
       <List
         list={list}
+        allowUpdate={allowUpdate}
+        allowDelete={allowDelete}
         onPaginate={handlePaginate}
         onDisplay={handleDisplay}
         onEdit={handleEdit}

@@ -3,7 +3,7 @@ import { Col, Form, Row, Button } from 'react-bootstrap';
 
 import { useFormik } from 'formik';
 
-export function Filter({ allowCreate = true, onCreate, onFilter }) {
+export function Filter({ allowCreate, onCreate, onFilter }) {
   const formik = useFormik({
     initialValues: {
       name: '',
