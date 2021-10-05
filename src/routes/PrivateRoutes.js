@@ -25,6 +25,7 @@ import {
   WorkoutProfile,
   Notifications,
   Calendar,
+  CalendarAvailability,
 } from '~/pages';
 
 const PrivateRoutes = () => {
@@ -173,6 +174,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.settings.calendar.list}
           path="/calendars"
           component={Calendar}
+        />
+
+        <PrivateRoute
+          exact
+          functionality={FUNCTIONALITIES.settings.calendar.list}
+          path="/calendars/:id/availabilities"
+          component={CalendarAvailability}
         />
 
         <Route path="/404" component={NotAuthorized} />
