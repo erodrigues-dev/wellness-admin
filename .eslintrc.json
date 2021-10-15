@@ -27,11 +27,12 @@
       }
     ],
     "no-unused-expressions": [
-      "error",
+      "warn",
       {
         "allowTaggedTemplates": true
       }
     ],
+    "no-unused-vars": "warn",
     "comma-dangle": [
       "error",
       "only-multiline"
@@ -62,6 +63,7 @@
         }
       }
     ],
+    "react/destructuring-assignment": "off",
     "react/no-danger": "off",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
