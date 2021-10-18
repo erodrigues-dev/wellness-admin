@@ -3,8 +3,7 @@ import { Card } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { Day } from '@progress/kendo-date-math';
-import { Scheduler, WeekView, DayView } from '@progress/kendo-react-scheduler';
+import { Scheduler, DayView, WeekView } from '@progress/kendo-react-scheduler';
 import styled from 'styled-components';
 import { v4 as uuid } from 'uuid';
 
@@ -21,7 +20,7 @@ const settings = {
   slotDuration: 60,
 };
 
-export function CalendarAvailability() {
+export function CalendarSlot() {
   const [events, setEvents] = useState([]);
   const { id: calendarId } = useParams();
 
@@ -83,9 +82,9 @@ export function CalendarAvailability() {
         <Scheduler
           data={events}
           onDataChange={handleDataChange}
-          editable
-          height={700}
           defaultView="week"
+          height={700}
+          editable
         >
           <DayView
             slot={CustomSlot}

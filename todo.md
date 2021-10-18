@@ -16,3 +16,4 @@
   - color
     - available (verde)
     - block (vermelho)
+- [x] renomear para calendar-slots
