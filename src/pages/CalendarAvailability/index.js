@@ -12,6 +12,15 @@ import service from '~/services/calendar-slot';
 
 import { CustomSlot } from './custom-scheduler';
 
+const settings = {
+  startTime: '01:00',
+  endTime: '23:00',
+  workDayStart: '07:00',
+  workDayEnd: '19:00',
+  slotDivisions: 4,
+  slotDuration: 60,
+};
+
 export function CalendarAvailability() {
   const [events, setEvents] = useState([]);
   const { id: calendarId } = useParams();
@@ -80,22 +89,20 @@ export function CalendarAvailability() {
         >
           <DayView
             slot={CustomSlot}
-            startTime="01:00"
-            endTime="23:00"
-            workDayStart="07:00"
-            workDayEnd="19:00"
-            slotDivisions={4}
-            slotDuration={60}
+            startTime={settings.startTime}
+            endTime={settings.endTime}
+            workDayStart={settings.workDayStart}
+            workDayEnd={settings.workDayEnd}
+            slotDivisions={settings.slotDivisions}
+            slotDuration={settings.slotDuration}
           />
           <WeekView
-            startTime="01:00"
-            endTime="23:00"
-            workDayStart="07:00"
-            workDayEnd="19:00"
-            slotDivisions={4}
-            slotDuration={60}
-            workWeekStart={Day.Monday}
-            workWeekEnd={Day.Friday}
+            startTime={settings.startTime}
+            endTime={settings.endTime}
+            workDayStart={settings.workDayStart}
+            workDayEnd={settings.workDayEnd}
+            slotDivisions={settings.slotDivisions}
+            slotDuration={settings.slotDuration}
             slot={CustomSlot}
           />
         </Scheduler>
