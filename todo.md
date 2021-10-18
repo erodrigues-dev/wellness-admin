@@ -7,9 +7,10 @@
   - status
     - available (default)
     - block
-- [ ] enviar dados para api
-- [ ] listar slots na api
-- [ ] organizar a bagunça
+- [x] criar service
+  - [x] enviar dados para api
+  - [x] listar slots na api
+- [x] organizar a bagunça
 - [ ] customizar **ViewItem** [documentation](https://www.telerik.com/kendo-react-ui/components/scheduler/customization/items/view-item/)
   - title (available or block) de acordo com o status
   - color
