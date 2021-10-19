@@ -95,13 +95,17 @@ export function CustomForm(formProps) {
 export function CustomViewItem(props) {
   const { dataItem } = props;
   const { status } = dataItem;
-  const isAvailable = status === 'available';
+
+  const colors = {
+    available: '#b0d04c',
+    block: '#dc3545',
+  };
 
   return (
     <SchedulerViewItem
       {...props}
       style={{
-        backgroundColor: isAvailable ? '#b0d04c' : '#dc3545',
+        backgroundColor: colors[status] || colors.block,
       }}
     />
   );
