@@ -12,8 +12,8 @@
   - [x] listar slots na api
 - [x] organizar a bagunça
 - [ ] customizar **ViewItem** [documentation](https://www.telerik.com/kendo-react-ui/components/scheduler/customization/items/view-item/)
-  - title (available or block) de acordo com o status
-  - color
+  - [ ] title (available or block) de acordo com o status
+  - [x] color
     - available (verde)
     - block (vermelho)
 - [x] renomear para calendar-slots

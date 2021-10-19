@@ -6,6 +6,7 @@ import {
   SchedulerSlot,
   SchedulerFormEditor,
   SchedulerForm,
+  SchedulerViewItem,
 } from '@progress/kendo-react-scheduler';
 
 import Modal from '~/components/Modal';
@@ -89,4 +90,19 @@ export function CustomForm(formProps) {
   }
 
   return <SchedulerForm {...formProps} editor={FormContent2} />;
+}
+
+export function CustomViewItem(props) {
+  const { dataItem } = props;
+  const { status } = dataItem;
+  const isAvailable = status === 'available';
+
+  return (
+    <SchedulerViewItem
+      {...props}
+      style={{
+        backgroundColor: isAvailable ? '#b0d04c' : '#dc3545',
+      }}
+    />
+  );
 }

@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 
 import service from '~/services/calendar-slot';
 
-import { CustomSlot } from './custom-scheduler';
+import { CustomSlot, CustomViewItem } from './custom-scheduler';
 
 const settings = {
   startTime: '01:00',
@@ -103,6 +103,7 @@ export function CalendarSlot() {
             slotDivisions={settings.slotDivisions}
             slotDuration={settings.slotDuration}
             slot={CustomSlot}
+            viewItem={CustomViewItem}
           />
         </Scheduler>
       </Content>
