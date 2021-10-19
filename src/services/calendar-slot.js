@@ -5,6 +5,7 @@ async function list({ calendarId }) {
 
   return data.map((item) => ({
     ...item,
+    title: item.status,
     start: new Date(item.start),
     end: new Date(item.end),
     recurrenceExceptions: item.recurrenceExceptions.map(
