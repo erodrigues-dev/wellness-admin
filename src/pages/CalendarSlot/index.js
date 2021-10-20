@@ -55,7 +55,8 @@ export function CalendarSlot() {
 
   const handleDataChange = useCallback(
     (changes) => {
-      const data = fillCreatedsWithNewId(changes);
+      let data = fillCreatedsWithNewId(changes);
+      data = fillWithStatus(data);
 
       sendToApi(data);
       updateData(data);
@@ -67,6 +68,17 @@ export function CalendarSlot() {
     return {
       ...changes,
       created: changes.created.map((item) => ({ ...item, id: uuid() })),
+    };
+  }
+
+  function fillWithStatus(changes) {
+    return {
+      ...changes,
+      created: changes.created.map((item) => ({
+        ...item,
+        title: 'available',
+        status: 'available',
+      })),
     };
   }
 
@@ -87,13 +99,14 @@ export function CalendarSlot() {
           editable
         >
           <DayView
-            slot={CustomSlot}
             startTime={settings.startTime}
             endTime={settings.endTime}
             workDayStart={settings.workDayStart}
             workDayEnd={settings.workDayEnd}
             slotDivisions={settings.slotDivisions}
             slotDuration={settings.slotDuration}
+            slot={CustomSlot}
+            viewItem={CustomViewItem}
           />
           <WeekView
             startTime={settings.startTime}

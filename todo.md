@@ -13,6 +13,7 @@
 - [x] organizar a bagunça
 - [x] customizar **ViewItem** [documentation](https://www.telerik.com/kendo-react-ui/components/scheduler/customization/items/view-item/)
   - [x] title (available or block) de acordo com o status
+  - [ ] remover o status available hard code pegar do FORM CUSTOMIZADO
   - [x] color
     - available (verde)
     - block (vermelho)
