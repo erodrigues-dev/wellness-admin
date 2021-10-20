@@ -179,7 +179,7 @@ const PrivateRoutes = () => {
         <PrivateRoute
           exact
           functionality={FUNCTIONALITIES.settings.calendar.list}
-          path="/calendars/:id/availabilities"
+          path="/calendars/:id/slots"
           component={CalendarSlot}
         />
 

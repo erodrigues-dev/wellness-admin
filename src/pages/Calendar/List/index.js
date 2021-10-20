@@ -63,9 +63,7 @@ export function List({
                   size={18}
                   cursor="pointer"
                   className="ml-2"
-                  onClick={() =>
-                    history.push(`calendars/${item.id}/availabilities`)
-                  }
+                  onClick={() => history.push(`calendars/${item.id}/slots`)}
                 />
               </td>
               <td>{item.name}</td>
