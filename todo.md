@@ -1,6 +1,7 @@
 # TODO
 
 - [ ] campos do **formulario** [documentation](https://www.telerik.com/kendo-react-ui/components/scheduler/customization/form/editor/)
+  - https://www.telerik.com/kendo-react-ui/components/scheduler/customization/form/overview/ -
   - start (time only)
   - end (time only)
   - recurrence

@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 
 import service from '~/services/calendar-slot';
 
-import { CustomSlot, CustomViewItem } from './custom-scheduler';
+import { CustomSlot, CustomViewItem, CustomForm } from './custom-scheduler';
 
 const settings = {
   startTime: '01:00',
@@ -96,6 +96,7 @@ export function CalendarSlot() {
           onDataChange={handleDataChange}
           defaultView="week"
           height={700}
+          form={CustomForm}
           editable
         >
           <DayView

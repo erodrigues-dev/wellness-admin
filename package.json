@@ -25,6 +25,7 @@
     "@progress/kendo-react-form": "^4.9.0",
     "@progress/kendo-react-inputs": "^4.9.0",
     "@progress/kendo-react-intl": "^4.9.0",
+    "@progress/kendo-react-labels": "^4.9.0",
     "@progress/kendo-react-popup": "^4.9.0",
     "@progress/kendo-react-scheduler": "^4.9.0",
     "@progress/kendo-react-treeview": "^4.9.0",
