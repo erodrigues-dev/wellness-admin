@@ -8,6 +8,8 @@
   - status
     - available (default)
     - block
+- [ ] customizar dialog
+  - [ ] colocar os botoes no mesmo padrao do sistema
 - [x] criar service
   - [x] enviar dados para api
   - [x] listar slots na api
@@ -19,3 +21,9 @@
     - available (verde)
     - block (vermelho)
 - [x] renomear para calendar-slots
+- [ ] Recurrence - criar componente personalizado
+  - [x] construir RRule apartir do formulario
+  - [x] disparar o onChange com a string do RRule
+  - [ ] receber uma RRule string e preencher o formulario
+  - [ ] fazer refactor no código, melhorar legibilidade
+  - [ ] mapear campos "End"
