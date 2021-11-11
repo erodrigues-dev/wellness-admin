@@ -18,7 +18,7 @@ import {
   weekDaysData,
 } from './consts';
 
-function RepeatSelector({ value, onChange }) {
+function RepeatSelector({ value: selected, onChange }) {
   return (
     <FieldWrapper>
       <Label>Repeat</Label>
@@ -27,7 +27,7 @@ function RepeatSelector({ value, onChange }) {
           <Button
             type="button"
             key={item.label}
-            selected={item.value === (value ?? null)}
+            selected={item.value === selected?.value ?? null}
             onClick={() => onChange(item)}
             togglable
           >
@@ -54,13 +54,11 @@ function RepeatEvery({ value, onChange }) {
   );
 }
 
-function WeeklyRepeatOn({ value, onChange }) {
-  const [data, setData] = useState(value?.days || []);
-
+function WeeklyRepeatOn({ value: data = { days: [] }, onChange }) {
   function handleChangeRepeatOn(day) {
-    const include = data.includes(day);
-    const selecteds = include ? data.filter((x) => x !== day) : [...data, day];
-    setData(selecteds);
+    const { days } = data;
+    const included = days.includes(day);
+    const selecteds = included ? days.filter((x) => x !== day) : [...days, day];
     onChange({ days: selecteds });
   }
 
@@ -72,7 +70,7 @@ function WeeklyRepeatOn({ value, onChange }) {
           <Button
             type="button"
             key={item.value}
-            selected={data.includes(item.value)}
+            selected={data.days.includes(item.value)}
             onClick={() => handleChangeRepeatOn(item.value)}
             togglable
           >
@@ -84,41 +82,27 @@ function WeeklyRepeatOn({ value, onChange }) {
   );
 }
 
-function MonthlyRepeatOn({ value, onChange }) {
-  const [data, setData] = useState(
-    value || {
-      radio: 'day',
-      day: null,
-      position: null,
-      weekday: null,
-    }
-  );
-
+function MonthlyRepeatOn({
+  value: data = {
+    radio: 'day',
+  },
+  onChange,
+}) {
   const handleChangeRadio = ({ value: radio }) => {
-    setData((state) => ({
-      ...state,
-      radio,
-      position: null,
-      weekday: null,
-      day: null,
-    }));
+    onChange({ radio });
   };
 
   const handleChangeDay = ({ value: day }) => {
-    setData((state) => ({ ...state, day: Number(day) }));
+    onChange({ ...data, day: Number(day) });
   };
 
   const handleChangePosition = ({ value: position }) => {
-    setData((state) => ({ ...state, position }));
+    onChange({ ...data, position });
   };
 
   const handleChangeWeekday = ({ value: weekday }) => {
-    setData((state) => ({ ...state, weekday }));
+    onChange({ ...data, weekday });
   };
-
-  useEffect(() => {
-    if (data !== value) onChange(data);
-  }, [onChange, value, data]);
 
   return (
     <FieldWrapper>
@@ -180,72 +164,67 @@ function MonthlyRepeatOn({ value, onChange }) {
   );
 }
 
-function YearlyRepeatOn({ value: externalValue, onChange }) {
-  const [data, setData] = useState(
-    externalValue || {
-      radio: 'month',
-    }
-  );
-
+function YearlyRepeatOn({
+  value: data = {
+    radio: 'month',
+  },
+  onChange,
+}) {
   const handleChangeRadio = ({ value }) => {
-    setData({
+    onChange({
       radio: value,
     });
   };
 
   const handleChangeDay = ({ value }) => {
-    setData((state) => ({
-      ...state,
+    onChange({
+      ...data,
       month: {
-        ...state.month,
+        ...data.month,
         day: Number(value),
       },
-    }));
+    });
   };
 
   const handleChangeMonth = ({ value }) => {
-    setData((state) => ({
-      ...state,
+    onChange({
+      ...data,
       month: {
-        ...state.month,
+        ...data.month,
         value,
       },
-    }));
+    });
   };
 
   const handleChangePosition = ({ value }) => {
-    setData((state) => ({
-      ...state,
+    onChange({
+      ...data,
       position: {
-        ...state.position,
+        ...data.position,
         value,
       },
-    }));
+    });
   };
 
   const handleChangeWeekday = ({ value }) => {
-    setData((state) => ({
-      ...state,
+    onChange({
+      ...data,
       position: {
-        ...state.position,
+        ...data.position,
         weekday: value,
       },
-    }));
+    });
   };
 
   const handleChangePositionMonth = ({ value }) => {
-    setData((state) => ({
-      ...state,
+    onChange({
+      ...data,
       position: {
-        ...state.position,
+        ...data.position,
         month: value,
       },
-    }));
+    });
   };
-
-  useEffect(() => {
-    if (data !== externalValue) onChange(data);
-  }, [onChange, externalValue, data]);
 
   return (
     <FieldWrapper>
@@ -326,28 +305,18 @@ function YearlyRepeatOn({ value: externalValue, onChange }) {
   );
 }
 
-function RepeatEnd({ value, onChange }) {
-  const [data, setData] = useState(value || { radio: 'never' });
-
+function RepeatEnd({ value = { radio: 'never' }, onChange }) {
   const handleChangeRadio = ({ value: radio }) => {
-    setData({ radio, count: null, until: null });
+    onChange({ radio, after: null, on: null });
   };
 
-  const handleChangeAfter = ({ value: count }) => {
-    setData((state) => ({ ...state, count }));
+  const handleChangeAfter = ({ value: after }) => {
+    onChange({ ...value, after });
   };
 
-  const handleChangeOn = ({ value: until }) => {
-    setData((state) => ({ ...state, until }));
+  const handleChangeOn = ({ value: on }) => {
+    onChange({ ...value, on });
   };
-
-  useEffect(() => {
-    console.log(`>> useEffect`);
-    if (data !== value) {
-      console.log(`>> dentro do onchange`);
-      onChange(data);
-    }
-  }, [data, value, onChange]);
 
   return (
     <FieldWrapper>
@@ -362,7 +331,7 @@ function RepeatEnd({ value, onChange }) {
             name="radio-repeat-end"
             label="Never"
             value="never"
-            checked={data.radio === 'never'}
+            checked={value.radio === 'never'}
             onChange={handleChangeRadio}
           />
         </li>
@@ -375,15 +344,15 @@ function RepeatEnd({ value, onChange }) {
             name="radio-repeat-end"
             label="After"
             value="after"
-            checked={data.radio === 'after'}
+            checked={value.radio === 'after'}
             onChange={handleChangeRadio}
           />
           <NumericTextBox
             min={1}
             width={160}
-            value={data.count}
+            value={value.count}
             onChange={handleChangeAfter}
-            disabled={data.radio !== 'after'}
+            disabled={value.radio !== 'after'}
           />
           <span>occurrence(s)</span>
         </li>
@@ -396,14 +365,14 @@ function RepeatEnd({ value, onChange }) {
             name="radio-repeat-end"
             label="On"
             value="on"
-            checked={data.radio === 'on'}
+            checked={value.radio === 'on'}
             onChange={handleChangeRadio}
           />
           <DatePicker
             width={240}
-            value={data.until}
+            value={value.until}
             onChange={handleChangeOn}
-            disabled={data.radio !== 'on'}
+            disabled={value.radio !== 'on'}
           />
         </li>
       </ul>
@@ -417,6 +386,11 @@ export function RecurrenceEditor({ value: externalValue, onChange }) {
       label: 'Never',
       value: null,
     },
+    repeatEvery: null,
+    weekly: null,
+    monthly: null,
+    yearly: null,
+    repeatEnd: null,
   });
 
   function handleChangeRepeat({ label, value }) {
@@ -431,41 +405,82 @@ export function RecurrenceEditor({ value: externalValue, onChange }) {
     setData((state) => ({ ...state, [name]: value }));
   }, []);
 
-  useEffect(() => {
-    console.log(data);
+  const getRepeatOnValues = useCallback(() => {
+    return {
+      freq: data.repeat?.value,
+      interval: data.repeatEvery,
+    };
+  }, [data.repeat, data.repeatEvery]);
 
-    if (data.repeat?.label !== 'Never') {
-      const rule = new RRule({
-        freq: data.repeat?.value,
-        interval: data.repeatEvery,
-        byweekday:
-          data.weekly?.days ||
-          data.monthly?.weekday?.value ||
-          data.yearly?.position?.weekday?.value,
-        bymonthday: data.monthly?.day || data.yearly?.month?.day,
-        bysetpos:
-          data.monthly?.position?.value || data.yearly?.position?.value?.value,
-        bymonth:
-          data.yearly?.month?.value?.value ||
-          data.yearly?.position?.month?.value,
-        count: data.repeatEnd?.count,
-        until: data.repeatEnd?.until,
-      });
-      const rulestr = rule.toString();
-      console.log(rulestr);
-      if (externalValue !== rulestr) {
-        console.log('call on change');
-        onChange({ value: rulestr });
-      }
+  const getWeeklyValues = useCallback(() => {
+    const values = {};
+    if (data.weekly?.days) values.byweekday = data.weekly?.days;
+    return values;
+  }, [data.weekly]);
+
+  const getMonthlyValues = useCallback(() => {
+    const values = {};
+    if (data.monthly?.weekday?.value)
+      values.byweekday = data.monthly?.weekday?.value;
+    if (data.monthly?.day) values.bymonthday = data.monthly?.day;
+    if (data.monthly?.position?.value)
+      values.bysetpos = data.monthly?.position?.value;
+    return values;
+  }, [data.monthly]);
+
+  const getYearlyValues = useCallback(() => {
+    const values = {};
+    if (data.yearly?.position?.weekday?.value)
+      values.byweekday = data.yearly?.position?.weekday?.value;
+    if (data.yearly?.position?.value?.value)
+      values.bysetpos = data.yearly?.position?.value?.value;
+    if (data.yearly?.month?.value?.value)
+      values.bymonth = data.yearly?.month?.value?.value;
+    if (data.yearly?.position?.month?.value)
+      values.bymonth = data.yearly?.position?.month?.value;
+    return values;
+  }, [data.yearly]);
+
+  const getRepeatEndValues = useCallback(() => {
+    return {
+      count: data.repeatEnd?.after,
+      until: data.repeatEnd?.on,
+    };
+  }, [data.repeatEnd]);
+
+  const makeRRule = useCallback(() => {
+    if (data.repeat?.label === 'Never' || !data.repeat) return null;
+
+    const options = {
+      ...getRepeatOnValues(),
+      ...getWeeklyValues(),
+      ...getMonthlyValues(),
+      ...getYearlyValues(),
+      ...getRepeatEndValues(),
+    };
+
+    return new RRule(options);
+  }, [
+    data.repeat,
+    getRepeatOnValues,
+    getWeeklyValues,
+    getMonthlyValues,
+    getYearlyValues,
+    getRepeatEndValues,
+  ]);
+
+  useEffect(() => {
+    const rrule = makeRRule();
+    const rulestr = rrule?.toString();
+
+    if (externalValue !== rulestr) {
+      onChange({ value: rulestr });
     }
-  }, [data, externalValue, onChange]);
+  }, [makeRRule, externalValue, onChange]);
 
   return (
     <div>
-      <RepeatSelector
-        value={data.repeat?.value}
-        onChange={handleChangeRepeat}
-      />
+      <RepeatSelector value={data.repeat} onChange={handleChangeRepeat} />
       {data.repeat?.label !== 'Never' && (
         <>
           <RepeatEvery
@@ -496,7 +511,6 @@ export function RecurrenceEditor({ value: externalValue, onChange }) {
           />
         </>
       )}
-      {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
     </div>
   );
 }
