@@ -8,7 +8,7 @@ import { DropDownList } from '@progress/kendo-react-dropdowns';
 import { FieldWrapper } from '@progress/kendo-react-form';
 import { NumericTextBox, RadioButton } from '@progress/kendo-react-inputs';
 import { Label } from '@progress/kendo-react-labels';
-import RRule, { rrulestr } from 'rrule';
+import RRule from 'rrule';
 
 import {
   frequencyData,
@@ -326,20 +326,28 @@ function YearlyRepeatOn({ value: externalValue, onChange }) {
   );
 }
 
-function RepeatEnd() {
-  const [data, setData] = useState({ radio: 'never' });
+function RepeatEnd({ value, onChange }) {
+  const [data, setData] = useState(value || { radio: 'never' });
 
-  const handleChangeRadio = ({ value }) => {
-    setData({ radio: value, after: null, on: null });
+  const handleChangeRadio = ({ value: radio }) => {
+    setData({ radio, count: null, until: null });
   };
 
-  const handleChangeAfter = ({ value }) => {
-    setData((state) => ({ ...state, after: value }));
+  const handleChangeAfter = ({ value: count }) => {
+    setData((state) => ({ ...state, count }));
   };
 
-  const handleChangeOn = ({ value }) => {
-    setData((state) => ({ ...state, on: value }));
+  const handleChangeOn = ({ value: until }) => {
+    setData((state) => ({ ...state, until }));
   };
+
+  useEffect(() => {
+    console.log(`>> useEffect`);
+    if (data !== value) {
+      console.log(`>> dentro do onchange`);
+      onChange(data);
+    }
+  }, [data, value, onChange]);
 
   return (
     <FieldWrapper>
@@ -353,8 +361,8 @@ function RepeatEnd() {
           <RadioButton
             name="radio-repeat-end"
             label="Never"
-            checked={data.radio === 'never'}
             value="never"
+            checked={data.radio === 'never'}
             onChange={handleChangeRadio}
           />
         </li>
@@ -365,15 +373,15 @@ function RepeatEnd() {
         >
           <RadioButton
             name="radio-repeat-end"
-            checked={data.radio === 'after'}
-            value="after"
             label="After"
+            value="after"
+            checked={data.radio === 'after'}
             onChange={handleChangeRadio}
           />
           <NumericTextBox
             min={1}
             width={160}
-            value={data.after}
+            value={data.count}
             onChange={handleChangeAfter}
             disabled={data.radio !== 'after'}
           />
@@ -386,14 +394,14 @@ function RepeatEnd() {
         >
           <RadioButton
             name="radio-repeat-end"
-            checked={data.radio === 'on'}
-            value="on"
             label="On"
+            value="on"
+            checked={data.radio === 'on'}
             onChange={handleChangeRadio}
           />
           <DatePicker
             width={240}
-            value={data.on}
+            value={data.until}
             onChange={handleChangeOn}
             disabled={data.radio !== 'on'}
           />
@@ -440,6 +448,8 @@ export function RecurrenceEditor({ value: externalValue, onChange }) {
         bymonth:
           data.yearly?.month?.value?.value ||
           data.yearly?.position?.month?.value,
+        count: data.repeatEnd?.count,
+        until: data.repeatEnd?.until,
       });
       const rulestr = rule.toString();
       console.log(rulestr);
@@ -448,13 +458,6 @@ export function RecurrenceEditor({ value: externalValue, onChange }) {
         onChange({ value: rulestr });
       }
     }
-
-    // if (data !== externalValue) {
-    //   onChange({
-    //     value:
-    //       'DTSTART:20211108T185300ZRRULE:FREQ=WEEKLY;COUNT=30;INTERVAL=1;WKST=MO',
-    //   });
-    // }
   }, [data, externalValue, onChange]);
 
   return (
@@ -487,7 +490,10 @@ export function RecurrenceEditor({ value: externalValue, onChange }) {
               onChange={(value) => handleChange('yearly', value)}
             />
           )}
-          <RepeatEnd />
+          <RepeatEnd
+            value={data.repeatEnd}
+            onChange={(value) => handleChange('repeatEnd', value)}
+          />
         </>
       )}
       {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}

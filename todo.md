@@ -25,5 +25,6 @@
   - [x] construir RRule apartir do formulario
   - [x] disparar o onChange com a string do RRule
   - [ ] receber uma RRule string e preencher o formulario
-  - [ ] fazer refactor no código, melhorar legibilidade
-  - [ ] mapear campos "End"
+  - [ ] fazer refactor no código, melhorar legibilidade?
+  - [x] mapear campos "End"
+  - [ ] iniciar valores com opções padrões ao selecionar os radio buttons
