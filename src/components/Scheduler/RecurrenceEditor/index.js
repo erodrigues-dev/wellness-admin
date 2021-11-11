@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 /* eslint-disable jsx-a11y/role-has-required-aria-props */
 /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
 import React, { useCallback, useEffect, useState } from 'react';
@@ -85,11 +86,20 @@ function WeeklyRepeatOn({ value: data = { days: [] }, onChange }) {
 function MonthlyRepeatOn({
   value: data = {
     radio: 'day',
+    day: 1,
   },
   onChange,
 }) {
   const handleChangeRadio = ({ value: radio }) => {
-    onChange({ radio });
+    const values = { radio };
+
+    if (radio === 'day') values.day = 1;
+    if (radio === 'position') {
+      values.position = positionsData[0];
+      values.weekday = weekDaysData[0];
+    }
+
+    onChange(values);
   };
 
   const handleChangeDay = ({ value: day }) => {
@@ -167,13 +177,32 @@ function MonthlyRepeatOn({
 function YearlyRepeatOn({
   value: data = {
     radio: 'month',
+    month: {
+      value: monthsData[0],
+      day: 1,
+    },
   },
   onChange,
 }) {
-  const handleChangeRadio = ({ value }) => {
-    onChange({
-      radio: value,
-    });
+  const handleChangeRadio = ({ value: radio }) => {
+    const values = { radio };
+
+    if (radio === 'month') {
+      values.month = {
+        value: monthsData[0],
+        day: 1,
+      };
+    }
+
+    if (radio === 'position') {
+      values.position = {
+        value: positionsData[0],
+        weekday: weekDaysData[0],
+        month: monthsData[0],
+      };
+    }
+
+    onChange(values);
   };
 
   const handleChangeDay = ({ value }) => {
@@ -307,7 +336,11 @@ function YearlyRepeatOn({
 
 function RepeatEnd({ value = { radio: 'never' }, onChange }) {
   const handleChangeRadio = ({ value: radio }) => {
-    onChange({ radio, after: null, on: null });
+    onChange({
+      radio,
+      count: radio === 'after' ? 1 : null,
+      on: radio === 'on' ? new Date() : null,
+    });
   };
 
   const handleChangeAfter = ({ value: after }) => {
@@ -370,7 +403,7 @@ function RepeatEnd({ value = { radio: 'never' }, onChange }) {
           />
           <DatePicker
             width={240}
-            value={value.until}
+            value={value.on}
             onChange={handleChangeOn}
             disabled={value.radio !== 'on'}
           />
