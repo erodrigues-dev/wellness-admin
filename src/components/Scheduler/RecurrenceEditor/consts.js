@@ -28,7 +28,7 @@ export const positionsData = [
 export const weekDaysData = [
   { label: 'Day', value: [RR.MO, RR.TU, RR.WE, RR.TH, RR.FR, RR.SA, RR.SU] },
   { label: 'Week day', value: [RR.MO, RR.TU, RR.WE, RR.TH, RR.FR] },
-  { label: 'Week end day', value: [RR.SA, RR.SU] },
+  { label: 'Week end', value: [RR.SA, RR.SU] },
   { label: 'Sunday', value: RR.SU },
   { label: 'Monday', value: RR.MO },
   { label: 'Tuesday', value: RR.TU },
