@@ -1,8 +1,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
 /* eslint-disable jsx-a11y/role-has-required-aria-props */
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 
 import { Day } from '@progress/kendo-date-math';
+import { TimePicker } from '@progress/kendo-react-dateinputs';
 import { DropDownList } from '@progress/kendo-react-dropdowns';
 import { FormElement, Field } from '@progress/kendo-react-form';
 import { Label } from '@progress/kendo-react-labels';
@@ -66,39 +67,22 @@ export function CustomViewItem(props) {
   );
 }
 
-function TitleEditor({ value, onChange }) {
-  const [data, setData] = useState(value);
-
-  function handleChange({ value: t }) {
-    // props.onChange({ value });
-    setData(t);
-  }
-
-  useEffect(() => {
-    console.log('>>>>>');
-    if (data !== value) {
-      console.log('<<<<<', data);
-      onChange({ value: data });
-    }
-  }, [data, value, onChange]);
-
-  return (
-    <DropDownList
-      data={['Item 1', 'Item 2']}
-      value={data}
-      onChange={handleChange}
-      label="Meu titulo"
-    />
-  );
-}
-
 function CustomEditor(props) {
+  // console.log('>> CustomEditor');
   // console.log(props);
+
+  // useEffect(() => {
+  //   console.log('>> only one time');
+  // }, [props]);
 
   return (
     <FormElement>
       <div className="k-form-field">
-        <Field name="title" component={TitleEditor} />
+        <Field label="Start time" name="start" component={TimePicker} />
+      </div>
+
+      <div className="k-form-field">
+        <Field label="End time" name="end" component={TimePicker} />
       </div>
 
       <div className="k-form-field">
