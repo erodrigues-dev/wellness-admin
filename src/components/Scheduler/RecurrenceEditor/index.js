@@ -9,7 +9,7 @@ import { DropDownList } from '@progress/kendo-react-dropdowns';
 import { FieldWrapper } from '@progress/kendo-react-form';
 import { NumericTextBox, RadioButton } from '@progress/kendo-react-inputs';
 import { Label } from '@progress/kendo-react-labels';
-import RRule from 'rrule';
+import RRule, { rrulestr } from 'rrule';
 
 import {
   frequencyData,
@@ -18,6 +18,20 @@ import {
   positionsData,
   weekDaysData,
 } from './consts';
+
+function deepEqual(valueA, valueB) {
+  const compareA = Array.isArray(valueA) ? [...valueA] : [valueA];
+  const compareB = Array.isArray(valueB) ? [...valueB] : [valueB];
+
+  if (compareA.length !== compareB.length) return false;
+
+  const strA = compareA.sort().join('');
+  const strB = compareB.sort().join('');
+
+  if (strA !== strB) return false;
+
+  return true;
+}
 
 function RepeatSelector({ value: selected, onChange }) {
   return (
@@ -414,17 +428,65 @@ function RepeatEnd({ value = { radio: 'never' }, onChange }) {
 }
 
 export function RecurrenceEditor({ value: externalValue, onChange }) {
-  const [data, setData] = useState({
-    repeat: {
-      label: 'Never',
-      value: null,
-    },
-    repeatEvery: null,
-    weekly: null,
-    monthly: null,
-    yearly: null,
-    repeatEnd: null,
-  });
+  const [data, setData] = useState(makeDataFromExternalValue(externalValue));
+
+  function makeDataFromExternalValue(value) {
+    const state = {
+      repeat: {
+        label: 'Never',
+        value: null,
+      },
+    };
+
+    if (value) {
+      const { origOptions: options } = rrulestr(value);
+
+      if (Number.isInteger(options.freq)) {
+        state.repeat = frequencyData.find((x) => x.value === options.freq);
+        state.repeatEvery = 1;
+      }
+
+      if (options.freq === RRule.WEEKLY) {
+        state.weekly = {
+          days: options.byweekday,
+        };
+      }
+
+      if (options.freq === RRule.MONTHLY) {
+        state.monthly = {
+          radio: options.bymonthday ? 'day' : 'position',
+          weekday: weekDaysData.find((week) =>
+            deepEqual(week.value, options.byweekday)
+          ),
+          day: options.bymonthday,
+          position: positionsData.find(
+            ({ value: position }) => position === options.bysetpos
+          ),
+        };
+      }
+
+      if (options.freq === RRule.YEARLY) {
+        state.yearly = {
+          radio: options.bymonthday ? 'month' : 'position',
+          month: {
+            value: monthsData.find((month) => month.value === options.bymonth),
+            day: options.bymonthday,
+          },
+          position: {
+            value: positionsData.find(
+              (position) => position.value === options.bysetpos
+            ),
+            weekday: weekDaysData.find((week) =>
+              deepEqual(week.value, options.byweekday)
+            ),
+            month: monthsData.find((month) => month.value === options.bymonth),
+          },
+        };
+      }
+    }
+
+    return state;
+  }
 
   function handleChangeRepeat({ label, value }) {
     const isNever = label === 'Never';

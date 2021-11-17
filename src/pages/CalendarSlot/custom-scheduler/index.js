@@ -95,11 +95,11 @@ function CustomEditor(props) {
           name="recurrenceRule"
           displayName="Recurrence"
           component={RecurrenceEditor}
+          as={RecurrenceEditor}
         />
       </div>
 
-      <p>{props.valueGetter('recurrenceRule')}</p>
-      <p>{props.valueGetter('title')}</p>
+      <p>rrule: {props.valueGetter('recurrenceRule')}</p>
     </FormElement>
   );
 
