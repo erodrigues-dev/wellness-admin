@@ -87,7 +87,7 @@ function CustomEditor(props) {
 
       <div className="k-form-field">
         <Label>Status</Label>
-        <DropDownList data={['available', 'block']} />
+        <DropDownList defaultValue="available" data={['available', 'block']} />
       </div>
 
       <div className="k-form-field">
