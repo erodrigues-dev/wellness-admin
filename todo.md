@@ -24,12 +24,12 @@
 - [ ] Recurrence - criar componente personalizado
   - [x] construir RRule apartir do formulario
   - [x] disparar o onChange com a string do RRule
-  - [-] receber uma RRule string e preencher o formulario <<<xxx
+  - [-] receber uma RRule string e preencher o formulario
     - [x] daily
     - [x] weekly
     - [x] monthly
     - [x] yearly
-    - [ ] recurrence end <<<xxx
+    - [x] recurrence end
     - [ ] refactor
   - [x] fazer refactor no código, melhorar legibilidade
   - [x] mapear campos "End"
