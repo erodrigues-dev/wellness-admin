@@ -483,6 +483,20 @@ export function RecurrenceEditor({ value: externalValue, onChange }) {
           },
         };
       }
+
+      if (options.count) {
+        state.repeatEnd = {
+          radio: 'after',
+          count: options.count,
+        };
+      }
+
+      if (options.until) {
+        state.repeatEnd = {
+          radio: 'on',
+          on: options.until,
+        };
+      }
     }
 
     return state;
