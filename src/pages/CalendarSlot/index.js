@@ -10,15 +10,7 @@ import { v4 as uuid } from 'uuid';
 import service from '~/services/calendar-slot';
 
 import { CustomSlot, CustomViewItem, CustomForm } from './custom-scheduler';
-
-const settings = {
-  startTime: '01:00',
-  endTime: '23:00',
-  workDayStart: '07:00',
-  workDayEnd: '19:00',
-  slotDivisions: 4,
-  slotDuration: 60,
-};
+import { settings } from './settings';
 
 export function CalendarSlot() {
   const [events, setEvents] = useState([]);
