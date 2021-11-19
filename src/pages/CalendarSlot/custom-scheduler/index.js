@@ -1,19 +1,13 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
-/* eslint-disable jsx-a11y/role-has-required-aria-props */
 import React from 'react';
 
 import { Day } from '@progress/kendo-date-math';
-import { TimePicker } from '@progress/kendo-react-dateinputs';
-import { DropDownList } from '@progress/kendo-react-dropdowns';
-import { FormElement, Field } from '@progress/kendo-react-form';
-import { Label } from '@progress/kendo-react-labels';
 import {
   SchedulerSlot,
   SchedulerForm,
   SchedulerViewItem,
 } from '@progress/kendo-react-scheduler';
 
-import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
+import { CustomEditor } from './CustomEditor';
 
 export function CustomSlot(props) {
   const colors = Object.freeze({
@@ -65,45 +59,6 @@ export function CustomViewItem(props) {
       }}
     />
   );
-}
-
-function CustomEditor(props) {
-  // console.log('>> CustomEditor');
-  // console.log(props);
-
-  // useEffect(() => {
-  //   console.log('>> only one time');
-  // }, [props]);
-
-  return (
-    <FormElement>
-      <div className="k-form-field">
-        <Field label="Start time" name="start" component={TimePicker} />
-      </div>
-
-      <div className="k-form-field">
-        <Field label="End time" name="end" component={TimePicker} />
-      </div>
-
-      <div className="k-form-field">
-        <Label>Status</Label>
-        <DropDownList defaultValue="available" data={['available', 'block']} />
-      </div>
-
-      <div className="k-form-field">
-        <Field
-          name="recurrenceRule"
-          displayName="Recurrence"
-          component={RecurrenceEditor}
-          as={RecurrenceEditor}
-        />
-      </div>
-
-      <p>rrule: {props.valueGetter('recurrenceRule')}</p>
-    </FormElement>
-  );
-
-  // return <SchedulerFormEditor {...props} />;
 }
 
 export function CustomForm(props) {
