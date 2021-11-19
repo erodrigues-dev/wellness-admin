@@ -21,7 +21,7 @@ function store({ calendarId, created, updated, deleted }) {
     end: item.end,
     recurrenceRule: item.recurrenceRule,
     recurrenceExceptions: item.recurrenceExceptions,
-    status: 'available',
+    status: item.status,
   });
 
   return api.post(`/calendars/${calendarId}/slots`, {
