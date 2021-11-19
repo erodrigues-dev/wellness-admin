@@ -48,7 +48,7 @@ export function CalendarSlot() {
   const handleDataChange = useCallback(
     (changes) => {
       let data = fillCreatedsWithNewId(changes);
-      data = fillWithStatus(data);
+      data = fillTitleWithStatus(data);
 
       sendToApi(data);
       updateData(data);
@@ -63,14 +63,11 @@ export function CalendarSlot() {
     };
   }
 
-  function fillWithStatus(changes) {
+  function fillTitleWithStatus(changes) {
     return {
       ...changes,
-      created: changes.created.map((item) => ({
-        ...item,
-        title: 'available',
-        status: 'available',
-      })),
+      created: changes.created.map((item) => ({ ...item, title: item.status })),
+      updated: changes.updated.map((item) => ({ ...item, title: item.status })),
     };
   }
 
