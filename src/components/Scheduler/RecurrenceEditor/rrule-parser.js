@@ -5,7 +5,7 @@ import {
   positionsData,
   weekDaysData,
   monthsData,
-} from './consts';
+} from '../consts';
 
 export function makeStateFromRRuleString(value) {
   const state = {

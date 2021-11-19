@@ -16,7 +16,7 @@ import {
   monthsData,
   positionsData,
   weekDaysData,
-} from './consts';
+} from '../consts';
 
 export function RepeatSelector({ value: selected, onChange }) {
   return (

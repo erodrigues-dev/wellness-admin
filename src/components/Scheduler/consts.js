@@ -51,3 +51,5 @@ export const monthsData = [
   { label: 'November', value: 11 },
   { label: 'December', value: 12 },
 ];
+
+export const statusData = ['available', 'block'];
