@@ -43,6 +43,7 @@ const Filter = ({ onFilter, allowCreate, handleOpenAdd }) => {
               <option value="">All Types</option>
               <option value="activity">Activity</option>
               <option value="package">Package</option>
+              <option value="calendar">Calendar</option>
             </Form.Control>
           </Form.Group>
         </Row>

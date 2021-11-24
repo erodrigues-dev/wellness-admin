@@ -73,5 +73,11 @@ export const FUNCTIONALITIES = {
       update: 134217728,
       delete: 268435456,
     },
+    calendar: {
+      list: 68719476736,
+      create: 137438953472,
+      update: 137438953472,
+      delete: 274877906944,
+    },
   },
 };

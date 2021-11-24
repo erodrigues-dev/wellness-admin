@@ -17,3 +17,5 @@ export * from './Waivers';
 export * from './CustomerWaiver';
 export * from './WorkoutProfile';
 export * from './Notifications';
+export * from './Calendar';
+export * from './CalendarSlot';
