@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEdit, FiEye, FiTrash } from 'react-icons/fi';
+import { FiEdit, FiEye, FiTrash, FiCalendar } from 'react-icons/fi';
+import { useHistory } from 'react-router-dom';
 
 import Paginate from '~/components/Paginate';
 import { config } from '~/helpers/config';
@@ -15,6 +16,8 @@ export function List({
   onEdit,
   onDelete,
 }) {
+  const history = useHistory();
+
   return (
     <div className="mt-4">
       <Table style={{ minWidth: 800 }} striped hover responsive>
@@ -55,6 +58,13 @@ export function List({
                     onClick={() => onDelete(item.id)}
                   />
                 )}
+                <FiCalendar
+                  title="Availability"
+                  size={18}
+                  cursor="pointer"
+                  className="ml-2"
+                  onClick={() => history.push(`calendars/${item.id}/slots`)}
+                />
               </td>
               <td>{item.name}</td>
               <td>{item.category.name}</td>

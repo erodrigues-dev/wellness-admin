@@ -3,7 +3,11 @@
   "env": {
     "browser": true
   },
-  "extends": ["airbnb", "prettier", "prettier/react"],
+  "extends": [
+    "airbnb",
+    "prettier",
+    "prettier/react"
+  ],
   "plugins": [
     "react",
     "react-hooks",
@@ -16,16 +20,23 @@
     "react/jsx-filename-extension": [
       "error",
       {
-        "extensions": [".js", ".jsx"]
+        "extensions": [
+          ".js",
+          ".jsx"
+        ]
       }
     ],
     "no-unused-expressions": [
-      "error",
+      "warn",
       {
         "allowTaggedTemplates": true
       }
     ],
-    "comma-dangle": ["error", "only-multiline"],
+    "no-unused-vars": "warn",
+    "comma-dangle": [
+      "error",
+      "only-multiline"
+    ],
     "import/no-extraneous-dependencies": [
       "error",
       {
@@ -40,7 +51,11 @@
           "/^react/",
           "module",
           "/^~/",
-          ["parent", "sibling", "index"]
+          [
+            "parent",
+            "sibling",
+            "index"
+          ]
         ],
         "alphabetize": {
           "order": "asc",
@@ -48,6 +63,7 @@
         }
       }
     ],
+    "react/destructuring-assignment": "off",
     "react/no-danger": "off",
     "react/prop-types": "off",
     "react/jsx-props-no-spreading": "off",
@@ -59,7 +75,10 @@
         "functions": false
       }
     ],
-    "radix": ["error", "as-needed"],
+    "radix": [
+      "error",
+      "as-needed"
+    ],
     "no-restricted-globals": "off",
     "no-template-curly-in-string": "off",
     "no-bitwise": "off",
@@ -68,7 +87,8 @@
     "prettier/prettier": "error",
     "jsx-a11y/label-has-associated-control": "off",
     "jsx-a11y/control-has-associated-label": "off",
-    "react-hooks/exhaustive-deps": "error"
+    "react-hooks/exhaustive-deps": "error",
+    "react/jsx-no-bind": "off"
   },
   "settings": {
     "import/resolver": {

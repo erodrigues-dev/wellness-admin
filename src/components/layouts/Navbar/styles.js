@@ -11,7 +11,7 @@ export const Container = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 200;
+  z-index: 10;
 `;
 
 export const Brand = styled.div`
