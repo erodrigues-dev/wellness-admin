@@ -1,26 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-import Navbar from '~/components/Navbar';
-import Sidebar from '~/components/Sidebar';
+import Navbar from '~/components/layouts/Navbar';
+import Sidebar from '~/components/layouts/Sidebar';
 
-import { Container, Main, Content, Footer } from './styles';
+import { Main, Content, Footer } from './styles';
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, routes }) => {
   const [sidebar, setSidebar] = useState(true);
+
+  const handleResize = () => {
+    const isOpen = window.innerWidth > 1024;
+    setSidebar(isOpen);
+  };
+
+  const handleClickMenuItem = () => {
+    if (window.innerWidth <= 1024) setSidebar(false);
+  };
+
+  useEffect(() => {
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleToglesidebar = () => {
     setSidebar(!sidebar);
   };
 
   return (
-    <Container>
-      <Sidebar open={sidebar} />
+    <>
+      <Navbar sidebarOpen={sidebar} toggleSidebar={handleToglesidebar} />
+      <Sidebar
+        open={sidebar}
+        routes={routes}
+        handleClose={handleClickMenuItem}
+      />
       <Main sidebarOpen={sidebar}>
-        <Navbar toggleSidebar={handleToglesidebar} />
         <Content>{children}</Content>
         <Footer>&copy; 2020 . Elite Wellness . Performance & Recovery</Footer>
       </Main>
-    </Container>
+    </>
   );
 };
 

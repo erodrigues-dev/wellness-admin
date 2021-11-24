@@ -1,0 +1,38 @@
+# TODO
+
+- [x] campos do **formulario**
+  - https://www.telerik.com/kendo-react-ui/components/scheduler/customization/form/editor/
+  - https://www.telerik.com/kendo-react-ui/components/scheduler/customization/form/overview/
+  - [x] campos
+    - status (available (default), block)
+    - start (time only)
+    - end (time only)
+    - recurrence
+  - [ ] validar dados ?
+- [ ] customizar dialog
+  - [ ] colocar os botoes no mesmo padrao do sistema
+- [x] criar service
+  - [x] verificar se todos os campos do formulario customizado estão chegando na service
+  - [x] enviar dados para api
+  - [x] listar slots na api
+- [x] organizar a bagunça
+- [x] customizar **ViewItem** [documentation](https://www.telerik.com/kendo-react-ui/components/scheduler/customization/items/view-item/)
+  - [x] title (available or block) de acordo com o status
+  - [x] remover o status available hard code pegar do FORM CUSTOMIZADO
+  - [x] color
+    - available (verde)
+    - block (vermelho)
+- [x] renomear para calendar-slots
+- [x] Recurrence - criar componente personalizado
+  - [x] construir RRule apartir do formulario
+  - [x] disparar o onChange com a string do RRule
+  - [x] receber uma RRule string e preencher o formulario
+    - [x] daily
+    - [x] weekly
+    - [x] monthly
+    - [x] yearly
+    - [x] recurrence end
+    - [x] refactor
+  - [x] fazer refactor no código, melhorar legibilidade
+  - [x] mapear campos "End"
+  - [x] iniciar valores com opções padrões ao selecionar os radio buttons

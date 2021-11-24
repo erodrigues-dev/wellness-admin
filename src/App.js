@@ -1,16 +1,21 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 import { AuthProvider } from '~/contexts/auth';
+import { LoadingProvider } from '~/contexts/loading';
 
-import Routes from './routes';
+import Routes from './routes/Routes';
+
+import 'react-confirm-alert/src/react-confirm-alert.css';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => (
-  <AuthProvider>
-    <BrowserRouter>
+  <LoadingProvider>
+    <ToastContainer />
+    <AuthProvider>
       <Routes />
-    </BrowserRouter>
-  </AuthProvider>
+    </AuthProvider>
+  </LoadingProvider>
 );
 
 export default App;

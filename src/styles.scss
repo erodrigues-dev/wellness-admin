@@ -1,4 +1,5 @@
-@import './theme/custom.scss';
+@import './theme/kendo-custom.scss';
+@import './theme/bootstrap-custom.scss';
 
 * {
   margin: 0;
@@ -6,4 +7,19 @@
   padding: 0;
   outline: 0;
   box-sizing: border-box;
+}
+
+a {
+  text-decoration: none;
+  color: #212529;
+}
+
+.text-error {
+  color: $danger;
+  font-size: 0.8em;
+}
+
+.react-confirm-alert-overlay {
+  z-index: 9999;
+  background-color: rgba(0, 0, 0, 0.2);
 }

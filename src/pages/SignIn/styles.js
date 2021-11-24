@@ -18,6 +18,22 @@ export const Box = styled.div`
   padding: 48px 24px;
   border-radius: 4px;
   box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.6);
+
+  form {
+    display: flex;
+    flex-direction: column;
+
+    .btn-forgot-password {
+      align-self: flex-end;
+      background-color: transparent;
+      border: none;
+      outline: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
 `;
 
 export const Logo = styled.img`

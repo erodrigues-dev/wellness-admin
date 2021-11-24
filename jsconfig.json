@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "es2020",
     "module": "commonjs",
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"]
-    }
+    },
+    "jsx": "react-jsx"
   },
   "exclude": ["build", "node_modules"]
 }
