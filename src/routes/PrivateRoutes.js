@@ -26,6 +26,7 @@ import {
   Notifications,
   Calendar,
   CalendarSlot,
+  TeamGroup,
 } from '~/pages';
 
 const PrivateRoutes = () => {
@@ -65,6 +66,13 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.settings.waivers.list}
           path="/customers/:id/waivers"
           component={CustomerWaiver}
+        />
+
+        <PrivateRoute
+          exact
+          functionality={FUNCTIONALITIES.customers.list}
+          path="/team-groups"
+          component={TeamGroup}
         />
 
         <PrivateRoute

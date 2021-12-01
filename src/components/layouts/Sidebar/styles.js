@@ -98,7 +98,7 @@ export const Item = styled.li`
 
   svg {
     margin-right: 24px;
-    stroke-width: 1;
+    /* stroke-width: 1; */
     color: #fff;
   }
 

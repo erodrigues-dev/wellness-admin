@@ -7,6 +7,7 @@ import {
   FiBell,
 } from 'react-icons/fi';
 import { GiWeightLiftingUp } from 'react-icons/gi';
+import { MdGroup } from 'react-icons/md';
 
 import { FUNCTIONALITIES } from './functionalities';
 
@@ -21,6 +22,12 @@ export const MENU = [
     title: 'Customers',
     path: '/customers',
     Icon: FiUsers,
+    functionality: FUNCTIONALITIES.customers.list,
+  },
+  {
+    title: 'Team/Groups',
+    path: '/team-groups',
+    Icon: MdGroup,
     functionality: FUNCTIONALITIES.customers.list,
   },
   {
