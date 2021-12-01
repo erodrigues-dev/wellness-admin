@@ -1,9 +1,14 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 
+import { List } from './List';
+
 export function TeamGroup() {
-  <Card body>
-    <Card.Title>Team/Group</Card.Title>
-    <hr />
-  </Card>;
+  return (
+    <Card body>
+      <Card.Title>Team/Group</Card.Title>
+      <hr />
+      <List />
+    </Card>
+  );
 }
