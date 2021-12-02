@@ -3,18 +3,22 @@ import { Table } from 'react-bootstrap';
 import { FiEdit, FiEye, FiTrash } from 'react-icons/fi';
 
 import Paginate from '~/components/Paginate';
+import { config } from '~/helpers/config';
+import { formatToList } from '~/helpers/date';
 
 import { Filter } from './Filter';
 
-export function List() {
-  const allowEdit = true;
-  const allowDelete = true;
-
+export function List({ data, allowEdit, allowDelete, onPaginate }) {
   const onDisplay = () => {};
   const onEdit = () => {};
   const onDelete = () => {};
 
-  const items = [{ id: 1 }];
+  const getMembersNames = (members) => {
+    return members
+      .map((member) => member.name)
+      .map((name) => name.split(' ')[0])
+      .join(', ');
+  };
 
   return (
     <div className="mt-4">
@@ -29,8 +33,8 @@ export function List() {
           </tr>
         </thead>
         <tbody>
-          {items.map((item) => (
-            <tr>
+          {data.list.map((item) => (
+            <tr key={item.id}>
               <td>
                 <FiEye
                   title="Display"
@@ -59,12 +63,12 @@ export function List() {
                   />
                 )}
               </td>
-              <td>T-0001</td>
-              <td>Jhon, Gui, Alicia, Mary</td>
-              <td>1 month ago</td>
+              <td>{item.name}</td>
+              <td>{getMembersNames(item.members)}</td>
+              <td>{formatToList(item.createdAt)}</td>
             </tr>
           ))}
-          {items.length === 0 && (
+          {data.count === 0 && (
             <tr>
               <td colSpan={4}>No record found</td>
             </tr>
@@ -72,10 +76,10 @@ export function List() {
         </tbody>
       </Table>
       <Paginate
-        activePage={1}
-        itemsCountPerPage={10}
-        totalItemsCount={100}
-        onChange={() => {}}
+        activePage={data.page}
+        itemsCountPerPage={config.pageLimit}
+        totalItemsCount={data.count}
+        onChange={onPaginate}
       />
     </div>
   );
