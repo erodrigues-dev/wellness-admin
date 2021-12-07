@@ -8,11 +8,17 @@ import { formatToList } from '~/helpers/date';
 
 import { Filter } from './Filter';
 
-export function List({ data, allowEdit, allowDelete, onPaginate }) {
-  const onDisplay = () => {};
-  const onEdit = () => {};
-  const onDelete = () => {};
-
+export function List({
+  data,
+  allowCreate,
+  allowEdit,
+  allowDelete,
+  onPaginate,
+  onDisplay,
+  onEdit,
+  onDelete,
+  onCreate,
+}) {
   const getMembersNames = (members) => {
     return members
       .map((member) => member.name)
@@ -22,7 +28,7 @@ export function List({ data, allowEdit, allowDelete, onPaginate }) {
 
   return (
     <div className="mt-4">
-      <Filter />
+      <Filter allowCreate={allowCreate} onCreate={onCreate} />
       <Table className="mt-4">
         <thead>
           <tr>
@@ -41,7 +47,7 @@ export function List({ data, allowEdit, allowDelete, onPaginate }) {
                   className="m-1"
                   size={18}
                   cursor="pointer"
-                  onClick={() => onDisplay(item.id)}
+                  onClick={() => onDisplay(item)}
                 />
                 {allowEdit && (
                   <FiEdit
@@ -49,7 +55,7 @@ export function List({ data, allowEdit, allowDelete, onPaginate }) {
                     title="Edit"
                     size={18}
                     cursor="pointer"
-                    onClick={() => onEdit(item.id)}
+                    onClick={() => onEdit(item)}
                   />
                 )}
                 {allowDelete && (
@@ -59,7 +65,7 @@ export function List({ data, allowEdit, allowDelete, onPaginate }) {
                     title="Delete"
                     size={18}
                     cursor="pointer"
-                    onClick={() => onDelete(item.id)}
+                    onClick={() => onDelete(item)}
                   />
                 )}
               </td>
