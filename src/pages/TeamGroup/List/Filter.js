@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Button, Row, Col } from 'react-bootstrap';
 
-export function Filter() {
+export function Filter({ allowCreate, onCreate }) {
   return (
     <Form onSubmit={(e) => e.preventDefault()}>
       <Row>
@@ -15,9 +15,11 @@ export function Filter() {
       <Row>
         <Col className="d-flex justify-content-end">
           <Button type="submit">Filter</Button>
-          <Button className="ml-2" variant="secondary">
-            Add Team/Group
-          </Button>
+          {allowCreate && (
+            <Button className="ml-2" variant="secondary" onClick={onCreate}>
+              Add Team/Group
+            </Button>
+          )}
         </Col>
       </Row>
     </Form>
