@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 
 import service from '~/services/team-group';
 
+import { FormTeamGroup } from './Form';
 import { List } from './List';
 
 export function TeamGroup() {
@@ -13,7 +14,9 @@ export function TeamGroup() {
     list: [],
     filters: {},
   });
+  const [modal, setModal] = useState({});
 
+  const allowCreate = true;
   const allowEdit = true;
   const allowDelete = true;
 
@@ -32,6 +35,41 @@ export function TeamGroup() {
     }
   }, []);
 
+  const handleDisplay = ({ id }) => {
+    setModal({
+      id,
+      isDisplay: true,
+      isOpen: true,
+    });
+  };
+
+  const handleCreate = () => {
+    setModal({ isOpen: true });
+  };
+
+  const handleEdit = ({ id }) => {
+    setModal({
+      id,
+      isOpen: true,
+    });
+  };
+
+  const handleDelete = ({ id }) => {
+    console.log(`>> handle delete ${id}`);
+  };
+
+  const handleCloseModal = () => {
+    setModal({});
+  };
+
+  const handleSaveModal = () => {
+    fetchList(1, {});
+  };
+
+  const handlePaginate = (page) => {
+    setData((state) => ({ ...state, page }));
+  };
+
   useEffect(() => {
     fetchList(data.page, data.filters);
   }, [data.page, data.filters, fetchList]);
@@ -42,10 +80,23 @@ export function TeamGroup() {
       <hr />
       <List
         data={data}
+        allowCreate={allowCreate}
         allowEdit={allowEdit}
         allowDelete={allowDelete}
-        onPaginate={(page) => setData((state) => ({ ...state, page }))}
+        onPaginate={handlePaginate}
+        onDisplay={handleDisplay}
+        onCreate={handleCreate}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
       />
+      {modal.isOpen && (
+        <FormTeamGroup
+          id={modal.id}
+          isDisplay={modal.isDisplay}
+          onClose={handleCloseModal}
+          onSave={handleSaveModal}
+        />
+      )}
     </Card>
   );
 }
