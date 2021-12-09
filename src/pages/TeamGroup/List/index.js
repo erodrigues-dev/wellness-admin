@@ -41,7 +41,7 @@ export function List({
         <tbody>
           {data.list.map((item) => (
             <tr key={item.id}>
-              <td>
+              <td className="column-actions">
                 <FiEye
                   title="Display"
                   className="m-1"
@@ -70,7 +70,9 @@ export function List({
                 )}
               </td>
               <td>{item.name}</td>
-              <td>{getMembersNames(item.members)}</td>
+              <td style={{ textTransform: 'capitalize' }}>
+                {getMembersNames(item.members)}
+              </td>
               <td>{formatToList(item.createdAt)}</td>
             </tr>
           ))}
