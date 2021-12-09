@@ -1,30 +1,27 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
-import { MultiSelect } from '@progress/kendo-react-dropdowns';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 
 import Modal from '~/components/Modal';
-import autocomplete from '~/services/autocomplete';
 import { get, create, update } from '~/services/team-group';
+
+import { MembersField } from './MembersField';
 
 const initialValues = {
   name: '',
+  members: [],
 };
 
 const validationSchema = Yup.object({
   name: Yup.string().max(120).required(),
+  members: Yup.array(Yup.number()).required().min(1),
 });
 
 export const FormTeamGroup = ({ id, isDisplay, onClose, onSave }) => {
-  const [membersData, setMembersData] = useState({
-    data: [],
-    value: [],
-    loading: false,
-    timeout: null,
-  });
+  const [members, setMembers] = useState([]);
 
   const onSubmit = async (values, { setIsSubmiting }) => {
     try {
@@ -46,53 +43,22 @@ export const FormTeamGroup = ({ id, isDisplay, onClose, onSave }) => {
     onSubmit,
   });
 
-  const handleChangeMembers = ({ value }) => {
-    setMembersData((state) => ({ ...state, value }));
-  };
-
-  const handleFilterMembers = useCallback(
-    ({ filter }) => {
-      clearTimeout(membersData.timeout);
-      const timeout = setTimeout(() => {
-        autocomplete
-          .customers(filter.value)
-          .then(({ data }) => {
-            setMembersData((state) => ({
-              ...state,
-              data,
-              loading: false,
-            }));
-          })
-          .catch(() => {
-            toast.error('Unable to list members');
-          });
-      }, 500);
-
-      setMembersData((state) => ({
-        ...state,
-        loading: true,
-        data: [],
-        timeout,
-        filter: filter.value,
-      }));
-    },
-    [membersData.timeout]
-  );
-
   useEffect(() => {
     if (!id) return;
     get(id)
-      .then(({ data }) =>
+      .then(({ data }) => {
         setValues({
           name: data.name,
-        })
-      )
+          members: data.members.map((x) => x.id),
+        });
+        setMembers(data.members);
+      })
       .catch(() => toast.error('An unexpected error has occurred'));
   }, [id, setValues]);
 
   return (
     <Modal title="Team/Group" setClose={onClose}>
-      <Form onSubmit={formik.handleSubmit} className="p-4">
+      <Form onSubmit={formik.handleSubmit} className="p-4" noValidate>
         <Form.Group>
           <Form.Label>Name</Form.Label>
           <Form.Control
@@ -111,23 +77,20 @@ export const FormTeamGroup = ({ id, isDisplay, onClose, onSave }) => {
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Form.Group>
-          <Form.Label>Members</Form.Label>
-          <MultiSelect
-            textField="name"
-            dataItemKey="id"
-            data={membersData.data}
-            loading={membersData.loading}
-            value={membersData.value}
-            filter={membersData.filter}
-            onFocus={() => handleFilterMembers({ filter: { value: '' } })}
-            onBlur={() => setMembersData((state) => ({ ...state, filter: '' }))}
-            onChange={handleChangeMembers}
-            onFilterChange={handleFilterMembers}
-            popupSettings={{ className: 'z-index-in-modal' }}
-            filterable
-          />
-        </Form.Group>
+        <MembersField
+          disabled={isDisplay}
+          value={members}
+          onChange={(value) => {
+            setMembers(value);
+            formik.setFieldValue(
+              'members',
+              value.map((x) => x.id)
+            );
+          }}
+          onBlur={() => formik.setFieldTouched('members')}
+          isValid={!(formik.touched.members && formik.errors.members)}
+          error={formik.errors.members}
+        />
 
         <div className="d-flex justify-content-end">
           <Button type="button" onClick={onClose}>
