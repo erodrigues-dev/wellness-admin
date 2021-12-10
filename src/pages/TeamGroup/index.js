@@ -70,6 +70,10 @@ export function TeamGroup() {
     setData((state) => ({ ...state, page }));
   };
 
+  const handleFilter = (filters) => {
+    fetchList(1, filters);
+  };
+
   useEffect(() => {
     fetchList(data.page, data.filters);
   }, [data.page, data.filters, fetchList]);
@@ -88,6 +92,7 @@ export function TeamGroup() {
         onCreate={handleCreate}
         onEdit={handleEdit}
         onDelete={handleDelete}
+        onFilter={handleFilter}
       />
       {modal.isOpen && (
         <FormTeamGroup

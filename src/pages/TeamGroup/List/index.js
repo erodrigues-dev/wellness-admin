@@ -18,6 +18,7 @@ export function List({
   onEdit,
   onDelete,
   onCreate,
+  onFilter,
 }) {
   const getMembersNames = (members) => {
     return members
@@ -28,7 +29,11 @@ export function List({
 
   return (
     <div className="mt-4">
-      <Filter allowCreate={allowCreate} onCreate={onCreate} />
+      <Filter
+        allowCreate={allowCreate}
+        onCreate={onCreate}
+        onFilter={onFilter}
+      />
       <Table className="mt-4">
         <thead>
           <tr>
