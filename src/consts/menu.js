@@ -28,7 +28,7 @@ export const MENU = [
     title: 'Team/Groups',
     path: '/team-groups',
     Icon: MdGroup,
-    functionality: FUNCTIONALITIES.customers.list,
+    functionality: FUNCTIONALITIES.teamGroup.list,
   },
   {
     title: 'Orders',

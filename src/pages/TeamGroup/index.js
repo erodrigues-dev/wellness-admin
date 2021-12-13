@@ -2,6 +2,9 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Card } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
+import confirmHandler from '~/components/ConfirmAlert/confirmHandler';
+import { FUNCTIONALITIES } from '~/consts/functionalities';
+import useAuth from '~/contexts/auth';
 import service from '~/services/team-group';
 
 import { FormTeamGroup } from './Form';
@@ -15,10 +18,11 @@ export function TeamGroup() {
     filters: {},
   });
   const [modal, setModal] = useState({});
+  const { hasPermission } = useAuth();
 
-  const allowCreate = true;
-  const allowEdit = true;
-  const allowDelete = true;
+  const hasPermissionToCreate = hasPermission(FUNCTIONALITIES.teamGroup.create);
+  const hasPermissionToUpdate = hasPermission(FUNCTIONALITIES.teamGroup.update);
+  const hasPermissionToDelete = hasPermission(FUNCTIONALITIES.teamGroup.delete);
 
   const fetchList = useCallback(async (page, filters) => {
     try {
@@ -55,7 +59,15 @@ export function TeamGroup() {
   };
 
   const handleDelete = ({ id }) => {
-    console.log(`>> handle delete ${id}`);
+    confirmHandler('Are you sure want delete this record?', async () => {
+      try {
+        await service.destroy(id);
+        fetchList();
+        toast.success('Team/Group deleted succesfully');
+      } catch (error) {
+        toast.error(error.message);
+      }
+    });
   };
 
   const handleCloseModal = () => {
@@ -84,9 +96,9 @@ export function TeamGroup() {
       <hr />
       <List
         data={data}
-        allowCreate={allowCreate}
-        allowEdit={allowEdit}
-        allowDelete={allowDelete}
+        allowCreate={hasPermissionToCreate}
+        allowEdit={hasPermissionToUpdate}
+        allowDelete={hasPermissionToDelete}
         onPaginate={handlePaginate}
         onDisplay={handleDisplay}
         onCreate={handleCreate}
