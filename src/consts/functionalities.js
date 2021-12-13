@@ -11,6 +11,12 @@ export const FUNCTIONALITIES = {
     update: 16,
     delete: 2097152,
   },
+  teamGroup: {
+    list: 2 ** 39,
+    create: 2 ** 40,
+    update: 2 ** 40,
+    delete: 2 ** 41,
+  },
   orders: {
     list: 32,
     create: 64,
