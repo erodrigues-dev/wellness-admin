@@ -7,6 +7,14 @@ export const customers = (q) => {
   });
 };
 
+export const teamGroups = (q) => {
+  return api.get('autocomplete/team-groups', {
+    params: { q },
+    disableGlobalLoading: true,
+  });
+};
+
 export default {
   customers,
+  teamGroups,
 };
