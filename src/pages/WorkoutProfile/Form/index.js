@@ -7,9 +7,10 @@ import { useFormik } from 'formik';
 import { ButtonsRight } from '~/assets/styleds';
 import Modal from '~/components/Modal';
 import { clearEmptyFields } from '~/helpers/forms';
-import customerService from '~/services/customer';
 import service from '~/services/workout-profile';
 
+import { AutoCompleteFormikAdapter } from '../../../components/AutoComplete';
+import autocomplete from '../../../services/autocomplete';
 import { validationSchema, initialValues } from './schema';
 
 export function FormWorkoutProfile({
@@ -19,19 +20,22 @@ export function FormWorkoutProfile({
   isEdit,
   workoutProfileId,
 }) {
-  const [customers, setCustomers] = useState([]);
+  const [customer, setCustomer] = useState(null);
+  const [teamGroup, setTeamGroup] = useState(null);
+
   const { setValues, ...formik } = useFormik({
     initialValues,
     validationSchema,
     onSubmit,
   });
+
   const fetchWorkoutProfile = useCallback(async () => {
     try {
       if (!workoutProfileId) return;
       const { data } = await service.get(workoutProfileId);
-      const { customer, ...values } = data;
-      setCustomers([customer]);
-      setValues(parseDataToFormValues(values));
+      setCustomer(data.customer);
+      setTeamGroup(data.teamGroup);
+      setValues(parseDataToFormValues(data));
     } catch (error) {
       toast.error('Unable to load workout profile.');
     }
@@ -40,7 +44,9 @@ export function FormWorkoutProfile({
   function parseDataToFormValues(data) {
     return {
       id: data.id,
+      type: data.customerId ? 'customer' : 'team-group',
       customerId: data.customerId,
+      teamGroupId: data.teamGroupId,
       age: data.age || '',
       height: data.height || '',
       weight: data.weight || '',
@@ -73,41 +79,65 @@ export function FormWorkoutProfile({
   }
 
   useEffect(() => {
-    if (isCreate)
-      customerService.listAll().then(({ data }) => setCustomers(data));
-  }, [isCreate]);
-
-  useEffect(() => {
     fetchWorkoutProfile();
   }, [fetchWorkoutProfile]);
 
   return (
-    <Modal title="Workout Profile" setClose={onClose}>
+    <Modal title="Workout Profile" setClose={onClose} width="400px">
       <Form className="p-4" onSubmit={formik.handleSubmit}>
-        <Form.Group>
-          <Form.Label>Customer</Form.Label>
-          <Form.Control
-            type="text"
-            as="select"
-            name="customerId"
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.customerId}
-            isInvalid={formik.touched.customerId && formik.errors.customerId}
-            isValid={formik.touched.customerId && !formik.errors.customerId}
-            disabled={isDisplay || isEdit}
-          >
-            <option value="">Select</option>
-            {customers.map((item) => (
-              <option key={item.id} value={item.id}>
-                {item.name}
-              </option>
-            ))}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.customerId}
-          </Form.Control.Feedback>
-        </Form.Group>
+        {(isDisplay || isEdit) && (
+          <p style={{ fontSize: '1.15em' }}>
+            {customer?.name || teamGroup?.name}
+          </p>
+        )}
+        {isDisplay || isEdit || (
+          <>
+            <Form.Group>
+              <Form.Label>Type</Form.Label>
+              <Form.Control
+                name="type"
+                as="select"
+                value={formik.values.type}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.type && formik.errors.type}
+                isValid={formik.touched.type && !formik.errors.type}
+              >
+                <option value="">Select</option>
+                <option value="customer">Customer</option>
+                <option value="team-group">Team/Group</option>
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.type}
+              </Form.Control.Feedback>
+            </Form.Group>
+            {formik.values.type === 'customer' && (
+              <AutoCompleteFormikAdapter
+                label="Customer"
+                name="customerId"
+                value={customer}
+                formik={formik}
+                itemKey="id"
+                textField="name"
+                onChange={setCustomer}
+                onFilter={autocomplete.customers}
+              />
+            )}
+
+            {formik.values.type === 'team-group' && (
+              <AutoCompleteFormikAdapter
+                label="Team/Group"
+                name="teamGroupId"
+                value={teamGroup}
+                formik={formik}
+                itemKey="id"
+                textField="name"
+                onChange={setTeamGroup}
+                onFilter={autocomplete.teamGroups}
+              />
+            )}
+          </>
+        )}
 
         <Form.Group>
           <Form.Label>Experience Level</Form.Label>
@@ -130,59 +160,61 @@ export function FormWorkoutProfile({
           </Form.Control.Feedback>
         </Form.Group>
 
-        <Row>
-          <Form.Group as={Col} sm>
-            <Form.Label>Age</Form.Label>
-            <Form.Control
-              type="number"
-              name="age"
-              value={formik.values.age}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.age && formik.errors.age}
-              isValid={formik.touched.age && !formik.errors.age}
-              disabled={isDisplay}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.age}
-            </Form.Control.Feedback>
-          </Form.Group>
+        {formik.values.type === 'customer' && (
+          <Row>
+            <Form.Group as={Col} sm>
+              <Form.Label>Age</Form.Label>
+              <Form.Control
+                type="number"
+                name="age"
+                value={formik.values.age}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.age && formik.errors.age}
+                isValid={formik.touched.age && !formik.errors.age}
+                disabled={isDisplay}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.age}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-          <Form.Group as={Col} sm>
-            <Form.Label>Height</Form.Label>
-            <Form.Control
-              type="text"
-              name="height"
-              value={formik.values.height}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.height && formik.errors.height}
-              isValid={formik.touched.height && !formik.errors.height}
-              maxLength={10}
-              disabled={isDisplay}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.height}
-            </Form.Control.Feedback>
-          </Form.Group>
+            <Form.Group as={Col} sm>
+              <Form.Label>Height</Form.Label>
+              <Form.Control
+                type="text"
+                name="height"
+                value={formik.values.height}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.height && formik.errors.height}
+                isValid={formik.touched.height && !formik.errors.height}
+                maxLength={10}
+                disabled={isDisplay}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.height}
+              </Form.Control.Feedback>
+            </Form.Group>
 
-          <Form.Group as={Col} sm>
-            <Form.Label>Weight</Form.Label>
-            <Form.Control
-              type="number"
-              name="weight"
-              value={formik.values.weight}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={formik.touched.weight && formik.errors.weight}
-              isValid={formik.touched.weight && !formik.errors.weight}
-              disabled={isDisplay}
-            />
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.weight}
-            </Form.Control.Feedback>
-          </Form.Group>
-        </Row>
+            <Form.Group as={Col} sm>
+              <Form.Label>Weight</Form.Label>
+              <Form.Control
+                type="number"
+                name="weight"
+                value={formik.values.weight}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.weight && formik.errors.weight}
+                isValid={formik.touched.weight && !formik.errors.weight}
+                disabled={isDisplay}
+              />
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.weight}
+              </Form.Control.Feedback>
+            </Form.Group>
+          </Row>
+        )}
 
         <Form.Group>
           <Form.Label>Goal</Form.Label>

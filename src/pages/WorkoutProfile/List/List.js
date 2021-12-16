@@ -16,18 +16,26 @@ export function List({
   allowEdit,
   allowDelete,
 }) {
+  const getType = (item) => {
+    if (item.customer) return 'Customer';
+    return 'Team/Group';
+  };
+
+  const getName = (item) => {
+    if (item.customer?.name) return item.customer.name;
+    return item.teamGroup.name;
+  };
+
   return (
     <div className="mt-4">
       <Table striped hover responsive>
         <thead>
           <tr>
             <th>Actions</th>
-            <th>Customer</th>
+            <th>Type</th>
+            <th>Name</th>
             <th>Experience</th>
             <th>Goal</th>
-            <th>Age</th>
-            <th>Height</th>
-            <th>Weight</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -69,12 +77,10 @@ export function List({
                   />
                 )}
               </td>
-              <td>{item.customer.name}</td>
+              <td>{getType(item)}</td>
+              <td>{getName(item)}</td>
               <td>{item.experienceLevel}</td>
               <td>{item.goal}</td>
-              <td>{item.age}</td>
-              <td>{item.height}</td>
-              <td>{item.weight}lbs</td>
               <td>{formatToList(item.createdAt)}</td>
             </tr>
           ))}
