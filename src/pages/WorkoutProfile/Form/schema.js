@@ -23,13 +23,15 @@ export const validationSchema = yup.object({
     .when('type', {
       is: 'team-group',
       then: yup.string().required(),
+      otherwise: yup.string().nullable(),
     })
     .label('Team/Group'),
   customerId: yup
-    .number()
+    .string()
     .when('type', {
       is: 'customer',
-      then: yup.number().required(),
+      then: yup.string().required(),
+      otherwise: yup.string().nullable(),
     })
     .label('Customer'),
   age: yup.number().min(1),

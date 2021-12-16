@@ -13,12 +13,15 @@ export const list = (page, filters) => {
 export const get = (id) => api.get(`/workout-profiles/${id}`);
 
 export function create(data) {
-  return api.post('/workout-profiles', data);
+  const sendData = { ...data };
+  if (sendData.type === 'customer') sendData.teamGroupId = undefined;
+  if (sendData.type === 'team-group') sendData.customerId = undefined;
+
+  return api.post('/workout-profiles', sendData);
 }
 
-export function update({ id, ...data }) {
-  const payload = { ...data };
-  delete payload.customerId;
+export function update(data) {
+  const { id, type, customerId, teamGroupId, ...payload } = data;
   return api.put(`/workout-profiles/${id}`, payload);
 }
 

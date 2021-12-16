@@ -7,7 +7,6 @@ import { useFormik } from 'formik';
 import { ButtonsRight } from '~/assets/styleds';
 import Modal from '~/components/Modal';
 import { clearEmptyFields } from '~/helpers/forms';
-import customerService from '~/services/customer';
 import service from '~/services/workout-profile';
 
 import { AutoCompleteFormikAdapter } from '../../../components/AutoComplete';
@@ -34,9 +33,9 @@ export function FormWorkoutProfile({
     try {
       if (!workoutProfileId) return;
       const { data } = await service.get(workoutProfileId);
-      const { _customer, ...values } = data;
-      // setCustomers([customer]);
-      setValues(parseDataToFormValues(values));
+      setCustomer(data.customer);
+      setTeamGroup(data.teamGroup);
+      setValues(parseDataToFormValues(data));
     } catch (error) {
       toast.error('Unable to load workout profile.');
     }
@@ -45,7 +44,9 @@ export function FormWorkoutProfile({
   function parseDataToFormValues(data) {
     return {
       id: data.id,
+      type: data.customerId ? 'customer' : 'team-group',
       customerId: data.customerId,
+      teamGroupId: data.teamGroupId,
       age: data.age || '',
       height: data.height || '',
       weight: data.weight || '',
@@ -77,11 +78,6 @@ export function FormWorkoutProfile({
     }
   }
 
-  // useEffect(() => {
-  //   if (isCreate)
-  //     customerService.listAll().then(({ data }) => setCustomers(data));
-  // }, [isCreate]);
-
   useEffect(() => {
     fetchWorkoutProfile();
   }, [fetchWorkoutProfile]);
@@ -89,50 +85,58 @@ export function FormWorkoutProfile({
   return (
     <Modal title="Workout Profile" setClose={onClose} width="400px">
       <Form className="p-4" onSubmit={formik.handleSubmit}>
-        <Form.Group>
-          <Form.Label>Type</Form.Label>
-          <Form.Control
-            name="type"
-            as="select"
-            value={formik.values.type}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isInvalid={formik.touched.type && formik.errors.type}
-            isValid={formik.touched.type && !formik.errors.type}
-            disabled={isDisplay || isEdit}
-          >
-            <option value="">Select</option>
-            <option value="customer">Customer</option>
-            <option value="team-group">Team/Group</option>
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.type}
-          </Form.Control.Feedback>
-        </Form.Group>
-        {formik.values.type === 'customer' && (
-          <AutoCompleteFormikAdapter
-            label="Customer"
-            name="customerId"
-            value={customer}
-            formik={formik}
-            itemKey="id"
-            textField="name"
-            onChange={setCustomer}
-            onFilter={autocomplete.customers}
-          />
+        {(isDisplay || isEdit) && (
+          <p style={{ fontSize: '1.15em' }}>
+            {customer?.name || teamGroup?.name}
+          </p>
         )}
+        {isDisplay || isEdit || (
+          <>
+            <Form.Group>
+              <Form.Label>Type</Form.Label>
+              <Form.Control
+                name="type"
+                as="select"
+                value={formik.values.type}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                isInvalid={formik.touched.type && formik.errors.type}
+                isValid={formik.touched.type && !formik.errors.type}
+              >
+                <option value="">Select</option>
+                <option value="customer">Customer</option>
+                <option value="team-group">Team/Group</option>
+              </Form.Control>
+              <Form.Control.Feedback type="invalid">
+                {formik.errors.type}
+              </Form.Control.Feedback>
+            </Form.Group>
+            {formik.values.type === 'customer' && (
+              <AutoCompleteFormikAdapter
+                label="Customer"
+                name="customerId"
+                value={customer}
+                formik={formik}
+                itemKey="id"
+                textField="name"
+                onChange={setCustomer}
+                onFilter={autocomplete.customers}
+              />
+            )}
 
-        {formik.values.type === 'team-group' && (
-          <AutoCompleteFormikAdapter
-            label="Team/Group"
-            name="teamGroupId"
-            value={teamGroup}
-            formik={formik}
-            itemKey="id"
-            textField="name"
-            onChange={setTeamGroup}
-            onFilter={autocomplete.teamGroups}
-          />
+            {formik.values.type === 'team-group' && (
+              <AutoCompleteFormikAdapter
+                label="Team/Group"
+                name="teamGroupId"
+                value={teamGroup}
+                formik={formik}
+                itemKey="id"
+                textField="name"
+                onChange={setTeamGroup}
+                onFilter={autocomplete.teamGroups}
+              />
+            )}
+          </>
         )}
 
         <Form.Group>
