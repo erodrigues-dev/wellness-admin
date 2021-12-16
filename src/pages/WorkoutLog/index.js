@@ -27,6 +27,7 @@ export function WorkoutLog({
   });
 
   const workoutProfileId = workoutProfile.id;
+  const name = workoutProfile.customer?.name || workoutProfile.teamGroup?.name;
 
   const fetchList = useCallback(
     async (page) => {
@@ -113,8 +114,7 @@ export function WorkoutLog({
     <Modal title="Workout Logs" setClose={onClose}>
       <div className="p-4">
         <p style={{ fontWeight: 600, fontSize: '1.2em' }}>
-          {workoutProfile.customer.name}{' '}
-          <small>{workoutProfile.experienceLevel}</small>
+          {name} <small>{workoutProfile.experienceLevel}</small>
         </p>
         {hasCreateUpdatePermission && (
           <ButtonsRight>
