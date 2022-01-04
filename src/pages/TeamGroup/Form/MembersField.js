@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useState, useRef } from 'react';
 import { Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -16,6 +16,7 @@ export function MembersField({
   onBlur = () => {},
   onFocus = () => {},
 }) {
+  const containerRef = useRef(null);
   const [membersData, setMembersData] = useState({
     data: [],
     value: value || [],
@@ -80,12 +81,15 @@ export function MembersField({
         onBlur={handleBlur}
         onChange={handleChangeMembers}
         onFilterChange={handleFilterMembers}
-        popupSettings={{ className: 'z-index-in-modal' }}
+        popupSettings={{
+          appendTo: containerRef.current,
+        }}
         valid={isValid}
         disabled={disabled}
         filterable
       />
       {isValid || <Error>{error}</Error>}
+      <div ref={containerRef} />
     </Form.Group>
   );
 }
