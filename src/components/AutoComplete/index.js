@@ -4,6 +4,11 @@ import { Form } from 'react-bootstrap';
 import { DropDownList, MultiSelect } from '@progress/kendo-react-dropdowns';
 import { Error } from '@progress/kendo-react-labels';
 
+function SelectComponent({ multiple, ...props }) {
+  if (multiple) return <MultiSelect {...props} />;
+  return <DropDownList {...props} />;
+}
+
 export function AutoComplete({
   label,
   name,
@@ -64,15 +69,11 @@ export function AutoComplete({
     handleFilter({ filter: { value: '' } });
   };
 
-  function SelectComponent(props) {
-    if (multiple) return <MultiSelect {...props} />;
-    return <DropDownList {...props} />;
-  }
-
   return (
     <Form.Group>
       <Form.Label>{label}</Form.Label>
       <SelectComponent
+        multiple={multiple}
         style={{ width: '100%' }}
         popupSettings={{ appendTo: appendToRef.current }}
         name={name}
