@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Form } from 'react-bootstrap';
 
-import { DropDownList } from '@progress/kendo-react-dropdowns';
+import { DropDownList, MultiSelect } from '@progress/kendo-react-dropdowns';
 import { Error } from '@progress/kendo-react-labels';
 
 export function AutoComplete({
@@ -15,10 +15,12 @@ export function AutoComplete({
   onChange,
   onBlur,
   onFocus,
-  disabled,
+  disabled = false,
   isValid,
   error,
+  multiple = false,
 }) {
+  const appendToRef = useRef(null);
   const [data, setData] = useState({
     list: [],
     loading: false,
@@ -62,12 +64,17 @@ export function AutoComplete({
     handleFilter({ filter: { value: '' } });
   };
 
+  function SelectComponent(props) {
+    if (multiple) return <MultiSelect {...props} />;
+    return <DropDownList {...props} />;
+  }
+
   return (
     <Form.Group>
       <Form.Label>{label}</Form.Label>
-      <DropDownList
+      <SelectComponent
         style={{ width: '100%' }}
-        popupSettings={{ className: 'z-index-in-modal' }}
+        popupSettings={{ appendTo: appendToRef.current }}
         name={name}
         textField={textField}
         dataItemKey={itemKey}
@@ -85,6 +92,7 @@ export function AutoComplete({
         filterable
       />
       {isValid || <Error>{error}</Error>}
+      <div ref={appendToRef} />
     </Form.Group>
   );
 }
