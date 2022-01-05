@@ -5,4 +5,6 @@ export const config = Object.freeze({
   squareLocationId: process.env.REACT_APP_SQUARE_LOCATION_ID,
   socketUrl: process.env.REACT_APP_SOCKET_URL,
   socketKey: process.env.REACT_APP_SOCKET_KEY,
+  workoutLogTrainerSpecialty:
+    process.env.REAC_APP_WORKOUT_LOG_TRAINER_SPECIALTY || 'Head Trainer',
 });
