@@ -1,14 +1,17 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
 import { ButtonsRight } from '~/assets/styleds';
+import { AutoCompleteFormikAdapter } from '~/components/AutoComplete';
+import InputDatePicker from '~/components/InputDatePicker';
 import Modal from '~/components/Modal';
+import { config } from '~/helpers/config';
+import autocomplete from '~/services/autocomplete';
 import service from '~/services/workout-log';
 
-import InputDatePicker from '../../components/InputDatePicker';
 import { initialValues, validationSchema } from './schema';
 
 export function WorkoutLogForm({
@@ -19,6 +22,7 @@ export function WorkoutLogForm({
   isDisplay,
   onClose,
 }) {
+  const [trainers, setTrainers] = useState([]);
   const { setValues, ...formik } = useFormik({
     initialValues: { ...initialValues, workoutProfileId },
     validationSchema,
@@ -30,6 +34,7 @@ export function WorkoutLogForm({
       if (!workoutLogId) return;
       const { data } = await service.get(workoutLogId);
       setValues(parseDataToFormValues(data));
+      setTrainers(data.trainers);
     } catch (error) {
       toast.error(error.message);
     }
@@ -42,6 +47,17 @@ export function WorkoutLogForm({
       resume: data.resume || '',
       date: data.date || '',
       notes: data.notes || '',
+      trainers: data.trainers || [],
+    };
+  }
+
+  function parseFormValuesToApiData(values) {
+    return {
+      workoutProfileId: values.workoutProfileId,
+      resume: values.resume,
+      date: values.date,
+      notes: values.notes,
+      trainers: values.trainers.map((item) => item.id),
     };
   }
 
@@ -49,13 +65,15 @@ export function WorkoutLogForm({
     try {
       if (isDisplay) return;
 
+      const data = parseFormValuesToApiData(values);
+
       if (isCreate) {
-        const { data: createdItem } = await service.create(values);
+        const { data: createdItem } = await service.create(data);
         toast.success('Workout Log created with success.');
         onClose({ role: 'created', createdItem });
       }
       if (isEdit) {
-        await service.update({ id, ...values });
+        await service.update({ id, ...data });
         toast.success('Workout Log updated with success.');
         onClose({ role: 'updated' });
       }
@@ -72,6 +90,20 @@ export function WorkoutLogForm({
   return (
     <Modal setClose={onClose} title="Workout Log">
       <Form className="p-4" onSubmit={formik.handleSubmit}>
+        <AutoCompleteFormikAdapter
+          formik={formik}
+          label="Trainers"
+          name="trainers"
+          itemKey="id"
+          textField="name"
+          value={trainers}
+          onChange={setTrainers}
+          onFilter={(q) =>
+            autocomplete.employees(q, config.workoutLogTrainerSpecialty)
+          }
+          disabled={isDisplay}
+          multiple
+        />
         <Form.Group>
           <Form.Label>Resume</Form.Label>
           <Form.Control
