@@ -98,14 +98,28 @@ export function AutoComplete({
   );
 }
 
-export function AutoCompleteFormikAdapter({ formik, ...options }) {
-  const { name, itemKey, onChange, multiple } = options;
+export function AutoCompleteFormikAdapter({
+  formik,
+  formikGetValue,
+  ...options
+}) {
+  const { name, itemKey, onChange } = options;
+
+  function getValue(value) {
+    if (formikGetValue) return formikGetValue(value);
+
+    return Array.isArray(value)
+      ? value.map((item) => item[itemKey])
+      : value[itemKey];
+  }
+
   return (
     <AutoComplete
       {...options}
       onChange={(value) => {
         onChange(value);
-        formik.setFieldValue(name, multiple ? value : value[itemKey]);
+        const formikValue = getValue(value);
+        formik.setFieldValue(name, formikValue);
       }}
       onBlur={() => formik.setFieldTouched(name)}
       isValid={!(formik.touched[name] && formik.errors[name])}
