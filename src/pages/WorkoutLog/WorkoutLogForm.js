@@ -49,17 +49,7 @@ export function WorkoutLogForm({
       resume: data.resume || '',
       date: data.date || '',
       notes: data.notes || '',
-      trainers: data.trainers || [],
-    };
-  }
-
-  function parseFormValuesToApiData(values) {
-    return {
-      workoutProfileId: values.workoutProfileId,
-      resume: values.resume,
-      date: values.date,
-      notes: values.notes,
-      trainers: values.trainers.map((item) => item.id),
+      trainers: data.trainers?.map((x) => x.id) || [],
     };
   }
 
@@ -67,15 +57,13 @@ export function WorkoutLogForm({
     try {
       if (isDisplay) return;
 
-      const data = parseFormValuesToApiData(values);
-
       if (isCreate) {
-        const { data: createdItem } = await service.create(data);
+        const { data: createdItem } = await service.create(values);
         toast.success('Workout Log created with success.');
         onClose({ role: 'created', createdItem });
       }
       if (isEdit) {
-        await service.update({ id, ...data });
+        await service.update({ id, ...values });
         toast.success('Workout Log updated with success.');
         onClose({ role: 'updated' });
       }
