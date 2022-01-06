@@ -14,6 +14,8 @@ import service from '~/services/workout-log';
 
 import { initialValues, validationSchema } from './schema';
 
+const filterSpecialties = config.workoutLogTrainerSpecialties;
+
 export function WorkoutLogForm({
   workoutLogId,
   workoutProfileId,
@@ -98,9 +100,7 @@ export function WorkoutLogForm({
           textField="name"
           value={trainers}
           onChange={setTrainers}
-          onFilter={(q) =>
-            autocomplete.employees(q, config.workoutLogTrainerSpecialty)
-          }
+          onFilter={(q) => autocomplete.employees(q, filterSpecialties)}
           disabled={isDisplay}
           multiple
         />

@@ -15,7 +15,7 @@ jobs:
       REACT_APP_SQUARE_LOCATION_ID: ${{ secrets.STG_SQUARE_LOCATION_ID }}
       REACT_APP_SOCKET_URL: ${{ secrets.STG_SOCKET_URL }}
       REACT_APP_SOCKET_KEY: ${{ secrets.STG_SOCKET_KEY }}
-      REAC_APP_WORKOUT_LOG_TRAINER_SPECIALTY: ${{ secrets.STG_WORKOUT_LOG_TRAINER_SPECIALTY }}
+      REACT_APP_WORKOUT_LOG_TRAINER_SPECIALTIES: ${{ secrets.STG_WORKOUT_LOG_TRAINER_SPECIALTIES }}
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2

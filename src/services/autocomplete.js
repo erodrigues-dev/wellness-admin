@@ -14,9 +14,9 @@ export const teamGroups = (q) => {
   });
 };
 
-export const employees = (q, specialty) => {
+export const employees = (q, specialties) => {
   return api.get('autocomplete/employees', {
-    params: { q, specialty },
+    params: { q, specialties },
     disableGlobalLoading: true,
   });
 };
