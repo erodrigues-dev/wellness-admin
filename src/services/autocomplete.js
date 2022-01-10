@@ -14,7 +14,15 @@ export const teamGroups = (q) => {
   });
 };
 
+export const employees = (q, specialties) => {
+  return api.get('autocomplete/employees', {
+    params: { q, specialties },
+    disableGlobalLoading: true,
+  });
+};
+
 export default {
+  employees,
   customers,
   teamGroups,
 };
