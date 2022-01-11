@@ -9,6 +9,7 @@ jobs:
     env:
       USER: ${{ secrets.STG_SERVER_USER }}
       HOST: ${{ secrets.STG_SERVER_HOST }}
+      KENDO_UI_LICENSE: ${{ secrets.KENDO_UI_LICENSE }}
       REACT_APP_PAGE_LIMIT: 10
       REACT_APP_API_URL: ${{ secrets.STG_API_URL }}
       REACT_APP_SQUARE_APP_ID: ${{ secrets.STG_SQUARE_APP_ID }}
