@@ -19,3 +19,4 @@ export * from './WorkoutProfile';
 export * from './Notifications';
 export * from './Calendar';
 export * from './CalendarSlot';
+export * from './TeamGroup';

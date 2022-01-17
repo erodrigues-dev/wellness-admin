@@ -1,61 +1,58 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
 import { FiEdit, FiEye, FiTrash } from 'react-icons/fi';
-import { GiWeightLiftingUp } from 'react-icons/gi';
 
 import Paginate from '~/components/Paginate';
+import { config } from '~/helpers/config';
 import { formatToList } from '~/helpers/date';
 
+import { Filter } from './Filter';
+
 export function List({
-  list,
+  data,
+  allowCreate,
+  allowEdit,
+  allowDelete,
   onPaginate,
   onDisplay,
   onEdit,
   onDelete,
-  onLog,
-  allowEdit,
-  allowDelete,
+  onCreate,
+  onFilter,
 }) {
-  const getType = (item) => {
-    if (item.customer) return 'Customer';
-    return 'Team/Group';
-  };
-
-  const getName = (item) => {
-    if (item.customer?.name) return item.customer.name;
-    return item.teamGroup.name;
+  const getMembersNames = (members) => {
+    return members
+      .map((member) => member.name)
+      .map((name) => name.split(' ')[0])
+      .join(', ');
   };
 
   return (
     <div className="mt-4">
-      <Table striped hover responsive>
+      <Filter
+        allowCreate={allowCreate}
+        onCreate={onCreate}
+        onFilter={onFilter}
+      />
+      <Table className="mt-4">
         <thead>
           <tr>
             <th>Actions</th>
-            <th>Type</th>
             <th>Name</th>
-            <th>Experience</th>
-            <th>Goal</th>
+            <th>Members</th>
             <th>Created At</th>
           </tr>
         </thead>
         <tbody>
-          {list.rows.map((item) => (
+          {data.list.map((item) => (
             <tr key={item.id}>
-              <td>
-                <GiWeightLiftingUp
-                  title="Log"
-                  className="m-1"
-                  size={18}
-                  cursor="pointer"
-                  onClick={() => onLog(item)}
-                />
+              <td className="column-actions">
                 <FiEye
                   title="Display"
                   className="m-1"
                   size={18}
                   cursor="pointer"
-                  onClick={() => onDisplay(item.id)}
+                  onClick={() => onDisplay(item)}
                 />
                 {allowEdit && (
                   <FiEdit
@@ -63,7 +60,7 @@ export function List({
                     title="Edit"
                     size={18}
                     cursor="pointer"
-                    onClick={() => onEdit(item.id)}
+                    onClick={() => onEdit(item)}
                   />
                 )}
                 {allowDelete && (
@@ -73,28 +70,28 @@ export function List({
                     title="Delete"
                     size={18}
                     cursor="pointer"
-                    onClick={() => onDelete(item.id)}
+                    onClick={() => onDelete(item)}
                   />
                 )}
               </td>
-              <td>{getType(item)}</td>
-              <td>{getName(item)}</td>
-              <td>{item.experienceLevel}</td>
-              <td>{item.goal}</td>
+              <td>{item.name}</td>
+              <td style={{ textTransform: 'capitalize' }}>
+                {getMembersNames(item.members)}
+              </td>
               <td>{formatToList(item.createdAt)}</td>
             </tr>
           ))}
-          {list.total === 0 && (
+          {data.count === 0 && (
             <tr>
-              <td colSpan={8}>No record found</td>
+              <td colSpan={4}>No record found</td>
             </tr>
           )}
         </tbody>
       </Table>
       <Paginate
-        activePage={list.page}
-        itemsCountPerPage={10}
-        totalItemsCount={list.total}
+        activePage={data.page}
+        itemsCountPerPage={config.pageLimit}
+        totalItemsCount={data.count}
         onChange={onPaginate}
       />
     </div>

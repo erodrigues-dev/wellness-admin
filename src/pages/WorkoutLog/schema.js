@@ -6,6 +6,7 @@ export const initialValues = {
   resume: '',
   date: '',
   notes: '',
+  trainers: [],
 };
 
 export const validationSchema = yup.object({
@@ -14,4 +15,5 @@ export const validationSchema = yup.object({
   resume: yup.string().required(),
   date: yup.date().required(),
   notes: yup.string().nullable(),
+  trainers: yup.array().min(1),
 });

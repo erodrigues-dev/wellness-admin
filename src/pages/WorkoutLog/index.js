@@ -27,6 +27,7 @@ export function WorkoutLog({
   });
 
   const workoutProfileId = workoutProfile.id;
+  const name = workoutProfile.customer?.name || workoutProfile.teamGroup?.name;
 
   const fetchList = useCallback(
     async (page) => {
@@ -105,6 +106,13 @@ export function WorkoutLog({
     }
   }
 
+  function getNames(trainers) {
+    return trainers
+      ?.map((trainer) => trainer.name.split(' ')[0])
+      .sort()
+      .join(', ');
+  }
+
   useEffect(() => {
     fetchList(list.page);
   }, [fetchList, list.page]);
@@ -113,8 +121,7 @@ export function WorkoutLog({
     <Modal title="Workout Logs" setClose={onClose}>
       <div className="p-4">
         <p style={{ fontWeight: 600, fontSize: '1.2em' }}>
-          {workoutProfile.customer.name}{' '}
-          <small>{workoutProfile.experienceLevel}</small>
+          {name} <small>{workoutProfile.experienceLevel}</small>
         </p>
         {hasCreateUpdatePermission && (
           <ButtonsRight>
@@ -128,6 +135,7 @@ export function WorkoutLog({
         <thead>
           <tr>
             <th>Actions</th>
+            <th>Trainers</th>
             <th>Resume</th>
             <th>Date</th>
             <th>Created At</th>
@@ -171,6 +179,7 @@ export function WorkoutLog({
                   </>
                 )}
               </td>
+              <td>{getNames(item.trainers)}</td>
               <td>{item.resume}</td>
               <td>{formatToDisplay(new Date(item.date))}</td>
               <td>{formatToList(item.createdAt)}</td>

@@ -15,15 +15,20 @@ export function update({
   email,
   confirmationCode,
   password,
-  specialtyId,
+  specialties,
 }) {
   const formData = new FormData();
 
   formData.append('name', name);
   formData.append('email', email);
   formData.append('confirmationCode', confirmationCode);
+
   if (password && !!password.trim()) formData.append('password', password);
-  formData.append('specialtyId', specialtyId);
+
+  specialties?.forEach((specialtyId) => {
+    formData.append('specialties[]', specialtyId);
+  });
+
   if (image) formData.append('image', image);
 
   return api.put(ENDPOINT, formData);

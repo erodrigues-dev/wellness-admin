@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Card, Col, Form, Row } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 
 import { useFormik } from 'formik';
 
+import { AutoCompleteFormikAdapter } from '~/components/AutoComplete';
 import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import useAuth from '~/contexts/auth';
 import useToast from '~/hooks/useToast';
 import account from '~/services/account';
-import specialtyService from '~/services/specialty';
+import autocomplete from '~/services/autocomplete';
 
 import schema from './schema';
 import { Container } from './styles';
@@ -19,7 +19,8 @@ const Account = () => {
   const { sendToast } = useToast();
   const [seconds, setSeconds] = useState(0);
   const [sendingCode, setSendingCode] = useState(false);
-  const [specialties, setSpecialties] = useState([]);
+  const [specialties, setSpecialties] = useState(user.specialties || []);
+
   const formik = useFormik({
     validationSchema: schema,
     onSubmit: handleSubmit,
@@ -31,7 +32,7 @@ const Account = () => {
       confirmationCode: '',
       password: '',
       confirmPassword: '',
-      specialtyId: user.specialty?.id || '',
+      specialties: user.specialties.map(({ id }) => id) || [],
       imageUrl: user.imageUrl,
     },
   });
@@ -83,13 +84,6 @@ const Account = () => {
       setSendingCode(false);
     }
   }
-
-  useEffect(() => {
-    specialtyService
-      .listAll()
-      .then((response) => setSpecialties(response.data))
-      .catch(() => toast.error('Unable to list specialties'));
-  }, []);
 
   return (
     <Card body>
@@ -176,29 +170,17 @@ const Account = () => {
             </Col>
           </Row>
           <Form.Group className="mt-2">
-            <Form.Label>Specialty</Form.Label>
-            <Form.Control
-              as="select"
-              placeholder="Speciality"
-              name="specialtyId"
-              value={formik.values.specialtyId}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={
-                formik.touched.specialtyId && formik.errors.specialtyId
-              }
-              isValid={formik.touched.specialtyId && !formik.errors.specialtyId}
-            >
-              <option value="">Select</option>
-              {specialties.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.specialtyId}
-            </Form.Control.Feedback>
+            <AutoCompleteFormikAdapter
+              label="Specialties"
+              name="specialties"
+              formik={formik}
+              itemKey="id"
+              textField="name"
+              onFilter={autocomplete.specialties}
+              value={specialties}
+              onChange={setSpecialties}
+              multiple
+            />
           </Form.Group>
           <Row>
             <Form.Group as={Col} md="6">

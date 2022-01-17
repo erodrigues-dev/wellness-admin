@@ -23,7 +23,7 @@ function List({
             <th>Name</th>
             <th>E-mail</th>
             <th>Profile</th>
-            <th>Specialty</th>
+            <th>Specialties</th>
             <th>Created At</th>
           </tr>
         </thead>
@@ -60,7 +60,9 @@ function List({
               <td>{item.name}</td>
               <td>{item.email}</td>
               <td>{item.profile.name}</td>
-              <td>{item.specialty?.name || '-'}</td>
+              <td>
+                {item.specialties.map((spec) => spec.name).join(', ') || '-'}
+              </td>
               <td>{dateHelper.formatToList(item.createdAt)}</td>
             </tr>
           ))}

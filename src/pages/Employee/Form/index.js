@@ -8,17 +8,18 @@ import AvatarUpload from '~/components/AvatarUpload';
 import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
 import useToast from '~/hooks/useToast';
+import autocomplete from '~/services/autocomplete';
 import * as employeeService from '~/services/employee';
 import * as profileService from '~/services/profile';
-import * as specialtyService from '~/services/specialty';
 
+import { AutoCompleteFormikAdapter } from '../../../components/AutoComplete';
 import schema from './schema';
 
 const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
   const { sendToast } = useToast();
   const [file, setFile] = useState(null);
   const [profiles, setProfiles] = useState([]);
-  const [specialties, setSpecialties] = useState([]);
+  const [specialties, setSpecialties] = useState(employee?.specialties || []);
 
   const formik = useFormik({
     validationSchema: schema,
@@ -30,7 +31,7 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
       phone: employee?.phone ?? '',
       imageUrl: employee?.imageUrl ?? '',
       profileId: employee?.profile.id ?? '',
-      specialtyId: employee?.specialty?.id ?? '',
+      specialties: employee?.specialties.map(({ id }) => id) ?? [],
     },
   });
 
@@ -44,22 +45,9 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
     }
   }, [sendToast]);
 
-  const listSpecialties = useCallback(async () => {
-    try {
-      const { data } = await specialtyService.listAll();
-      setSpecialties(data);
-    } catch (error) {
-      sendToast('Unable to list specialties', false);
-    }
-  }, [sendToast]);
-
   useEffect(() => {
     listProfiles();
   }, [listProfiles]);
-
-  useEffect(() => {
-    listSpecialties();
-  }, [listSpecialties]);
 
   async function handleSubmit(data) {
     if (display) return;
@@ -166,31 +154,18 @@ const ModalForm = ({ title, setClose, employee, reloadEmployees, display }) => {
               {formik.errors.profileId}
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group>
-            <Form.Label>Specialty</Form.Label>
-            <Form.Control
-              as="select"
-              name="specialtyId"
-              value={formik.values.specialtyId}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              isInvalid={
-                formik.touched.specialtyId && formik.errors.specialtyId
-              }
-              isValid={formik.touched.specialtyId && !formik.errors.specialtyId}
-              disabled={display}
-            >
-              <option value="">{display ? '-' : 'Select an option'}</option>
-              {specialties.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
-            </Form.Control>
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.specialtyId}
-            </Form.Control.Feedback>
-          </Form.Group>
+          <AutoCompleteFormikAdapter
+            label="Specialties"
+            name="specialties"
+            formik={formik}
+            itemKey="id"
+            textField="name"
+            onFilter={autocomplete.specialties}
+            value={specialties}
+            onChange={setSpecialties}
+            disabled={display}
+            multiple
+          />
         </div>
         <div className="buttons">
           <Form.Row className="d-flex justify-content-end">

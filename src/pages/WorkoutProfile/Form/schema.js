@@ -2,7 +2,9 @@ import * as yup from 'yup';
 
 export const initialValues = {
   id: '',
+  type: '',
   customerId: '',
+  teamGroupId: '',
   age: '',
   height: '',
   weight: '',
@@ -15,14 +17,30 @@ export const initialValues = {
 };
 
 export const validationSchema = yup.object({
-  customerId: yup.number().required().label('Customer'),
+  type: yup.string().required(),
+  teamGroupId: yup
+    .string()
+    .when('type', {
+      is: 'team-group',
+      then: yup.string().required(),
+      otherwise: yup.string().nullable(),
+    })
+    .label('Team/Group'),
+  customerId: yup
+    .string()
+    .when('type', {
+      is: 'customer',
+      then: yup.string().required(),
+      otherwise: yup.string().nullable(),
+    })
+    .label('Customer'),
   age: yup.number().min(1),
   height: yup.string().max(10),
   weight: yup.number(),
   goal: yup.string().max(60),
-  test1: yup.string().max(60),
-  test2: yup.string().max(60),
-  injuriesLimitations: yup.string().max(60),
+  test1: yup.string().max(1200),
+  test2: yup.string().max(1200),
+  injuriesLimitations: yup.string().max(1200),
   experienceLevel: yup.string().max(60),
   notes: yup.string(),
 });

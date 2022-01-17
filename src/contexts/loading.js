@@ -17,7 +17,7 @@ export const LoadingProvider = ({ children }) => {
   const loadingInterceptor = useCallback(() => {
     api.interceptors.request.use(
       (req) => {
-        setShow(true);
+        if (!req.disableGlobalLoading) setShow(true);
         return req;
       },
       (error) => {

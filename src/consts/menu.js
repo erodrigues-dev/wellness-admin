@@ -5,6 +5,7 @@ import {
   FiCalendar,
   FiShoppingCart,
   FiBell,
+  FiUser,
 } from 'react-icons/fi';
 import { GiWeightLiftingUp } from 'react-icons/gi';
 
@@ -20,8 +21,14 @@ export const MENU = [
   {
     title: 'Customers',
     path: '/customers',
-    Icon: FiUsers,
+    Icon: FiUser,
     functionality: FUNCTIONALITIES.customers.list,
+  },
+  {
+    title: 'Team/Groups',
+    path: '/team-groups',
+    Icon: FiUsers,
+    functionality: FUNCTIONALITIES.teamGroup.list,
   },
   {
     title: 'Orders',
