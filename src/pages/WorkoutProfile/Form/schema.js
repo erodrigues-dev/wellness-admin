@@ -38,9 +38,9 @@ export const validationSchema = yup.object({
   height: yup.string().max(10),
   weight: yup.number(),
   goal: yup.string().max(60),
-  test1: yup.string().max(60),
-  test2: yup.string().max(60),
-  injuriesLimitations: yup.string().max(60),
+  test1: yup.string().max(1200),
+  test2: yup.string().max(1200),
+  injuriesLimitations: yup.string().max(1200),
   experienceLevel: yup.string().max(60),
   notes: yup.string(),
 });

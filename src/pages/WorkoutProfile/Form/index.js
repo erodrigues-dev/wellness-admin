@@ -240,12 +240,14 @@ export function FormWorkoutProfile({
             <Form.Control
               type="text"
               name="test1"
+              as="textarea"
+              rows={3}
               value={formik.values.test1}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.test1 && formik.errors.test1}
               isValid={formik.touched.test1 && !formik.errors.test1}
-              maxLength={60}
+              maxLength={1200}
               disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
@@ -258,12 +260,14 @@ export function FormWorkoutProfile({
             <Form.Control
               type="text"
               name="test2"
+              as="textarea"
+              rows={3}
               value={formik.values.test2}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
               isInvalid={formik.touched.test2 && formik.errors.test2}
               isValid={formik.touched.test2 && !formik.errors.test2}
-              maxLength={60}
+              maxLength={1200}
               disabled={isDisplay}
             />
             <Form.Control.Feedback type="invalid">
@@ -277,6 +281,8 @@ export function FormWorkoutProfile({
           <Form.Control
             type="text"
             name="injuriesLimitations"
+            as="textarea"
+            rows={2}
             value={formik.values.injuriesLimitations}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -288,7 +294,7 @@ export function FormWorkoutProfile({
               formik.touched.injuriesLimitations &&
               !formik.errors.injuriesLimitations
             }
-            maxLength={60}
+            maxLength={1200}
             disabled={isDisplay}
           />
           <Form.Control.Feedback type="invalid">
