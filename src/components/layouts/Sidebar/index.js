@@ -27,7 +27,7 @@ const Sidebar = ({ open, handleClose }) => {
   const settingsItems = menu.filter((item) => item.subgroup === 'settings');
 
   const isActive = (path) => {
-    return matchPath(pathname, { path });
+    return matchPath(pathname, { path, exact: true });
   };
 
   function handleRetract() {
