@@ -6,24 +6,20 @@ import styled from 'styled-components';
 
 import calendarService from '~/services/calendar';
 
+import { MainSchedulerContext } from './Context';
+import { CustomHeader } from './CustomHeader';
 import { settings } from './settings';
 
 export function MainScheduler() {
-  const [resources, setResources] = useState([]);
+  const [calendars, setCalendars] = useState([]);
+  const [selectedCalendars, setSelectedCalendars] = useState([]);
   const contentRef = useRef(null);
 
   const fetchCalendars = useCallback(async () => {
     try {
       const { data } = await calendarService.index({});
-      setResources([
-        {
-          name: 'Calendars',
-          data,
-          field: 'calendarId',
-          valueField: 'id',
-          textField: 'name',
-        },
-      ]);
+      setCalendars(data);
+      setSelectedCalendars(data);
     } catch (error) {
       toast.error('Unable to load calendars');
     }
@@ -39,26 +35,43 @@ export function MainScheduler() {
       <Content
         ref={contentRef}
         contentWidth={contentRef.current?.clientWidth}
-        schedulerWidth={resources[0]?.data.length * settings.calendarMinWidth}
+        schedulerWidth={selectedCalendars.length * settings.calendarMinWidth}
       >
-        <Scheduler
-          height={contentRef.current?.clientHeight - 20 || 600}
-          group={{
-            resources: ['Calendars'],
-            orientation: 'horizontal',
+        <MainSchedulerContext.Provider
+          value={{
+            calendars,
+            selectedCalendars,
+            setSelectedCalendars,
           }}
-          resources={resources}
-          data={[]}
         >
-          <DayView
-            startTime={settings.startTime}
-            endTime={settings.endTime}
-            workDayStart={settings.workDayStart}
-            workDayEnd={settings.workDayEnd}
-            slotDivisions={settings.slotDivisions}
-            slotDuration={settings.slotDuration}
-          />
-        </Scheduler>
+          <Scheduler
+            height={contentRef.current?.clientHeight - 20 || 600}
+            group={{
+              resources: ['Calendars'],
+              orientation: 'horizontal',
+            }}
+            resources={[
+              {
+                name: 'Calendars',
+                data: selectedCalendars,
+                field: 'calendarId',
+                valueField: 'id',
+                textField: 'name',
+              },
+            ]}
+            data={[]}
+            header={CustomHeader}
+          >
+            <DayView
+              startTime={settings.startTime}
+              endTime={settings.endTime}
+              workDayStart={settings.workDayStart}
+              workDayEnd={settings.workDayEnd}
+              slotDivisions={settings.slotDivisions}
+              slotDuration={settings.slotDuration}
+            />
+          </Scheduler>
+        </MainSchedulerContext.Provider>
       </Content>
     </Container>
   );
@@ -75,6 +88,10 @@ const Content = styled.div`
 
   .k-scheduler {
     width: ${(props) => props.contentWidth}px;
+  }
+
+  .k-scheduler-toolbar span.k-datepicker {
+    width: auto;
   }
 
   // set fixed times column on scroll horizontal
