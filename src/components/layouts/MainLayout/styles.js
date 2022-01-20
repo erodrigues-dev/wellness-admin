@@ -19,6 +19,8 @@ export const Content = styled.div`
   flex: 1;
   padding: 24px 16px 0;
   margin-top: 60px;
+  display: flex;
+  flex-direction: column;
 `;
 
 export const Footer = styled.footer`
