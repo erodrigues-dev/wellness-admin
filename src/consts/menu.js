@@ -13,6 +13,12 @@ import { FUNCTIONALITIES } from './functionalities';
 
 export const MENU = [
   {
+    title: 'Scheduler',
+    path: '/',
+    Icon: FiCalendar,
+    functionality: FUNCTIONALITIES.appointments.list,
+  },
+  {
     title: 'Appointments',
     path: '/appointments',
     Icon: FiCalendar,
