@@ -7,6 +7,7 @@ export const initialValues = {
   minHoursToCancel: 12,
   maxDaysInFuture: 365,
   maxEntryPerSlot: 1,
+  activities: [],
 };
 
 export const validationSchema = yup.object({
@@ -16,4 +17,5 @@ export const validationSchema = yup.object({
   minHoursToCancel: yup.number().min(1).required().label('this'),
   maxDaysInFuture: yup.number().min(1).required().label('this'),
   maxEntryPerSlot: yup.number().min(1).required().label('this'),
+  activities: yup.array(yup.number()).min(1),
 });

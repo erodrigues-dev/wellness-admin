@@ -8,14 +8,17 @@ import ButtonLoading from '~/components/ButtonLoading';
 import Modal from '~/components/Modal';
 import masks from '~/helpers/masks';
 import ModalCategory from '~/pages/Category/Modal';
+import autocomplete from '~/services/autocomplete';
 import service from '~/services/calendar';
 import categoryService from '~/services/category';
 
+import { AutoCompleteFormikAdapter } from '../../../components/AutoComplete';
 import { initialValues, validationSchema } from './schema';
 
 export function CalendarForm({ onClose, action, model }) {
   const [categories, setCategories] = useState([]);
   const [addCategory, setAddCategory] = useState(false);
+  const [activities, setActivities] = useState([]);
 
   const isDisplay = action === 'display';
 
@@ -29,6 +32,25 @@ export function CalendarForm({ onClose, action, model }) {
     const { data } = await categoryService.listAll({ type: 'calendar' });
     setCategories(data);
   }, []);
+
+  const fetchData = useCallback(async () => {
+    try {
+      if (!model?.id) return;
+      const { data } = await service.get(model.id);
+      setValues({
+        name: data.name,
+        categoryId: data.category.id,
+        minHoursToSchedule: data.minHoursToSchedule,
+        minHoursToCancel: data.minHoursToCancel,
+        maxDaysInFuture: data.maxDaysInFuture,
+        maxEntryPerSlot: data.maxEntryPerSlot,
+        activities: data.activities.map((item) => item.id),
+      });
+      setActivities(data.activities);
+    } catch (error) {
+      toast.error('Unable to load calendar');
+    }
+  }, [model, setValues]);
 
   async function handleSubmit(values) {
     try {
@@ -49,17 +71,8 @@ export function CalendarForm({ onClose, action, model }) {
   }
 
   useEffect(() => {
-    if (model) {
-      setValues({
-        name: model.name,
-        categoryId: model.category.id,
-        minHoursToSchedule: model.minHoursToSchedule,
-        minHoursToCancel: model.minHoursToCancel,
-        maxDaysInFuture: model.maxDaysInFuture,
-        maxEntryPerSlot: model.maxEntryPerSlot,
-      });
-    }
-  }, [model, setValues]);
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
     fetchCategories();
@@ -115,6 +128,19 @@ export function CalendarForm({ onClose, action, model }) {
             </Form.Control.Feedback>
           </InputGroup>
         </Form.Group>
+
+        <AutoCompleteFormikAdapter
+          label="Activities"
+          name="activities"
+          formik={formik}
+          itemKey="id"
+          textField="name"
+          onFilter={autocomplete.activities}
+          onChange={setActivities}
+          value={activities}
+          disabled={isDisplay}
+          multiple
+        />
 
         <Row>
           <Form.Group as={Col}>

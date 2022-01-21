@@ -28,9 +28,17 @@ export const specialties = (q) => {
   });
 };
 
+export const activities = (q) => {
+  return api.get('autocomplete/activities', {
+    params: { q },
+    disableGlobalLoading: true,
+  });
+};
+
 export default {
   employees,
   customers,
   teamGroups,
   specialties,
+  activities,
 };
