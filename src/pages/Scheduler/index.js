@@ -56,13 +56,11 @@ export function MainScheduler() {
         setEntries(data.map(mapToDataItem));
       }
     } catch (error) {
-      console.log(error);
       toast.error('Unable to list scheduler data');
     }
   }, [selectedCalendars, selectedDate]);
 
   const handleDateChange = useCallback(({ value }) => {
-    console.log('change data', new Date(value));
     setSelectedDate(new Date(value));
   }, []);
 
