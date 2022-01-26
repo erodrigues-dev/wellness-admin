@@ -1,6 +1,6 @@
 # TODO
 
-## Package
+## Packages
 
 - [ ] remover react-spring
 - [ ] remover fullcalendar
@@ -12,3 +12,11 @@
 # Application
 
 - [ ] remover activity scheduler
+
+# Scheduler
+
+- [ ] customizar "slot"
+  - [ ] onClick: abrir modal create
+  - [ ] onDrag: abrir modal de block (verificar se possivel)
+- [ ] customizar "item"
+  - [ ] onClick: abrir modal de edição
