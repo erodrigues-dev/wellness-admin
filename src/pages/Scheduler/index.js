@@ -6,9 +6,9 @@ import styled from 'styled-components';
 
 import calendarService from '~/services/calendar';
 
-import { MainSchedulerContext } from './Context';
-import { CustomHeader } from './CustomHeader';
-import { settings } from './settings';
+import { CustomHeader } from './components/CustomHeader';
+import { MainSchedulerContext } from './data/Context';
+import { settings } from './data/settings';
 
 export function MainScheduler() {
   const [calendars, setCalendars] = useState([]);

@@ -3,8 +3,8 @@ import React, { useContext } from 'react';
 import { ToolbarItem } from '@progress/kendo-react-buttons';
 import { SchedulerHeader } from '@progress/kendo-react-scheduler';
 
+import { MainSchedulerContext } from '../data/Context';
 import { CalendarSelect } from './CalendarSelect';
-import { MainSchedulerContext } from './Context';
 
 export function CustomHeader({ children }) {
   const [Seletor, Datepicker, ...Others] = children;
