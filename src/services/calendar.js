@@ -2,13 +2,13 @@ import { config } from '~/helpers/config';
 
 import api from './api';
 
-const { limit } = config;
+const { pageLimit } = config;
 
-function index({ page, filters }) {
+function index({ page, filters } = {}) {
   return api.get('/calendars', {
     params: {
       page,
-      limit,
+      limit: pageLimit,
       ...filters,
     },
   });
