@@ -9,6 +9,7 @@ import calendarService from '~/services/calendar';
 import * as calendarEntryService from '~/services/calendar-entry';
 
 import { CustomHeader } from './components/CustomHeader';
+import { CustomItem } from './components/CustomItem';
 import { SchedulerContext } from './data/Context';
 import { settings } from './data/settings';
 
@@ -77,42 +78,42 @@ export function MainScheduler() {
       <h3>Scheduler</h3>
       {calendars.length === 0 && <p>No calendars found.</p>}
       {calendars.length > 0 && (
-      <Content
-        ref={contentRef}
-        contentWidth={contentRef.current?.clientWidth}
-        schedulerWidth={selectedCalendars.length * settings.calendarMinWidth}
-      >
-        <SchedulerContext.Provider
-          value={{
-            calendars,
-            selectedCalendars,
-            setSelectedCalendars,
-          }}
+        <Content
+          ref={contentRef}
+          contentWidth={contentRef.current?.clientWidth}
+          schedulerWidth={selectedCalendars.length * settings.calendarMinWidth}
         >
-          <Scheduler
-            height={contentRef.current?.clientHeight - 20 || 600}
+          <SchedulerContext.Provider
+            value={{
+              calendars,
+              selectedCalendars,
+              setSelectedCalendars,
+            }}
+          >
+            <Scheduler
+              height={contentRef.current?.clientHeight - 20 || 600}
               group={settings.group}
               resources={[{ ...settings.resources, data: selectedCalendars }]}
-            data={entries}
-            header={CustomHeader}
-            onDateChange={handleDateChange}
-            date={selectedDate}
+              data={entries}
+              header={CustomHeader}
+              onDateChange={handleDateChange}
+              date={selectedDate}
               item={CustomItem}
               editable={{
                 remove: true,
               }}
-          >
-            <DayView
-              startTime={settings.startTime}
-              endTime={settings.endTime}
-              workDayStart={settings.workDayStart}
-              workDayEnd={settings.workDayEnd}
-              slotDivisions={settings.slotDivisions}
-              slotDuration={settings.slotDuration}
-            />
-          </Scheduler>
-        </SchedulerContext.Provider>
-      </Content>
+            >
+              <DayView
+                startTime={settings.startTime}
+                endTime={settings.endTime}
+                workDayStart={settings.workDayStart}
+                workDayEnd={settings.workDayEnd}
+                slotDivisions={settings.slotDivisions}
+                slotDuration={settings.slotDuration}
+              />
+            </Scheduler>
+          </SchedulerContext.Provider>
+        </Content>
       )}
     </Container>
   );
