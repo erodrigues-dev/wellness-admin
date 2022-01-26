@@ -37,7 +37,8 @@ export function MainScheduler() {
 
   const fetchCalendars = useCallback(async () => {
     try {
-      const { data } = await calendarService.index({});
+      const { data } = await calendarService.index();
+      if (data.length === 0) toast.error('Not exist calendars');
       setCalendars(data);
       setSelectedCalendars(data);
     } catch (error) {
@@ -76,6 +77,8 @@ export function MainScheduler() {
   return (
     <Container>
       <h3>Scheduler</h3>
+      {calendars.length === 0 && <p>No calendars found.</p>}
+      {calendars.length > 0 && (
       <Content
         ref={contentRef}
         contentWidth={contentRef.current?.clientWidth}
@@ -112,6 +115,7 @@ export function MainScheduler() {
           </Scheduler>
         </SchedulerContext.Provider>
       </Content>
+      )}
     </Container>
   );
 }
