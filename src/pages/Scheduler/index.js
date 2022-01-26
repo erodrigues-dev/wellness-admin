@@ -21,6 +21,20 @@ export function MainScheduler() {
 
   const contentRef = useRef(null);
 
+  const mapToDataItem = (data) => {
+    const title = `${data.customer.name} (${data.activity.name})`;
+    const start = new Date(data.dateStart);
+    const end = new Date(data.dateEnd);
+
+    return {
+      id: data.id,
+      title,
+      start,
+      end,
+      calendarId: data.calendarId,
+    };
+  };
+
   const fetchCalendars = useCallback(async () => {
     try {
       const { data } = await calendarService.index({});
@@ -38,15 +52,7 @@ export function MainScheduler() {
           calendars: selectedCalendars.map((item) => item.id),
           date: selectedDate,
         });
-        setEntries(
-          data.map((entry) => ({
-            id: entry.id,
-            title: entry.id,
-            start: new Date(entry.dateStart),
-            end: new Date(entry.dateEnd),
-            calendarId: entry.calendarId,
-          }))
-        );
+        setEntries(data.map(mapToDataItem));
       }
     } catch (error) {
       console.log(error);
