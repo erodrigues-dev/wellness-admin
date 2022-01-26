@@ -4,7 +4,9 @@ import { toast } from 'react-toastify';
 import { Scheduler, DayView } from '@progress/kendo-react-scheduler';
 import styled from 'styled-components';
 
+import { clearTime } from '~/helpers/date';
 import calendarService from '~/services/calendar';
+import * as calendarEntryService from '~/services/calendar-entry';
 
 import { CustomHeader } from './components/CustomHeader';
 import { SchedulerContext } from './data/Context';
@@ -13,6 +15,10 @@ import { settings } from './data/settings';
 export function MainScheduler() {
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendars, setSelectedCalendars] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(clearTime(new Date()));
+
+  const [entries, setEntries] = useState([]);
+
   const contentRef = useRef(null);
 
   const fetchCalendars = useCallback(async () => {
@@ -25,9 +31,41 @@ export function MainScheduler() {
     }
   }, []);
 
+  const fetchEntries = useCallback(async () => {
+    try {
+      if (selectedCalendars.length > 0 && selectedDate) {
+        const data = await calendarEntryService.list({
+          calendars: selectedCalendars.map((item) => item.id),
+          date: selectedDate,
+        });
+        setEntries(
+          data.map((entry) => ({
+            id: entry.id,
+            title: entry.id,
+            start: new Date(entry.dateStart),
+            end: new Date(entry.dateEnd),
+            calendarId: entry.calendarId,
+          }))
+        );
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error('Unable to list scheduler data');
+    }
+  }, [selectedCalendars, selectedDate]);
+
+  const handleDateChange = useCallback(({ value }) => {
+    console.log('change data', new Date(value));
+    setSelectedDate(new Date(value));
+  }, []);
+
   useEffect(() => {
     fetchCalendars();
   }, [fetchCalendars]);
+
+  useEffect(() => {
+    fetchEntries();
+  }, [fetchEntries]);
 
   return (
     <Container>
@@ -59,8 +97,10 @@ export function MainScheduler() {
                 textField: 'name',
               },
             ]}
-            data={[]}
+            data={entries}
             header={CustomHeader}
+            onDateChange={handleDateChange}
+            date={selectedDate}
           >
             <DayView
               startTime={settings.startTime}
