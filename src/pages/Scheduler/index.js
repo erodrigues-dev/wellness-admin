@@ -7,7 +7,7 @@ import styled from 'styled-components';
 import calendarService from '~/services/calendar';
 
 import { CustomHeader } from './components/CustomHeader';
-import { MainSchedulerContext } from './data/Context';
+import { SchedulerContext } from './data/Context';
 import { settings } from './data/settings';
 
 export function MainScheduler() {
@@ -37,7 +37,7 @@ export function MainScheduler() {
         contentWidth={contentRef.current?.clientWidth}
         schedulerWidth={selectedCalendars.length * settings.calendarMinWidth}
       >
-        <MainSchedulerContext.Provider
+        <SchedulerContext.Provider
           value={{
             calendars,
             selectedCalendars,
@@ -71,7 +71,7 @@ export function MainScheduler() {
               slotDuration={settings.slotDuration}
             />
           </Scheduler>
-        </MainSchedulerContext.Provider>
+        </SchedulerContext.Provider>
       </Content>
     </Container>
   );

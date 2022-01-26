@@ -1,3 +1,3 @@
 const { createContext } = require('react');
 
-export const MainSchedulerContext = createContext();
+export const SchedulerContext = createContext();
