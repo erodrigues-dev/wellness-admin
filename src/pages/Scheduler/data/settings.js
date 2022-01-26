@@ -6,4 +6,15 @@ export const settings = {
   slotDivisions: 4,
   slotDuration: 60,
   calendarMinWidth: 260,
+  group: {
+    resources: ['Calendars'],
+    orientation: 'horizontal',
+  },
+  resources: {
+    name: 'Calendars',
+    data: [],
+    field: 'calendarId',
+    valueField: 'id',
+    textField: 'name',
+  },
 };

@@ -90,23 +90,16 @@ export function MainScheduler() {
         >
           <Scheduler
             height={contentRef.current?.clientHeight - 20 || 600}
-            group={{
-              resources: ['Calendars'],
-              orientation: 'horizontal',
-            }}
-            resources={[
-              {
-                name: 'Calendars',
-                data: selectedCalendars,
-                field: 'calendarId',
-                valueField: 'id',
-                textField: 'name',
-              },
-            ]}
+              group={settings.group}
+              resources={[{ ...settings.resources, data: selectedCalendars }]}
             data={entries}
             header={CustomHeader}
             onDateChange={handleDateChange}
             date={selectedDate}
+              item={CustomItem}
+              editable={{
+                remove: true,
+              }}
           >
             <DayView
               startTime={settings.startTime}
