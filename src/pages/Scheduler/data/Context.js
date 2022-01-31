@@ -20,6 +20,7 @@ export function SchedulerProvider({ children }) {
   const [selectedCalendars, setSelectedCalendars] = useState([]);
   const [selectedDate, setSelectedDate] = useState(clearTime(new Date()));
   const [entries, setEntries] = useState([]);
+  const [modal, setModal] = useState({});
 
   const mapToDataItem = (data) => {
     const title = `${data.customer.name} (${data.activity.name})`;
@@ -75,8 +76,10 @@ export function SchedulerProvider({ children }) {
         selectedCalendars,
         entries,
         settings,
+        modal,
         setSelectedCalendars,
         setSelectedDate,
+        setModal,
       }}
     >
       {children}
