@@ -1,77 +1,39 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { toast } from 'react-toastify';
+import React, { useCallback, useRef } from 'react';
 
 import { Scheduler, DayView } from '@progress/kendo-react-scheduler';
 import styled from 'styled-components';
 
-import { clearTime } from '~/helpers/date';
-import calendarService from '~/services/calendar';
-import * as calendarEntryService from '~/services/calendar-entry';
-
 import { CustomHeader } from './components/CustomHeader';
 import { CustomItem } from './components/CustomItem';
-import { SchedulerContext } from './data/Context';
-import { settings } from './data/settings';
+import { CustomSlot } from './components/CustomSlot';
+import { useSchedulerContext, SchedulerProvider } from './data/Context';
 
-export function MainScheduler() {
-  const [calendars, setCalendars] = useState([]);
-  const [selectedCalendars, setSelectedCalendars] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(clearTime(new Date()));
+export function SchedulerPage() {
+  return (
+    <SchedulerProvider>
+      <CalendarScheduler />
+    </SchedulerProvider>
+  );
+}
 
-  const [entries, setEntries] = useState([]);
+export function CalendarScheduler() {
+  const {
+    calendars,
+    selectedCalendars,
+    entries,
+    selectedDate,
+    setSelectedDate,
+    settings,
+  } = useSchedulerContext();
 
   const contentRef = useRef(null);
 
-  const mapToDataItem = (data) => {
-    const title = `${data.customer.name} (${data.activity.name})`;
-    const start = new Date(data.dateStart);
-    const end = new Date(data.dateEnd);
-
-    return {
-      id: data.id,
-      title,
-      start,
-      end,
-      calendarId: data.calendarId,
-    };
-  };
-
-  const fetchCalendars = useCallback(async () => {
-    try {
-      const { data } = await calendarService.index();
-      if (data.length === 0) toast.error('Not exist calendars');
-      setCalendars(data);
-      setSelectedCalendars(data);
-    } catch (error) {
-      toast.error('Unable to load calendars');
-    }
-  }, []);
-
-  const fetchEntries = useCallback(async () => {
-    try {
-      if (selectedCalendars.length > 0 && selectedDate) {
-        const data = await calendarEntryService.list({
-          calendars: selectedCalendars.map((item) => item.id),
-          date: selectedDate,
-        });
-        setEntries(data.map(mapToDataItem));
-      }
-    } catch (error) {
-      toast.error('Unable to list scheduler data');
-    }
-  }, [selectedCalendars, selectedDate]);
-
-  const handleDateChange = useCallback(({ value }) => {
-    setSelectedDate(new Date(value));
-  }, []);
-
-  useEffect(() => {
-    fetchCalendars();
-  }, [fetchCalendars]);
-
-  useEffect(() => {
-    fetchEntries();
-  }, [fetchEntries]);
+  const handleDateChange = useCallback(
+    ({ value }) => {
+      setSelectedDate(new Date(value));
+    },
+    [setSelectedDate]
+  );
 
   return (
     <Container>
@@ -83,36 +45,29 @@ export function MainScheduler() {
           contentWidth={contentRef.current?.clientWidth}
           schedulerWidth={selectedCalendars.length * settings.calendarMinWidth}
         >
-          <SchedulerContext.Provider
-            value={{
-              calendars,
-              selectedCalendars,
-              setSelectedCalendars,
+          <Scheduler
+            height={contentRef.current?.clientHeight - 20 || 600}
+            group={settings.group}
+            resources={[{ ...settings.resources, data: selectedCalendars }]}
+            data={entries}
+            header={CustomHeader}
+            onDateChange={handleDateChange}
+            date={selectedDate}
+            item={CustomItem}
+            slot={CustomSlot}
+            editable={{
+              remove: true,
             }}
           >
-            <Scheduler
-              height={contentRef.current?.clientHeight - 20 || 600}
-              group={settings.group}
-              resources={[{ ...settings.resources, data: selectedCalendars }]}
-              data={entries}
-              header={CustomHeader}
-              onDateChange={handleDateChange}
-              date={selectedDate}
-              item={CustomItem}
-              editable={{
-                remove: true,
-              }}
-            >
-              <DayView
-                startTime={settings.startTime}
-                endTime={settings.endTime}
-                workDayStart={settings.workDayStart}
-                workDayEnd={settings.workDayEnd}
-                slotDivisions={settings.slotDivisions}
-                slotDuration={settings.slotDuration}
-              />
-            </Scheduler>
-          </SchedulerContext.Provider>
+            <DayView
+              startTime={settings.startTime}
+              endTime={settings.endTime}
+              workDayStart={settings.workDayStart}
+              workDayEnd={settings.workDayEnd}
+              slotDivisions={settings.slotDivisions}
+              slotDuration={settings.slotDuration}
+            />
+          </Scheduler>
         </Content>
       )}
     </Container>

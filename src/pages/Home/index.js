@@ -1,14 +1,14 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 
-import { MainScheduler } from '../Scheduler';
+import { SchedulerPage } from '../Scheduler';
 
 const flex = { display: 'flex', flex: 1 };
 
 const Home = () => (
   <Card style={flex}>
     <Card.Body style={flex}>
-      <MainScheduler />
+      <SchedulerPage />
     </Card.Body>
   </Card>
 );
