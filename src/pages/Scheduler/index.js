@@ -3,6 +3,7 @@ import React, { useCallback, useRef } from 'react';
 import { Scheduler, DayView } from '@progress/kendo-react-scheduler';
 import styled from 'styled-components';
 
+import { AppointmentFormModal } from './components/AppointmentFormModal';
 import { CustomHeader } from './components/CustomHeader';
 import { CustomItem } from './components/CustomItem';
 import { CustomSlot } from './components/CustomSlot';
@@ -24,6 +25,7 @@ export function CalendarScheduler() {
     selectedDate,
     setSelectedDate,
     settings,
+    modal,
   } = useSchedulerContext();
 
   const contentRef = useRef(null);
@@ -68,6 +70,7 @@ export function CalendarScheduler() {
               slotDuration={settings.slotDuration}
             />
           </Scheduler>
+          <AppointmentFormModal />
         </Content>
       )}
     </Container>
