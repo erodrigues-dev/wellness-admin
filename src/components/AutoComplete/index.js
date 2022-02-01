@@ -24,6 +24,8 @@ export function AutoComplete({
   isValid,
   error,
   multiple = false,
+  appendToBody = false,
+  ...otherSettings
 }) {
   const appendToRef = useRef(null);
   const [data, setData] = useState({
@@ -91,9 +93,10 @@ export function AutoComplete({
         valid={isValid}
         disabled={disabled}
         filterable
+        {...otherSettings}
       />
       {isValid || <Error>{error}</Error>}
-      <div ref={appendToRef} />
+      {appendToBody || <div ref={appendToRef} />}
     </Form.Group>
   );
 }
