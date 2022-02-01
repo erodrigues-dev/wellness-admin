@@ -31,3 +31,14 @@ a {
 .column-actions {
   white-space: nowrap;
 }
+
+.k-popup {
+  .k-list-filter {
+    display: flex;
+    align-items: center;
+
+    .k-textbox {
+      width: 100%;
+    }
+  }
+}
