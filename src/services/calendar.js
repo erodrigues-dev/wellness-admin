@@ -30,10 +30,15 @@ function destroy(id) {
   return api.delete(`/calendars/${id}`);
 }
 
+function listActivities(calendarId) {
+  return api.get(`/calendars/${calendarId}/activities`);
+}
+
 export default {
   index,
   get,
   create,
   update,
   destroy,
+  listActivities,
 };
