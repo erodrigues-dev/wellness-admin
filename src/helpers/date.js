@@ -5,7 +5,10 @@ import {
   parseISO,
   startOfDay,
   parse,
+  addMinutes,
 } from 'date-fns';
+
+export { addMinutes };
 
 const TIMEZONE = /\((.*)\)/.exec(new Date().toString())[1];
 
