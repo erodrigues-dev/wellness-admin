@@ -3,7 +3,6 @@ import { CardDeck } from 'react-bootstrap';
 
 import styled from 'styled-components';
 
-import Appointments from './Appointments';
 import Discounts from './Discounts';
 import Orders from './Orders';
 import Waivers from './Waivers';
@@ -19,10 +18,6 @@ const Container = styled.div`
 const Cards = () => {
   return (
     <Container>
-      <CardDeck>
-        <Appointments />
-      </CardDeck>
-
       <CardDeck>
         <Waivers />
       </CardDeck>

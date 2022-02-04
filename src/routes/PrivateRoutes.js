@@ -8,8 +8,6 @@ import {
   Home,
   Account,
   Activity,
-  ActivitySchedule,
-  Appointments,
   Category,
   Customer,
   CustomerDashboard,
@@ -40,12 +38,6 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.activities.list}
           path="/activities"
           component={Activity}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.activities.createEventTimes}
-          path="/activities/:id/schedule"
-          component={ActivitySchedule}
         />
 
         <PrivateRoute
@@ -134,19 +126,6 @@ const PrivateRoutes = () => {
           functionality={FUNCTIONALITIES.orders.list}
           path="/orders/:id"
           component={Order}
-        />
-
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.appointments.list}
-          path="/appointments"
-          component={Appointments}
-        />
-        <PrivateRoute
-          exact
-          functionality={FUNCTIONALITIES.appointments.list}
-          path="/appointments/:id"
-          component={Appointments}
         />
 
         <PrivateRoute

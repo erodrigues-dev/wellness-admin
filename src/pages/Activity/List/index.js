@@ -1,7 +1,6 @@
 import React from 'react';
 import { Table } from 'react-bootstrap';
-import { FiEye, FiEdit, FiCalendar } from 'react-icons/fi';
-import { Link } from 'react-router-dom';
+import { FiEye, FiEdit } from 'react-icons/fi';
 
 import * as dateHelper from '~/helpers/date';
 import { currency } from '~/helpers/intl';
@@ -55,9 +54,6 @@ function List({ list, allowEdit, setOpenEdit, setOpenDisplay, setSelected }) {
                       title="Edit"
                       cursor="pointer"
                     />
-                    <Link to={`/activities/${item.id}/schedule`} title="Events">
-                      <FiCalendar size="18" />
-                    </Link>
                   </>
                 )}
               </td>

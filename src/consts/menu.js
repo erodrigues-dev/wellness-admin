@@ -19,12 +19,6 @@ export const MENU = [
     functionality: FUNCTIONALITIES.appointments.list,
   },
   {
-    title: 'Appointments',
-    path: '/appointments',
-    Icon: FiCalendar,
-    functionality: FUNCTIONALITIES.appointments.list,
-  },
-  {
     title: 'Customers',
     path: '/customers',
     Icon: FiUser,

@@ -1,8 +1,6 @@
 export { default as Home } from './Home';
 export { default as Account } from './Account';
 export { default as Activity } from './Activity';
-export { default as ActivitySchedule } from './Activity/Schedule';
-export { default as Appointments } from './Appointments';
 export { default as Category } from './Category';
 export { default as Customer } from './Customer';
 export { default as CustomerDashboard } from './Customer/Dashboard';
