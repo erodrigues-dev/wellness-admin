@@ -2,21 +2,18 @@ import React from 'react';
 
 import { SchedulerSlot } from '@progress/kendo-react-scheduler';
 
-import { useSchedulerContext } from '../data/Context';
+import { useAppointmentContext } from '../data/AppointmentContext';
 
 export function CustomSlot(props) {
-  const { setModal } = useSchedulerContext();
+  const { setData } = useAppointmentContext();
 
   const handleClick = () => {
     const calendar = props.group.resources[0];
     const { start, end } = props;
-    setModal({
-      isOpen: true,
-      data: {
-        calendar,
-        start,
-        end,
-      },
+    setData({
+      calendar,
+      start,
+      end,
     });
   };
 
