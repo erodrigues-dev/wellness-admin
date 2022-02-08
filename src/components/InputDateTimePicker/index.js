@@ -67,6 +67,13 @@ const InputDateTimePicker = ({
     setDateTime(date);
   };
 
+  const convertValueToTimeInput = (dateValue) => {
+    return {
+      hour: dateValue.getHours(),
+      minute: dateValue.getMinutes(),
+    };
+  };
+
   return (
     <Container>
       <InputGroup>
@@ -74,12 +81,13 @@ const InputDateTimePicker = ({
           name={name}
           onClick={handleToggle}
           value={formatedValue}
+          onChange={() => {}}
           onBlur={onBlur}
           isValid={isValid}
           isInvalid={isInvalid}
           placeholder="mm/dd/yyyy hh:mm"
         />
-        <InputGroup.Append>
+        <InputGroup.Append style={{ cursor: 'pointer' }}>
           {dateTime && (
             <InputGroup.Text onClick={handleClear}>
               <FiXCircle />
@@ -103,9 +111,10 @@ const InputDateTimePicker = ({
       )}
       {openTimePicker && (
         <TimePicker
-          value={dateTime || new Date()}
+          value={convertValueToTimeInput(dateTime || new Date())}
           onChange={handleChangeTimePicker}
           onClose={handleToggleTimePicker}
+          stepMinutes={15}
         />
       )}
     </Container>
