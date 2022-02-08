@@ -7,16 +7,23 @@ import { useFormik } from 'formik';
 
 import { AutoCompleteFormikAdapter } from '~/components/AutoComplete';
 import ButtonLoading from '~/components/ButtonLoading';
+import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import autocomplete from '~/services/autocomplete';
 
-import InputDateTimePicker from '../../../../components/InputDateTimePicker';
 import { useAppointmentContext } from '../../data/AppointmentContext';
 import { validationSchema, initialValues } from './schema';
 
 export function AppointmentFormModal() {
+  const { isOpen } = useAppointmentContext();
+
+  if (!isOpen) return null;
+
+  return <AppointmentFormComponent />;
+}
+
+function AppointmentFormComponent() {
   const {
-    isOpen,
     slotData,
     calendar,
     activities,
@@ -48,8 +55,6 @@ export function AppointmentFormModal() {
     });
   }, [slotData, setValues]);
 
-  if (!isOpen) return null;
-
   return (
     <Window
       title="Add appointment"
@@ -58,25 +63,20 @@ export function AppointmentFormModal() {
       onClose={handleClose}
     >
       <Form>
-        <pre>{JSON.stringify(formik.values, null, 2)}</pre>
+        <pre>values: {JSON.stringify(formik.values, null, 2)}</pre>
+        <pre>touched: {JSON.stringify(formik.touched, null, 2)}</pre>
+        <pre>errors: {JSON.stringify(formik.errors, null, 2)}</pre>
         <Input
           label="Calendar"
           name="calendar"
           inputOptions={{ disabled: true, defaultValue: calendar?.name }}
         />
 
-        <Form.Group>
-          <Form.Label>Start</Form.Label>
-          <InputDateTimePicker
-            name="start"
-            value={formik.values.start}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            isValid={Boolean(formik.touched.start && !formik.errors.start)}
-            isInvalid={Boolean(formik.touched.start && formik.errors.start)}
-            feedback={formik.errors.start}
-          />
-        </Form.Group>
+        <DateTimePickerFormikAdapter
+          formik={formik}
+          name="start"
+          label="Start"
+        />
 
         <Input
           name="duration"
