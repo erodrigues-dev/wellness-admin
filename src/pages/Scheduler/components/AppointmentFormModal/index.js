@@ -1,27 +1,30 @@
-import React, { useCallback, useState, useEffect } from 'react';
-import { Form, Row, Col, Button } from 'react-bootstrap';
-import { FaMoneyBill as AddPaymentIcon } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import React, { useEffect } from 'react';
+import { Form, Button } from 'react-bootstrap';
+// import { FaMoneyBill as AddPaymentIcon } from 'react-icons/fa';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
 
-import { formatToDateTime, addMinutes } from '~/helpers/date';
+import { AutoCompleteFormikAdapter } from '~/components/AutoComplete';
+import ButtonLoading from '~/components/ButtonLoading';
+import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import autocomplete from '~/services/autocomplete';
-import { listActivities } from '~/services/scheduler';
 
-import { AutoCompleteFormikAdapter } from '../../../../components/AutoComplete';
-import ButtonLoading from '../../../../components/ButtonLoading';
-import { useSchedulerContext } from '../../data/Context';
+import InputDateTimePicker from '../../../../components/InputDateTimePicker';
+import { useAppointmentContext } from '../../data/AppointmentContext';
 import { validationSchema, initialValues } from './schema';
 
 export function AppointmentFormModal() {
-  const { modal, setModal } = useSchedulerContext();
-  const [activities, setActivities] = useState([]);
-  const [end, setEnd] = useState(null);
-
-  const { data = {}, isOpen } = modal;
-  const { start, calendar } = data;
+  const {
+    isOpen,
+    slotData,
+    calendar,
+    activities,
+    selectedActivity,
+    handleChangeActivity,
+    handleClose,
+    handleSave,
+  } = useAppointmentContext();
 
   const formik = useFormik({
     initialValues,
@@ -29,39 +32,21 @@ export function AppointmentFormModal() {
     onSubmit: handleSubmit,
   });
 
-  function handleSubmit() {
-    const submitData = {
-      start,
-      end,
-      calendarId: calendar.id,
-      activityId: formik.values.activityId,
-      customerId: formik.values.customerId,
-    };
+  const { setValues } = formik;
 
-    console.log(submitData);
+  function handleSubmit(values) {
+    handleSave(values);
   }
-  const handleClose = () => setModal({});
-  const fetchActivities = useCallback(async (calendarId) => {
-    try {
-      const { data: response } = await listActivities(calendarId);
-      setActivities(response);
-    } catch (error) {
-      toast.error('Unable to list activities of calendar');
-    }
-  }, []);
-  const handleChangeActivity = useCallback(() => {
-    const { activityId } = formik.values;
-    const activity = activities.find((x) => x.id === Number(activityId));
-    setEnd(activity?.duration ? addMinutes(start, activity.duration) : null);
-  }, [formik.values, activities, start]);
 
   useEffect(() => {
-    if (calendar?.id) fetchActivities(calendar?.id);
-  }, [calendar, fetchActivities]);
+    handleChangeActivity(formik.values.activityId);
+  }, [formik.values.activityId, handleChangeActivity]);
 
   useEffect(() => {
-    handleChangeActivity();
-  }, [handleChangeActivity]);
+    setValues({
+      start: slotData?.start || '',
+    });
+  }, [slotData, setValues]);
 
   if (!isOpen) return null;
 
@@ -73,70 +58,87 @@ export function AppointmentFormModal() {
       onClose={handleClose}
     >
       <Form>
-        <Form.Group>
-          <Form.Label>Calendar</Form.Label>
-          <Form.Control disabled defaultValue={calendar?.name} />
-        </Form.Group>
-        <Row>
-          <Form.Group as={Col} md>
-            <Form.Label>Start</Form.Label>
-            <Form.Control disabled defaultValue={formatToDateTime(start)} />
-          </Form.Group>
-          <Form.Group as={Col} md>
-            <Form.Label>End</Form.Label>
-            <Form.Control disabled defaultValue={formatToDateTime(end)} />
-          </Form.Group>
-        </Row>
+        <pre>{JSON.stringify(formik.values, null, 2)}</pre>
+        <Input
+          label="Calendar"
+          name="calendar"
+          inputOptions={{ disabled: true, defaultValue: calendar?.name }}
+        />
 
         <Form.Group>
-          <Form.Label>Activity</Form.Label>
-          <Form.Control
-            as="select"
-            name="activityId"
-            value={formik.values.activityId}
+          <Form.Label>Start</Form.Label>
+          <InputDateTimePicker
+            name="start"
+            value={formik.values.start}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
-            isValid={formik.touched.activityId && !formik.errors.activityId}
-            isInvalid={formik.touched.activityId && formik.errors.activityId}
-          >
-            <option value="">Select</option>
-            {activities.map((activity) => (
-              <option key={activity.id} value={activity.id}>
-                {activity.name}
-              </option>
-            ))}
-          </Form.Control>
-          <Form.Control.Feedback type="invalid">
-            {formik.errors.activityId}
-          </Form.Control.Feedback>
+            isValid={Boolean(formik.touched.start && !formik.errors.start)}
+            isInvalid={Boolean(formik.touched.start && formik.errors.start)}
+            feedback={formik.errors.start}
+          />
         </Form.Group>
 
+        <Input
+          name="duration"
+          label="Duration (minutes)"
+          inputOptions={{
+            disabled: true,
+            defaultValue: selectedActivity?.duration || '',
+          }}
+        />
+
+        <InputFormikAdapter
+          formik={formik}
+          name="activityId"
+          label="Activity"
+          inputOptions={{
+            as: 'select',
+          }}
+        >
+          <option value="">Select</option>
+          {activities.map((activity) => (
+            <option key={activity.id} value={activity.id}>
+              {activity.name}
+            </option>
+          ))}
+        </InputFormikAdapter>
+
         <AutoCompleteFormikAdapter
+          formik={formik}
           name="customerId"
           label="Customer"
-          formik={formik}
           itemKey="id"
           textField="name"
           onFilter={autocomplete.customers}
           onChange={() => {}}
           appendToBody
         />
+
+        <InputFormikAdapter
+          formik={formik}
+          name="note"
+          label="Notes"
+          inputOptions={{
+            as: 'textarea',
+            rows: 3,
+          }}
+        />
       </Form>
 
-      <h6>Payment Details</h6>
+      {/* <h6>Payment Details</h6>
       <p>
         Paid with <strong>money</strong> on 20/02/22 9:33am order number:
         <u>012345</u>
-      </p>
+      </p> */}
 
       <WindowActionsBar>
         <Button variant="secondary" onClick={handleClose}>
           Cancel
         </Button>
-        <Button disabled>
+        {/* <Button disabled>
           <AddPaymentIcon className="mr-2" />
           Add Payment
-        </Button>
+        </Button> */}
         <ButtonLoading onClick={formik.handleSubmit}>Save</ButtonLoading>
       </WindowActionsBar>
     </Window>
