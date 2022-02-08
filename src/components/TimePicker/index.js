@@ -5,7 +5,7 @@ import TimeKeeper from 'react-timekeeper';
 
 import { Container } from './styles';
 
-const TimePicker = ({ value, onChange, onClose }) => {
+const TimePicker = ({ value, onChange, onClose, stepMinutes = 10 }) => {
   return (
     <Fit>
       <Container>
@@ -14,9 +14,9 @@ const TimePicker = ({ value, onChange, onClose }) => {
             switchToMinuteOnHourSelect
             time={value}
             onDoneClick={onClose}
-            coarseMinutes={10}
+            coarseMinutes={stepMinutes}
             forceCoarseMinutes
-            onChange={({ formatted12 }) => onChange(formatted12)}
+            onChange={onChange}
           />
         </OutsideClickHandler>
       </Container>
