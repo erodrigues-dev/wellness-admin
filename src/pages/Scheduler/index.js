@@ -9,13 +9,16 @@ import { AppointmentFormModal } from './components/AppointmentFormModal';
 import { CustomHeader } from './components/CustomHeader';
 import { CustomItem } from './components/CustomItem';
 import { CustomSlot } from './components/CustomSlot';
+import { AppointmentProvider } from './data/AppointmentContext';
 import { useSchedulerContext, SchedulerProvider } from './data/Context';
 import { Container, Content } from './styles';
 
 export function Scheduler() {
   return (
     <SchedulerProvider>
-      <InnerScheduler />
+      <AppointmentProvider>
+        <InnerScheduler />
+      </AppointmentProvider>
     </SchedulerProvider>
   );
 }
