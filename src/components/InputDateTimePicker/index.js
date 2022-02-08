@@ -86,6 +86,7 @@ const InputDateTimePicker = ({
           isValid={isValid}
           isInvalid={isInvalid}
           placeholder="mm/dd/yyyy hh:mm"
+          autocomplete="off"
         />
         <InputGroup.Append style={{ cursor: 'pointer' }}>
           {dateTime && (
