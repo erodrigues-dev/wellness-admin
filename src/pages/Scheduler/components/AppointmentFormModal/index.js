@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
 // import { FaMoneyBill as AddPaymentIcon } from 'react-icons/fa';
 
@@ -33,6 +33,8 @@ function AppointmentFormComponent() {
     handleSave,
   } = useAppointmentContext();
 
+  const btnSubmitRef = useRef(null);
+
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -62,10 +64,7 @@ function AppointmentFormComponent() {
       initialHeight={600}
       onClose={handleClose}
     >
-      <Form>
-        <pre>values: {JSON.stringify(formik.values, null, 2)}</pre>
-        <pre>touched: {JSON.stringify(formik.touched, null, 2)}</pre>
-        <pre>errors: {JSON.stringify(formik.errors, null, 2)}</pre>
+      <Form onSubmit={formik.handleSubmit}>
         <Input
           label="Calendar"
           name="calendar"
@@ -123,6 +122,12 @@ function AppointmentFormComponent() {
             rows: 3,
           }}
         />
+        <pre>values: {JSON.stringify(formik.values, null, 2)}</pre>
+        <pre>touched: {JSON.stringify(formik.touched, null, 2)}</pre>
+        <pre>errors: {JSON.stringify(formik.errors, null, 2)}</pre>
+        <button ref={btnSubmitRef} type="submit" style={{ display: 'none' }}>
+          save
+        </button>
       </Form>
 
       {/* <h6>Payment Details</h6>
@@ -139,7 +144,9 @@ function AppointmentFormComponent() {
           <AddPaymentIcon className="mr-2" />
           Add Payment
         </Button> */}
-        <ButtonLoading onClick={formik.handleSubmit}>Save</ButtonLoading>
+        <ButtonLoading onClick={() => btnSubmitRef.current.click()}>
+          Save
+        </ButtonLoading>
       </WindowActionsBar>
     </Window>
   );
