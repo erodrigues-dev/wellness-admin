@@ -2,9 +2,9 @@
 
 ## Packages
 
-- [ ] remover react-spring
-- [ ] remover fullcalendar
-- [ ] remover test libs
+- [x] remover react-spring
+- [x] remover fullcalendar
+- [x] remover test libs
 - [ ] update react-bootstrap
 - [ ] update bootstrap
 - [ ] update react dependencies
