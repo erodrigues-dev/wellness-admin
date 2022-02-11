@@ -114,6 +114,7 @@ function AppointmentFormComponent() {
             rows: 3,
           }}
         />
+
         <pre>values: {JSON.stringify(formik.values, null, 2)}</pre>
         <pre>touched: {JSON.stringify(formik.touched, null, 2)}</pre>
         <pre>errors: {JSON.stringify(formik.errors, null, 2)}</pre>
@@ -123,7 +124,7 @@ function AppointmentFormComponent() {
         <Button variant="secondary" onClick={handleClose}>
           Cancel
         </Button>
-        <ButtonLoading onClick={() => {}}>Save</ButtonLoading>
+        <ButtonLoading onClick={formik.handleSubmit}>Save</ButtonLoading>
       </WindowActionsBar>
     </Window>
   );
