@@ -21,19 +21,27 @@ export function Input({
 }
 
 export function InputFormikAdapter({ formik, ...options }) {
-  const { name } = options;
+  const { name = '', identifier = '', onChange } = options;
+
+  const getProperty = (property) =>
+    identifier && formik[property][name]
+      ? formik[property][name][identifier]
+      : formik[property][name];
+
+  const getError = () => getProperty('errors') ?? '';
+
   return (
     <Input
       {...options}
       inputOptions={{
         ...options.inputOptions,
-        value: formik.values[name],
-        onChange: formik.handleChange,
+        value: getProperty('values'),
+        onChange: onChange ?? formik.handleChange,
         onBlur: formik.handleBlur,
-        isValid: formik.touched[name] && !formik.errors[name],
-        isInvalid: formik.touched[name] && formik.errors[name],
+        isValid: formik.touched[name] && !getError(),
+        isInvalid: formik.touched[name] && getError(),
       }}
-      error={formik.errors[name]}
+      error={getError()}
     />
   );
 }

@@ -16,8 +16,6 @@ export function AppointmentProvider({ children }) {
   const [slotData, setSlotData] = useState();
   const [calendar, setCalendar] = useState(null);
   const [activities, setActivities] = useState([]);
-
-  const [selectedActivity, setSelectedActivity] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
 
   const fetchActivities = useCallback(async (calendarId) => {
@@ -36,14 +34,6 @@ export function AppointmentProvider({ children }) {
     setIsOpen(true);
   }, []);
 
-  const handleChangeActivity = useCallback(
-    (activityId) => {
-      const activity = activities.find((x) => x.id === Number(activityId));
-      setSelectedActivity(activity);
-    },
-    [activities]
-  );
-
   const handleChangeDate = (value) => {
     setSelectedDate(value);
   };
@@ -53,6 +43,7 @@ export function AppointmentProvider({ children }) {
   };
 
   const handleSave = useCallback(async (data) => {
+    // eslint-disable-next-line no-console
     console.log('handleSave', data);
   }, []);
 
@@ -67,10 +58,8 @@ export function AppointmentProvider({ children }) {
         slotData,
         calendar,
         activities,
-        selectedActivity,
         selectedDate,
         setData,
-        handleChangeActivity,
         handleChangeDate,
         handleClose,
         handleSave,
