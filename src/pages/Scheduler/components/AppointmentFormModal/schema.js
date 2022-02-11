@@ -1,14 +1,20 @@
 import * as yup from 'yup';
 
 export const validationSchema = yup.object({
-  activityId: yup.string().required().label('activity'),
+  activity: yup.object({
+    id: yup.string().required().label('activity'),
+    duration: yup.number(),
+  }),
   customerId: yup.string().required().label('customer'),
   start: yup.string().required(),
 });
 
-export const initialValues = {
-  activityId: '',
+export const getInitialValues = ({ start }) => ({
+  activity: {
+    id: '',
+    duration: '',
+  },
   customerId: '',
   notes: '',
-  start: '',
-};
+  start: start ?? '',
+});
