@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 import { clearTime } from '~/helpers/date';
 import calendarService from '~/services/calendar';
-import * as calendarEntryService from '~/services/calendar-entry';
+import schedulerService from '~/services/scheduler';
 
 import { settings } from './settings';
 
@@ -50,7 +50,7 @@ export function SchedulerProvider({ children }) {
   const fetchEntries = useCallback(async () => {
     try {
       if (selectedCalendars.length > 0 && selectedDate) {
-        const data = await calendarEntryService.list({
+        const data = await schedulerService.listItems({
           calendars: selectedCalendars.map((item) => item.id),
           date: selectedDate,
         });
