@@ -12,6 +12,7 @@ export const validationSchema = yup.object({
 export const getInitialValues = ({ start }) => ({
   activity: {
     id: '',
+    name: '',
     duration: '',
   },
   customerId: '',

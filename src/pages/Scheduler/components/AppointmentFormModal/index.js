@@ -70,7 +70,7 @@ function AppointmentFormComponent() {
           <option value="" disabled>
             Select
           </option>
-          {activities.map((activity) => (
+          {activities?.map((activity) => (
             <option key={activity.id} value={activity.id}>
               {activity.name}
             </option>
@@ -114,10 +114,6 @@ function AppointmentFormComponent() {
             rows: 3,
           }}
         />
-
-        <pre>values: {JSON.stringify(formik.values, null, 2)}</pre>
-        <pre>touched: {JSON.stringify(formik.touched, null, 2)}</pre>
-        <pre>errors: {JSON.stringify(formik.errors, null, 2)}</pre>
       </Form>
 
       <WindowActionsBar>
