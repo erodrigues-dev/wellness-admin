@@ -4,6 +4,12 @@ import { Form } from 'react-bootstrap';
 import { DropDownList, MultiSelect } from '@progress/kendo-react-dropdowns';
 import { Error } from '@progress/kendo-react-labels';
 
+const defaultStyles = ({ disabled }) => ({
+  width: '100%',
+  backgroundColor: disabled ? '#e9ecef' : 'white',
+  borderRadius: '0.25rem',
+});
+
 function SelectComponent({ multiple, ...props }) {
   if (multiple) return <MultiSelect {...props} />;
   return <DropDownList {...props} />;
@@ -76,7 +82,7 @@ export function AutoComplete({
       <Form.Label>{label}</Form.Label>
       <SelectComponent
         multiple={multiple}
-        style={{ width: '100%' }}
+        style={defaultStyles({ disabled })}
         popupSettings={{ appendTo: appendToRef.current }}
         name={name}
         textField={textField}
