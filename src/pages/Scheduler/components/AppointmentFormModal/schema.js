@@ -6,16 +6,17 @@ export const validationSchema = yup.object({
     duration: yup.number(),
   }),
   customerId: yup.string().required().label('customer'),
-  start: yup.string().required(),
+  dateStart: yup.string().required().label('start date'),
 });
 
-export const getInitialValues = ({ start }) => ({
+export const getInitialValues = ({ dateStart, calendarId }) => ({
+  dateStart: dateStart ?? '',
+  calendarId: calendarId ?? '',
+  customerId: '',
+  notes: '',
   activity: {
     id: '',
     name: '',
     duration: '',
   },
-  customerId: '',
-  notes: '',
-  start: start ?? '',
 });

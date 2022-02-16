@@ -23,17 +23,16 @@ export function AppointmentFormModal() {
 }
 
 function AppointmentFormComponent() {
-  const { slotData, calendar, activities, handleClose, handleSave } =
+  const { slotData, calendar, activities, handleClose, onSubmit } =
     useAppointmentContext();
 
-  function handleSubmit(values) {
-    handleSave(values);
-  }
-
   const formik = useFormik({
+    onSubmit,
     validationSchema,
-    onSubmit: handleSubmit,
-    initialValues: getInitialValues({ start: slotData?.start }),
+    initialValues: getInitialValues({
+      dateStart: slotData?.start,
+      calendarId: calendar?.id,
+    }),
   });
 
   function handleChangeActivity({ target }) {
@@ -53,7 +52,7 @@ function AppointmentFormComponent() {
       <Form onSubmit={formik.handleSubmit}>
         <Input
           label="Calendar"
-          name="calendar"
+          name="calendarId"
           inputOptions={{ disabled: true, defaultValue: calendar?.name }}
         />
 
@@ -80,8 +79,8 @@ function AppointmentFormComponent() {
         <DateFields>
           <DateTimePickerFormikAdapter
             formik={formik}
-            name="start"
-            label="Start"
+            name="dateStart"
+            label="Start Date"
           />
 
           <Input

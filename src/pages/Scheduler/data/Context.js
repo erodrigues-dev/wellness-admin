@@ -39,7 +39,9 @@ export function SchedulerProvider({ children }) {
   const fetchCalendars = useCallback(async () => {
     try {
       const { data } = await calendarService.index();
+
       if (data.length === 0) toast.error('Not exist calendars');
+
       setCalendars(data);
       setSelectedCalendars(data);
     } catch (error) {
@@ -50,16 +52,21 @@ export function SchedulerProvider({ children }) {
   const fetchEntries = useCallback(async () => {
     try {
       if (selectedCalendars.length > 0 && selectedDate) {
-        const data = await schedulerService.listItems({
+        const { data } = await schedulerService.listItems({
           calendars: selectedCalendars.map((item) => item.id),
           date: selectedDate,
         });
+
         setEntries(data.map(mapToDataItem));
       }
     } catch (error) {
       toast.error('Unable to list scheduler data');
     }
   }, [selectedCalendars, selectedDate]);
+
+  const saveItem = useCallback((item) => {
+    setEntries((prevState) => [...prevState, item]);
+  }, []);
 
   useEffect(() => {
     fetchCalendars();
@@ -80,6 +87,7 @@ export function SchedulerProvider({ children }) {
         setSelectedCalendars,
         setSelectedDate,
         setModal,
+        saveItem,
       }}
     >
       {children}

@@ -7,11 +7,14 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 
-import { listActivities } from '~/services/scheduler';
+import { createItem, listActivities } from '~/services/scheduler';
+
+import { useSchedulerContext } from './Context';
 
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
+  const { saveItem } = useSchedulerContext();
   const [isOpen, setIsOpen] = useState(false);
   const [slotData, setSlotData] = useState();
   const [calendar, setCalendar] = useState(null);
@@ -20,8 +23,9 @@ export function AppointmentProvider({ children }) {
 
   const fetchActivities = useCallback(async (calendarId) => {
     try {
-      const { data: response } = await listActivities(calendarId);
-      setActivities(response);
+      const { data } = await listActivities(calendarId);
+
+      setActivities(data);
     } catch (error) {
       toast.error('Unable to list activities of calendar');
     }
@@ -42,10 +46,22 @@ export function AppointmentProvider({ children }) {
     setIsOpen(false);
   };
 
-  const handleSave = useCallback(async (data) => {
-    // eslint-disable-next-line no-console
-    console.log('handleSave', data);
-  }, []);
+  const onSubmit = async (formValues) => {
+    try {
+      const { activity, ...values } = formValues;
+      const submit = {
+        activityId: activity.id,
+        ...values,
+      };
+      const item = await createItem(submit);
+
+      saveItem(item);
+
+      toast.success('Appointment saved successfully');
+    } catch (error) {
+      toast.error('Error on save appointment');
+    }
+  };
 
   useEffect(() => {
     if (calendar?.id) fetchActivities(calendar?.id);
@@ -62,7 +78,7 @@ export function AppointmentProvider({ children }) {
         setData,
         handleChangeDate,
         handleClose,
-        handleSave,
+        onSubmit,
       }}
     >
       {children}
