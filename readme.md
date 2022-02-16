@@ -1,10 +1,9 @@
-# 🤖 Wellness frontend 📡
+# 🤖 Wellness Admin - Front-End 📡
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/cd4f9d1a-929c-4aea-965e-91d7945749f7/deploy-status)](https://app.netlify.com/sites/wellness-release/deploys)
 [![Staging pipeline](https://github.com/erodrigues-dev/wellness-admin/actions/workflows/staging.yml/badge.svg)](https://github.com/erodrigues-dev/wellness-admin/actions/workflows/staging.yml)
 [![Production pipeline](https://github.com/erodrigues-dev/wellness-admin/actions/workflows/production.yml/badge.svg)](https://github.com/erodrigues-dev/wellness-admin/actions/workflows/production.yml)
 
-- [link para release](https://wellness-release.netlify.app)
+- [link para staging](http://stg.app.elitewellnessperformance.com/sign-in)
 
 ## ⚙️ .ENV
 
