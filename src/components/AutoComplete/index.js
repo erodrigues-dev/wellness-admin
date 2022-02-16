@@ -10,6 +10,12 @@ const defaultStyles = ({ disabled }) => ({
   borderRadius: '0.25rem',
 });
 
+function listNoDataRender(element, loading) {
+  const noData = <p>{loading ? 'Loading...' : 'No data found.'}</p>;
+
+  return React.cloneElement(element, { ...element.props }, noData);
+}
+
 function SelectComponent({ multiple, ...props }) {
   if (multiple) return <MultiSelect {...props} />;
   return <DropDownList {...props} />;
@@ -99,6 +105,7 @@ export function AutoComplete({
         valid={isValid}
         disabled={disabled}
         filterable
+        listNoDataRender={(el) => listNoDataRender(el, data.loading)}
         {...otherSettings}
       />
       {isValid || <Error>{error}</Error>}
