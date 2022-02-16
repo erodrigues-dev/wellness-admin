@@ -53,9 +53,10 @@ export function AppointmentProvider({ children }) {
         activityId: activity.id,
         ...values,
       };
-      const item = await createItem(submit);
+      const { data } = await createItem(submit);
 
-      saveItem(item);
+      saveItem(data);
+      handleClose();
 
       toast.success('Appointment saved successfully');
     } catch (error) {

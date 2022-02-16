@@ -65,7 +65,7 @@ export function SchedulerProvider({ children }) {
   }, [selectedCalendars, selectedDate]);
 
   const saveItem = useCallback((item) => {
-    setEntries((prevState) => [...prevState, item]);
+    setEntries((prevState) => [...prevState, mapToDataItem(item)]);
   }, []);
 
   useEffect(() => {

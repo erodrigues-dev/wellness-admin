@@ -102,7 +102,6 @@ function AppointmentFormComponent() {
           onFilter={autocomplete.customers}
           onChange={() => {}}
           appendToBody
-          // disabled
         />
 
         <InputFormikAdapter
