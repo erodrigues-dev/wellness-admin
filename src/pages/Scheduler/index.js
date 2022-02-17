@@ -10,7 +10,10 @@ import { CustomHeader } from './components/CustomHeader';
 import { CustomItem } from './components/CustomItem';
 import { CustomSlot } from './components/CustomSlot';
 import { AppointmentProvider } from './data/AppointmentContext';
-import { useSchedulerContext, SchedulerProvider } from './data/Context';
+import {
+  useSchedulerContext,
+  SchedulerProvider,
+} from './data/SchedulerContext';
 import { Container, Content } from './styles';
 
 export function Scheduler() {

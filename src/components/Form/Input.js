@@ -21,19 +21,48 @@ export function Input({
 }
 
 export function InputFormikAdapter({ formik, ...options }) {
-  const { name } = options;
+  const { name: inputName = '', onChange } = options;
+
+  // If the formik field value is an object,
+  // It will get the main property inside this object
+  // Otherwise, it would try to render an object and
+  // Throw an error.
+  // example: get the property id inside an object with id and text.
+  const hasIdentifier = () => inputName.includes('.');
+
+  const getFieldNameProperty = (property) => {
+    const isName = property === 'name';
+
+    if (!hasIdentifier()) return isName ? inputName : '';
+
+    const [name, identifier] = inputName.split('.');
+
+    return isName ? name : identifier;
+  };
+
+  const fieldName = getFieldNameProperty('name');
+  const fieldIdentifier = getFieldNameProperty('identifier');
+
+  const getProperty = (property) => {
+    const field = formik[property][fieldName];
+
+    return hasIdentifier() && field ? field[fieldIdentifier] : field;
+  };
+
+  const getError = () => getProperty('errors') ?? '';
+
   return (
     <Input
       {...options}
       inputOptions={{
         ...options.inputOptions,
-        value: formik.values[name],
-        onChange: formik.handleChange,
+        value: getProperty('values'),
+        onChange: onChange ?? formik.handleChange,
         onBlur: formik.handleBlur,
-        isValid: formik.touched[name] && !formik.errors[name],
-        isInvalid: formik.touched[name] && formik.errors[name],
+        isValid: formik.touched[fieldName] && !getError(),
+        isInvalid: formik.touched[fieldName] && getError(),
       }}
-      error={formik.errors[name]}
+      error={getError()}
     />
   );
 }

@@ -7,23 +7,25 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 
-import { listActivities } from '~/services/scheduler';
+import { createItem, listActivities } from '~/services/scheduler';
+
+import { useSchedulerContext } from './SchedulerContext';
 
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
+  const { addItem } = useSchedulerContext();
   const [isOpen, setIsOpen] = useState(false);
   const [slotData, setSlotData] = useState();
   const [calendar, setCalendar] = useState(null);
   const [activities, setActivities] = useState([]);
-
-  const [selectedActivity, setSelectedActivity] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
 
   const fetchActivities = useCallback(async (calendarId) => {
     try {
-      const { data: response } = await listActivities(calendarId);
-      setActivities(response);
+      const { data } = await listActivities(calendarId);
+
+      setActivities(data);
     } catch (error) {
       toast.error('Unable to list activities of calendar');
     }
@@ -36,14 +38,6 @@ export function AppointmentProvider({ children }) {
     setIsOpen(true);
   }, []);
 
-  const handleChangeActivity = useCallback(
-    (activityId) => {
-      const activity = activities.find((x) => x.id === Number(activityId));
-      setSelectedActivity(activity);
-    },
-    [activities]
-  );
-
   const handleChangeDate = (value) => {
     setSelectedDate(value);
   };
@@ -52,9 +46,23 @@ export function AppointmentProvider({ children }) {
     setIsOpen(false);
   };
 
-  const handleSave = useCallback(async (data) => {
-    console.log('handleSave', data);
-  }, []);
+  const onSubmit = async (formValues) => {
+    try {
+      const { activity, ...values } = formValues;
+      const submit = {
+        activityId: activity.id,
+        ...values,
+      };
+      const { data } = await createItem(submit);
+
+      addItem(data);
+      handleClose();
+
+      toast.success('Appointment saved successfully');
+    } catch (error) {
+      toast.error('Error on save appointment');
+    }
+  };
 
   useEffect(() => {
     if (calendar?.id) fetchActivities(calendar?.id);
@@ -67,13 +75,11 @@ export function AppointmentProvider({ children }) {
         slotData,
         calendar,
         activities,
-        selectedActivity,
         selectedDate,
         setData,
-        handleChangeActivity,
         handleChangeDate,
         handleClose,
-        handleSave,
+        onSubmit,
       }}
     >
       {children}

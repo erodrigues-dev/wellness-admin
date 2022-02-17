@@ -1,6 +1,5 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import { Form, Button } from 'react-bootstrap';
-// import { FaMoneyBill as AddPaymentIcon } from 'react-icons/fa';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
@@ -12,7 +11,8 @@ import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import autocomplete from '~/services/autocomplete';
 
 import { useAppointmentContext } from '../../data/AppointmentContext';
-import { validationSchema, initialValues } from './schema';
+import { validationSchema, getInitialValues } from './schema';
+import { DateFields } from './styles';
 
 export function AppointmentFormModal() {
   const { isOpen } = useAppointmentContext();
@@ -23,39 +23,24 @@ export function AppointmentFormModal() {
 }
 
 function AppointmentFormComponent() {
-  const {
-    slotData,
-    calendar,
-    activities,
-    selectedActivity,
-    handleChangeActivity,
-    handleClose,
-    handleSave,
-  } = useAppointmentContext();
-
-  const btnSubmitRef = useRef(null);
+  const { slotData, calendar, activities, handleClose, onSubmit } =
+    useAppointmentContext();
 
   const formik = useFormik({
-    initialValues,
+    onSubmit,
     validationSchema,
-    onSubmit: handleSubmit,
+    initialValues: getInitialValues({
+      dateStart: slotData?.start,
+      calendarId: calendar?.id,
+    }),
   });
 
-  const { setValues } = formik;
+  function handleChangeActivity({ target }) {
+    const { value } = target;
+    const selectedActivity = activities.find((x) => x.id === Number(value));
 
-  function handleSubmit(values) {
-    handleSave(values);
+    formik.setFieldValue('activity', selectedActivity);
   }
-
-  useEffect(() => {
-    handleChangeActivity(formik.values.activityId);
-  }, [formik.values.activityId, handleChangeActivity]);
-
-  useEffect(() => {
-    setValues({
-      start: slotData?.start || '',
-    });
-  }, [slotData, setValues]);
 
   return (
     <Window
@@ -67,40 +52,46 @@ function AppointmentFormComponent() {
       <Form onSubmit={formik.handleSubmit}>
         <Input
           label="Calendar"
-          name="calendar"
+          name="calendarId"
           inputOptions={{ disabled: true, defaultValue: calendar?.name }}
-        />
-
-        <DateTimePickerFormikAdapter
-          formik={formik}
-          name="start"
-          label="Start"
-        />
-
-        <Input
-          name="duration"
-          label="Duration (minutes)"
-          inputOptions={{
-            disabled: true,
-            defaultValue: selectedActivity?.duration || '',
-          }}
         />
 
         <InputFormikAdapter
           formik={formik}
-          name="activityId"
+          name="activity.id"
           label="Activity"
           inputOptions={{
             as: 'select',
           }}
+          onChange={handleChangeActivity}
         >
-          <option value="">Select</option>
-          {activities.map((activity) => (
+          <option value="" disabled>
+            Select
+          </option>
+          {activities?.map((activity) => (
             <option key={activity.id} value={activity.id}>
               {activity.name}
             </option>
           ))}
         </InputFormikAdapter>
+
+        <DateFields>
+          <DateTimePickerFormikAdapter
+            formik={formik}
+            name="dateStart"
+            label="Start Date"
+          />
+
+          <Input
+            name="duration"
+            label="Duration (minutes)"
+            inputOptions={{
+              disabled: true,
+              defaultValue: formik.values.activity?.duration || '',
+              placeholder: '-',
+            }}
+          />
+        </DateFields>
 
         <AutoCompleteFormikAdapter
           formik={formik}
@@ -115,38 +106,20 @@ function AppointmentFormComponent() {
 
         <InputFormikAdapter
           formik={formik}
-          name="note"
+          name="notes"
           label="Notes"
           inputOptions={{
             as: 'textarea',
             rows: 3,
           }}
         />
-        <pre>values: {JSON.stringify(formik.values, null, 2)}</pre>
-        <pre>touched: {JSON.stringify(formik.touched, null, 2)}</pre>
-        <pre>errors: {JSON.stringify(formik.errors, null, 2)}</pre>
-        <button ref={btnSubmitRef} type="submit" style={{ display: 'none' }}>
-          save
-        </button>
       </Form>
-
-      {/* <h6>Payment Details</h6>
-      <p>
-        Paid with <strong>money</strong> on 20/02/22 9:33am order number:
-        <u>012345</u>
-      </p> */}
 
       <WindowActionsBar>
         <Button variant="secondary" onClick={handleClose}>
           Cancel
         </Button>
-        {/* <Button disabled>
-          <AddPaymentIcon className="mr-2" />
-          Add Payment
-        </Button> */}
-        <ButtonLoading onClick={() => btnSubmitRef.current.click()}>
-          Save
-        </ButtonLoading>
+        <ButtonLoading onClick={formik.handleSubmit}>Save</ButtonLoading>
       </WindowActionsBar>
     </Window>
   );
