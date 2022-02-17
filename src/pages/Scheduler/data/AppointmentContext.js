@@ -14,7 +14,7 @@ import { useSchedulerContext } from './Context';
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { saveItem } = useSchedulerContext();
+  const { addItem } = useSchedulerContext();
   const [isOpen, setIsOpen] = useState(false);
   const [slotData, setSlotData] = useState();
   const [calendar, setCalendar] = useState(null);
@@ -55,7 +55,7 @@ export function AppointmentProvider({ children }) {
       };
       const { data } = await createItem(submit);
 
-      saveItem(data);
+      addItem(data);
       handleClose();
 
       toast.success('Appointment saved successfully');
