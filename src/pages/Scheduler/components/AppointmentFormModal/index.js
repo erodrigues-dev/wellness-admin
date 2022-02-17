@@ -58,8 +58,7 @@ function AppointmentFormComponent() {
 
         <InputFormikAdapter
           formik={formik}
-          name="activity"
-          identifier="id"
+          name="activity.id"
           label="Activity"
           inputOptions={{
             as: 'select',
@@ -89,6 +88,7 @@ function AppointmentFormComponent() {
             inputOptions={{
               disabled: true,
               defaultValue: formik.values.activity?.duration || '',
+              placeholder: '-',
             }}
           />
         </DateFields>
