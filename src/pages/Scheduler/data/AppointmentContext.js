@@ -9,7 +9,7 @@ import { toast } from 'react-toastify';
 
 import { createItem, listActivities } from '~/services/scheduler';
 
-import { useSchedulerContext } from './Context';
+import { useSchedulerContext } from './SchedulerContext';
 
 const AppointmentContext = createContext({});
 
