@@ -11,27 +11,35 @@ import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import autocomplete from '~/services/autocomplete';
 
 import { useAppointmentContext } from '../../data/AppointmentContext';
+import { useSchedulerContext } from '../../data/SchedulerContext';
 import { validationSchema, getInitialValues } from './schema';
 import { DateFields } from './styles';
 
 export function AppointmentFormModal() {
-  const { isOpen } = useAppointmentContext();
+  const {
+    modal: { type, isOpen },
+  } = useSchedulerContext();
 
-  if (!isOpen) return null;
+  if (type !== 'appointment' && !isOpen) return null;
 
   return <AppointmentFormComponent />;
 }
 
 function AppointmentFormComponent() {
-  const { slotData, calendar, activities, handleClose, onSubmit } =
+  const { modal, closeModal } = useSchedulerContext();
+  const { selectedItem, slotData, calendar, activities, onSubmit } =
     useAppointmentContext();
+  const { isEdit } = modal;
 
   const formik = useFormik({
     onSubmit,
     validationSchema,
     initialValues: getInitialValues({
-      dateStart: slotData?.start,
+      dateStart: selectedItem?.start ?? slotData?.start,
+      activity: selectedItem?.activity,
       calendarId: calendar?.id,
+      notes: selectedItem?.notes,
+      customerId: selectedItem?.customer?.id,
     }),
   });
 
@@ -44,16 +52,16 @@ function AppointmentFormComponent() {
 
   return (
     <Window
-      title="Add appointment"
+      title={`${isEdit ? 'Edit' : 'Add'} appointment`}
       initialWidth={600}
       initialHeight={600}
-      onClose={handleClose}
+      onClose={closeModal}
     >
       <Form onSubmit={formik.handleSubmit}>
         <Input
           label="Calendar"
           name="calendarId"
-          inputOptions={{ disabled: true, defaultValue: calendar?.name }}
+          inputOptions={{ disabled: true, defaultValue: calendar?.name ?? '-' }}
         />
 
         <InputFormikAdapter
@@ -62,6 +70,7 @@ function AppointmentFormComponent() {
           label="Activity"
           inputOptions={{
             as: 'select',
+            disabled: isEdit,
           }}
           onChange={handleChangeActivity}
         >
@@ -102,6 +111,7 @@ function AppointmentFormComponent() {
           onFilter={autocomplete.customers}
           onChange={() => {}}
           appendToBody
+          disabled={isEdit}
         />
 
         <InputFormikAdapter
@@ -116,7 +126,7 @@ function AppointmentFormComponent() {
       </Form>
 
       <WindowActionsBar>
-        <Button variant="secondary" onClick={handleClose}>
+        <Button variant="secondary" onClick={closeModal}>
           Cancel
         </Button>
         <ButtonLoading onClick={formik.handleSubmit}>Save</ButtonLoading>

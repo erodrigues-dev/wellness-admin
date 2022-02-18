@@ -13,6 +13,14 @@ import schedulerService from '~/services/scheduler';
 
 import { settings } from './settings';
 
+export const initialModalState = {
+  type: '',
+  selectedId: '',
+  isCreate: false,
+  isEdit: false,
+  isOpen: false,
+};
+
 export const SchedulerContext = createContext();
 
 export function SchedulerProvider({ children }) {
@@ -20,7 +28,7 @@ export function SchedulerProvider({ children }) {
   const [selectedCalendars, setSelectedCalendars] = useState([]);
   const [selectedDate, setSelectedDate] = useState(clearTime(new Date()));
   const [entries, setEntries] = useState([]);
-  const [modal, setModal] = useState({});
+  const [modal, setModal] = useState(initialModalState);
 
   const mapToDataItem = (data) => {
     const title = `${data.customer.name} (${data.activity.name})`;
@@ -33,6 +41,8 @@ export function SchedulerProvider({ children }) {
       start,
       end,
       calendarId: data.calendarId,
+      activity: data.activity,
+      ...data,
     };
   };
 
@@ -68,6 +78,8 @@ export function SchedulerProvider({ children }) {
     setEntries((prevState) => [...prevState, mapToDataItem(item)]);
   }, []);
 
+  const closeModal = () => setModal(initialModalState);
+
   useEffect(() => {
     fetchCalendars();
   }, [fetchCalendars]);
@@ -83,11 +95,12 @@ export function SchedulerProvider({ children }) {
         selectedCalendars,
         entries,
         settings,
-        modal,
         setSelectedCalendars,
         setSelectedDate,
-        setModal,
         addItem,
+        modal,
+        setModal,
+        closeModal,
       }}
     >
       {children}

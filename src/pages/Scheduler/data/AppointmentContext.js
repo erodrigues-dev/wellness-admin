@@ -14,12 +14,12 @@ import { useSchedulerContext } from './SchedulerContext';
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { addItem } = useSchedulerContext();
-  const [isOpen, setIsOpen] = useState(false);
+  const { addItem, setModal, closeModal } = useSchedulerContext();
   const [slotData, setSlotData] = useState();
   const [calendar, setCalendar] = useState(null);
   const [activities, setActivities] = useState([]);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedItem, setSelectedItem] = useState(null);
 
   const fetchActivities = useCallback(async (calendarId) => {
     try {
@@ -31,19 +31,33 @@ export function AppointmentProvider({ children }) {
     }
   }, []);
 
-  const setData = useCallback((data) => {
+  const openFreeSlot = (data) => {
     setSlotData(data);
     setSelectedDate(data.start);
     setCalendar(data.calendar);
-    setIsOpen(true);
-  }, []);
+    setSelectedItem(data.dataItem);
+    setModal({
+      type: 'appointment',
+      isCreate: true,
+      isOpen: true,
+    });
+  };
+
+  const openAppointment = (data) => {
+    setSlotData(data);
+    setSelectedDate(data.start);
+    setCalendar(data.calendar);
+    setSelectedItem(data.dataItem);
+    setModal({
+      selectedId: data.id,
+      type: 'appointment',
+      isEdit: true,
+      isOpen: true,
+    });
+  };
 
   const handleChangeDate = (value) => {
     setSelectedDate(value);
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
   };
 
   const onSubmit = async (formValues) => {
@@ -56,7 +70,7 @@ export function AppointmentProvider({ children }) {
       const { data } = await createItem(submit);
 
       addItem(data);
-      handleClose();
+      closeModal();
 
       toast.success('Appointment saved successfully');
     } catch (error) {
@@ -71,15 +85,15 @@ export function AppointmentProvider({ children }) {
   return (
     <AppointmentContext.Provider
       value={{
-        isOpen,
         slotData,
         calendar,
         activities,
         selectedDate,
-        setData,
+        openFreeSlot,
         handleChangeDate,
-        handleClose,
         onSubmit,
+        openAppointment,
+        selectedItem,
       }}
     >
       {children}
