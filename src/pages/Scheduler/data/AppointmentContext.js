@@ -31,23 +31,27 @@ export function AppointmentProvider({ children }) {
     }
   }, []);
 
-  const openFreeSlot = (data) => {
-    setSlotData(data);
-    setSelectedDate(data.start);
-    setCalendar(data.calendar);
-    setSelectedItem(data.dataItem);
+  const openNewAppointment = () =>
     setModal({
       type: 'appointment',
       isCreate: true,
       isOpen: true,
     });
-  };
 
-  const openAppointment = (data) => {
+  const handleItemsOnOpenModal = (data) => {
     setSlotData(data);
     setSelectedDate(data.start);
     setCalendar(data.calendar);
     setSelectedItem(data.dataItem);
+  };
+
+  const openFreeSlot = (data) => {
+    handleItemsOnOpenModal(data);
+    openNewAppointment();
+  };
+
+  const openEditAppointment = (data) => {
+    handleItemsOnOpenModal(data);
     setModal({
       selectedId: data.id,
       type: 'appointment',
@@ -89,11 +93,12 @@ export function AppointmentProvider({ children }) {
         calendar,
         activities,
         selectedDate,
-        openFreeSlot,
         handleChangeDate,
         onSubmit,
-        openAppointment,
         selectedItem,
+        openFreeSlot,
+        openEditAppointment,
+        openNewAppointment,
       }}
     >
       {children}

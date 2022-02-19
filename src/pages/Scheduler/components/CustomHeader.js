@@ -5,6 +5,7 @@ import { SchedulerHeader } from '@progress/kendo-react-scheduler';
 
 import { SchedulerContext } from '../data/SchedulerContext';
 import { CalendarSelect } from './CalendarSelect';
+import { CustomButtons } from './CustomButtons';
 
 export function CustomHeader({ children }) {
   const [Seletor, Datepicker, ...Others] = children;
@@ -23,6 +24,7 @@ export function CustomHeader({ children }) {
         />
       </ToolbarItem>
       {Others}
+      <CustomButtons />
     </SchedulerHeader>
   );
 }

@@ -5,13 +5,13 @@ import { SchedulerItem } from '@progress/kendo-react-scheduler';
 import { useAppointmentContext } from '../data/AppointmentContext';
 
 export function CustomItem(props) {
-  const { openAppointment } = useAppointmentContext();
+  const { openEditAppointment } = useAppointmentContext();
 
   const handleClick = () => {
     const calendar = props.group.resources[0];
     const { start, end } = props.dataItem;
 
-    openAppointment({
+    openEditAppointment({
       calendar,
       start,
       end,
