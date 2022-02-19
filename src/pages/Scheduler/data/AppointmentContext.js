@@ -11,25 +11,34 @@ import { createItem, listActivities } from '~/services/scheduler';
 
 import { useSchedulerContext } from './SchedulerContext';
 
+const initialSelectedItemState = {
+  slotData: null,
+  calendar: null,
+  item: null,
+};
+
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
   const { addItem, setModal, closeModal } = useSchedulerContext();
-  const [slotData, setSlotData] = useState();
-  const [calendar, setCalendar] = useState(null);
   const [activities, setActivities] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [isFetchingActivites, setIsFetchingActivities] = useState(false);
+  const [selected, setSelected] = useState(initialSelectedItemState);
 
   const fetchActivities = useCallback(async (calendarId) => {
     try {
+      setIsFetchingActivities(true);
       const { data } = await listActivities(calendarId);
 
       setActivities(data);
     } catch (error) {
       toast.error('Unable to list activities of calendar');
+    } finally {
+      setIsFetchingActivities(false);
     }
   }, []);
+
+  const resetSelected = () => setSelected(initialSelectedItemState);
 
   const openNewAppointment = () =>
     setModal({
@@ -38,30 +47,26 @@ export function AppointmentProvider({ children }) {
       isOpen: true,
     });
 
-  const handleItemsOnOpenModal = (data) => {
-    setSlotData(data);
-    setSelectedDate(data.start);
-    setCalendar(data.calendar);
-    setSelectedItem(data.dataItem);
-  };
+  const handleSelectedData = (data) =>
+    setSelected({
+      slotData: data,
+      calendar: data.calendar,
+      item: data.dataItem,
+    });
 
   const openFreeSlot = (data) => {
-    handleItemsOnOpenModal(data);
+    handleSelectedData(data);
     openNewAppointment();
   };
 
   const openEditAppointment = (data) => {
-    handleItemsOnOpenModal(data);
+    handleSelectedData(data);
     setModal({
       selectedId: data.id,
       type: 'appointment',
       isEdit: true,
       isOpen: true,
     });
-  };
-
-  const handleChangeDate = (value) => {
-    setSelectedDate(value);
   };
 
   const onSubmit = async (formValues) => {
@@ -83,22 +88,21 @@ export function AppointmentProvider({ children }) {
   };
 
   useEffect(() => {
-    if (calendar?.id) fetchActivities(calendar?.id);
-  }, [calendar, fetchActivities]);
+    if (selected?.calendar?.id) fetchActivities(selected?.calendar?.id);
+  }, [fetchActivities, selected]);
 
   return (
     <AppointmentContext.Provider
       value={{
-        slotData,
-        calendar,
+        selected,
         activities,
-        selectedDate,
-        handleChangeDate,
         onSubmit,
-        selectedItem,
         openFreeSlot,
         openEditAppointment,
         openNewAppointment,
+        resetSelected,
+        fetchActivities,
+        isFetchingActivites,
       }}
     >
       {children}

@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { ToolbarItem } from '@progress/kendo-react-buttons';
 import { SchedulerHeader } from '@progress/kendo-react-scheduler';
 
-import { SchedulerContext } from '../data/SchedulerContext';
+import { useSchedulerContext } from '../data/SchedulerContext';
 import { CalendarSelect } from './CalendarSelect';
 import { CustomButtons } from './CustomButtons';
 
 export function CustomHeader({ children }) {
   const [Seletor, Datepicker, ...Others] = children;
   const { calendars, selectedCalendars, setSelectedCalendars } =
-    useContext(SchedulerContext);
+    useSchedulerContext();
 
   return (
     <SchedulerHeader>

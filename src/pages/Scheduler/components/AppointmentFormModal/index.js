@@ -26,28 +26,60 @@ export function AppointmentFormModal() {
 }
 
 function AppointmentFormComponent() {
-  const { modal, closeModal } = useSchedulerContext();
-  const { selectedItem, slotData, calendar, activities, onSubmit } =
-    useAppointmentContext();
+  const { modal, closeModal, calendars } = useSchedulerContext();
+  const {
+    activities,
+    onSubmit,
+    resetSelected,
+    selected,
+    fetchActivities,
+    isFetchingActivites,
+  } = useAppointmentContext();
   const { isEdit } = modal;
 
   const formik = useFormik({
     onSubmit,
     validationSchema,
     initialValues: getInitialValues({
-      dateStart: selectedItem?.start ?? slotData?.start,
-      activity: selectedItem?.activity,
-      calendarId: calendar?.id,
-      notes: selectedItem?.notes,
-      customerId: selectedItem?.customer?.id,
+      dateStart: selected?.item?.start ?? selected?.slotData?.start,
+      activity: selected?.item?.activity,
+      calendar: selected?.calendar,
+      notes: selected?.item?.notes,
+      customerId: selected?.item?.customer?.id,
     }),
   });
 
-  function handleChangeActivity({ target }) {
-    const { value } = target;
-    const selectedActivity = activities.find((x) => x.id === Number(value));
+  function handleSelectFields(value, field, cb) {
+    const selectedItem = cb(value);
 
-    formik.setFieldValue('activity', selectedActivity);
+    formik.setFieldValue(field, selectedItem);
+  }
+
+  function handleChangeActivity({ target }) {
+    handleSelectFields(target.value, 'activity', (value) =>
+      activities.find((x) => x.id === Number(value))
+    );
+  }
+
+  async function handleChangeCalendar({ target }) {
+    const { value } = target;
+
+    handleSelectFields(value, 'calendar', (id) =>
+      calendars.find((x) => x.id === id)
+    );
+
+    formik.setFieldValue('activity', {
+      id: '',
+      name: '',
+      duration: '',
+    });
+
+    await fetchActivities(value);
+  }
+
+  function handleCloseModal() {
+    closeModal();
+    resetSelected();
   }
 
   return (
@@ -55,14 +87,28 @@ function AppointmentFormComponent() {
       title={`${isEdit ? 'Edit' : 'Add'} appointment`}
       initialWidth={600}
       initialHeight={600}
-      onClose={closeModal}
+      onClose={handleCloseModal}
     >
       <Form onSubmit={formik.handleSubmit}>
-        <Input
+        <InputFormikAdapter
+          formik={formik}
+          name="calendar.id"
           label="Calendar"
-          name="calendarId"
-          inputOptions={{ disabled: true, defaultValue: calendar?.name ?? '-' }}
-        />
+          inputOptions={{
+            as: 'select',
+            disabled: isEdit,
+          }}
+          onChange={handleChangeCalendar}
+        >
+          <option value="" disabled>
+            Select
+          </option>
+          {calendars?.map((calendar) => (
+            <option key={calendar.id} value={calendar.id}>
+              {calendar.name}
+            </option>
+          ))}
+        </InputFormikAdapter>
 
         <InputFormikAdapter
           formik={formik}
@@ -70,7 +116,7 @@ function AppointmentFormComponent() {
           label="Activity"
           inputOptions={{
             as: 'select',
-            disabled: isEdit,
+            disabled: isEdit || isFetchingActivites,
           }}
           onChange={handleChangeActivity}
         >
@@ -126,7 +172,7 @@ function AppointmentFormComponent() {
       </Form>
 
       <WindowActionsBar>
-        <Button variant="secondary" onClick={closeModal}>
+        <Button variant="secondary" onClick={handleCloseModal}>
           Cancel
         </Button>
         <ButtonLoading onClick={formik.handleSubmit}>Save</ButtonLoading>
