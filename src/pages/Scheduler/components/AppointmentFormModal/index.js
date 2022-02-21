@@ -29,6 +29,7 @@ function AppointmentFormComponent() {
   const { modal, closeModal, calendars } = useSchedulerContext();
   const {
     activities,
+    setActivities,
     onSubmit,
     resetSelected,
     selected,
@@ -80,6 +81,7 @@ function AppointmentFormComponent() {
   function handleCloseModal() {
     closeModal();
     resetSelected();
+    setActivities([]);
   }
 
   return (
@@ -116,7 +118,8 @@ function AppointmentFormComponent() {
           label="Activity"
           inputOptions={{
             as: 'select',
-            disabled: isEdit || isFetchingActivites,
+            disabled:
+              isEdit || isFetchingActivites || !formik.values.calendar?.id,
           }}
           onChange={handleChangeActivity}
         >

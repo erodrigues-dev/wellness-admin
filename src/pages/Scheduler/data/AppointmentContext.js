@@ -103,6 +103,7 @@ export function AppointmentProvider({ children }) {
         resetSelected,
         fetchActivities,
         isFetchingActivites,
+        setActivities,
       }}
     >
       {children}

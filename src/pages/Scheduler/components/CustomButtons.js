@@ -15,13 +15,13 @@ export const CustomButtons = () => {
   return (
     <ButtonsRight>
       <Button type="button" onClick={openNewAppointment}>
-        New Appointment
+        New
       </Button>
       <Button type="button" onClick={notImplementedYet}>
-        New Class
+        Class
       </Button>
       <Button type="button" onClick={notImplementedYet}>
-        New Block
+        Block
       </Button>
     </ButtonsRight>
   );
