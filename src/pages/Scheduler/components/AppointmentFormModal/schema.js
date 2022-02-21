@@ -10,7 +10,7 @@ export const validationSchema = yup.object({
   }),
   calendar: yup.object({
     id: yup.string().required().label('calendar'),
-    duration: yup.number(),
+    name: yup.string(),
   }),
 });
 

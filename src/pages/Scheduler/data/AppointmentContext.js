@@ -71,9 +71,10 @@ export function AppointmentProvider({ children }) {
 
   const onSubmit = async (formValues) => {
     try {
-      const { activity, ...values } = formValues;
+      const { activity, calendar, ...values } = formValues;
       const submit = {
         activityId: activity.id,
+        calendarId: calendar.id,
         ...values,
       };
       const { data } = await createItem(submit);
