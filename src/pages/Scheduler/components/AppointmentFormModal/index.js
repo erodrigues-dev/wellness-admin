@@ -158,6 +158,7 @@ function AppointmentFormComponent() {
           itemKey="id"
           textField="name"
           onFilter={autocomplete.customers}
+          defaultValue={selected?.item?.customer}
           onChange={() => {}}
           appendToBody
           disabled={isEdit}
