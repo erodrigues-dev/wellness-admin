@@ -154,7 +154,7 @@ function AppointmentFormComponent() {
 
         <AutoCompleteFormikAdapter
           formik={formik}
-          name="customer"
+          name="customer.id"
           label="Customer"
           itemKey="id"
           textField="name"

@@ -119,7 +119,7 @@ export function AutoCompleteFormikAdapter({
   formikGetValue,
   ...options
 }) {
-  const { name, itemKey, onChange } = options;
+  const { name: inputName, itemKey, onChange } = options;
 
   function getValue(value) {
     if (formikGetValue) return formikGetValue(value);
@@ -129,6 +129,34 @@ export function AutoCompleteFormikAdapter({
       : value[itemKey];
   }
 
+  // If the formik field value is an object,
+  // It will get the main property inside this object
+  // Otherwise, it would try to render an object and
+  // Throw an error.
+  // example: get the property id inside an object with id and text.
+  const hasIdentifier = () => inputName.includes('.');
+
+  const getFieldNameProperty = (property) => {
+    const isName = property === 'name';
+
+    if (!hasIdentifier()) return isName ? inputName : '';
+
+    const [name, identifier] = inputName.split('.');
+
+    return isName ? name : identifier;
+  };
+
+  const fieldName = getFieldNameProperty('name');
+  const fieldIdentifier = getFieldNameProperty('identifier');
+
+  const getProperty = (property) => {
+    const field = formik[property][fieldName];
+
+    return hasIdentifier() && field ? field[fieldIdentifier] : field;
+  };
+
+  const getError = () => getProperty('errors') ?? '';
+
   return (
     <AutoComplete
       {...options}
@@ -136,12 +164,12 @@ export function AutoCompleteFormikAdapter({
         onChange ||
         ((value) => {
           const formikValue = getValue(value);
-          formik.setFieldValue(name, formikValue);
+          formik.setFieldValue(fieldName, formikValue);
         })
       }
-      onBlur={() => formik.setFieldTouched(name)}
-      isValid={!(formik.touched[name] && formik.errors[name])}
-      error={formik.errors[name]}
+      onBlur={() => formik.setFieldTouched(fieldName)}
+      isValid={!(formik.touched[fieldName] && formik.errors[fieldName])}
+      error={getError()}
     />
   );
 }
