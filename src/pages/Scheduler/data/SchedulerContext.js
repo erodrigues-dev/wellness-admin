@@ -76,8 +76,9 @@ export function SchedulerProvider({ children }) {
 
   const handleSaveItemMap = useCallback((values, item) => {
     const dataItem = mapToDataItem(item);
+    const alreadyOnList = values.some((x) => x.id === item.id);
 
-    if (item.id) {
+    if (alreadyOnList) {
       return values.map((x) => (item.id === x.id ? dataItem : x));
     }
 
