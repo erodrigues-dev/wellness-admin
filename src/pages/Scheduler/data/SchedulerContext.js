@@ -74,7 +74,7 @@ export function SchedulerProvider({ children }) {
     }
   }, [selectedCalendars, selectedDate]);
 
-  const addItem = useCallback((item) => {
+  const saveItem = useCallback((item) => {
     setEntries((prevState) => [...prevState, mapToDataItem(item)]);
   }, []);
 
@@ -97,7 +97,7 @@ export function SchedulerProvider({ children }) {
         settings,
         setSelectedCalendars,
         setSelectedDate,
-        addItem,
+        saveItem,
         modal,
         setModal,
         closeModal,

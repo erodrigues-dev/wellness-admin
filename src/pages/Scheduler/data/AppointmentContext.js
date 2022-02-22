@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 
-import { createItem, listActivities } from '~/services/scheduler';
+import { createItem, updateItem, listActivities } from '~/services/scheduler';
 
 import { useSchedulerContext } from './SchedulerContext';
 
@@ -20,7 +20,7 @@ const initialSelectedItemState = {
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { addItem, setModal, closeModal } = useSchedulerContext();
+  const { saveItem, setModal, closeModal } = useSchedulerContext();
   const [activities, setActivities] = useState([]);
   const [isFetchingActivites, setIsFetchingActivities] = useState(false);
   const [selected, setSelected] = useState(initialSelectedItemState);
@@ -69,17 +69,26 @@ export function AppointmentProvider({ children }) {
     });
   };
 
+  const submitItem = (id, values) =>
+    id ? updateItem(id, { id, ...values }) : createItem(values);
+
+  const handleItemOnSave = (values, response) =>
+    values.id ? values : response;
+
   const onSubmit = async (formValues) => {
     try {
-      const { activity, calendar, ...values } = formValues;
+      const values = formValues;
+      const { id, activity, calendar, customer, ...otherValues } = formValues;
       const submit = {
         activityId: activity.id,
         calendarId: calendar.id,
-        ...values,
+        customerId: customer.id,
+        ...otherValues,
       };
-      const { data } = await createItem(submit);
+      const { data } = await submitItem(id, submit);
+      const items = handleItemOnSave(values, data);
 
-      addItem(data);
+      saveItem(items);
       closeModal();
 
       toast.success('Appointment saved successfully');

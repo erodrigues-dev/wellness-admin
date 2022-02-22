@@ -42,11 +42,12 @@ function AppointmentFormComponent() {
     onSubmit,
     validationSchema,
     initialValues: getInitialValues({
+      id: selected?.item?.id,
       dateStart: selected?.item?.start ?? selected?.slotData?.start,
       activity: selected?.item?.activity,
       calendar: selected?.calendar,
       notes: selected?.item?.notes,
-      customerId: selected?.item?.customer?.id,
+      customer: selected?.item?.customer,
     }),
   });
 
@@ -153,13 +154,13 @@ function AppointmentFormComponent() {
 
         <AutoCompleteFormikAdapter
           formik={formik}
-          name="customerId"
+          name="customer"
           label="Customer"
           itemKey="id"
           textField="name"
           onFilter={autocomplete.customers}
           defaultValue={selected?.item?.customer}
-          onChange={() => {}}
+          onChange={(value) => formik.setFieldValue('customer', value)}
           appendToBody
           disabled={isEdit}
         />

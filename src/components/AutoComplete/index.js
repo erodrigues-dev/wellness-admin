@@ -132,11 +132,13 @@ export function AutoCompleteFormikAdapter({
   return (
     <AutoComplete
       {...options}
-      onChange={(value) => {
-        onChange(value);
-        const formikValue = getValue(value);
-        formik.setFieldValue(name, formikValue);
-      }}
+      onChange={
+        onChange ||
+        ((value) => {
+          const formikValue = getValue(value);
+          formik.setFieldValue(name, formikValue);
+        })
+      }
       onBlur={() => formik.setFieldTouched(name)}
       isValid={!(formik.touched[name] && formik.errors[name])}
       error={formik.errors[name]}
