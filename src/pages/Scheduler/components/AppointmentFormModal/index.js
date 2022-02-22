@@ -44,6 +44,7 @@ function AppointmentFormComponent() {
     initialValues: getInitialValues({
       id: selected?.item?.id,
       dateStart: selected?.item?.start ?? selected?.slotData?.start,
+      dateEnd: selected?.item?.end ?? selected?.slotData?.end,
       activity: selected?.item?.activity,
       calendar: selected?.calendar,
       notes: selected?.item?.notes,

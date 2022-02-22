@@ -15,6 +15,7 @@ export const validationSchema = yup.object({
   id: yup.string(),
   notes: yup.string().optional().max(600),
   dateStart: yup.string().required().label('start date'),
+  dateEnd: yup.string().label('end date'),
   activity: yup.object({
     id: yup.string().required().label('activity'),
     duration: yup.number(),
@@ -31,6 +32,7 @@ export const validationSchema = yup.object({
 
 export const getInitialValues = ({
   dateStart,
+  dateEnd,
   activity,
   customer,
   notes,
@@ -40,6 +42,7 @@ export const getInitialValues = ({
   id: id ?? '',
   notes: notes ?? '',
   dateStart: dateStart ?? '',
+  dateEnd: dateEnd ?? '',
   customer: customer ?? defaultCustomer,
   calendar: calendar ?? defaultCustomer,
   activity: activity ?? defaultActivity,
