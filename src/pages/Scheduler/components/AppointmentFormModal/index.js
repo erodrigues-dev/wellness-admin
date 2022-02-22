@@ -124,6 +124,7 @@ function AppointmentFormComponent() {
               isEdit || isFetchingActivites || !formik.values.calendar?.id,
           }}
           onChange={handleChangeActivity}
+          loading={isFetchingActivites}
         >
           <option value="" disabled>
             Select

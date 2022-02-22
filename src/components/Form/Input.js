@@ -1,20 +1,44 @@
 import React from 'react';
 import { Form } from 'react-bootstrap';
+import Spinner from 'react-bootstrap/Spinner';
+
+import styled from 'styled-components';
+
+const InputWrapper = styled.div`
+  position: relative;
+
+  .spinner {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+  }
+`;
 
 export function Input({
   name,
   label,
   error,
   children,
+  loading,
   groupOptions = {},
   inputOptions = {},
 }) {
   return (
     <Form.Group {...groupOptions}>
       <Form.Label>{label}</Form.Label>
-      <Form.Control name={name} {...inputOptions}>
-        {children}
-      </Form.Control>
+      <InputWrapper>
+        <Form.Control name={name} {...inputOptions}>
+          {children}
+        </Form.Control>
+        {loading && (
+          <Spinner
+            as="span"
+            animation="border"
+            size="sm"
+            className="spinner mr-2"
+          />
+        )}
+      </InputWrapper>
       <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
     </Form.Group>
   );
