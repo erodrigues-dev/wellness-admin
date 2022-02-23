@@ -13,6 +13,14 @@ import schedulerService from '~/services/scheduler';
 
 import { settings } from './settings';
 
+export const initialModalState = {
+  type: '',
+  selectedId: '',
+  isCreate: false,
+  isEdit: false,
+  isOpen: false,
+};
+
 export const SchedulerContext = createContext();
 
 export function SchedulerProvider({ children }) {
@@ -20,7 +28,7 @@ export function SchedulerProvider({ children }) {
   const [selectedCalendars, setSelectedCalendars] = useState([]);
   const [selectedDate, setSelectedDate] = useState(clearTime(new Date()));
   const [entries, setEntries] = useState([]);
-  const [modal, setModal] = useState({});
+  const [modal, setModal] = useState(initialModalState);
 
   const mapToDataItem = (data) => {
     const title = `${data.customer.name} (${data.activity.name})`;
@@ -32,7 +40,9 @@ export function SchedulerProvider({ children }) {
       title,
       start,
       end,
-      calendarId: data.calendarId,
+      calendarId: data.calendar ? data.calendar.id : data.calendarId,
+      activity: data.activity,
+      ...data,
     };
   };
 
@@ -64,9 +74,25 @@ export function SchedulerProvider({ children }) {
     }
   }, [selectedCalendars, selectedDate]);
 
-  const addItem = useCallback((item) => {
-    setEntries((prevState) => [...prevState, mapToDataItem(item)]);
+  const handleSaveItemMap = useCallback((values, item) => {
+    const dataItem = mapToDataItem(item);
+    const alreadyOnList = values.some((x) => x.id === item.id);
+
+    if (alreadyOnList) {
+      return values.map((x) => (item.id === x.id ? dataItem : x));
+    }
+
+    return [...values, dataItem];
   }, []);
+
+  const saveItem = useCallback(
+    (item) => {
+      setEntries((prevState) => handleSaveItemMap(prevState, item));
+    },
+    [handleSaveItemMap]
+  );
+
+  const closeModal = () => setModal(initialModalState);
 
   useEffect(() => {
     fetchCalendars();
@@ -83,11 +109,12 @@ export function SchedulerProvider({ children }) {
         selectedCalendars,
         entries,
         settings,
-        modal,
         setSelectedCalendars,
         setSelectedDate,
+        saveItem,
+        modal,
         setModal,
-        addItem,
+        closeModal,
       }}
     >
       {children}

@@ -7,56 +7,90 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 
-import { createItem, listActivities } from '~/services/scheduler';
+import { createItem, updateItem, listActivities } from '~/services/scheduler';
 
 import { useSchedulerContext } from './SchedulerContext';
+
+const initialSelectedItemState = {
+  slotData: null,
+  calendar: null,
+  item: null,
+};
 
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { addItem } = useSchedulerContext();
-  const [isOpen, setIsOpen] = useState(false);
-  const [slotData, setSlotData] = useState();
-  const [calendar, setCalendar] = useState(null);
+  const { saveItem, setModal, closeModal } = useSchedulerContext();
   const [activities, setActivities] = useState([]);
-  const [selectedDate, setSelectedDate] = useState(null);
+  const [isFetchingActivites, setIsFetchingActivities] = useState(false);
+  const [selected, setSelected] = useState(initialSelectedItemState);
 
   const fetchActivities = useCallback(async (calendarId) => {
     try {
+      setIsFetchingActivities(true);
       const { data } = await listActivities(calendarId);
 
       setActivities(data);
     } catch (error) {
       toast.error('Unable to list activities of calendar');
+    } finally {
+      setIsFetchingActivities(false);
     }
   }, []);
 
-  const setData = useCallback((data) => {
-    setSlotData(data);
-    setSelectedDate(data.start);
-    setCalendar(data.calendar);
-    setIsOpen(true);
-  }, []);
+  const resetSelected = () => setSelected(initialSelectedItemState);
 
-  const handleChangeDate = (value) => {
-    setSelectedDate(value);
+  const openNewAppointment = () =>
+    setModal({
+      type: 'appointment',
+      isCreate: true,
+      isOpen: true,
+    });
+
+  const handleSelectedData = (data) =>
+    setSelected({
+      slotData: data,
+      calendar: data.calendar,
+      item: data.dataItem,
+    });
+
+  const openFreeSlot = (data) => {
+    handleSelectedData(data);
+    openNewAppointment();
   };
 
-  const handleClose = () => {
-    setIsOpen(false);
+  const openEditAppointment = (data) => {
+    handleSelectedData(data);
+    setModal({
+      selectedId: data.id,
+      type: 'appointment',
+      isEdit: true,
+      isOpen: true,
+    });
   };
+
+  const submitItem = (id, values) =>
+    id ? updateItem(id, { id, ...values }) : createItem(values);
+
+  const handleItemOnSave = (values, response) =>
+    values.id ? values : response;
 
   const onSubmit = async (formValues) => {
     try {
-      const { activity, ...values } = formValues;
+      const values = formValues;
+      const { id, activity, calendar, customer, dateEnd, ...otherValues } =
+        formValues;
       const submit = {
         activityId: activity.id,
-        ...values,
+        calendarId: calendar.id,
+        customerId: customer.id,
+        ...otherValues,
       };
-      const { data } = await createItem(submit);
+      const { data } = await submitItem(id, submit);
+      const items = handleItemOnSave(values, data);
 
-      addItem(data);
-      handleClose();
+      saveItem(items);
+      closeModal();
 
       toast.success('Appointment saved successfully');
     } catch (error) {
@@ -65,21 +99,22 @@ export function AppointmentProvider({ children }) {
   };
 
   useEffect(() => {
-    if (calendar?.id) fetchActivities(calendar?.id);
-  }, [calendar, fetchActivities]);
+    if (selected?.calendar?.id) fetchActivities(selected?.calendar?.id);
+  }, [fetchActivities, selected]);
 
   return (
     <AppointmentContext.Provider
       value={{
-        isOpen,
-        slotData,
-        calendar,
+        selected,
         activities,
-        selectedDate,
-        setData,
-        handleChangeDate,
-        handleClose,
         onSubmit,
+        openFreeSlot,
+        openEditAppointment,
+        openNewAppointment,
+        resetSelected,
+        fetchActivities,
+        isFetchingActivites,
+        setActivities,
       }}
     >
       {children}

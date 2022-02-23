@@ -5,12 +5,13 @@ import { SchedulerSlot } from '@progress/kendo-react-scheduler';
 import { useAppointmentContext } from '../data/AppointmentContext';
 
 export function CustomSlot(props) {
-  const { setData } = useAppointmentContext();
+  const { openFreeSlot } = useAppointmentContext();
 
   const handleClick = () => {
     const calendar = props.group.resources[0];
     const { start, end } = props;
-    setData({
+
+    openFreeSlot({
       calendar,
       start,
       end,
