@@ -20,6 +20,7 @@ export function Input({
   error,
   children,
   loading,
+  touched,
   groupOptions = {},
   inputOptions = {},
 }) {
@@ -39,7 +40,11 @@ export function Input({
           />
         )}
       </InputWrapper>
-      <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
+      {touched && error && (
+        <Form.Control.Feedback type="invalid" className="d-block">
+          {error}
+        </Form.Control.Feedback>
+      )}
     </Form.Group>
   );
 }
@@ -86,6 +91,7 @@ export function InputFormikAdapter({ formik, ...options }) {
         isValid: formik.touched[fieldName] && !getError(),
         isInvalid: formik.touched[fieldName] && getError(),
       }}
+      touched={formik.touched[fieldName]}
       error={getError()}
     />
   );

@@ -86,6 +86,11 @@ function AppointmentFormComponent() {
     setActivities([]);
   }
 
+  function submitForm() {
+    formik.submitForm();
+    formik.setFieldTouched('calendar');
+  }
+
   return (
     <Window
       title={`${isEdit ? 'Edit' : 'Add'} appointment`}
@@ -182,7 +187,7 @@ function AppointmentFormComponent() {
         <Button variant="secondary" onClick={handleCloseModal}>
           Cancel
         </Button>
-        <ButtonLoading onClick={formik.handleSubmit}>Save</ButtonLoading>
+        <ButtonLoading onClick={submitForm}>Save</ButtonLoading>
       </WindowActionsBar>
     </Window>
   );
