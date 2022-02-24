@@ -27,7 +27,11 @@ export function SchedulerProvider({ children }) {
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendars, setSelectedCalendars] = useState([]);
   const [selectedDate, setSelectedDate] = useState(clearTime(new Date()));
-  const [entries, setEntries] = useState([]);
+  const [items, setItems] = useState({
+    appointments: [],
+    classes: [],
+    blocks: [],
+  });
   const [modal, setModal] = useState(initialModalState);
 
   const mapToDataItem = (data) => {
@@ -59,37 +63,48 @@ export function SchedulerProvider({ children }) {
     }
   }, []);
 
-  const fetchEntries = useCallback(async () => {
+  const fetchSchedulerItems = useCallback(async () => {
     try {
       if (selectedCalendars.length > 0 && selectedDate) {
         const { data } = await schedulerService.listItems({
           calendars: selectedCalendars.map((item) => item.id),
           date: selectedDate,
         });
+        const appointments = data?.appointments?.map(mapToDataItem);
 
-        setEntries(data.map(mapToDataItem));
+        setItems((prevState) => ({ ...prevState, appointments }));
       }
     } catch (error) {
       toast.error('Unable to list scheduler data');
     }
   }, [selectedCalendars, selectedDate]);
 
-  const handleSaveItemMap = useCallback((values, item) => {
-    const dataItem = mapToDataItem(item);
-    const alreadyOnList = values.some((x) => x.id === item.id);
+  const handleSaveAppointmentMap = useCallback(
+    (appointments, newAppointment) => {
+      const dataItem = mapToDataItem(newAppointment);
+      const alreadyOnList = appointments.some(
+        (x) => x.id === newAppointment.id
+      );
 
-    if (alreadyOnList) {
-      return values.map((x) => (item.id === x.id ? dataItem : x));
-    }
+      if (alreadyOnList) {
+        return appointments.map((x) =>
+          newAppointment.id === x.id ? dataItem : x
+        );
+      }
 
-    return [...values, dataItem];
-  }, []);
-
-  const saveItem = useCallback(
-    (item) => {
-      setEntries((prevState) => handleSaveItemMap(prevState, item));
+      return [...appointments, dataItem];
     },
-    [handleSaveItemMap]
+    []
+  );
+
+  const saveAppointment = useCallback(
+    (item) => {
+      setItems((prevState) => ({
+        ...prevState,
+        appointments: handleSaveAppointmentMap(prevState.appointments, item),
+      }));
+    },
+    [handleSaveAppointmentMap]
   );
 
   const closeModal = () => setModal(initialModalState);
@@ -99,19 +114,19 @@ export function SchedulerProvider({ children }) {
   }, [fetchCalendars]);
 
   useEffect(() => {
-    fetchEntries();
-  }, [fetchEntries]);
+    fetchSchedulerItems();
+  }, [fetchSchedulerItems]);
 
   return (
     <SchedulerContext.Provider
       value={{
         calendars,
         selectedCalendars,
-        entries,
+        items,
         settings,
         setSelectedCalendars,
         setSelectedDate,
-        saveItem,
+        saveAppointment,
         modal,
         setModal,
         closeModal,
