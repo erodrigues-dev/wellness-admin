@@ -1,4 +1,4 @@
-import React, { useCallback, useRef } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 
 import {
   Scheduler as KendoScheduler,
@@ -30,10 +30,10 @@ function InnerScheduler() {
   const {
     calendars,
     selectedCalendars,
-    entries,
     selectedDate,
     setSelectedDate,
     settings,
+    items,
   } = useSchedulerContext();
 
   const contentRef = useRef(null);
@@ -44,6 +44,13 @@ function InnerScheduler() {
     },
     [setSelectedDate]
   );
+
+  const handleSchedulerData = useMemo(() => {
+    // Later here we also will put the classes and blocks
+    const { appointments } = items;
+
+    return [...appointments];
+  }, [items]);
 
   return (
     <Container>
@@ -59,7 +66,7 @@ function InnerScheduler() {
             height={contentRef.current?.clientHeight - 20 || 600}
             group={settings.group}
             resources={[{ ...settings.resources, data: selectedCalendars }]}
-            data={entries}
+            data={handleSchedulerData}
             header={CustomHeader}
             onDateChange={handleDateChange}
             date={selectedDate}

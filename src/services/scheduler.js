@@ -14,17 +14,17 @@ export async function listActivities(calendarId) {
   return response;
 }
 
-export async function listSlots(calendars) {
-  const response = await api.get('/scheduler/slots', {
-    params: { calendars },
+export async function listItems({ calendars, date }) {
+  const response = await api.get('/scheduler/items', {
+    params: { calendars, date },
   });
 
   return response;
 }
 
-export async function listItems({ calendars, date }) {
-  const response = await api.get('/scheduler/items', {
-    params: { calendars, date },
+export async function listSlots(calendars) {
+  const response = await api.get('/scheduler/slots', {
+    params: { calendars },
   });
 
   return response;
@@ -36,14 +36,20 @@ export async function getItemById(id) {
   return response;
 }
 
-export async function createItem(item) {
-  const response = await api.post('/scheduler/items', item);
+export async function createAppointment(item) {
+  const response = await api.post('/scheduler/appointments', item);
 
   return response;
 }
 
-export async function updateItem(id, item) {
-  const response = await api.put(`/scheduler/items/${id}`, item);
+export async function updateAppointment(id, item) {
+  const response = await api.put(`/scheduler/appointments/${id}`, item);
+
+  return response;
+}
+
+export async function cancelAppointment(id) {
+  const response = await api.put(`/scheduler/appointments/${id}/cancel`);
 
   return response;
 }
@@ -54,6 +60,7 @@ export default {
   listSlots,
   listItems,
   getItemById,
-  createItem,
-  updateItem,
+  createAppointment,
+  updateAppointment,
+  cancelAppointment,
 };

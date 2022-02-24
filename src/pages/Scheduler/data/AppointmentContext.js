@@ -7,7 +7,11 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 
-import { createItem, updateItem, listActivities } from '~/services/scheduler';
+import {
+  createAppointment,
+  updateAppointment,
+  listActivities,
+} from '~/services/scheduler';
 
 import { useSchedulerContext } from './SchedulerContext';
 
@@ -20,7 +24,7 @@ const initialSelectedItemState = {
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { saveItem, setModal, closeModal } = useSchedulerContext();
+  const { saveAppointment, setModal, closeModal } = useSchedulerContext();
   const [activities, setActivities] = useState([]);
   const [isFetchingActivites, setIsFetchingActivities] = useState(false);
   const [selected, setSelected] = useState(initialSelectedItemState);
@@ -70,10 +74,10 @@ export function AppointmentProvider({ children }) {
   };
 
   const submitItem = (id, values) =>
-    id ? updateItem(id, { id, ...values }) : createItem(values);
+    id ? updateAppointment(id, { id, ...values }) : createAppointment(values);
 
   const handleItemOnSave = (values, response) =>
-    values.id ? values : response;
+    values.id ? { ...values, dateEnd: response.dateEnd } : response;
 
   const onSubmit = async (formValues) => {
     try {
@@ -89,7 +93,7 @@ export function AppointmentProvider({ children }) {
       const { data } = await submitItem(id, submit);
       const items = handleItemOnSave(values, data);
 
-      saveItem(items);
+      saveAppointment(items);
       closeModal();
 
       toast.success('Appointment saved successfully');
