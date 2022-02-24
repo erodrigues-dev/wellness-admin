@@ -4,10 +4,19 @@ export const Container = styled.div``;
 
 export const List = styled.ul``;
 
-export const ListItem = styled.span`
-  display: block;
+export const ListItem = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   width: 100%;
-  min-height: 26px;
+  min-height: 40px;
+
+  button {
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 `;
 
 export const MultiSelectFooterContainer = styled.div`

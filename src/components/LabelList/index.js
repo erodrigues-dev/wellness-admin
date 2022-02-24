@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Form } from 'react-bootstrap';
+import { FiEdit } from 'react-icons/fi';
 
 import { Button } from '@progress/kendo-react-buttons';
 import { MultiSelect } from '@progress/kendo-react-dropdowns';
@@ -33,11 +34,13 @@ const MultiSelectFooter = () => (
   </MultiSelectFooterContainer>
 );
 
-const itemRender = (li, itemProps) => {
-  const { index } = itemProps;
+const itemRender = (li) => {
   const itemChildren = (
     <ListItem>
-      {li.props.children} {index}
+      <span>{li.props.children}</span>
+      <button type="button" title="Edit">
+        <FiEdit />
+      </button>
     </ListItem>
   );
 
@@ -61,6 +64,7 @@ export function LabelList() {
           opened={isOpened}
           onOpen={() => setIsOpened(true)}
           itemRender={itemRender}
+          className="label-list"
         />
         {/* {isValid || <Error>{error}</Error>} */}
       </Form.Group>

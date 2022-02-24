@@ -42,3 +42,21 @@ a {
     }
   }
 }
+
+// MULTISELECT ITEM
+.k-list__item.k-state-selected,
+.k-list .k-state-selected.k-item,
+.k-state-selected.k-list-optionlabel {
+  background-color: #f3f3f3;
+  color: #212529;
+}
+
+.k-list__item:hover.k-state-selected,
+.k-list .k-item:hover.k-state-selected,
+.k-list-optionlabel:hover.k-state-selected,
+.k-list__item.k-state-hover.k-state-selected,
+.k-list .k-state-hover.k-state-selected.k-item,
+.k-state-hover.k-state-selected.k-list-optionlabel {
+  background-color: rgba(0, 0, 0, 0.1);
+  color: #212529;
+}
