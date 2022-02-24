@@ -8,6 +8,7 @@ import { AutoCompleteFormikAdapter } from '~/components/AutoComplete';
 import ButtonLoading from '~/components/ButtonLoading';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
+import { LabelList } from '~/components/LabelList';
 import autocomplete from '~/services/autocomplete';
 
 import { useAppointmentContext } from '../../data/AppointmentContext';
@@ -171,6 +172,8 @@ function AppointmentFormComponent() {
           appendToBody
           disabled={isEdit}
         />
+
+        {isEdit && <LabelList />}
 
         <InputFormikAdapter
           formik={formik}
