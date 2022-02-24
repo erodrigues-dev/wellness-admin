@@ -77,7 +77,7 @@ export function AppointmentProvider({ children }) {
     id ? updateAppointment(id, { id, ...values }) : createAppointment(values);
 
   const handleItemOnSave = (values, response) =>
-    values.id ? values : response;
+    values.id ? { ...values, dateEnd: response.dateEnd } : response;
 
   const onSubmit = async (formValues) => {
     try {
