@@ -100,6 +100,8 @@ function AppointmentFormComponent() {
       onClose={handleCloseModal}
     >
       <Form onSubmit={formik.handleSubmit}>
+        {isEdit && <LabelList />}
+
         <InputFormikAdapter
           formik={formik}
           name="calendar.id"
@@ -172,8 +174,6 @@ function AppointmentFormComponent() {
           appendToBody
           disabled={isEdit}
         />
-
-        {isEdit && <LabelList />}
 
         <InputFormikAdapter
           formik={formik}
