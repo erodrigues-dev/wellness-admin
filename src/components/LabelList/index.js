@@ -6,6 +6,7 @@ import OutsideClickHandler from 'react-outside-click-handler';
 
 import { Button } from '@progress/kendo-react-buttons';
 
+import { LabelForm } from './LabelForm';
 import {
   Container,
   OpenListButton,
@@ -14,6 +15,8 @@ import {
   LabelButton,
   EditButton,
   FooterContainer,
+  Render,
+  HeaderContainer,
 } from './styles';
 
 const labels = [
@@ -34,8 +37,67 @@ const labels = [
   },
 ];
 
+const ListRender = ({
+  openForm,
+  showForm,
+  selectedLabel,
+  handleEditClick,
+  closeForm,
+}) => {
+  if (showForm) {
+    return (
+      <LabelForm
+        isEdit={!!selectedLabel}
+        label={selectedLabel}
+        closeForm={closeForm}
+      />
+    );
+  }
+
+  return (
+    <List>
+      <HeaderContainer>Labels</HeaderContainer>
+      {labels?.map((label) => (
+        <ListItem key={label.id}>
+          <LabelButton type="button" color={label.color}>
+            {label.name}
+          </LabelButton>
+          <EditButton type="button" title="Edit" onClick={handleEditClick}>
+            <FiEdit />
+          </EditButton>
+        </ListItem>
+      ))}
+      <FooterContainer>
+        <Button type="button" onClick={openForm}>
+          New Label
+        </Button>
+      </FooterContainer>
+    </List>
+  );
+};
+
 export function LabelList() {
+  const [showForm, setShowForm] = useState(false);
+  const [selectedLabel, setSelectedLabel] = useState(null);
   const [isOpened, setIsOpened] = useState(false);
+
+  const closeList = () => {
+    setShowForm(false);
+    setIsOpened(false);
+    setSelectedLabel(null);
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setSelectedLabel(null);
+  };
+
+  const openForm = () => setShowForm(true);
+
+  const handleEditClick = (label) => {
+    openForm();
+    setSelectedLabel(label);
+  };
 
   return (
     <Container>
@@ -44,24 +106,16 @@ export function LabelList() {
           <MdOutlineLabel /> Label <RiArrowDownSFill />
         </OpenListButton>
         {isOpened && (
-          <OutsideClickHandler onOutsideClick={() => setIsOpened(false)}>
-            <List>
-              {labels?.map((label) => (
-                <ListItem key={label.id}>
-                  <LabelButton type="button" color={label.color}>
-                    {label.name}
-                  </LabelButton>
-                  <EditButton type="button" title="Edit">
-                    <FiEdit />
-                  </EditButton>
-                </ListItem>
-              ))}
-              <FooterContainer>
-                <Button type="button" onClick={(e) => e.preventDefault()}>
-                  New Label
-                </Button>
-              </FooterContainer>
-            </List>
+          <OutsideClickHandler onOutsideClick={closeList}>
+            <Render>
+              <ListRender
+                showForm={showForm}
+                selectedLabel={selectedLabel}
+                handleEditClick={handleEditClick}
+                openForm={openForm}
+                closeForm={closeForm}
+              />
+            </Render>
           </OutsideClickHandler>
         )}
       </div>

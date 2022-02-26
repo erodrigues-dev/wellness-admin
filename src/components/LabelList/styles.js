@@ -17,7 +17,7 @@ export const OpenListButton = styled.button`
   gap: 8px;
 `;
 
-export const List = styled.ul`
+export const Render = styled.div`
   background-color: white;
   position: absolute;
   top: 36px;
@@ -25,9 +25,13 @@ export const List = styled.ul`
   max-height: 300px;
   overflow-y: auto;
   z-index: 2;
-  padding: 16px;
+  padding: 12px;
   border-radius: 5px;
   box-shadow: 0 1px 2px 2px rgba(0, 0, 0, 0.2);
+`;
+
+export const List = styled.ul`
+  margin-bottom: 0;
 `;
 
 export const ListItem = styled.div`
@@ -61,8 +65,24 @@ export const EditButton = styled.button`
   }
 `;
 
-export const FooterContainer = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
-  margin-top: 12px;
+export const HeaderContainer = styled.header`
+  display: flex;
+  align-items: center;
+  /* justify-content: space-between; */
+  justify-content: center;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 8px;
+`;
+
+export const FooterContainer = styled.footer`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  column-gap: 8px;
+  margin-top: 16px;
+
+  button {
+    width: 100%;
+  }
 `;
