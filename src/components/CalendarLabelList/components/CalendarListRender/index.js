@@ -7,7 +7,13 @@ import { Button } from '@progress/kendo-react-buttons';
 import { useCalendarLabel } from '../../data/CalendarLabelContext';
 import { FooterContainer, HeaderContainer } from '../../styles';
 import { CalendarLabelForm } from '../CalendarLabelForm';
-import { List, ListItem, LabelButton, EditButton } from './styles';
+import {
+  List,
+  ListItem,
+  LabelButton,
+  EditButton,
+  ListContainer,
+} from './styles';
 
 const CalendarListRender = () => {
   const {
@@ -34,33 +40,35 @@ const CalendarListRender = () => {
   }
 
   return (
-    <List>
+    <ListContainer>
       <HeaderContainer>Labels</HeaderContainer>
-      {labels?.map((label) => (
-        <ListItem key={label.id}>
-          <LabelButton
-            type="button"
-            color={label.color}
-            onClick={() => handleSelectLabel(label)}
-          >
-            <span>{label.name}</span>
-            {isSelected(label) && <RiCheckFill />}
-          </LabelButton>
-          <EditButton
-            type="button"
-            title="Edit"
-            onClick={() => handleEditClick(label)}
-          >
-            <FiEdit />
-          </EditButton>
-        </ListItem>
-      ))}
+      <List>
+        {labels?.map((label) => (
+          <ListItem key={label.id}>
+            <LabelButton
+              type="button"
+              color={label.color}
+              onClick={() => handleSelectLabel(label)}
+            >
+              <span>{label.name}</span>
+              {isSelected(label) && <RiCheckFill />}
+            </LabelButton>
+            <EditButton
+              type="button"
+              title="Edit"
+              onClick={() => handleEditClick(label)}
+            >
+              <FiEdit />
+            </EditButton>
+          </ListItem>
+        ))}
+      </List>
       <FooterContainer>
         <Button type="button" onClick={openForm}>
           New Label
         </Button>
       </FooterContainer>
-    </List>
+    </ListContainer>
   );
 };
 

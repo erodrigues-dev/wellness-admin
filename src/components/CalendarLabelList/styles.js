@@ -26,7 +26,6 @@ export const Render = styled.div`
   position: absolute;
   top: 36px;
   width: 300px;
-  max-height: 300px;
   overflow-y: auto;
   z-index: 2;
   padding: 12px;

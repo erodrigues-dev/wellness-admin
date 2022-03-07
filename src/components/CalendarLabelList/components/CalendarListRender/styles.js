@@ -1,7 +1,11 @@
 import styled from 'styled-components';
 
+export const ListContainer = styled.div``;
+
 export const List = styled.ul`
   margin-bottom: 0;
+  overflow: auto;
+  max-height: 200px;
 `;
 
 export const ListItem = styled.div`
