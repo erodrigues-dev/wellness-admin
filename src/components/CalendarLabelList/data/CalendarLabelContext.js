@@ -1,7 +1,11 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
-import { listCalendarLabels } from '~/services/calendar-labels';
+import {
+  createCalendarLabel,
+  listCalendarLabels,
+  updateCalendarLabel,
+} from '~/services/calendar-labels';
 
 const CalendarLabelContext = createContext();
 
@@ -40,6 +44,37 @@ export const CalendarLabelProvider = ({ children }) => {
     setSelectedLabel(label);
   };
 
+  const submitItem = (id, values) =>
+    id
+      ? updateCalendarLabel(id, { id, ...values })
+      : createCalendarLabel(values);
+
+  const saveCalendarLabel = (item) => {
+    setLabels((prevState) => {
+      const alreadyOnList = labels.some((x) => x.id === item.id);
+
+      if (alreadyOnList) {
+        return labels.map((x) => (item.id === x.id ? item : x));
+      }
+
+      return [...prevState, item];
+    });
+  };
+
+  const onSubmit = async (formValues) => {
+    try {
+      const { id, ...values } = formValues;
+      const { data } = await submitItem(id, values);
+
+      saveCalendarLabel(data);
+      closeForm();
+
+      toast.success('Label saved successfully');
+    } catch (error) {
+      toast.error('Error on save label');
+    }
+  };
+
   return (
     <CalendarLabelContext.Provider
       value={{
@@ -54,6 +89,7 @@ export const CalendarLabelProvider = ({ children }) => {
         handleSelectLabel,
         setIsOpened,
         openForm,
+        onSubmit,
       }}
     >
       {children}

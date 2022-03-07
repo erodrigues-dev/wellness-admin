@@ -4,27 +4,14 @@ import { Button } from 'react-bootstrap';
 import { useFormik } from 'formik';
 
 import { Input } from '~/components/Form/Input';
-import {
-  createCalendarLabel,
-  updateCalendarLabel,
-} from '~/services/calendar-labels';
 
+import { useCalendarLabel } from '../../data/CalendarLabelContext';
 import { FooterContainer, HeaderContainer } from '../../styles';
 import { validationSchema, getInitialValues } from './schema';
 import { Container } from './styles';
 
 export function CalendarLabelForm({ isEdit, label, closeForm }) {
-  const onSubmit = (formValues) => {
-    const { id, ...values } = formValues;
-
-    if (id) {
-      updateCalendarLabel(id, values);
-    } else {
-      createCalendarLabel(values);
-    }
-
-    closeForm();
-  };
+  const { onSubmit } = useCalendarLabel();
 
   const formik = useFormik({
     onSubmit,
