@@ -20,6 +20,14 @@ export const LabelButton = styled.button`
   border-radius: 5px;
   padding: 4px 8px;
   color: white;
+  transition: all 200ms;
+
+  &:hover {
+    background-image: linear-gradient(
+      ${(props) => props.color},
+      rgba(0, 0, 0, 0.2)
+    );
+  }
 `;
 
 export const EditButton = styled.button`
