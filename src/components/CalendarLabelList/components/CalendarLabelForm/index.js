@@ -9,11 +9,11 @@ import {
   updateCalendarLabel,
 } from '~/services/calendar-labels';
 
-import { FooterContainer, HeaderContainer } from '../styles';
+import { FooterContainer, HeaderContainer } from '../../styles';
 import { validationSchema, getInitialValues } from './schema';
 import { Container } from './styles';
 
-export function LabelForm({ isEdit, label, closeForm }) {
+export function CalendarLabelForm({ isEdit, label, closeForm }) {
   const onSubmit = (formValues) => {
     const { id, ...values } = formValues;
 

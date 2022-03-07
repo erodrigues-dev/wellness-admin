@@ -6,9 +6,9 @@ import { useFormik } from 'formik';
 
 import { AutoCompleteFormikAdapter } from '~/components/AutoComplete';
 import ButtonLoading from '~/components/ButtonLoading';
+import { CalendarLabels } from '~/components/CalendarLabelList';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
-import { LabelList } from '~/components/LabelList';
 import autocomplete from '~/services/autocomplete';
 
 import { useAppointmentContext } from '../../data/AppointmentContext';
@@ -100,7 +100,7 @@ function AppointmentFormComponent() {
       onClose={handleCloseModal}
     >
       <Form onSubmit={formik.handleSubmit}>
-        {isEdit && <LabelList />}
+        {isEdit && <CalendarLabels />}
 
         <InputFormikAdapter
           formik={formik}

@@ -4,25 +4,28 @@ import { RiCheckFill } from 'react-icons/ri';
 
 import { Button } from '@progress/kendo-react-buttons';
 
-import { LabelForm } from '../LabelForm';
-import { FooterContainer, HeaderContainer } from '../styles';
+import { useCalendarLabel } from '../../data/CalendarLabelContext';
+import { FooterContainer, HeaderContainer } from '../../styles';
+import { CalendarLabelForm } from '../CalendarLabelForm';
 import { List, ListItem, LabelButton, EditButton } from './styles';
 
-const ListRender = ({
-  openForm,
-  showForm,
-  labelToEdit,
-  handleEditClick,
-  closeForm,
-  labels,
-  handleSelectLabel,
-  selectedLabel,
-}) => {
+const CalendarListRender = () => {
+  const {
+    openForm,
+    showForm,
+    labelToEdit,
+    handleEditClick,
+    closeForm,
+    labels,
+    handleSelectLabel,
+    selectedLabel,
+  } = useCalendarLabel();
+
   const isSelected = (label) => selectedLabel?.id === label.id;
 
   if (showForm) {
     return (
-      <LabelForm
+      <CalendarLabelForm
         isEdit={!!labelToEdit}
         label={labelToEdit}
         closeForm={closeForm}
@@ -61,4 +64,4 @@ const ListRender = ({
   );
 };
 
-export default ListRender;
+export default CalendarListRender;
