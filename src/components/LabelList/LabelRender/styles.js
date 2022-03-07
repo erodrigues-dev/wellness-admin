@@ -14,7 +14,7 @@ export const ListItem = styled.div`
 
 export const LabelButton = styled.button`
   display: flex;
-  flex: 1;
+  align-items: center;
   width: 100%;
   background-color: ${(props) => props.color};
   border-radius: 5px;
@@ -27,6 +27,12 @@ export const LabelButton = styled.button`
       ${(props) => props.color},
       rgba(0, 0, 0, 0.2)
     );
+  }
+
+  & > span {
+    text-align: left;
+    flex: 1;
+    align-self: flex-start;
   }
 `;
 

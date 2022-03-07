@@ -12,6 +12,7 @@ import { Container, OpenListButton, Render } from './styles';
 export function LabelList() {
   const [labels, setLabels] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [labelToEdit, setLabelToEdit] = useState(null);
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [isOpened, setIsOpened] = useState(false);
 
@@ -24,37 +25,48 @@ export function LabelList() {
   const closeList = () => {
     setShowForm(false);
     setIsOpened(false);
-    setSelectedLabel(null);
+    setLabelToEdit(null);
   };
 
   const closeForm = () => {
     setShowForm(false);
-    setSelectedLabel(null);
+    setLabelToEdit(null);
   };
 
   const openForm = () => setShowForm(true);
 
   const handleEditClick = (label) => {
     openForm();
+    setLabelToEdit(label);
+  };
+
+  const handleSelectLabel = (label) => {
     setSelectedLabel(label);
   };
 
   return (
     <Container>
       <div className="wrapper">
-        <OpenListButton type="button" onClick={() => setIsOpened(true)}>
-          <MdOutlineLabel /> Label <RiArrowDownSFill />
+        <OpenListButton
+          type="button"
+          onClick={() => setIsOpened(true)}
+          color={selectedLabel?.color}
+        >
+          <MdOutlineLabel /> {selectedLabel?.name ?? 'Label'}{' '}
+          <RiArrowDownSFill />
         </OpenListButton>
         {isOpened && (
           <OutsideClickHandler onOutsideClick={closeList}>
             <Render>
               <ListRender
                 showForm={showForm}
-                selectedLabel={selectedLabel}
+                labelToEdit={labelToEdit}
                 handleEditClick={handleEditClick}
                 openForm={openForm}
                 closeForm={closeForm}
                 labels={labels}
+                selectedLabel={selectedLabel}
+                handleSelectLabel={handleSelectLabel}
               />
             </Render>
           </OutsideClickHandler>

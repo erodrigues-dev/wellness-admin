@@ -1,5 +1,6 @@
 import React from 'react';
 import { FiEdit } from 'react-icons/fi';
+import { RiCheckFill } from 'react-icons/ri';
 
 import { Button } from '@progress/kendo-react-buttons';
 
@@ -10,16 +11,20 @@ import { List, ListItem, LabelButton, EditButton } from './styles';
 const ListRender = ({
   openForm,
   showForm,
-  selectedLabel,
+  labelToEdit,
   handleEditClick,
   closeForm,
   labels,
+  handleSelectLabel,
+  selectedLabel,
 }) => {
+  const isSelected = (label) => selectedLabel.id === label.id;
+
   if (showForm) {
     return (
       <LabelForm
-        isEdit={!!selectedLabel}
-        label={selectedLabel}
+        isEdit={!!labelToEdit}
+        label={labelToEdit}
         closeForm={closeForm}
       />
     );
@@ -30,10 +35,19 @@ const ListRender = ({
       <HeaderContainer>Labels</HeaderContainer>
       {labels?.map((label) => (
         <ListItem key={label.id}>
-          <LabelButton type="button" color={label.color}>
-            {label.name}
+          <LabelButton
+            type="button"
+            color={label.color}
+            onClick={() => handleSelectLabel(label)}
+          >
+            <span>{label.name}</span>
+            {isSelected(label) && <RiCheckFill />}
           </LabelButton>
-          <EditButton type="button" title="Edit" onClick={handleEditClick}>
+          <EditButton
+            type="button"
+            title="Edit"
+            onClick={() => handleEditClick(label)}
+          >
             <FiEdit />
           </EditButton>
         </ListItem>

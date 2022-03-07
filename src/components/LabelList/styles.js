@@ -15,6 +15,10 @@ export const OpenListButton = styled.button`
   display: flex;
   align-items: center;
   gap: 8px;
+  background-color: ${(props) => props.color};
+  color: ${(props) => (props.color ? 'white' : 'black')};
+  transition: all 200ms;
+  position: relative;
 `;
 
 export const Render = styled.div`
