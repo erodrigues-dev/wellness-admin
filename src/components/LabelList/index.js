@@ -1,85 +1,25 @@
-import React, { useState } from 'react';
-import { FiEdit } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
 import { MdOutlineLabel } from 'react-icons/md';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import OutsideClickHandler from 'react-outside-click-handler';
+import { toast } from 'react-toastify';
 
-import { Button } from '@progress/kendo-react-buttons';
+import { listCalendarLabels } from '~/services/calendar-labels';
 
-import { LabelForm } from './LabelForm';
-import {
-  Container,
-  OpenListButton,
-  List,
-  ListItem,
-  LabelButton,
-  EditButton,
-  FooterContainer,
-  Render,
-  HeaderContainer,
-} from './styles';
-
-const labels = [
-  {
-    id: 1,
-    name: 'teste',
-    color: '#333',
-  },
-  {
-    id: 2,
-    name: 'teste2',
-    color: '#333',
-  },
-  {
-    id: 3,
-    name: 'teste3',
-    color: '#333',
-  },
-];
-
-const ListRender = ({
-  openForm,
-  showForm,
-  selectedLabel,
-  handleEditClick,
-  closeForm,
-}) => {
-  if (showForm) {
-    return (
-      <LabelForm
-        isEdit={!!selectedLabel}
-        label={selectedLabel}
-        closeForm={closeForm}
-      />
-    );
-  }
-
-  return (
-    <List>
-      <HeaderContainer>Labels</HeaderContainer>
-      {labels?.map((label) => (
-        <ListItem key={label.id}>
-          <LabelButton type="button" color={label.color}>
-            {label.name}
-          </LabelButton>
-          <EditButton type="button" title="Edit" onClick={handleEditClick}>
-            <FiEdit />
-          </EditButton>
-        </ListItem>
-      ))}
-      <FooterContainer>
-        <Button type="button" onClick={openForm}>
-          New Label
-        </Button>
-      </FooterContainer>
-    </List>
-  );
-};
+import ListRender from './LabelRender';
+import { Container, OpenListButton, Render } from './styles';
 
 export function LabelList() {
+  const [labels, setLabels] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [isOpened, setIsOpened] = useState(false);
+
+  useEffect(() => {
+    listCalendarLabels()
+      .then((response) => setLabels(response.data))
+      .catch(() => toast.error('Error on fetch calendar labels'));
+  }, []);
 
   const closeList = () => {
     setShowForm(false);
@@ -114,6 +54,7 @@ export function LabelList() {
                 handleEditClick={handleEditClick}
                 openForm={openForm}
                 closeForm={closeForm}
+                labels={labels}
               />
             </Render>
           </OutsideClickHandler>
