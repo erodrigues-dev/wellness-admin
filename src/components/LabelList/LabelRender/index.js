@@ -18,7 +18,7 @@ const ListRender = ({
   handleSelectLabel,
   selectedLabel,
 }) => {
-  const isSelected = (label) => selectedLabel.id === label.id;
+  const isSelected = (label) => selectedLabel?.id === label.id;
 
   if (showForm) {
     return (
