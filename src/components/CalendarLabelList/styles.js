@@ -40,6 +40,19 @@ export const HeaderContainer = styled.header`
   margin-bottom: 12px;
   border-bottom: 1px solid #eaeaea;
   padding-bottom: 8px;
+
+  & > span {
+    text-align: center;
+    flex: 1;
+  }
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    font-size: 1.2rem;
+  }
 `;
 
 export const FooterContainer = styled.footer`

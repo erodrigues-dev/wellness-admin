@@ -1,6 +1,6 @@
 import React from 'react';
 import { FiEdit } from 'react-icons/fi';
-import { RiCheckFill } from 'react-icons/ri';
+import { RiCheckFill, RiCloseFill } from 'react-icons/ri';
 
 import { Button } from '@progress/kendo-react-buttons';
 
@@ -21,27 +21,26 @@ const CalendarListRender = () => {
     showForm,
     labelToEdit,
     handleEditClick,
-    closeForm,
     labels,
     handleSelectLabel,
     selectedLabel,
+    closeList,
   } = useCalendarLabel();
 
   const isSelected = (label) => selectedLabel?.id === label.id;
 
   if (showForm) {
-    return (
-      <CalendarLabelForm
-        isEdit={!!labelToEdit}
-        label={labelToEdit}
-        closeForm={closeForm}
-      />
-    );
+    return <CalendarLabelForm isEdit={!!labelToEdit} label={labelToEdit} />;
   }
 
   return (
     <ListContainer>
-      <HeaderContainer>Labels</HeaderContainer>
+      <HeaderContainer>
+        <span>Labels</span>
+        <button type="button" onClick={closeList} title="Close">
+          <RiCloseFill />
+        </button>
+      </HeaderContainer>
       <List>
         {labels?.map((label) => (
           <ListItem key={label.id}>
@@ -49,6 +48,7 @@ const CalendarListRender = () => {
               type="button"
               color={label.color}
               onClick={() => handleSelectLabel(label)}
+              title={label.name}
             >
               <span>{label.name}</span>
               {isSelected(label) && <RiCheckFill />}

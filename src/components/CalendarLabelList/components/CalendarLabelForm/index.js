@@ -1,5 +1,6 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
+import { RiArrowLeftSLine, RiCloseFill } from 'react-icons/ri';
 
 import { useFormik } from 'formik';
 
@@ -10,8 +11,8 @@ import { FooterContainer, HeaderContainer } from '../../styles';
 import { validationSchema, getInitialValues } from './schema';
 import { Container } from './styles';
 
-export function CalendarLabelForm({ isEdit, label, closeForm }) {
-  const { onSubmit } = useCalendarLabel();
+export function CalendarLabelForm({ isEdit, label }) {
+  const { onSubmit, closeForm, closeList } = useCalendarLabel();
 
   const formik = useFormik({
     onSubmit,
@@ -25,7 +26,15 @@ export function CalendarLabelForm({ isEdit, label, closeForm }) {
 
   return (
     <Container>
-      <HeaderContainer>{isEdit ? 'Edit' : 'Create'} label</HeaderContainer>
+      <HeaderContainer>
+        <button type="button" onClick={closeForm} title="Back">
+          <RiArrowLeftSLine />
+        </button>
+        <span>{isEdit ? 'Edit' : 'Create'} label</span>
+        <button type="button" onClick={closeList} title="Close">
+          <RiCloseFill />
+        </button>
+      </HeaderContainer>
 
       <div className="wrapper">
         <Input
@@ -51,9 +60,11 @@ export function CalendarLabelForm({ isEdit, label, closeForm }) {
       </div>
 
       <FooterContainer>
-        <Button type="button" variant="secondary" onClick={closeForm}>
-          Back
-        </Button>
+        {isEdit && (
+          <Button type="button" variant="danger" onClick={closeForm}>
+            Delete
+          </Button>
+        )}
         <Button type="button" onClick={formik.submitForm}>
           Submit
         </Button>
