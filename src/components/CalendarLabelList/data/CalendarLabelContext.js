@@ -88,7 +88,10 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
   };
 
   const deleteLabel = () => {
-    if (labelToEdit?.id === selectedLabel?.id) setSelectedLabel(null);
+    if (labelToEdit?.id === selectedLabel?.id) {
+      setSelectedLabel(null);
+      onChange('');
+    }
 
     setLabels((prevState) => prevState.filter((x) => x.id !== labelToEdit?.id));
   };
