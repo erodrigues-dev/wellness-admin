@@ -23,24 +23,24 @@ export function CalendarLabelList() {
     useCalendarLabel();
 
   return (
-    <Container>
-      <div className="wrapper">
-        <OpenListButton
-          type="button"
-          onClick={() => setIsOpened(true)}
-          color={selectedLabel?.color}
-        >
-          <MdOutlineLabel /> {selectedLabel?.name ?? 'Label'}{' '}
-          <RiArrowDownSFill />
-        </OpenListButton>
-        {isOpened && (
-          <OutsideClickHandler onOutsideClick={closeList}>
+    <OutsideClickHandler onOutsideClick={closeList}>
+      <Container>
+        <div className="wrapper">
+          <OpenListButton
+            type="button"
+            onClick={() => setIsOpened((prevState) => !prevState)}
+            color={selectedLabel?.color}
+          >
+            <MdOutlineLabel /> {selectedLabel?.name ?? 'Label'}{' '}
+            <RiArrowDownSFill />
+          </OpenListButton>
+          {isOpened && (
             <Render>
               <CalendarListRender />
             </Render>
-          </OutsideClickHandler>
-        )}
-      </div>
-    </Container>
+          )}
+        </div>
+      </Container>
+    </OutsideClickHandler>
   );
 }
