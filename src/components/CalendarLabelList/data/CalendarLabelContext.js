@@ -16,11 +16,14 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
   const [labelToEdit, setLabelToEdit] = useState(null);
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [isOpened, setIsOpened] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     listCalendarLabels()
       .then((response) => setLabels(response.data))
-      .catch(() => toast.error('Error on fetch calendar labels'));
+      .catch(() => toast.error('Error on fetch calendar labels'))
+      .finally(() => setLoading(false));
   }, []);
 
   useEffect(() => {
@@ -119,6 +122,7 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
         openForm,
         onSubmit,
         handleDeleteLabel,
+        loading,
       }}
     >
       {children}

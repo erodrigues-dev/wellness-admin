@@ -1,4 +1,5 @@
 import React from 'react';
+import { Spinner } from 'react-bootstrap';
 import { MdOutlineLabel } from 'react-icons/md';
 import { RiArrowDownSFill } from 'react-icons/ri';
 import OutsideClickHandler from 'react-outside-click-handler';
@@ -19,7 +20,7 @@ export function CalendarLabels({ value, onChange }) {
 }
 
 export function CalendarLabelList() {
-  const { selectedLabel, setIsOpened, isOpened, closeList } =
+  const { selectedLabel, setIsOpened, isOpened, closeList, loading } =
     useCalendarLabel();
 
   return (
@@ -30,9 +31,19 @@ export function CalendarLabelList() {
             type="button"
             onClick={() => setIsOpened((prevState) => !prevState)}
             color={selectedLabel?.color}
+            disabled={loading}
           >
             <MdOutlineLabel /> {selectedLabel?.name ?? 'Label'}{' '}
-            <RiArrowDownSFill />
+            {loading ? (
+              <Spinner
+                as="span"
+                animation="border"
+                size="sm"
+                className="spinner mr-2"
+              />
+            ) : (
+              <RiArrowDownSFill />
+            )}
           </OpenListButton>
           {isOpened && (
             <Render>
