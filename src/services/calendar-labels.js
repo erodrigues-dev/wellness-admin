@@ -19,7 +19,7 @@ export async function updateCalendarLabel(id, item) {
 }
 
 export async function deleteCalendarLabel(id) {
-  const response = await api.put(`/calendar-labels/${id}`);
+  const response = await api.delete(`/calendar-labels/${id}`);
 
   return response;
 }

@@ -9,5 +9,5 @@ export const validationSchema = yup.object({
 export const getInitialValues = (value) => ({
   id: value?.id ?? '',
   name: value?.name ?? '',
-  color: value?.color ?? '',
+  color: value?.color ?? '#000',
 });

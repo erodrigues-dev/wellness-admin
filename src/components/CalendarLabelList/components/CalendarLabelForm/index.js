@@ -12,7 +12,8 @@ import { validationSchema, getInitialValues } from './schema';
 import { Container } from './styles';
 
 export function CalendarLabelForm({ isEdit, label }) {
-  const { onSubmit, closeForm, closeList } = useCalendarLabel();
+  const { onSubmit, closeForm, closeList, handleDeleteLabel } =
+    useCalendarLabel();
 
   const formik = useFormik({
     onSubmit,
@@ -61,7 +62,7 @@ export function CalendarLabelForm({ isEdit, label }) {
 
       <FooterContainer>
         {isEdit && (
-          <Button type="button" variant="danger" onClick={closeForm}>
+          <Button type="button" variant="danger" onClick={handleDeleteLabel}>
             Delete
           </Button>
         )}

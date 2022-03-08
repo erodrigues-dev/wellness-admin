@@ -3,6 +3,7 @@ import { toast } from 'react-toastify';
 
 import {
   createCalendarLabel,
+  deleteCalendarLabel,
   listCalendarLabels,
   updateCalendarLabel,
 } from '~/services/calendar-labels';
@@ -75,6 +76,25 @@ export const CalendarLabelProvider = ({ children }) => {
     }
   };
 
+  const deleteLabel = () => {
+    if (labelToEdit?.id === selectedLabel?.id) setSelectedLabel(null);
+
+    setLabels((prevState) => prevState.filter((x) => x.id !== labelToEdit?.id));
+  };
+
+  const handleDeleteLabel = async () => {
+    try {
+      await deleteCalendarLabel(labelToEdit?.id);
+
+      deleteLabel();
+      closeForm();
+
+      toast.success('Label deleted successfully');
+    } catch (error) {
+      toast.error('Error on delete label');
+    }
+  };
+
   return (
     <CalendarLabelContext.Provider
       value={{
@@ -90,6 +110,7 @@ export const CalendarLabelProvider = ({ children }) => {
         setIsOpened,
         openForm,
         onSubmit,
+        handleDeleteLabel,
       }}
     >
       {children}
