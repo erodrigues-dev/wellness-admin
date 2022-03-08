@@ -14,7 +14,7 @@ const defaultActivity = {
 export const validationSchema = yup.object({
   id: yup.string(),
   notes: yup.string().max(600),
-  labelId: yup.string(),
+  calendarLabelId: yup.string().label('calendar label'),
   dateStart: yup.string().required().label('start date'),
   dateEnd: yup.string().label('end date'),
   activity: yup.object({
@@ -39,13 +39,13 @@ export const getInitialValues = ({
   notes,
   calendar,
   id,
-  labelId,
+  calendarLabelId,
 }) => ({
   id: id ?? '',
   notes: notes ?? '',
   dateStart: dateStart ?? '',
   dateEnd: dateEnd ?? '',
-  labelId: labelId ?? '',
+  calendarLabelId: calendarLabelId ?? '',
   customer: customer ?? defaultCustomer,
   calendar: calendar ?? defaultCustomer,
   activity: activity ?? defaultActivity,

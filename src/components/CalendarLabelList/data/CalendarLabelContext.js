@@ -27,7 +27,7 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
     if (selectedLabel?.id !== value) {
       setSelectedLabel(labels.find((x) => x.id === value));
     }
-  }, [labels, selectedLabel.id, value]);
+  }, [labels, selectedLabel, value]);
 
   const closeList = () => {
     setShowForm(false);

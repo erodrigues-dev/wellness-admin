@@ -50,7 +50,7 @@ function AppointmentFormComponent() {
       calendar: selected?.calendar,
       notes: selected?.item?.notes,
       customer: selected?.item?.customer,
-      labelId: selected?.item?.labelId,
+      calendarLabelId: selected?.item?.calendarLabelId,
     }),
   });
 
@@ -93,8 +93,8 @@ function AppointmentFormComponent() {
     formik.setFieldTouched('calendar');
   }
 
-  const handleChangeLabel = (labelId) => {
-    formik.setFieldValue('labelId', labelId);
+  const handleChangeLabel = (calendarLabelId) => {
+    formik.setFieldValue('calendarLabelId', calendarLabelId);
   };
 
   return (
@@ -107,7 +107,7 @@ function AppointmentFormComponent() {
       <Form onSubmit={formik.handleSubmit}>
         {isEdit && (
           <CalendarLabels
-            value={formik.values.labelId}
+            value={formik.values.calendarLabelId}
             onChange={handleChangeLabel}
           />
         )}
