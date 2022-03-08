@@ -52,3 +52,10 @@ export const EditButton = styled.button`
     background-color: rgba(0, 0, 0, 0.1);
   }
 `;
+
+export const EmptyText = styled.p`
+  width: 100%;
+  text-align: center;
+  color: #ccc;
+  margin-top: 16px;
+`;

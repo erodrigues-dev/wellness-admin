@@ -13,6 +13,7 @@ import {
   LabelButton,
   EditButton,
   ListContainer,
+  EmptyText,
 } from './styles';
 
 const CalendarListRender = () => {
@@ -25,6 +26,7 @@ const CalendarListRender = () => {
     handleSelectLabel,
     selectedLabel,
     closeList,
+    loading,
   } = useCalendarLabel();
 
   const isSelected = (label) => selectedLabel?.id === label.id;
@@ -62,6 +64,9 @@ const CalendarListRender = () => {
             </EditButton>
           </ListItem>
         ))}
+        {labels.length <= 0 && !loading && (
+          <EmptyText>No labels yet.</EmptyText>
+        )}
       </List>
       <FooterContainer>
         <Button type="button" onClick={openForm}>
