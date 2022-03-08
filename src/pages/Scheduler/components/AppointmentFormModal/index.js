@@ -50,6 +50,7 @@ function AppointmentFormComponent() {
       calendar: selected?.calendar,
       notes: selected?.item?.notes,
       customer: selected?.item?.customer,
+      labelId: selected?.item?.labelId,
     }),
   });
 
@@ -92,6 +93,10 @@ function AppointmentFormComponent() {
     formik.setFieldTouched('calendar');
   }
 
+  const handleChangeLabel = (labelId) => {
+    formik.setFieldValue('labelId', labelId);
+  };
+
   return (
     <Window
       title={`${isEdit ? 'Edit' : 'Add'} appointment`}
@@ -100,7 +105,12 @@ function AppointmentFormComponent() {
       onClose={handleCloseModal}
     >
       <Form onSubmit={formik.handleSubmit}>
-        {isEdit && <CalendarLabels />}
+        {isEdit && (
+          <CalendarLabels
+            value={formik.values.labelId}
+            onChange={handleChangeLabel}
+          />
+        )}
 
         <InputFormikAdapter
           formik={formik}

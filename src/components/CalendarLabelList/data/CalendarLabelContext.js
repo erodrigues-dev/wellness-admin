@@ -10,7 +10,7 @@ import {
 
 const CalendarLabelContext = createContext();
 
-export const CalendarLabelProvider = ({ children }) => {
+export const CalendarLabelProvider = ({ value, onChange, children }) => {
   const [labels, setLabels] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [labelToEdit, setLabelToEdit] = useState(null);
@@ -22,6 +22,12 @@ export const CalendarLabelProvider = ({ children }) => {
       .then((response) => setLabels(response.data))
       .catch(() => toast.error('Error on fetch calendar labels'));
   }, []);
+
+  useEffect(() => {
+    if (selectedLabel?.id !== value) {
+      setSelectedLabel(labels.find((x) => x.id === value));
+    }
+  }, [labels, selectedLabel.id, value]);
 
   const closeList = () => {
     setShowForm(false);
@@ -42,7 +48,9 @@ export const CalendarLabelProvider = ({ children }) => {
   };
 
   const handleSelectLabel = (label) => {
-    setSelectedLabel(label);
+    const selected = selectedLabel?.id === label?.id ? null : label;
+    setSelectedLabel(selected);
+    onChange(selected?.id);
   };
 
   const submitItem = (id, values) =>

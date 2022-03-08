@@ -10,9 +10,9 @@ import {
 } from './data/CalendarLabelContext';
 import { Container, OpenListButton, Render } from './styles';
 
-export function CalendarLabels() {
+export function CalendarLabels({ value, onChange }) {
   return (
-    <CalendarLabelProvider>
+    <CalendarLabelProvider value={value} onChange={onChange}>
       <CalendarLabelList />
     </CalendarLabelProvider>
   );
