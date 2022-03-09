@@ -6,6 +6,7 @@ import { useFormik } from 'formik';
 
 import { AutoCompleteFormikAdapter } from '~/components/AutoComplete';
 import ButtonLoading from '~/components/ButtonLoading';
+import { CalendarLabels } from '~/components/CalendarLabelList';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import autocomplete from '~/services/autocomplete';
@@ -49,6 +50,7 @@ function AppointmentFormComponent() {
       calendar: selected?.calendar,
       notes: selected?.item?.notes,
       customer: selected?.item?.customer,
+      calendarLabelId: selected?.item?.calendarLabelId,
     }),
   });
 
@@ -91,6 +93,10 @@ function AppointmentFormComponent() {
     formik.setFieldTouched('calendar');
   }
 
+  const handleChangeLabel = (calendarLabelId) => {
+    formik.setFieldValue('calendarLabelId', calendarLabelId);
+  };
+
   return (
     <Window
       title={`${isEdit ? 'Edit' : 'Add'} appointment`}
@@ -99,6 +105,13 @@ function AppointmentFormComponent() {
       onClose={handleCloseModal}
     >
       <Form onSubmit={formik.handleSubmit}>
+        {isEdit && (
+          <CalendarLabels
+            value={formik.values.calendarLabelId}
+            onChange={handleChangeLabel}
+          />
+        )}
+
         <InputFormikAdapter
           formik={formik}
           name="calendar.id"

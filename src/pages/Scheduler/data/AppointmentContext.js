@@ -73,8 +73,8 @@ export function AppointmentProvider({ children }) {
     });
   };
 
-  const submitItem = (id, values) =>
-    id ? updateAppointment(id, { id, ...values }) : createAppointment(values);
+  const submitItem = (values) =>
+    values.id ? updateAppointment(values) : createAppointment(values);
 
   const handleItemOnSave = (values, response) =>
     values.id ? { ...values, dateEnd: response.dateEnd } : response;
@@ -82,15 +82,15 @@ export function AppointmentProvider({ children }) {
   const onSubmit = async (formValues) => {
     try {
       const values = formValues;
-      const { id, activity, calendar, customer, dateEnd, ...otherValues } =
+      const { activity, calendar, customer, dateEnd, ...destructuredValues } =
         formValues;
       const submit = {
         activityId: activity.id,
         calendarId: calendar.id,
         customerId: customer.id,
-        ...otherValues,
+        ...destructuredValues,
       };
-      const { data } = await submitItem(id, submit);
+      const { data } = await submitItem(submit);
       const items = handleItemOnSave(values, data);
 
       saveAppointment(items);

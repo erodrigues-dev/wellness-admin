@@ -36,14 +36,43 @@ export async function getItemById(id) {
   return response;
 }
 
-export async function createAppointment(item) {
-  const response = await api.post('/scheduler/appointments', item);
+export async function createAppointment({
+  calendarId,
+  activityId,
+  dateStart,
+  customerId,
+  notes,
+}) {
+  const response = await api.post('/scheduler/appointments', {
+    calendarId,
+    activityId,
+    dateStart,
+    customerId,
+    notes,
+  });
 
   return response;
 }
 
-export async function updateAppointment(id, item) {
-  const response = await api.put(`/scheduler/appointments/${id}`, item);
+export async function updateAppointment({
+  id,
+  calendarClassId,
+  calendarId,
+  activityId,
+  dateStart,
+  customerId,
+  calendarLabelId,
+  notes,
+}) {
+  const response = await api.put(`/scheduler/appointments/${id}`, {
+    calendarClassId,
+    calendarId,
+    activityId,
+    dateStart,
+    customerId,
+    calendarLabelId: calendarLabelId || null,
+    notes,
+  });
 
   return response;
 }
