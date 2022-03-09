@@ -37,6 +37,10 @@ export const LabelButton = styled.button`
     text-align: left;
     flex: 1;
     align-self: flex-start;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `;
 

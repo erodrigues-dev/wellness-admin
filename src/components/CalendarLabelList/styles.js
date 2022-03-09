@@ -19,6 +19,13 @@ export const OpenListButton = styled.button`
   color: ${(props) => (props.color ? 'white' : 'black')};
   transition: all 200ms;
   position: relative;
+
+  & > .name {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 `;
 
 export const Render = styled.div`

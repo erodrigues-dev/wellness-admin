@@ -32,7 +32,10 @@ export function CalendarLabelList() {
           color={selectedLabel?.color}
           disabled={fetchingLabels}
         >
-          <MdOutlineLabel /> {selectedLabel?.name ?? 'Label'}{' '}
+          <MdOutlineLabel />
+          <span className="name" title={selectedLabel?.name ?? 'Label'}>
+            {selectedLabel?.name ?? 'Label'}
+          </span>
           {fetchingLabels ? (
             <Spinner
               as="span"
