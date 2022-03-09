@@ -14,6 +14,7 @@ const LabelContainer = styled.div`
   width: 25%;
   border-radius: 25px;
   background-color: ${(props) => props.color};
+  border: 1px solid rgba(0, 0, 0, 0.2);
 `;
 
 const Label = ({ calendarLabelId }) => {
