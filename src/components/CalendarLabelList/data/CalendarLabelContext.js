@@ -53,17 +53,20 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
       ? updateCalendarLabel(id, { id, ...values })
       : createCalendarLabel(values);
 
-  const saveCalendarLabel = (item) => {
-    setLabels((prevState) => {
-      const alreadyOnList = labels.some((x) => x.id === item.id);
+  const isLabelIsAlreadyOnList = (label) =>
+    labels.some((x) => x.id === label.id);
 
-      if (alreadyOnList) {
-        return labels.map((x) => (item.id === x.id ? item : x));
-      }
+  const updateLabels = (prevState, label) =>
+    prevState.map((x) => (label.id === x.id ? label : x));
 
-      return [...prevState, item];
-    });
-  };
+  const addNewLabel = (prevState, label) => [...prevState, label];
+
+  const saveCalendarLabel = (label) =>
+    setLabels((prevState) =>
+      isLabelIsAlreadyOnList(label)
+        ? updateLabels(prevState, label)
+        : addNewLabel(prevState, label)
+    );
 
   const onSubmit = async (formValues) => {
     try {

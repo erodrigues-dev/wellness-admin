@@ -40,7 +40,9 @@ export function CustomItem(props) {
 
   return (
     <SchedulerItem {...props} onClick={handleClick}>
-      <Label calendarLabelId={props?.dataItem?.calendarLabelId} />
+      {props?.dataItem?.calendarLabelId && (
+        <Label calendarLabelId={props?.dataItem?.calendarLabelId} />
+      )}
       {props.children}
     </SchedulerItem>
   );
