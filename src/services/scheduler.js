@@ -70,7 +70,7 @@ export async function updateAppointment({
     activityId,
     dateStart,
     customerId,
-    calendarLabelId,
+    calendarLabelId: calendarLabelId || null,
     notes,
   });
 
