@@ -1,30 +1,21 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 
+import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
 import {
   createCalendarLabel,
   deleteCalendarLabel,
-  listCalendarLabels,
   updateCalendarLabel,
 } from '~/services/calendar-labels';
 
 const CalendarLabelContext = createContext();
 
 export const CalendarLabelProvider = ({ value, onChange, children }) => {
-  const [labels, setLabels] = useState([]);
+  const { labels, setLabels } = useSchedulerContext();
   const [showForm, setShowForm] = useState(false);
   const [labelToEdit, setLabelToEdit] = useState(null);
   const [selectedLabel, setSelectedLabel] = useState(null);
   const [isOpened, setIsOpened] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    setLoading(true);
-    listCalendarLabels()
-      .then((response) => setLabels(response.data))
-      .catch(() => toast.error('Error on fetch calendar labels'))
-      .finally(() => setLoading(false));
-  }, []);
 
   useEffect(() => {
     if (selectedLabel?.id !== value) {
@@ -52,6 +43,7 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
 
   const handleSelectLabel = (label) => {
     const selected = selectedLabel?.id === label?.id ? null : label;
+
     setSelectedLabel(selected);
     onChange(selected?.id);
   };
@@ -112,7 +104,6 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
   return (
     <CalendarLabelContext.Provider
       value={{
-        labels,
         showForm,
         labelToEdit,
         selectedLabel,
@@ -125,7 +116,6 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
         openForm,
         onSubmit,
         handleDeleteLabel,
-        loading,
       }}
     >
       {children}

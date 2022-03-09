@@ -4,6 +4,8 @@ import { RiCheckFill, RiCloseFill } from 'react-icons/ri';
 
 import { Button } from '@progress/kendo-react-buttons';
 
+import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
+
 import { useCalendarLabel } from '../../data/CalendarLabelContext';
 import { FooterContainer, HeaderContainer } from '../../styles';
 import { CalendarLabelForm } from '../CalendarLabelForm';
@@ -17,16 +19,15 @@ import {
 } from './styles';
 
 const CalendarListRender = () => {
+  const { labels, fetchingLabels } = useSchedulerContext();
   const {
     openForm,
     showForm,
     labelToEdit,
     handleEditClick,
-    labels,
     handleSelectLabel,
     selectedLabel,
     closeList,
-    loading,
   } = useCalendarLabel();
 
   const isSelected = (label) => selectedLabel?.id === label.id;
@@ -64,7 +65,7 @@ const CalendarListRender = () => {
             </EditButton>
           </ListItem>
         ))}
-        {labels.length <= 0 && !loading && (
+        {labels.length <= 0 && !fetchingLabels && (
           <EmptyText>No labels yet.</EmptyText>
         )}
       </List>

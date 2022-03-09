@@ -20,7 +20,7 @@ export function CalendarLabels({ value, onChange }) {
 }
 
 export function CalendarLabelList() {
-  const { selectedLabel, setIsOpened, isOpened, closeList, loading } =
+  const { selectedLabel, setIsOpened, isOpened, closeList, fetchingLabels } =
     useCalendarLabel();
 
   return (
@@ -30,10 +30,10 @@ export function CalendarLabelList() {
           type="button"
           onClick={() => setIsOpened((prevState) => !prevState)}
           color={selectedLabel?.color}
-          disabled={loading}
+          disabled={fetchingLabels}
         >
           <MdOutlineLabel /> {selectedLabel?.name ?? 'Label'}{' '}
-          {loading ? (
+          {fetchingLabels ? (
             <Spinner
               as="span"
               animation="border"

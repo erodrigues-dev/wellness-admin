@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 
 import { clearTime } from '~/helpers/date';
 import calendarService from '~/services/calendar';
+import { listCalendarLabels } from '~/services/calendar-labels';
 import schedulerService from '~/services/scheduler';
 
 import { settings } from './settings';
@@ -33,6 +34,16 @@ export function SchedulerProvider({ children }) {
     blocks: [],
   });
   const [modal, setModal] = useState(initialModalState);
+  const [labels, setLabels] = useState([]);
+  const [fetchingLabels, setFetchingLabels] = useState(true);
+
+  useEffect(() => {
+    setFetchingLabels(true);
+    listCalendarLabels()
+      .then((response) => setLabels(response.data))
+      .catch(() => toast.error('Error on fetch calendar labels'))
+      .finally(() => setFetchingLabels(false));
+  }, []);
 
   const mapToDataItem = (data) => {
     const title = `${data.customer.name} (${data.activity.name})`;
@@ -130,6 +141,9 @@ export function SchedulerProvider({ children }) {
         modal,
         setModal,
         closeModal,
+        labels,
+        setLabels,
+        fetchingLabels,
       }}
     >
       {children}
