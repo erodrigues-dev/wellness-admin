@@ -71,6 +71,11 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
       const { data } = await submitItem(id, values);
 
       saveCalendarLabel(data);
+
+      if (id && selectedLabel?.id === id) {
+        setSelectedLabel(data);
+      }
+
       closeForm();
 
       toast.success('Label saved successfully');
