@@ -7,7 +7,7 @@ import { Button } from '@progress/kendo-react-buttons';
 import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
 
 import { useCalendarLabel } from '../../data/CalendarLabelContext';
-import { FooterContainer, HeaderContainer } from '../../styles';
+import { Color, FooterContainer, HeaderContainer } from '../../styles';
 import { CalendarLabelForm } from '../CalendarLabelForm';
 import {
   List,
@@ -49,11 +49,13 @@ const CalendarListRender = () => {
           <ListItem key={label.id}>
             <LabelButton
               type="button"
-              color={label.color}
               onClick={() => handleSelectLabel(label)}
               title={label.name}
             >
-              <span>{label.name}</span>
+              <div>
+                <Color color={label.color} />
+                <span>{label.name}</span>
+              </div>
               {isSelected(label) && <RiCheckFill />}
             </LabelButton>
             <EditButton

@@ -20,10 +20,8 @@ export const LabelButton = styled.button`
   display: flex;
   align-items: center;
   width: 100%;
-  background-color: ${(props) => props.color};
   border-radius: 5px;
   padding: 4px 8px;
-  color: white;
   transition: all 200ms;
 
   &:hover {
@@ -33,14 +31,20 @@ export const LabelButton = styled.button`
     );
   }
 
-  & > span {
-    text-align: left;
+  & > div {
+    display: flex;
+    align-items: center;
+    gap: 12px;
     flex: 1;
     align-self: flex-start;
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    text-align: left;
+
+    & > span {
+      max-width: 172px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 `;
 

@@ -9,7 +9,7 @@ import {
   CalendarLabelProvider,
   useCalendarLabel,
 } from './data/CalendarLabelContext';
-import { Container, OpenListButton, Render } from './styles';
+import { Color, Container, OpenListButton, Render } from './styles';
 
 export function CalendarLabels({ value, onChange }) {
   return (
@@ -29,13 +29,13 @@ export function CalendarLabelList() {
         <OpenListButton
           type="button"
           onClick={() => setIsOpened((prevState) => !prevState)}
-          color={selectedLabel?.color}
           disabled={fetchingLabels}
         >
           <MdOutlineLabel />
-          <span className="name" title={selectedLabel?.name ?? 'Label'}>
-            {selectedLabel?.name ?? 'Label'}
-          </span>
+          <div className="name" title={selectedLabel?.name ?? 'Label'}>
+            <span>{selectedLabel?.name ?? 'Label'}</span>
+            {selectedLabel?.color && <Color color={selectedLabel?.color} />}
+          </div>
           {fetchingLabels ? (
             <Spinner
               as="span"

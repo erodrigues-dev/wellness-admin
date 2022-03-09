@@ -15,16 +15,20 @@ export const OpenListButton = styled.button`
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: ${(props) => props.color};
-  color: ${(props) => (props.color ? 'white' : 'black')};
   transition: all 200ms;
   position: relative;
 
   & > .name {
-    max-width: 200px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    & > span {
+      max-width: 172px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
 `;
 
@@ -72,4 +76,13 @@ export const FooterContainer = styled.footer`
   button {
     width: 100%;
   }
+`;
+
+export const Color = styled.div`
+  height: 16px;
+  min-width: 16px;
+  width: 16px;
+  border-radius: 50px;
+  background-color: ${(props) => props.color};
+  border: 1px solid rgba(0, 0, 0, 0.1);
 `;
