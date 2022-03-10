@@ -1,5 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { RiErrorWarningLine } from 'react-icons/ri';
+import { toast } from 'react-toastify';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
@@ -10,11 +12,12 @@ import { CalendarLabels } from '~/components/CalendarLabelList';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import autocomplete from '~/services/autocomplete';
+import { checkAppointmentAvailability } from '~/services/scheduler';
 
 import { useAppointmentContext } from '../../data/AppointmentContext';
 import { useSchedulerContext } from '../../data/SchedulerContext';
 import { validationSchema, getInitialValues } from './schema';
-import { DateFields } from './styles';
+import { DateFields, FreeWarning } from './styles';
 
 export function AppointmentFormModal() {
   const {
@@ -38,6 +41,7 @@ function AppointmentFormComponent() {
     isFetchingActivites,
   } = useAppointmentContext();
   const { isEdit } = modal;
+  const [isFree, setIsFree] = useState(true);
 
   const formik = useFormik({
     onSubmit,
@@ -96,6 +100,21 @@ function AppointmentFormComponent() {
   const handleChangeLabel = (calendarLabelId) => {
     formik.setFieldValue('calendarLabelId', calendarLabelId);
   };
+
+  useEffect(() => {
+    const { calendar, id, dateStart: date } = formik.values;
+    const calendarId = calendar?.id;
+
+    if (calendarId && date) {
+      checkAppointmentAvailability({
+        date,
+        calendarId,
+        ignoreAppointmentId: id || null,
+      })
+        .then(({ data }) => setIsFree(data.isFree))
+        .catch(() => toast.error('Error on fetch availability'));
+    }
+  }, [formik.values]);
 
   return (
     <Window
@@ -194,6 +213,17 @@ function AppointmentFormComponent() {
             rows: 3,
           }}
         />
+
+        {!isFree && (
+          <FreeWarning>
+            <RiErrorWarningLine />
+            <span>
+              The current activity time conflicts with another appointment or is
+              outside of your hours. If you submit the current appointment, an
+              overbook might happen.
+            </span>
+          </FreeWarning>
+        )}
       </Form>
 
       <WindowActionsBar>

@@ -83,6 +83,23 @@ export async function cancelAppointment(id) {
   return response;
 }
 
+export async function checkAppointmentAvailability({
+  calendarId,
+  ignoreAppointmentId,
+  date,
+}) {
+  const response = await api.post(
+    `/scheduler/appointments/check-availability`,
+    {
+      calendarId,
+      ignoreAppointmentId,
+      date,
+    }
+  );
+
+  return response;
+}
+
 export default {
   listCalendars,
   listActivities,
