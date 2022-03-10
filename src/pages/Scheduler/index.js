@@ -6,10 +6,12 @@ import {
 } from '@progress/kendo-react-scheduler';
 
 import { AppointmentFormModal } from './components/AppointmentFormModal';
+import { ClassFormModal } from './components/ClassFormModal';
 import { CustomHeader } from './components/CustomHeader';
 import { CustomItem } from './components/CustomItem';
 import { CustomSlot } from './components/CustomSlot';
 import { AppointmentProvider } from './data/AppointmentContext';
+import { ClassProvider } from './data/ClassContext';
 import {
   useSchedulerContext,
   SchedulerProvider,
@@ -20,7 +22,9 @@ export function Scheduler() {
   return (
     <SchedulerProvider>
       <AppointmentProvider>
-        <InnerScheduler />
+        <ClassProvider>
+          <InnerScheduler />
+        </ClassProvider>
       </AppointmentProvider>
     </SchedulerProvider>
   );
@@ -86,6 +90,7 @@ function InnerScheduler() {
             />
           </KendoScheduler>
           <AppointmentFormModal />
+          <ClassFormModal />
         </Content>
       )}
     </Container>
