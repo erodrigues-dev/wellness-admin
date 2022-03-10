@@ -1,5 +1,7 @@
-import React, { createContext, useContext } from 'react';
+import React, { useState, useCallback, createContext, useContext } from 'react';
 import { toast } from 'react-toastify';
+
+import { listActivities } from '~/services/scheduler';
 
 import { useSchedulerContext } from './SchedulerContext';
 
@@ -7,6 +9,26 @@ const ClassContext = createContext({});
 
 export function ClassProvider({ children }) {
   const { setModal, closeModal } = useSchedulerContext();
+  const [activities, setActivities] = useState({
+    list: [],
+    loading: false,
+  });
+
+  const handleActivities = (state) =>
+    setActivities((prevState) => ({ ...prevState, ...state }));
+
+  const fetchActivities = useCallback(async (calendarId) => {
+    try {
+      handleActivities({ loading: true });
+      const { data } = await listActivities(calendarId);
+
+      handleActivities({ list: data });
+    } catch (error) {
+      toast.error('Unable to list activities of calendar');
+    } finally {
+      handleActivities({ loading: false });
+    }
+  }, []);
 
   const openNewClass = () =>
     setModal({
@@ -30,6 +52,8 @@ export function ClassProvider({ children }) {
       value={{
         onSubmit,
         openNewClass,
+        fetchActivities,
+        activities,
       }}
     >
       {children}
