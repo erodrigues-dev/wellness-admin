@@ -24,9 +24,11 @@ export function AppointmentFormModal() {
     modal: { type, isOpen },
   } = useSchedulerContext();
 
-  if (type !== 'appointment' && !isOpen) return null;
+  if (type === 'appointment' && isOpen) {
+    return <AppointmentFormComponent />;
+  }
 
-  return <AppointmentFormComponent />;
+  return null;
 }
 
 function AppointmentFormComponent() {
@@ -38,7 +40,6 @@ function AppointmentFormComponent() {
     resetSelected,
     selected,
     fetchActivities,
-    isFetchingActivites,
   } = useAppointmentContext();
   const { isEdit } = modal;
   const [isFree, setIsFree] = useState(true);
@@ -66,7 +67,7 @@ function AppointmentFormComponent() {
 
   function handleChangeActivity({ target }) {
     handleSelectFields(target.value, 'activity', (value) =>
-      activities.find((x) => x.id === Number(value))
+      activities?.list?.find((x) => x.id === Number(value))
     );
   }
 
@@ -158,15 +159,15 @@ function AppointmentFormComponent() {
           inputOptions={{
             as: 'select',
             disabled:
-              isEdit || isFetchingActivites || !formik.values.calendar?.id,
+              isEdit || activities.loading || !formik.values.calendar?.id,
           }}
           onChange={handleChangeActivity}
-          loading={isFetchingActivites}
+          loading={activities.loading}
         >
           <option value="" disabled>
             Select
           </option>
-          {activities?.map((activity) => (
+          {activities?.list?.map((activity) => (
             <option key={activity.id} value={activity.id}>
               {activity.name}
             </option>

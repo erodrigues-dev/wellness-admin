@@ -25,20 +25,25 @@ const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
   const { saveAppointment, setModal, closeModal } = useSchedulerContext();
-  const [activities, setActivities] = useState([]);
-  const [isFetchingActivites, setIsFetchingActivities] = useState(false);
+  const [activities, setActivities] = useState({
+    list: [],
+    loading: false,
+  });
   const [selected, setSelected] = useState(initialSelectedItemState);
+
+  const handleActivities = (state) =>
+    setActivities((prevState) => ({ ...prevState, ...state }));
 
   const fetchActivities = useCallback(async (calendarId) => {
     try {
-      setIsFetchingActivities(true);
+      handleActivities({ loading: true });
       const { data } = await listActivities(calendarId);
 
-      setActivities(data);
+      handleActivities({ list: data });
     } catch (error) {
       toast.error('Unable to list activities of calendar');
     } finally {
-      setIsFetchingActivities(false);
+      handleActivities({ loading: false });
     }
   }, []);
 
@@ -117,7 +122,6 @@ export function AppointmentProvider({ children }) {
         openNewAppointment,
         resetSelected,
         fetchActivities,
-        isFetchingActivites,
         setActivities,
       }}
     >

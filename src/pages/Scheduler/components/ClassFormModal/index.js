@@ -16,9 +16,11 @@ export function ClassFormModal() {
     modal: { type, isOpen },
   } = useSchedulerContext();
 
-  if (type !== 'class' && !isOpen) return null;
+  if (type === 'class' && isOpen) {
+    return <ClassFormComponent />;
+  }
 
-  return <ClassFormComponent />;
+  return null;
 }
 
 function ClassFormComponent() {
