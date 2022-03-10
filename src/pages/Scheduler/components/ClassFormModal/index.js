@@ -12,7 +12,7 @@ import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
 import { useClassContext } from '../../data/ClassContext';
 import { useSchedulerContext } from '../../data/SchedulerContext';
 import { validationSchema, getInitialValues } from './schema';
-import { DateFields } from './styles';
+import { DateFields, LimitAndColorWrapper } from './styles';
 
 export function ClassFormModal() {
   const {
@@ -137,27 +137,29 @@ function ClassFormComponent() {
           />
         </DateFields>
 
+        <LimitAndColorWrapper>
+          <InputFormikAdapter
+            formik={formik}
+            name="appointmentLimit"
+            label="Appointment limit"
+            inputOptions={{
+              type: 'number',
+            }}
+          />
+
+          <InputFormikAdapter
+            formik={formik}
+            name="color"
+            label="Color"
+            inputOptions={{
+              type: 'color',
+            }}
+          />
+        </LimitAndColorWrapper>
+
         <RecurrenceEditor
           onChange={() => {}}
           styles={{ marginBottom: '16px' }}
-        />
-
-        <InputFormikAdapter
-          formik={formik}
-          name="appointmentLimit"
-          label="Appointment limit"
-          inputOptions={{
-            type: 'number',
-          }}
-        />
-
-        <InputFormikAdapter
-          formik={formik}
-          name="color"
-          label="Color"
-          inputOptions={{
-            type: 'color',
-          }}
         />
 
         <InputFormikAdapter
