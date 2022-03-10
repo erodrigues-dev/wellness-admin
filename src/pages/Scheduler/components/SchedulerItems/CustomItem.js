@@ -3,8 +3,8 @@ import React from 'react';
 import { SchedulerItem } from '@progress/kendo-react-scheduler';
 import styled from 'styled-components';
 
-import { useAppointmentContext } from '../data/AppointmentContext';
-import { useSchedulerContext } from '../data/SchedulerContext';
+import { useAppointmentContext } from '../../data/AppointmentContext';
+import { useSchedulerContext } from '../../data/SchedulerContext';
 
 const LabelContainer = styled.div`
   margin: 12px 8px 8px 8px;

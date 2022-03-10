@@ -2,7 +2,7 @@ import React from 'react';
 
 import { SchedulerSlot } from '@progress/kendo-react-scheduler';
 
-import { useAppointmentContext } from '../data/AppointmentContext';
+import { useAppointmentContext } from '../../data/AppointmentContext';
 
 export function CustomSlot(props) {
   const { openFreeSlot } = useAppointmentContext();

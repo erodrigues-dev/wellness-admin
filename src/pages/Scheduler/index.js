@@ -7,9 +7,9 @@ import {
 
 import { AppointmentFormModal } from './components/AppointmentFormModal';
 import { ClassFormModal } from './components/ClassFormModal';
-import { CustomHeader } from './components/CustomHeader';
-import { CustomItem } from './components/CustomItem';
-import { CustomSlot } from './components/CustomSlot';
+import { CustomHeader } from './components/SchedulerItems/CustomHeader';
+import { CustomItem } from './components/SchedulerItems/CustomItem';
+import { CustomSlot } from './components/SchedulerItems/CustomSlot';
 import { AppointmentProvider } from './data/AppointmentContext';
 import { ClassProvider } from './data/ClassContext';
 import {

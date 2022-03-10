@@ -5,8 +5,8 @@ import { Button } from '@progress/kendo-react-buttons';
 
 import { ButtonsRight } from '~/assets/styleds';
 
-import { useAppointmentContext } from '../data/AppointmentContext';
-import { useClassContext } from '../data/ClassContext';
+import { useAppointmentContext } from '../../data/AppointmentContext';
+import { useClassContext } from '../../data/ClassContext';
 
 export const CustomButtons = () => {
   const { openNewAppointment } = useAppointmentContext();
