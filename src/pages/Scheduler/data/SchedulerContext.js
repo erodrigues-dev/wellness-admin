@@ -46,7 +46,7 @@ export function SchedulerProvider({ children }) {
   }, []);
 
   const mapToDataItem = (data) => {
-    const title = `${data.customer.name} (${data.activity.name})`;
+    const title = `${data?.customer?.name} (${data.activity.name})`;
     const start = new Date(data.dateStart);
     const end = new Date(data.dateEnd);
 
@@ -82,8 +82,9 @@ export function SchedulerProvider({ children }) {
           date: selectedDate,
         });
         const appointments = data?.appointments?.map(mapToDataItem);
+        const classes = data?.classes?.map(mapToDataItem);
 
-        setItems((prevState) => ({ ...prevState, appointments }));
+        setItems((prevState) => ({ ...prevState, appointments, classes }));
       }
     } catch (error) {
       toast.error('Unable to list scheduler data');

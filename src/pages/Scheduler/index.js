@@ -51,9 +51,9 @@ function InnerScheduler() {
 
   const handleSchedulerData = useMemo(() => {
     // Later here we also will put the classes and blocks
-    const { appointments } = items;
+    const { appointments, classes } = items;
 
-    return [...appointments];
+    return [...appointments, ...classes];
   }, [items]);
 
   return (
