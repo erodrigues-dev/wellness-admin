@@ -8,7 +8,8 @@ import { useSchedulerContext } from './SchedulerContext';
 const ClassContext = createContext({});
 
 export function ClassProvider({ children }) {
-  const { setModal, closeModal } = useSchedulerContext();
+  const { setModal, closeModal, setItems, mapClassesToDataItem } =
+    useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
     loading: false,
@@ -37,6 +38,30 @@ export function ClassProvider({ children }) {
       isOpen: true,
     });
 
+  const handleSaveClassMap = useCallback(
+    (classes, newClass) => {
+      const dataItem = mapClassesToDataItem(newClass);
+      const alreadyOnList = classes.some((x) => x.id === newClass.id);
+
+      if (alreadyOnList) {
+        return classes.map((x) => (newClass.id === x.id ? dataItem : x));
+      }
+
+      return [...classes, dataItem];
+    },
+    [mapClassesToDataItem]
+  );
+
+  const saveClass = useCallback(
+    (item) => {
+      setItems((prevState) => ({
+        ...prevState,
+        classes: handleSaveClassMap(prevState.classes, item),
+      }));
+    },
+    [handleSaveClassMap, setItems]
+  );
+
   const onSubmit = async (formValues) => {
     try {
       const {
@@ -44,6 +69,7 @@ export function ClassProvider({ children }) {
         activity,
         recurrenceRule,
         recurrenceExceptions,
+        notes,
         ...values
       } = formValues;
       const submit = {
@@ -51,10 +77,12 @@ export function ClassProvider({ children }) {
         activityId: activity?.id,
         recurrenceRule: recurrenceRule || null,
         recurrenceExceptions: recurrenceExceptions || null,
+        notes: null,
         ...values,
       };
-      await createClass(submit);
+      const { data } = await createClass(submit);
 
+      saveClass(data);
       closeModal();
 
       toast.success('Class saved successfully');

@@ -45,7 +45,7 @@ export function SchedulerProvider({ children }) {
       .finally(() => setFetchingLabels(false));
   }, []);
 
-  const mapAppointmentsToDataItem = (data) => {
+  const mapAppointmentsToDataItem = useCallback((data) => {
     const title = `${data?.customer?.name} (${data.activity.name})`;
     const start = new Date(data.dateStart);
     const end = new Date(data.dateEnd);
@@ -60,10 +60,12 @@ export function SchedulerProvider({ children }) {
       activity: data.activity,
       ...data,
     };
-  };
+  }, []);
 
-  const mapClassesToDataItem = (data) => {
-    const title = `${data.activity.name} - ${data.reservedSlots}/${data.slots}`;
+  const mapClassesToDataItem = useCallback((data) => {
+    const title = `${data.activity.name} - ${data.reservedSlots ?? 0}/${
+      data.slots
+    }`;
     const start = new Date(data.dateStart);
     const end = new Date(data.dateEnd);
 
@@ -77,7 +79,7 @@ export function SchedulerProvider({ children }) {
       activity: data.activity,
       ...data,
     };
-  };
+  }, []);
 
   const fetchCalendars = useCallback(async () => {
     try {
@@ -107,35 +109,12 @@ export function SchedulerProvider({ children }) {
     } catch (error) {
       toast.error('Unable to list scheduler data');
     }
-  }, [selectedCalendars, selectedDate]);
-
-  const handleSaveAppointmentMap = useCallback(
-    (appointments, newAppointment) => {
-      const dataItem = mapAppointmentsToDataItem(newAppointment);
-      const alreadyOnList = appointments.some(
-        (x) => x.id === newAppointment.id
-      );
-
-      if (alreadyOnList) {
-        return appointments.map((x) =>
-          newAppointment.id === x.id ? dataItem : x
-        );
-      }
-
-      return [...appointments, dataItem];
-    },
-    []
-  );
-
-  const saveAppointment = useCallback(
-    (item) => {
-      setItems((prevState) => ({
-        ...prevState,
-        appointments: handleSaveAppointmentMap(prevState.appointments, item),
-      }));
-    },
-    [handleSaveAppointmentMap]
-  );
+  }, [
+    mapAppointmentsToDataItem,
+    mapClassesToDataItem,
+    selectedCalendars,
+    selectedDate,
+  ]);
 
   const closeModal = () => setModal(initialModalState);
 
@@ -156,13 +135,15 @@ export function SchedulerProvider({ children }) {
         settings,
         setSelectedCalendars,
         setSelectedDate,
-        saveAppointment,
         modal,
         setModal,
         closeModal,
         labels,
         setLabels,
         fetchingLabels,
+        mapAppointmentsToDataItem,
+        mapClassesToDataItem,
+        setItems,
       }}
     >
       {children}

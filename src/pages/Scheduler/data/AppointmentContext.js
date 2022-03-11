@@ -24,7 +24,8 @@ const initialSelectedItemState = {
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { saveAppointment, setModal, closeModal } = useSchedulerContext();
+  const { setModal, closeModal, setItems, mapAppointmentsToDataItem } =
+    useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
     loading: false,
@@ -83,6 +84,34 @@ export function AppointmentProvider({ children }) {
 
   const handleItemOnSave = (values, response) =>
     values.id ? { ...values, dateEnd: response.dateEnd } : response;
+
+  const handleSaveAppointmentMap = useCallback(
+    (appointments, newAppointment) => {
+      const dataItem = mapAppointmentsToDataItem(newAppointment);
+      const alreadyOnList = appointments.some(
+        (x) => x.id === newAppointment.id
+      );
+
+      if (alreadyOnList) {
+        return appointments.map((x) =>
+          newAppointment.id === x.id ? dataItem : x
+        );
+      }
+
+      return [...appointments, dataItem];
+    },
+    [mapAppointmentsToDataItem]
+  );
+
+  const saveAppointment = useCallback(
+    (item) => {
+      setItems((prevState) => ({
+        ...prevState,
+        appointments: handleSaveAppointmentMap(prevState.appointments, item),
+      }));
+    },
+    [handleSaveAppointmentMap, setItems]
+  );
 
   const onSubmit = async (formValues) => {
     try {

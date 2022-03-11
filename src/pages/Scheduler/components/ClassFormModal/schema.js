@@ -31,7 +31,7 @@ export const getInitialValues = ({
 }) => ({
   id: id ?? '',
   notes: notes ?? '',
-  color: color ?? '#000',
+  color: color ?? '#000000',
   slots: slots ?? '',
   dateStart: dateStart ?? '',
   recurrenceRule: recurrenceRule ?? '',
