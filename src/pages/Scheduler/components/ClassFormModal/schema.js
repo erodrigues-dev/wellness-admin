@@ -4,7 +4,7 @@ export const validationSchema = yup.object({
   id: yup.string(),
   notes: yup.string().max(600),
   color: yup.string().required(),
-  slots: yup.number().positive().required(),
+  slots: yup.number().positive().required().label('appointment limit'),
   dateStart: yup.string().required().label('start date'),
   recurrenceRule: yup.string(),
   recurrenceExceptions: yup.string(),
@@ -31,7 +31,7 @@ export const getInitialValues = ({
 }) => ({
   id: id ?? '',
   notes: notes ?? '',
-  color: color ?? '',
+  color: color ?? '#000',
   slots: slots ?? '',
   dateStart: dateStart ?? '',
   recurrenceRule: recurrenceRule ?? '',
