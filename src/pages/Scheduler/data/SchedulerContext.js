@@ -63,7 +63,7 @@ export function SchedulerProvider({ children }) {
   };
 
   const mapClassesToDataItem = (data) => {
-    const title = `(${data.activity.name})`;
+    const title = `${data.activity.name} - ${data.reservedSlots}/${data.slots}`;
     const start = new Date(data.dateStart);
     const end = new Date(data.dateEnd);
 
