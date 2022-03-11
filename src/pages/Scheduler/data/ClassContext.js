@@ -63,6 +63,15 @@ export function ClassProvider({ children }) {
     }
   };
 
+  const openEditClass = (id) => {
+    setModal({
+      selectedId: id,
+      type: 'class',
+      isEdit: true,
+      isOpen: true,
+    });
+  };
+
   return (
     <ClassContext.Provider
       value={{
@@ -70,6 +79,7 @@ export function ClassProvider({ children }) {
         openNewClass,
         fetchActivities,
         activities,
+        openEditClass,
       }}
     >
       {children}

@@ -4,6 +4,7 @@ import { SchedulerItem } from '@progress/kendo-react-scheduler';
 import styled from 'styled-components';
 
 import { useAppointmentContext } from '../../data/AppointmentContext';
+import { useClassContext } from '../../data/ClassContext';
 import { useSchedulerContext } from '../../data/SchedulerContext';
 
 const LabelContainer = styled.div`
@@ -26,25 +27,38 @@ const Label = ({ calendarLabelId }) => {
 
 export function CustomItem(props) {
   const { openEditAppointment } = useAppointmentContext();
+  const { openEditClass } = useClassContext();
 
   const handleClick = () => {
     const calendar = props.group.resources[0];
     const { start, end } = props.dataItem;
 
-    openEditAppointment({
-      calendar,
-      start,
-      end,
-      ...props,
-    });
+    if (props.dataItem.type === 'class') {
+      openEditClass(props.dataItem.id);
+    } else {
+      openEditAppointment({
+        calendar,
+        start,
+        end,
+        ...props,
+      });
+    }
   };
 
   return (
-    <SchedulerItem {...props} onClick={handleClick}>
-      {props?.dataItem?.calendarLabelId && (
-        <Label calendarLabelId={props?.dataItem?.calendarLabelId} />
-      )}
-      {props.children}
+    <SchedulerItem {...props}>
+      <div
+        role="button"
+        onKeyUp={() => {}}
+        tabIndex={0}
+        onClick={handleClick}
+        style={{ height: '100%' }}
+      >
+        {props?.dataItem?.calendarLabelId && (
+          <Label calendarLabelId={props?.dataItem?.calendarLabelId} />
+        )}
+        {props.children}
+      </div>
     </SchedulerItem>
   );
 }

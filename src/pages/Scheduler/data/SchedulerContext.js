@@ -45,13 +45,31 @@ export function SchedulerProvider({ children }) {
       .finally(() => setFetchingLabels(false));
   }, []);
 
-  const mapToDataItem = (data) => {
+  const mapAppointmentsToDataItem = (data) => {
     const title = `${data?.customer?.name} (${data.activity.name})`;
     const start = new Date(data.dateStart);
     const end = new Date(data.dateEnd);
 
     return {
       id: data.id,
+      type: 'appointment',
+      title,
+      start,
+      end,
+      calendarId: data.calendar ? data.calendar.id : data.calendarId,
+      activity: data.activity,
+      ...data,
+    };
+  };
+
+  const mapClassesToDataItem = (data) => {
+    const title = `(${data.activity.name})`;
+    const start = new Date(data.dateStart);
+    const end = new Date(data.dateEnd);
+
+    return {
+      id: data.id,
+      type: 'class',
       title,
       start,
       end,
@@ -81,8 +99,8 @@ export function SchedulerProvider({ children }) {
           calendars: selectedCalendars.map((item) => item.id),
           date: selectedDate,
         });
-        const appointments = data?.appointments?.map(mapToDataItem);
-        const classes = data?.classes?.map(mapToDataItem);
+        const appointments = data?.appointments?.map(mapAppointmentsToDataItem);
+        const classes = data?.classes?.map(mapClassesToDataItem);
 
         setItems((prevState) => ({ ...prevState, appointments, classes }));
       }
@@ -93,7 +111,7 @@ export function SchedulerProvider({ children }) {
 
   const handleSaveAppointmentMap = useCallback(
     (appointments, newAppointment) => {
-      const dataItem = mapToDataItem(newAppointment);
+      const dataItem = mapAppointmentsToDataItem(newAppointment);
       const alreadyOnList = appointments.some(
         (x) => x.id === newAppointment.id
       );
