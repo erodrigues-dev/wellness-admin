@@ -1,7 +1,7 @@
 import React, { useState, useCallback, createContext, useContext } from 'react';
 import { toast } from 'react-toastify';
 
-import { listActivities } from '~/services/scheduler';
+import { createClass, listActivities } from '~/services/scheduler';
 
 import { useSchedulerContext } from './SchedulerContext';
 
@@ -37,11 +37,27 @@ export function ClassProvider({ children }) {
       isOpen: true,
     });
 
-  const onSubmit = async () => {
+  const onSubmit = async (formValues) => {
     try {
+      const {
+        calendar,
+        activity,
+        recurrenceRule,
+        recurrenceExceptions,
+        ...values
+      } = formValues;
+      const submit = {
+        calendarId: calendar?.id,
+        activityId: activity?.id,
+        recurrenceRule: recurrenceRule || null,
+        recurrenceExceptions: recurrenceExceptions || null,
+        ...values,
+      };
+      await createClass(submit);
+
       closeModal();
 
-      toast.info('Not implemented yey');
+      toast.success('Class saved successfully');
     } catch (error) {
       toast.error('Error on save appointment');
     }

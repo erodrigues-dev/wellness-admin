@@ -100,6 +100,30 @@ export async function checkAppointmentAvailability({
   return response;
 }
 
+export async function createClass({
+  calendarId,
+  activityId,
+  dateStart,
+  slots,
+  recurrenceRule,
+  recurrenceExceptions,
+  color,
+  notes,
+}) {
+  const response = await api.post(`/scheduler/classes`, {
+    calendarId,
+    activityId,
+    dateStart,
+    slots,
+    color,
+    notes,
+    recurrenceRule,
+    recurrenceExceptions,
+  });
+
+  return response;
+}
+
 export default {
   listCalendars,
   listActivities,

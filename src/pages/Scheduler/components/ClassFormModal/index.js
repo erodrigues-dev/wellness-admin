@@ -34,7 +34,7 @@ function ClassFormComponent() {
   const formik = useFormik({
     onSubmit,
     validationSchema,
-    initialValues: getInitialValues(),
+    initialValues: getInitialValues({}),
   });
 
   function handleCloseModal() {
@@ -140,7 +140,7 @@ function ClassFormComponent() {
         <LimitAndColorWrapper>
           <InputFormikAdapter
             formik={formik}
-            name="appointmentLimit"
+            name="slots"
             label="Appointment limit"
             inputOptions={{
               type: 'number',
