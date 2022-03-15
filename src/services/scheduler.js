@@ -124,6 +124,37 @@ export async function createClass({
   return response;
 }
 
+export async function updateClass({
+  id,
+  calendarId,
+  activityId,
+  dateStart,
+  slots,
+  recurrenceRule,
+  recurrenceExceptions,
+  color,
+  notes,
+}) {
+  const response = await api.put(`/scheduler/classes/${id}`, {
+    calendarId,
+    activityId,
+    dateStart,
+    slots,
+    color,
+    notes,
+    recurrenceRule,
+    recurrenceExceptions,
+  });
+
+  return response;
+}
+
+export async function getClassById(id) {
+  const response = await api.get(`/scheduler/classes/${id}`);
+
+  return response;
+}
+
 export default {
   listCalendars,
   listActivities,

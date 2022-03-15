@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { toast } from 'react-toastify';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
@@ -7,7 +8,9 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
+import Loading from '~/components/Loading';
 import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
+import { getClassById } from '~/services/scheduler';
 
 import { useClassContext } from '../../data/ClassContext';
 import { useSchedulerContext } from '../../data/SchedulerContext';
@@ -29,13 +32,41 @@ export function ClassFormModal() {
 function ClassFormComponent() {
   const { modal, closeModal, calendars } = useSchedulerContext();
   const { onSubmit, activities, fetchActivities } = useClassContext();
-  const { isEdit } = modal;
+  const { selectedId, isEdit } = modal;
+  const [fetchingClass, setFetchingClass] = useState(isEdit);
+  const [selectedClass, setSelectedClass] = useState(null);
+
+  useEffect(() => {
+    if (!selectedId) return;
+
+    setFetchingClass(true);
+    getClassById(selectedId)
+      .then(({ data }) => setSelectedClass(data))
+      .catch(() => toast.error('Error on fetch the selected calendar'))
+      .finally(() => setFetchingClass(false));
+  }, [selectedId]);
+
+  useEffect(() => {
+    if (selectedClass?.calendarId) fetchActivities(selectedClass?.calendarId);
+  }, [fetchActivities, selectedClass]);
 
   const formik = useFormik({
     onSubmit,
     validationSchema,
     initialValues: getInitialValues({}),
   });
+
+  useEffect(() => {
+    if (isEdit && selectedClass) {
+      const initialValues = getInitialValues({
+        ...selectedClass,
+        dateStart: new Date(selectedClass?.dateStart),
+      });
+
+      formik.setValues(initialValues);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isEdit, selectedClass]);
 
   function handleCloseModal() {
     closeModal();
@@ -67,6 +98,10 @@ function ClassFormComponent() {
     });
 
     await fetchActivities(value);
+  }
+
+  if (fetchingClass) {
+    return <Loading />;
   }
 
   return (

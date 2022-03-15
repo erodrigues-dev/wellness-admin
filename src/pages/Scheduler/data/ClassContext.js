@@ -1,7 +1,7 @@
 import React, { useState, useCallback, createContext, useContext } from 'react';
 import { toast } from 'react-toastify';
 
-import { createClass, listActivities } from '~/services/scheduler';
+import { createClass, listActivities, updateClass } from '~/services/scheduler';
 
 import { useSchedulerContext } from './SchedulerContext';
 
@@ -62,6 +62,9 @@ export function ClassProvider({ children }) {
     [handleSaveClassMap, setItems]
   );
 
+  const submitItem = (values) =>
+    values.id ? updateClass(values) : createClass(values);
+
   const onSubmit = async (formValues) => {
     try {
       const {
@@ -80,14 +83,14 @@ export function ClassProvider({ children }) {
         notes: null,
         ...values,
       };
-      const { data } = await createClass(submit);
+      const { data } = await submitItem(submit);
 
       saveClass(data);
       closeModal();
 
       toast.success('Class saved successfully');
     } catch (error) {
-      toast.error('Error on save appointment');
+      toast.error('Error on save class');
     }
   };
 
