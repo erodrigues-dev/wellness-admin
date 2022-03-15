@@ -46,7 +46,10 @@ export function CustomItem(props) {
   };
 
   return (
-    <SchedulerItem {...props}>
+    <SchedulerItem
+      {...props}
+      style={{ backgroundColor: props.dataItem?.color }}
+    >
       <div
         role="button"
         onKeyUp={() => {}}
