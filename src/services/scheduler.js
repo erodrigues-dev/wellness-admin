@@ -106,7 +106,6 @@ export async function createClass({
   dateStart,
   slots,
   recurrenceRule,
-  recurrenceExceptions,
   color,
   notes,
 }) {
@@ -118,7 +117,6 @@ export async function createClass({
     color,
     notes,
     recurrenceRule,
-    recurrenceExceptions,
   });
 
   return response;
@@ -131,7 +129,6 @@ export async function updateClass({
   dateStart,
   slots,
   recurrenceRule,
-  recurrenceExceptions,
   color,
   notes,
 }) {
@@ -143,7 +140,6 @@ export async function updateClass({
     color,
     notes,
     recurrenceRule,
-    recurrenceExceptions,
   });
 
   return response;

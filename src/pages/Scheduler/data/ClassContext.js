@@ -67,20 +67,13 @@ export function ClassProvider({ children }) {
 
   const onSubmit = async (formValues) => {
     try {
-      const {
-        calendar,
-        activity,
-        recurrenceRule,
-        recurrenceExceptions,
-        notes,
-        ...values
-      } = formValues;
+      const { calendar, activity, recurrenceRule, notes, ...values } =
+        formValues;
       const submit = {
         calendarId: calendar?.id,
         activityId: activity?.id,
         recurrenceRule: recurrenceRule || null,
-        recurrenceExceptions: recurrenceExceptions || null,
-        notes: null,
+        notes: notes || null,
         ...values,
       };
       const { data } = await submitItem(submit);

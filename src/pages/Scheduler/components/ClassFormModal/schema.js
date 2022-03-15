@@ -7,7 +7,6 @@ export const validationSchema = yup.object({
   slots: yup.number().positive().required().label('appointment limit'),
   dateStart: yup.string().required().label('start date'),
   recurrenceRule: yup.string(),
-  recurrenceExceptions: yup.string(),
   calendar: yup.object({
     id: yup.string().required().label('calendar'),
     name: yup.string(),
@@ -27,7 +26,6 @@ export const getInitialValues = ({
   color,
   slots,
   recurrenceRule,
-  recurrenceExceptions,
 }) => ({
   id: id ?? '',
   notes: notes ?? '',
@@ -35,7 +33,6 @@ export const getInitialValues = ({
   slots: slots ?? '',
   dateStart: dateStart ?? '',
   recurrenceRule: recurrenceRule ?? '',
-  recurrenceExceptions: recurrenceExceptions ?? '',
   calendar: calendar ?? '',
   activity: activity ?? '',
 });

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 
@@ -56,6 +56,8 @@ function ClassFormComponent() {
     initialValues: getInitialValues({}),
   });
 
+  const { setFieldValue, setValues } = formik;
+
   useEffect(() => {
     if (isEdit && selectedClass) {
       const initialValues = getInitialValues({
@@ -63,10 +65,9 @@ function ClassFormComponent() {
         dateStart: new Date(selectedClass?.dateStart),
       });
 
-      formik.setValues(initialValues);
+      setValues(initialValues);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isEdit, selectedClass]);
+  }, [isEdit, selectedClass, setValues]);
 
   function handleCloseModal() {
     closeModal();
@@ -75,7 +76,7 @@ function ClassFormComponent() {
   function handleSelectFields(value, field, cb) {
     const selectedItem = cb(value);
 
-    formik.setFieldValue(field, selectedItem);
+    setFieldValue(field, selectedItem);
   }
 
   function handleChangeActivity({ target }) {
@@ -91,7 +92,7 @@ function ClassFormComponent() {
       calendars.find((x) => x.id === id)
     );
 
-    formik.setFieldValue('activity', {
+    setFieldValue('activity', {
       id: '',
       name: '',
       duration: '',
@@ -99,6 +100,13 @@ function ClassFormComponent() {
 
     await fetchActivities(value);
   }
+
+  const handleRecurrenceChagne = useCallback(
+    ({ value }) => {
+      setFieldValue('recurrenceRule', value);
+    },
+    [setFieldValue]
+  );
 
   if (fetchingClass) {
     return <Loading />;
@@ -193,7 +201,8 @@ function ClassFormComponent() {
         </LimitAndColorWrapper>
 
         <RecurrenceEditor
-          onChange={() => {}}
+          value={formik.values.recurrenceRule}
+          onChange={handleRecurrenceChagne}
           styles={{ marginBottom: '16px' }}
         />
 
