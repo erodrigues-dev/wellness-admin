@@ -7,11 +7,11 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 
+import { listActivities } from '~/services/scheduler';
 import {
   createAppointment,
   updateAppointment,
-  listActivities,
-} from '~/services/scheduler';
+} from '~/services/scheduler-appointments';
 
 import { useSchedulerContext } from './SchedulerContext';
 

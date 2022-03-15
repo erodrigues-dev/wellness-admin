@@ -10,7 +10,7 @@ import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import Loading from '~/components/Loading';
 import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
-import { getClassById } from '~/services/scheduler';
+import { getClassById } from '~/services/scheduler-classes';
 
 import { useClassContext } from '../../data/ClassContext';
 import { useSchedulerContext } from '../../data/SchedulerContext';

@@ -1,7 +1,8 @@
 import React, { useState, useCallback, createContext, useContext } from 'react';
 import { toast } from 'react-toastify';
 
-import { createClass, listActivities, updateClass } from '~/services/scheduler';
+import { listActivities } from '~/services/scheduler';
+import { createClass, updateClass } from '~/services/scheduler-classes';
 
 import { useSchedulerContext } from './SchedulerContext';
 

@@ -12,7 +12,7 @@ import { CalendarLabels } from '~/components/CalendarLabelList';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import autocomplete from '~/services/autocomplete';
-import { checkAppointmentAvailability } from '~/services/scheduler';
+import { checkAppointmentAvailability } from '~/services/scheduler-appointments';
 
 import { useAppointmentContext } from '../../data/AppointmentContext';
 import { useSchedulerContext } from '../../data/SchedulerContext';
