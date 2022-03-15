@@ -7,11 +7,11 @@ import React, {
 } from 'react';
 import { toast } from 'react-toastify';
 
+import { listActivities } from '~/services/scheduler';
 import {
   createAppointment,
   updateAppointment,
-  listActivities,
-} from '~/services/scheduler';
+} from '~/services/scheduler-appointments';
 
 import { useSchedulerContext } from './SchedulerContext';
 
@@ -24,21 +24,27 @@ const initialSelectedItemState = {
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { saveAppointment, setModal, closeModal } = useSchedulerContext();
-  const [activities, setActivities] = useState([]);
-  const [isFetchingActivites, setIsFetchingActivities] = useState(false);
+  const { setModal, closeModal, setItems, mapAppointmentsToDataItem } =
+    useSchedulerContext();
+  const [activities, setActivities] = useState({
+    list: [],
+    loading: false,
+  });
   const [selected, setSelected] = useState(initialSelectedItemState);
+
+  const handleActivities = (state) =>
+    setActivities((prevState) => ({ ...prevState, ...state }));
 
   const fetchActivities = useCallback(async (calendarId) => {
     try {
-      setIsFetchingActivities(true);
+      handleActivities({ loading: true });
       const { data } = await listActivities(calendarId);
 
-      setActivities(data);
+      handleActivities({ list: data });
     } catch (error) {
       toast.error('Unable to list activities of calendar');
     } finally {
-      setIsFetchingActivities(false);
+      handleActivities({ loading: false });
     }
   }, []);
 
@@ -79,6 +85,34 @@ export function AppointmentProvider({ children }) {
   const handleItemOnSave = (values, response) =>
     values.id ? { ...values, dateEnd: response.dateEnd } : response;
 
+  const handleSaveAppointmentMap = useCallback(
+    (appointments, newAppointment) => {
+      const dataItem = mapAppointmentsToDataItem(newAppointment);
+      const alreadyOnList = appointments.some(
+        (x) => x.id === newAppointment.id
+      );
+
+      if (alreadyOnList) {
+        return appointments.map((x) =>
+          newAppointment.id === x.id ? dataItem : x
+        );
+      }
+
+      return [...appointments, dataItem];
+    },
+    [mapAppointmentsToDataItem]
+  );
+
+  const saveAppointment = useCallback(
+    (item) => {
+      setItems((prevState) => ({
+        ...prevState,
+        appointments: handleSaveAppointmentMap(prevState.appointments, item),
+      }));
+    },
+    [handleSaveAppointmentMap, setItems]
+  );
+
   const onSubmit = async (formValues) => {
     try {
       const values = formValues;
@@ -117,7 +151,6 @@ export function AppointmentProvider({ children }) {
         openNewAppointment,
         resetSelected,
         fetchActivities,
-        isFetchingActivites,
         setActivities,
       }}
     >

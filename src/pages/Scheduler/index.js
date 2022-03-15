@@ -6,10 +6,12 @@ import {
 } from '@progress/kendo-react-scheduler';
 
 import { AppointmentFormModal } from './components/AppointmentFormModal';
-import { CustomHeader } from './components/CustomHeader';
-import { CustomItem } from './components/CustomItem';
-import { CustomSlot } from './components/CustomSlot';
+import { ClassFormModal } from './components/ClassFormModal';
+import { CustomHeader } from './components/SchedulerItems/CustomHeader';
+import { CustomItem } from './components/SchedulerItems/CustomItem';
+import { CustomSlot } from './components/SchedulerItems/CustomSlot';
 import { AppointmentProvider } from './data/AppointmentContext';
+import { ClassProvider } from './data/ClassContext';
 import {
   useSchedulerContext,
   SchedulerProvider,
@@ -20,7 +22,9 @@ export function Scheduler() {
   return (
     <SchedulerProvider>
       <AppointmentProvider>
-        <InnerScheduler />
+        <ClassProvider>
+          <InnerScheduler />
+        </ClassProvider>
       </AppointmentProvider>
     </SchedulerProvider>
   );
@@ -47,9 +51,9 @@ function InnerScheduler() {
 
   const handleSchedulerData = useMemo(() => {
     // Later here we also will put the classes and blocks
-    const { appointments } = items;
+    const { appointments, classes } = items;
 
-    return [...appointments];
+    return [...appointments, ...classes];
   }, [items]);
 
   return (
@@ -86,6 +90,7 @@ function InnerScheduler() {
             />
           </KendoScheduler>
           <AppointmentFormModal />
+          <ClassFormModal />
         </Content>
       )}
     </Container>

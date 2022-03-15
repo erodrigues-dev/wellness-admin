@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { clearTime } from '~/helpers/date';
 import calendarService from '~/services/calendar';
 import { listCalendarLabels } from '~/services/calendar-labels';
-import schedulerService from '~/services/scheduler';
+import { listItems } from '~/services/scheduler';
 
 import { settings } from './settings';
 
@@ -45,13 +45,14 @@ export function SchedulerProvider({ children }) {
       .finally(() => setFetchingLabels(false));
   }, []);
 
-  const mapToDataItem = (data) => {
-    const title = `${data.customer.name} (${data.activity.name})`;
+  const mapAppointmentsToDataItem = useCallback((data) => {
+    const title = `${data?.customer?.name} (${data.activity.name})`;
     const start = new Date(data.dateStart);
     const end = new Date(data.dateEnd);
 
     return {
       id: data.id,
+      type: 'appointment',
       title,
       start,
       end,
@@ -59,7 +60,26 @@ export function SchedulerProvider({ children }) {
       activity: data.activity,
       ...data,
     };
-  };
+  }, []);
+
+  const mapClassesToDataItem = useCallback((data) => {
+    const title = `${data.activity.name} - ${data.reservedSlots ?? 0}/${
+      data.slots
+    }`;
+    const start = new Date(data.dateStart);
+    const end = new Date(data.dateEnd);
+
+    return {
+      id: data.id,
+      type: 'class',
+      title,
+      start,
+      end,
+      calendarId: data.calendar ? data.calendar.id : data.calendarId,
+      activity: data.activity,
+      ...data,
+    };
+  }, []);
 
   const fetchCalendars = useCallback(async () => {
     try {
@@ -77,46 +97,24 @@ export function SchedulerProvider({ children }) {
   const fetchSchedulerItems = useCallback(async () => {
     try {
       if (selectedCalendars.length > 0 && selectedDate) {
-        const { data } = await schedulerService.listItems({
+        const { data } = await listItems({
           calendars: selectedCalendars.map((item) => item.id),
           date: selectedDate,
         });
-        const appointments = data?.appointments?.map(mapToDataItem);
+        const appointments = data?.appointments?.map(mapAppointmentsToDataItem);
+        const classes = data?.classes?.map(mapClassesToDataItem);
 
-        setItems((prevState) => ({ ...prevState, appointments }));
+        setItems((prevState) => ({ ...prevState, appointments, classes }));
       }
     } catch (error) {
       toast.error('Unable to list scheduler data');
     }
-  }, [selectedCalendars, selectedDate]);
-
-  const handleSaveAppointmentMap = useCallback(
-    (appointments, newAppointment) => {
-      const dataItem = mapToDataItem(newAppointment);
-      const alreadyOnList = appointments.some(
-        (x) => x.id === newAppointment.id
-      );
-
-      if (alreadyOnList) {
-        return appointments.map((x) =>
-          newAppointment.id === x.id ? dataItem : x
-        );
-      }
-
-      return [...appointments, dataItem];
-    },
-    []
-  );
-
-  const saveAppointment = useCallback(
-    (item) => {
-      setItems((prevState) => ({
-        ...prevState,
-        appointments: handleSaveAppointmentMap(prevState.appointments, item),
-      }));
-    },
-    [handleSaveAppointmentMap]
-  );
+  }, [
+    mapAppointmentsToDataItem,
+    mapClassesToDataItem,
+    selectedCalendars,
+    selectedDate,
+  ]);
 
   const closeModal = () => setModal(initialModalState);
 
@@ -137,13 +135,15 @@ export function SchedulerProvider({ children }) {
         settings,
         setSelectedCalendars,
         setSelectedDate,
-        saveAppointment,
         modal,
         setModal,
         closeModal,
         labels,
         setLabels,
         fetchingLabels,
+        mapAppointmentsToDataItem,
+        mapClassesToDataItem,
+        setItems,
       }}
     >
       {children}

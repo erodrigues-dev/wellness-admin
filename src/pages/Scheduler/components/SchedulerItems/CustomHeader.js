@@ -3,7 +3,7 @@ import React from 'react';
 import { ToolbarItem } from '@progress/kendo-react-buttons';
 import { SchedulerHeader } from '@progress/kendo-react-scheduler';
 
-import { useSchedulerContext } from '../data/SchedulerContext';
+import { useSchedulerContext } from '../../data/SchedulerContext';
 import { CalendarSelect } from './CalendarSelect';
 import { CustomButtons } from './CustomButtons';
 
