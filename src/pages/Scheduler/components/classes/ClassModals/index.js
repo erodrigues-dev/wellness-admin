@@ -1,11 +1,11 @@
 import React from 'react';
 
-import { ClassDetailsModal } from '../ClassDetails';
-import { ClassFormModal } from '../ClassFormModal';
+import { ClassDetails } from '../ClassDetails';
+import { ClassForm } from '../ClassForm';
 
 export const ClassModals = () => (
   <>
-    <ClassFormModal />
-    <ClassDetailsModal />
+    <ClassForm />
+    <ClassDetails />
   </>
 );

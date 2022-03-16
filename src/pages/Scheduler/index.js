@@ -5,7 +5,7 @@ import {
   DayView,
 } from '@progress/kendo-react-scheduler';
 
-import { AppointmentFormModal } from './components/AppointmentFormModal';
+import { AppointmentModals } from './components/appointments/AppointmentModals';
 import { ClassModals } from './components/classes/ClassModals';
 import { CustomHeader } from './components/SchedulerItems/CustomHeader';
 import { CustomItem } from './components/SchedulerItems/CustomItem';
@@ -89,7 +89,7 @@ function InnerScheduler() {
               slotDuration={settings.slotDuration}
             />
           </KendoScheduler>
-          <AppointmentFormModal />
+          <AppointmentModals />
           <ClassModals />
         </Content>
       )}

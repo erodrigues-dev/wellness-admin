@@ -1,82 +1,68 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import { RiErrorWarningLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
 
+import { AutoCompleteFormikAdapter } from '~/components/AutoComplete';
 import ButtonLoading from '~/components/ButtonLoading';
+import { CalendarLabels } from '~/components/CalendarLabelList';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
-import Loading from '~/components/Loading';
-import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
-import { getClassById } from '~/services/scheduler-classes';
+import autocomplete from '~/services/autocomplete';
+import { checkAppointmentAvailability } from '~/services/scheduler-appointments';
 
-import { useClassContext } from '../../../data/ClassContext';
+import { useAppointmentContext } from '../../../data/AppointmentContext';
 import { useSchedulerContext } from '../../../data/SchedulerContext';
 import { validationSchema, getInitialValues } from './schema';
-import { DateFields, LimitAndColorWrapper } from './styles';
+import { DateFields, FreeWarning } from './styles';
 
-export function ClassFormModal() {
+export function AppointmentForm() {
   const {
-    modal: { type, isEdit, isOpen },
+    modal: { type, isOpen },
   } = useSchedulerContext();
 
-  if (type === 'class' && isEdit && isOpen) {
-    return <ClassFormComponent />;
+  if (type === 'appointment' && isOpen) {
+    return <AppointmentFormComponent />;
   }
 
   return null;
 }
 
-function ClassFormComponent() {
+function AppointmentFormComponent() {
   const { modal, closeModal, calendars } = useSchedulerContext();
-  const { onSubmit, activities, fetchActivities } = useClassContext();
-  const { selectedId, isEdit } = modal;
-  const [fetchingClass, setFetchingClass] = useState(isEdit);
-  const [selectedClass, setSelectedClass] = useState(null);
-
-  useEffect(() => {
-    if (!selectedId) return;
-
-    setFetchingClass(true);
-    getClassById(selectedId)
-      .then(({ data }) => setSelectedClass(data))
-      .catch(() => toast.error('Error on fetch the selected calendar'))
-      .finally(() => setFetchingClass(false));
-  }, [selectedId]);
-
-  useEffect(() => {
-    if (selectedClass?.calendarId) fetchActivities(selectedClass?.calendarId);
-  }, [fetchActivities, selectedClass]);
+  const {
+    activities,
+    setActivities,
+    onSubmit,
+    resetSelected,
+    selected,
+    fetchActivities,
+  } = useAppointmentContext();
+  const { isEdit } = modal;
+  const [isFree, setIsFree] = useState(true);
 
   const formik = useFormik({
     onSubmit,
     validationSchema,
-    initialValues: getInitialValues({}),
+    initialValues: getInitialValues({
+      id: selected?.item?.id,
+      dateStart: selected?.item?.start ?? selected?.slotData?.start,
+      dateEnd: selected?.item?.end ?? selected?.slotData?.end,
+      activity: selected?.item?.activity,
+      calendar: selected?.calendar,
+      notes: selected?.item?.notes,
+      customer: selected?.item?.customer,
+      calendarLabelId: selected?.item?.calendarLabelId,
+    }),
   });
-
-  const { setFieldValue, setValues } = formik;
-
-  useEffect(() => {
-    if (isEdit && selectedClass) {
-      const initialValues = getInitialValues({
-        ...selectedClass,
-        dateStart: new Date(selectedClass?.dateStart),
-      });
-
-      setValues(initialValues);
-    }
-  }, [isEdit, selectedClass, setValues]);
-
-  function handleCloseModal() {
-    closeModal();
-  }
 
   function handleSelectFields(value, field, cb) {
     const selectedItem = cb(value);
 
-    setFieldValue(field, selectedItem);
+    formik.setFieldValue(field, selectedItem);
   }
 
   function handleChangeActivity({ target }) {
@@ -92,7 +78,7 @@ function ClassFormComponent() {
       calendars.find((x) => x.id === id)
     );
 
-    setFieldValue('activity', {
+    formik.setFieldValue('activity', {
       id: '',
       name: '',
       duration: '',
@@ -101,25 +87,51 @@ function ClassFormComponent() {
     await fetchActivities(value);
   }
 
-  const handleRecurrenceChagne = useCallback(
-    ({ value }) => {
-      setFieldValue('recurrenceRule', value);
-    },
-    [setFieldValue]
-  );
-
-  if (fetchingClass) {
-    return <Loading />;
+  function handleCloseModal() {
+    closeModal();
+    resetSelected();
+    setActivities([]);
   }
+
+  function submitForm() {
+    formik.submitForm();
+    formik.setFieldTouched('calendar');
+  }
+
+  const handleChangeLabel = (calendarLabelId) => {
+    formik.setFieldValue('calendarLabelId', calendarLabelId);
+  };
+
+  useEffect(() => {
+    const { calendar, id, dateStart: date } = formik.values;
+    const calendarId = calendar?.id;
+
+    if (calendarId && date) {
+      checkAppointmentAvailability({
+        date,
+        calendarId,
+        ignoreAppointmentId: id || null,
+      })
+        .then(({ data }) => setIsFree(data.isFree))
+        .catch(() => toast.error('Error on fetch availability'));
+    }
+  }, [formik.values]);
 
   return (
     <Window
-      title={`${isEdit ? 'Edit' : 'Add'} class`}
+      title={`${isEdit ? 'Edit' : 'Add'} appointment`}
       initialWidth={600}
       initialHeight={600}
       onClose={handleCloseModal}
     >
       <Form onSubmit={formik.handleSubmit}>
+        {isEdit && (
+          <CalendarLabels
+            value={formik.values.calendarLabelId}
+            onChange={handleChangeLabel}
+          />
+        )}
+
         <InputFormikAdapter
           formik={formik}
           name="calendar.id"
@@ -180,30 +192,17 @@ function ClassFormComponent() {
           />
         </DateFields>
 
-        <LimitAndColorWrapper>
-          <InputFormikAdapter
-            formik={formik}
-            name="slots"
-            label="Appointment limit"
-            inputOptions={{
-              type: 'number',
-            }}
-          />
-
-          <InputFormikAdapter
-            formik={formik}
-            name="color"
-            label="Color"
-            inputOptions={{
-              type: 'color',
-            }}
-          />
-        </LimitAndColorWrapper>
-
-        <RecurrenceEditor
-          value={formik.values.recurrenceRule}
-          onChange={handleRecurrenceChagne}
-          styles={{ marginBottom: '16px' }}
+        <AutoCompleteFormikAdapter
+          formik={formik}
+          name="customer.id"
+          label="Customer"
+          itemKey="id"
+          textField="name"
+          onFilter={autocomplete.customers}
+          defaultValue={selected?.item?.customer}
+          onChange={(value) => formik.setFieldValue('customer', value)}
+          appendToBody
+          disabled={isEdit}
         />
 
         <InputFormikAdapter
@@ -215,13 +214,24 @@ function ClassFormComponent() {
             rows: 3,
           }}
         />
+
+        {!isFree && (
+          <FreeWarning>
+            <RiErrorWarningLine />
+            <span>
+              The current activity time conflicts with another appointment or is
+              outside of your hours. If you submit the current appointment, an
+              overbook might happen.
+            </span>
+          </FreeWarning>
+        )}
       </Form>
 
       <WindowActionsBar>
         <Button variant="secondary" onClick={handleCloseModal}>
           Cancel
         </Button>
-        <ButtonLoading onClick={formik.submitForm}>Save</ButtonLoading>
+        <ButtonLoading onClick={submitForm}>Save</ButtonLoading>
       </WindowActionsBar>
     </Window>
   );

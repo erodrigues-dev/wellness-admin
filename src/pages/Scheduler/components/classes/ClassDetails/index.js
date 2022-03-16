@@ -10,19 +10,19 @@ import { getClassById } from '~/services/scheduler-classes';
 import { useClassContext } from '../../../data/ClassContext';
 import { useSchedulerContext } from '../../../data/SchedulerContext';
 
-export function ClassDetailsModal() {
+export function ClassDetails() {
   const {
     modal: { type, isOpen, isDisplay },
   } = useSchedulerContext();
 
   if (type === 'class' && isDisplay && isOpen) {
-    return <ClassDetails />;
+    return <ClassDetailsComponent />;
   }
 
   return null;
 }
 
-function ClassDetails() {
+function ClassDetailsComponent() {
   const { modal, closeModal } = useSchedulerContext();
   const { fetchActivities } = useClassContext();
   const { selectedId } = modal;
