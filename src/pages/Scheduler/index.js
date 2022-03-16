@@ -6,7 +6,7 @@ import {
 } from '@progress/kendo-react-scheduler';
 
 import { AppointmentFormModal } from './components/AppointmentFormModal';
-import { ClassFormModal } from './components/ClassFormModal';
+import { ClassModals } from './components/classes/ClassModals';
 import { CustomHeader } from './components/SchedulerItems/CustomHeader';
 import { CustomItem } from './components/SchedulerItems/CustomItem';
 import { CustomSlot } from './components/SchedulerItems/CustomSlot';
@@ -90,7 +90,7 @@ function InnerScheduler() {
             />
           </KendoScheduler>
           <AppointmentFormModal />
-          <ClassFormModal />
+          <ClassModals />
         </Content>
       )}
     </Container>

@@ -12,17 +12,17 @@ import Loading from '~/components/Loading';
 import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
 import { getClassById } from '~/services/scheduler-classes';
 
-import { useClassContext } from '../../data/ClassContext';
-import { useSchedulerContext } from '../../data/SchedulerContext';
+import { useClassContext } from '../../../data/ClassContext';
+import { useSchedulerContext } from '../../../data/SchedulerContext';
 import { validationSchema, getInitialValues } from './schema';
 import { DateFields, LimitAndColorWrapper } from './styles';
 
 export function ClassFormModal() {
   const {
-    modal: { type, isOpen },
+    modal: { type, isEdit, isOpen },
   } = useSchedulerContext();
 
-  if (type === 'class' && isOpen) {
+  if (type === 'class' && isEdit && isOpen) {
     return <ClassFormComponent />;
   }
 

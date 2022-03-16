@@ -19,6 +19,7 @@ export const initialModalState = {
   selectedId: '',
   isCreate: false,
   isEdit: false,
+  isDisplay: false,
   isOpen: false,
 };
 

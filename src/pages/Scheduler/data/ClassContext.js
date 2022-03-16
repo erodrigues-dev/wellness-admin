@@ -88,11 +88,11 @@ export function ClassProvider({ children }) {
     }
   };
 
-  const openEditClass = (id) => {
+  const openEditModal = (id) => {
     setModal({
       selectedId: id,
       type: 'class',
-      isEdit: true,
+      isDisplay: true,
       isOpen: true,
     });
   };
@@ -104,7 +104,7 @@ export function ClassProvider({ children }) {
         openNewClass,
         fetchActivities,
         activities,
-        openEditClass,
+        openEditModal,
       }}
     >
       {children}
