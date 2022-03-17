@@ -16,25 +16,14 @@ import { validationSchema, getInitialValues } from './schema';
 import { DateFields, LimitAndColorWrapper } from './styles';
 
 export function ClassForm() {
-  const {
-    modal: { type, isCreate, isEdit, isOpen },
-  } = useSchedulerContext();
-
-  if (type === 'class' && (isCreate || isEdit) && isOpen) {
-    return <ClassFormComponent />;
-  }
-
-  return null;
-}
-
-function ClassFormComponent() {
-  const { modal, closeModal, calendars } = useSchedulerContext();
+  const { modal, calendars } = useSchedulerContext();
   const {
     selectedClass,
     fetchingClass,
     onSubmit,
     activities,
     fetchActivities,
+    handleCloseModal,
   } = useClassContext();
   const { isEdit } = modal;
 
@@ -45,25 +34,15 @@ function ClassFormComponent() {
   const formik = useFormik({
     onSubmit,
     validationSchema,
-    initialValues: getInitialValues({}),
+    initialValues: getInitialValues({
+      ...selectedClass,
+      dateStart: selectedClass?.dateStart
+        ? new Date(selectedClass?.dateStart)
+        : null,
+    }),
   });
 
-  const { setFieldValue, setValues } = formik;
-
-  useEffect(() => {
-    if (isEdit && selectedClass) {
-      const initialValues = getInitialValues({
-        ...selectedClass,
-        dateStart: new Date(selectedClass?.dateStart),
-      });
-
-      setValues(initialValues);
-    }
-  }, [isEdit, selectedClass, setValues]);
-
-  function handleCloseModal() {
-    closeModal();
-  }
+  const { setFieldValue } = formik;
 
   function handleSelectFields(value, field, cb) {
     const selectedItem = cb(value);

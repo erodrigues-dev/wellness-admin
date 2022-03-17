@@ -3,35 +3,24 @@ import { Button } from 'react-bootstrap';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 
-import { useSchedulerContext } from '../../../data/SchedulerContext';
+import { useClassContext } from '~/pages/Scheduler/data/ClassContext';
 
 export function ClassDetails() {
-  const {
-    modal: { type, isOpen, isDisplay },
-  } = useSchedulerContext();
-
-  if (type === 'class' && isDisplay && isOpen) {
-    return <ClassDetailsComponent />;
-  }
-
-  return null;
-}
-
-function ClassDetailsComponent() {
-  const { closeModal } = useSchedulerContext();
+  const { openClassEdit, handleCloseModal } = useClassContext();
 
   return (
     <Window
       title="Class details"
       initialWidth={600}
       initialHeight={600}
-      onClose={closeModal}
+      onClose={handleCloseModal}
     >
+      <div>teste</div>
       <WindowActionsBar>
-        <Button variant="secondary" onClick={closeModal}>
+        <Button variant="secondary" onClick={handleCloseModal}>
           Cancel
         </Button>
-        <Button>Edit</Button>
+        <Button onClick={openClassEdit}>Edit</Button>
       </WindowActionsBar>
     </Window>
   );
