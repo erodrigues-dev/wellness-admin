@@ -1,20 +1,43 @@
-import React, { useState, useCallback, createContext, useContext } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useCallback,
+  createContext,
+  useContext,
+} from 'react';
 import { toast } from 'react-toastify';
 
 import { listActivities } from '~/services/scheduler';
-import { createClass, updateClass } from '~/services/scheduler-classes';
+import {
+  createClass,
+  getClassById,
+  updateClass,
+} from '~/services/scheduler-classes';
 
 import { useSchedulerContext } from './SchedulerContext';
 
 const ClassContext = createContext({});
 
 export function ClassProvider({ children }) {
-  const { setModal, closeModal, setItems, mapClassesToDataItem } =
+  const { modal, setModal, closeModal, setItems, mapClassesToDataItem } =
     useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
     loading: false,
   });
+  const { isEdit, isDisplay, selectedId } = modal;
+  const [fetchingClass, setFetchingClass] = useState(isEdit || isDisplay);
+  const [selectedClass, setSelectedClass] = useState(null);
+
+  useEffect(() => {
+    if (!selectedId) return;
+
+    setFetchingClass(true);
+    getClassById(selectedId)
+      .then(({ data }) => setSelectedClass(data))
+      .catch(() => toast.error('Error on fetch the selected calendar'))
+      .finally(() => setFetchingClass(false));
+  }, [selectedId]);
 
   const handleActivities = (state) =>
     setActivities((prevState) => ({ ...prevState, ...state }));
@@ -105,6 +128,8 @@ export function ClassProvider({ children }) {
         fetchActivities,
         activities,
         openEditModal,
+        fetchingClass,
+        selectedClass,
       }}
     >
       {children}

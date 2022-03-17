@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
@@ -10,7 +9,6 @@ import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import Loading from '~/components/Loading';
 import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
-import { getClassById } from '~/services/scheduler-classes';
 
 import { useClassContext } from '../../../data/ClassContext';
 import { useSchedulerContext } from '../../../data/SchedulerContext';
@@ -31,20 +29,14 @@ export function ClassForm() {
 
 function ClassFormComponent() {
   const { modal, closeModal, calendars } = useSchedulerContext();
-  const { onSubmit, activities, fetchActivities } = useClassContext();
-  const { selectedId, isEdit } = modal;
-  const [fetchingClass, setFetchingClass] = useState(isEdit);
-  const [selectedClass, setSelectedClass] = useState(null);
-
-  useEffect(() => {
-    if (!selectedId) return;
-
-    setFetchingClass(true);
-    getClassById(selectedId)
-      .then(({ data }) => setSelectedClass(data))
-      .catch(() => toast.error('Error on fetch the selected calendar'))
-      .finally(() => setFetchingClass(false));
-  }, [selectedId]);
+  const {
+    selectedClass,
+    fetchingClass,
+    onSubmit,
+    activities,
+    fetchActivities,
+  } = useClassContext();
+  const { isEdit } = modal;
 
   useEffect(() => {
     if (selectedClass?.calendarId) fetchActivities(selectedClass?.calendarId);
