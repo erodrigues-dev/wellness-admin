@@ -50,3 +50,11 @@ export async function getClassById(id) {
 
   return response;
 }
+
+export async function getAppointmentsList(id, date) {
+  const response = await api.get(
+    `/scheduler/classes/${id}/appointments/${date}`
+  );
+
+  return response;
+}
