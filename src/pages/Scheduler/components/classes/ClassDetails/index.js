@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
+import { RiDoubleQuotesL } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
+import { Button as KendoButton } from '@progress/kendo-react-buttons';
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 
+import { CalendarLabels } from '~/components/CalendarLabelList';
 import { formatDate } from '~/helpers/date';
 import { useClassContext } from '~/pages/Scheduler/data/ClassContext';
 import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
@@ -16,7 +19,41 @@ import {
   AttendeesList,
   AttendeesItem,
   EmptyAttendees,
+  AttendeesHeader,
 } from './styles';
+
+const appointmentMock = [
+  {
+    id: '2',
+    customer: { id: 6, name: 'Teste' },
+    calendarLabel: null,
+    notes: '',
+  },
+  {
+    id: '2',
+    customer: { id: 6, name: 'Teste' },
+    calendarLabel: null,
+    notes: '',
+  },
+  {
+    id: '2',
+    customer: { id: 6, name: 'Teste' },
+    calendarLabel: null,
+    notes: '',
+  },
+  {
+    id: '2',
+    customer: { id: 6, name: 'Teste' },
+    calendarLabel: null,
+    notes: '',
+  },
+  {
+    id: '2',
+    customer: { id: 6, name: 'Teste' },
+    calendarLabel: null,
+    notes: '',
+  },
+];
 
 export function ClassDetails() {
   const { modal } = useSchedulerContext();
@@ -30,12 +67,15 @@ export function ClassDetails() {
   useEffect(() => {
     if (!selectedClass) return;
 
-    const date = formatDate(new Date(), 'yyyy-MM-dd');
+    // const date = formatDate(new Date(), 'yyyy-MM-dd');
 
     setAppointments((prevState) => ({ ...prevState, loading: true }));
-    getAppointmentsList(selectedId, date)
+    getAppointmentsList(selectedId, selectedClass?.dateStart)
       .then(({ data }) =>
-        setAppointments((prevState) => ({ ...prevState, list: data }))
+        setAppointments((prevState) => ({
+          ...prevState,
+          list: [...data, ...appointmentMock],
+        }))
       )
       .catch(() => toast.error('Error on fetch appointments list'))
       .finally(() =>
@@ -51,6 +91,9 @@ export function ClassDetails() {
 
     return `${date} at ${time}`;
   };
+
+  const getSlots = () =>
+    `${selectedClass?.slots - appointments?.list?.length} slots available`;
 
   return (
     <Window
@@ -68,11 +111,21 @@ export function ClassDetails() {
           </span>
         </DetailsInfo>
         <AttendeesContainer>
-          <h5>Attendees</h5>
+          <AttendeesHeader>
+            <h5>Attendees</h5>
+            <span>{getSlots()}</span>
+          </AttendeesHeader>
           {appointments?.list?.length > 0 && (
             <AttendeesList>
-              {appointments?.list?.map(() => (
-                <AttendeesItem>teset</AttendeesItem>
+              {appointments?.list?.map((appointment) => (
+                <AttendeesItem key={appointment?.id}>
+                  <input type="checkbox" />
+                  <span>{appointment?.customer?.name}</span>
+                  <KendoButton>
+                    <RiDoubleQuotesL />
+                  </KendoButton>
+                  <CalendarLabels />
+                </AttendeesItem>
               ))}
             </AttendeesList>
           )}
