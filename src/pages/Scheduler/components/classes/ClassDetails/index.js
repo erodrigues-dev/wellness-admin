@@ -43,6 +43,15 @@ export function ClassDetails() {
       );
   }, [selectedId, selectedClass]);
 
+  const handleInfoDate = () => {
+    if (!selectedClass) return '';
+
+    const date = formatDate(new Date(), 'MMMM dd, yyyy');
+    const time = formatDate(new Date(selectedClass?.dateStart), 'h:mbbb');
+
+    return `${date} at ${time}`;
+  };
+
   return (
     <Window
       title="Class details"
@@ -52,9 +61,11 @@ export function ClassDetails() {
     >
       <Container>
         <DetailsInfo>
-          <span className="date">July 04</span>
-          <span className="title">ADULT GROUP</span>
-          <span className="slots">8 people can schedule this</span>
+          <span className="date">{handleInfoDate()}</span>
+          <span className="title">{selectedClass?.activity?.name}</span>
+          <span className="slots">
+            {selectedClass?.slots} people can schedule this
+          </span>
         </DetailsInfo>
         <AttendeesContainer>
           <h5>Attendees</h5>
