@@ -38,23 +38,41 @@ export const AttendeesList = styled.ul`
 `;
 
 export const AttendeesItem = styled.li`
-  display: flex;
-  align-items: center;
-  column-gap: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding: 16px 0;
   padding-right: 8px;
 
-  &:last-child {
-    border: none;
-  }
-
-  & > span {
-    flex: 1;
-  }
-
   & > div {
-    margin-bottom: 0;
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+
+    &:last-child {
+      border: none;
+    }
+
+    & > span {
+      flex: 1;
+    }
+
+    & > div {
+      margin-bottom: 0;
+    }
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-top: 24px;
+
+    .buttons {
+      display: flex;
+      align-items: center;
+      column-gap: 8px;
+      margin-top: 12px;
+      align-self: flex-end;
+    }
   }
 `;
 

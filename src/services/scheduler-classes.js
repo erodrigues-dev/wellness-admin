@@ -58,3 +58,9 @@ export async function getAppointmentsList(id, date) {
 
   return response;
 }
+
+export async function updateAttendeeNote(values) {
+  const response = await api.patch(`/scheduler/classes/`, values);
+
+  return response;
+}
