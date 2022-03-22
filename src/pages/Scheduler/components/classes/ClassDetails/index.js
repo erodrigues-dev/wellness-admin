@@ -7,6 +7,7 @@ import { Button as KendoButton } from '@progress/kendo-react-buttons';
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 
 import { CalendarLabels } from '~/components/CalendarLabelList';
+import Loading from '~/components/Loading';
 import { formatDate } from '~/helpers/date';
 import { useClassContext } from '~/pages/Scheduler/data/ClassContext';
 import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
@@ -23,21 +24,6 @@ import {
   AttendeesHeader,
 } from './styles';
 
-const appointmentMock = [
-  {
-    id: '2',
-    customer: { id: 6, name: 'Teste' },
-    calendarLabel: null,
-    notes: '',
-  },
-  {
-    id: '3',
-    customer: { id: 6, name: 'Teste' },
-    calendarLabel: null,
-    notes: '',
-  },
-];
-
 const selectedNoteInitialState = {
   id: '',
   notes: '',
@@ -45,7 +31,8 @@ const selectedNoteInitialState = {
 
 export function ClassDetails() {
   const { modal } = useSchedulerContext();
-  const { openClassEdit, handleCloseModal, selectedClass } = useClassContext();
+  const { openClassEdit, handleCloseModal, selectedClass, fetchingClass } =
+    useClassContext();
   const [appointments, setAppointments] = useState({
     loading: true,
     list: [],
@@ -61,7 +48,7 @@ export function ClassDetails() {
       .then(({ data }) =>
         setAppointments((prevState) => ({
           ...prevState,
-          list: [...data, ...appointmentMock],
+          list: data,
         }))
       )
       .catch(() => toast.error('Error on fetch appointments list'))
@@ -125,6 +112,10 @@ export function ClassDetails() {
       toast.error('Error on save label');
     }
   };
+
+  if (!selectedClass || fetchingClass) {
+    return <Loading />;
+  }
 
   return (
     <Window
