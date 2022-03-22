@@ -103,8 +103,8 @@ function AppointmentFormComponent() {
     formik.setFieldTouched('calendar');
   }
 
-  const handleChangeLabel = (calendarLabelId) => {
-    formik.setFieldValue('calendarLabelId', calendarLabelId);
+  const handleChangeLabel = (calendarLabel) => {
+    formik.setFieldValue('calendarLabelId', calendarLabel?.id);
   };
 
   useEffect(() => {

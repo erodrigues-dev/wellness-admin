@@ -28,6 +28,17 @@ export const AttendeesHeader = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  margin-bottom: 8px;
+
+  & > div {
+    h5 {
+      margin-bottom: 0;
+    }
+
+    span {
+      font-size: 0.9rem;
+    }
+  }
 `;
 
 export const AttendeesList = styled.ul`
@@ -64,7 +75,6 @@ export const AttendeesItem = styled.li`
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    margin-top: 24px;
 
     .buttons {
       display: flex;

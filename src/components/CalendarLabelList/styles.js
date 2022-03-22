@@ -17,17 +17,22 @@ export const OpenListButton = styled.button`
   gap: 8px;
   transition: all 200ms;
   position: relative;
+  width: 150px;
 
   & > .name {
+    flex: 1;
     display: flex;
     align-items: center;
+    justify-content: flex-start;
     gap: 8px;
 
     & > span {
-      max-width: 172px;
+      flex: 1;
+      max-width: 60px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      text-align: left;
     }
   }
 `;

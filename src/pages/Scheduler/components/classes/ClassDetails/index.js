@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Form } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { RiDoubleQuotesL } from 'react-icons/ri';
 import { toast } from 'react-toastify';
 
@@ -15,6 +15,7 @@ import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
 import { updateAppointmentPartially } from '~/services/scheduler-appointments';
 import { getAppointmentsList } from '~/services/scheduler-classes';
 
+import NoteEdit from './NoteEdit';
 import {
   Container,
   DetailsInfo,
@@ -24,11 +25,6 @@ import {
   EmptyAttendees,
   AttendeesHeader,
 } from './styles';
-
-const selectedNoteInitialState = {
-  id: '',
-  notes: '',
-};
 
 export function ClassDetails() {
   const { modal } = useSchedulerContext();
@@ -40,7 +36,10 @@ export function ClassDetails() {
     list: [],
   });
   const { selectedId } = modal;
-  const [selectedNote, setSelectedNote] = useState(selectedNoteInitialState);
+  const [selectedNote, setSelectedNote] = useState({
+    id: '',
+    notes: '',
+  });
 
   useEffect(() => {
     if (!selectedClass) return;
@@ -81,33 +80,19 @@ export function ClassDetails() {
     handleSelectedNote({ id, notes });
   };
 
-  const handleNotesChange = ({ target }) => {
-    handleSelectedNote({ notes: target.value });
-  };
-
-  const saveNote = async () => {
+  const handleLabelChange = async (id, calendarLabel) => {
     try {
       await updateAppointmentPartially({
-        id: selectedId,
-        notes: selectedNote?.notes,
+        id,
+        calendarLabelId: calendarLabel?.id ?? null,
       });
 
-      setSelectedNote(selectedNoteInitialState);
-
-      toast.success('Notes saved successfully');
-    } catch (error) {
-      toast.error('Error on save notes');
-    }
-  };
-
-  const handleLabelChange = async (labelId) => {
-    try {
-      await updateAppointmentPartially({
-        id: selectedId,
-        calendarLabelId: labelId,
-      });
-
-      setSelectedNote(selectedNoteInitialState);
+      setAppointments((prevState) => ({
+        ...prevState,
+        list: prevState?.list?.map((x) =>
+          id === x?.id ? { ...x, calendarLabel } : x
+        ),
+      }));
 
       toast.success('Label saved successfully');
     } catch (error) {
@@ -159,30 +144,18 @@ export function ClassDetails() {
                       </KendoButton>
                       <CalendarLabels
                         value={appointment?.calendarLabel?.id}
-                        onChange={handleLabelChange}
+                        onChange={(label) =>
+                          handleLabelChange(appointment?.id, label)
+                        }
                       />
                     </div>
                     {selectedNote?.id && (
-                      <Form.Group>
-                        <Form.Label>Notes</Form.Label>
-                        <Form.Control
-                          as="textarea"
-                          name="notes"
-                          onChange={handleNotesChange}
-                          value={selectedNote?.notes}
-                        />
-                        <div className="buttons">
-                          <Button
-                            variant="secondary"
-                            onClick={() =>
-                              setSelectedNote(selectedNoteInitialState)
-                            }
-                          >
-                            Cancel
-                          </Button>
-                          <Button onClick={saveNote}>Save</Button>
-                        </div>
-                      </Form.Group>
+                      <NoteEdit
+                        appointment={appointment}
+                        selectedNote={selectedNote}
+                        setSelectedNote={setSelectedNote}
+                        setAppointments={setAppointments}
+                      />
                     )}
                   </AttendeesItem>
                 ))}
