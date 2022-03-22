@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Spinner } from 'react-bootstrap';
 import { MdOutlineLabel } from 'react-icons/md';
 import { RiArrowDownSFill } from 'react-icons/ri';
@@ -22,6 +22,20 @@ export function CalendarLabels({ value, onChange }) {
 export function CalendarLabelList() {
   const { selectedLabel, setIsOpened, isOpened, closeList, fetchingLabels } =
     useCalendarLabel();
+  const [buttonPosition, setButtonPosition] = useState(null);
+  const openListButtonRef = useRef(null);
+
+  useEffect(() => {
+    document.addEventListener('scroll', () => {
+      setButtonPosition(openListButtonRef?.current?.getBoundingClientRect());
+    });
+  }, []);
+
+  const getTopPosition = () =>
+    `${openListButtonRef?.current?.getBoundingClientRect()?.top + 36}px`;
+
+  const getLeftPosition = () =>
+    `${openListButtonRef?.current?.getBoundingClientRect()?.right - 110}px`;
 
   return (
     <Container>
@@ -30,6 +44,7 @@ export function CalendarLabelList() {
           type="button"
           onClick={() => setIsOpened((prevState) => !prevState)}
           disabled={fetchingLabels}
+          ref={openListButtonRef}
         >
           <MdOutlineLabel />
           <div className="name" title={selectedLabel?.name ?? 'Label'}>
@@ -49,7 +64,14 @@ export function CalendarLabelList() {
         </OpenListButton>
         {isOpened && (
           <OutsideClickHandler onOutsideClick={closeList}>
-            <Render>
+            <Render
+              position={buttonPosition}
+              style={{
+                position: 'fixed',
+                top: getTopPosition(),
+                left: getLeftPosition(),
+              }}
+            >
               <CalendarListRender />
             </Render>
           </OutsideClickHandler>

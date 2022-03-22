@@ -34,8 +34,6 @@ export const OpenListButton = styled.button`
 
 export const Render = styled.div`
   background-color: white;
-  position: absolute;
-  top: 36px;
   width: 300px;
   overflow-y: auto;
   z-index: 2;
