@@ -63,3 +63,16 @@ export async function checkAppointmentAvailability({
 
   return response;
 }
+
+export async function updateAppointmentPartially({
+  id,
+  notes,
+  calendarLabelId,
+}) {
+  const response = await api.patch(`/scheduler/appointments/${id}`, {
+    notes,
+    calendarLabelId,
+  });
+
+  return response;
+}

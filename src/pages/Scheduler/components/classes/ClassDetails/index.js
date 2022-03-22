@@ -10,10 +10,8 @@ import { CalendarLabels } from '~/components/CalendarLabelList';
 import { formatDate } from '~/helpers/date';
 import { useClassContext } from '~/pages/Scheduler/data/ClassContext';
 import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
-import {
-  getAppointmentsList,
-  updateAttendeeNote,
-} from '~/services/scheduler-classes';
+import { updateAppointmentPartially } from '~/services/scheduler-appointments';
+import { getAppointmentsList } from '~/services/scheduler-classes';
 
 import {
   Container,
@@ -38,24 +36,6 @@ const appointmentMock = [
     calendarLabel: null,
     notes: '',
   },
-  {
-    id: '4',
-    customer: { id: 6, name: 'Teste' },
-    calendarLabel: null,
-    notes: '',
-  },
-  {
-    id: '5',
-    customer: { id: 6, name: 'Teste' },
-    calendarLabel: null,
-    notes: '',
-  },
-  {
-    id: '6',
-    customer: { id: 6, name: 'Teste' },
-    calendarLabel: null,
-    notes: '',
-  },
 ];
 
 const selectedNoteInitialState = {
@@ -76,10 +56,8 @@ export function ClassDetails() {
   useEffect(() => {
     if (!selectedClass) return;
 
-    // const date = formatDate(new Date(), 'yyyy-MM-dd');
-
     setAppointments((prevState) => ({ ...prevState, loading: true }));
-    getAppointmentsList(selectedId, selectedClass?.dateStart)
+    getAppointmentsList(selectedId)
       .then(({ data }) =>
         setAppointments((prevState) => ({
           ...prevState,
@@ -120,9 +98,13 @@ export function ClassDetails() {
 
   const saveNote = async () => {
     try {
-      await updateAttendeeNote(selectedNote);
+      await updateAppointmentPartially({
+        id: selectedId,
+        notes: selectedNote?.notes,
+      });
 
       setSelectedNote(selectedNoteInitialState);
+
       toast.success('Notes saved successfully');
     } catch (error) {
       toast.error('Error on save notes');
@@ -146,8 +128,11 @@ export function ClassDetails() {
         </DetailsInfo>
         <AttendeesContainer>
           <AttendeesHeader>
-            <h5>Attendees</h5>
-            <span>{getSlots()}</span>
+            <div>
+              <h5>Attendees</h5>
+              <span>{getSlots()}</span>
+            </div>
+            <KendoButton>Add attendee</KendoButton>
           </AttendeesHeader>
           {appointments?.list?.length > 0 && (
             <AttendeesList>
