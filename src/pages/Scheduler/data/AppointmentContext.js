@@ -24,7 +24,7 @@ const initialSelectedItemState = {
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { setModal, closeModal, setItems, mapAppointmentsToDataItem } =
+  const { modal, setModal, closeModal, setItems, mapAppointmentsToDataItem } =
     useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
@@ -50,11 +50,12 @@ export function AppointmentProvider({ children }) {
 
   const resetSelected = () => setSelected(initialSelectedItemState);
 
-  const openNewAppointment = () =>
+  const openNewAppointment = (selectedClass) =>
     setModal({
       type: 'appointment',
       isCreate: true,
       isOpen: true,
+      selectedClass,
     });
 
   const handleSelectedData = (data) =>
@@ -127,7 +128,7 @@ export function AppointmentProvider({ children }) {
       const { data } = await submitItem(submit);
       const items = handleItemOnSave(values, data);
 
-      saveAppointment(items);
+      if (!formValues?.calendarClassId) saveAppointment(items);
       closeModal();
 
       toast.success('Appointment saved successfully');
@@ -137,8 +138,11 @@ export function AppointmentProvider({ children }) {
   };
 
   useEffect(() => {
-    if (selected?.calendar?.id) fetchActivities(selected?.calendar?.id);
-  }, [fetchActivities, selected]);
+    const calendarId =
+      modal?.selectedClass?.calendarId ?? selected?.calendar?.id;
+
+    if (calendarId) fetchActivities(calendarId);
+  }, [fetchActivities, selected, modal]);
 
   return (
     <AppointmentContext.Provider

@@ -9,6 +9,7 @@ import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { CalendarLabels } from '~/components/CalendarLabelList';
 import Loading from '~/components/Loading';
 import { formatDate } from '~/helpers/date';
+import { useAppointmentContext } from '~/pages/Scheduler/data/AppointmentContext';
 import { useClassContext } from '~/pages/Scheduler/data/ClassContext';
 import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
 import { updateAppointmentPartially } from '~/services/scheduler-appointments';
@@ -31,6 +32,7 @@ const selectedNoteInitialState = {
 
 export function ClassDetails() {
   const { modal } = useSchedulerContext();
+  const { openNewAppointment } = useAppointmentContext();
   const { openClassEdit, handleCloseModal, selectedClass, fetchingClass } =
     useClassContext();
   const [appointments, setAppointments] = useState({
@@ -138,7 +140,9 @@ export function ClassDetails() {
               <h5>Attendees</h5>
               <span>{getSlots()}</span>
             </div>
-            <KendoButton>Add attendee</KendoButton>
+            <KendoButton onClick={() => openNewAppointment(selectedClass)}>
+              Add attendee
+            </KendoButton>
           </AttendeesHeader>
           {appointments?.list?.length > 0 && (
             <AttendeesList>

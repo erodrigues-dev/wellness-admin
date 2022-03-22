@@ -41,7 +41,7 @@ function AppointmentFormComponent() {
     selected,
     fetchActivities,
   } = useAppointmentContext();
-  const { isEdit } = modal;
+  const { selectedClass, isEdit } = modal;
   const [isFree, setIsFree] = useState(true);
 
   const formik = useFormik({
@@ -49,13 +49,18 @@ function AppointmentFormComponent() {
     validationSchema,
     initialValues: getInitialValues({
       id: selected?.item?.id,
-      dateStart: selected?.item?.start ?? selected?.slotData?.start,
-      dateEnd: selected?.item?.end ?? selected?.slotData?.end,
-      activity: selected?.item?.activity,
-      calendar: selected?.calendar,
+      dateStart: selectedClass?.dateStart
+        ? new Date(selectedClass?.dateStart)
+        : selected?.item?.start ?? selected?.slotData?.start,
+      dateEnd: selectedClass?.dateEnd
+        ? new Date(selectedClass?.dateEnd)
+        : selected?.item?.end ?? selected?.slotData?.end,
+      activity: selectedClass?.activity ?? selected?.item?.activity,
+      calendar: selectedClass?.calendar ?? selected?.calendar,
       notes: selected?.item?.notes,
       customer: selected?.item?.customer,
       calendarLabelId: selected?.item?.calendarLabelId,
+      calendarClassId: selectedClass?.id,
     }),
   });
 
@@ -138,7 +143,7 @@ function AppointmentFormComponent() {
           label="Calendar"
           inputOptions={{
             as: 'select',
-            disabled: isEdit,
+            disabled: isEdit || selectedClass,
           }}
           onChange={handleChangeCalendar}
         >
@@ -159,7 +164,10 @@ function AppointmentFormComponent() {
           inputOptions={{
             as: 'select',
             disabled:
-              isEdit || activities.loading || !formik.values.calendar?.id,
+              isEdit ||
+              activities.loading ||
+              !formik.values.calendar?.id ||
+              selectedClass,
           }}
           onChange={handleChangeActivity}
           loading={activities.loading}
@@ -179,6 +187,8 @@ function AppointmentFormComponent() {
             formik={formik}
             name="dateStart"
             label="Start Date"
+            // disabled={!!selectedClass}
+            disabled
           />
 
           <Input

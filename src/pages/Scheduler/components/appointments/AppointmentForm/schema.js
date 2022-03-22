@@ -40,6 +40,7 @@ export const getInitialValues = ({
   calendar,
   id,
   calendarLabelId,
+  calendarClassId,
 }) => ({
   id: id ?? '',
   notes: notes ?? '',
@@ -49,4 +50,5 @@ export const getInitialValues = ({
   customer: customer ?? defaultCustomer,
   calendar: calendar ?? defaultCustomer,
   activity: activity ?? defaultActivity,
+  calendarClassId: calendarClassId ?? '',
 });

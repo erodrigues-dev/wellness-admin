@@ -6,6 +6,7 @@ export async function createAppointment({
   dateStart,
   customerId,
   notes,
+  calendarClassId,
 }) {
   const response = await api.post('/scheduler/appointments', {
     calendarId,
@@ -13,6 +14,7 @@ export async function createAppointment({
     dateStart,
     customerId,
     notes,
+    calendarClassId,
   });
 
   return response;
