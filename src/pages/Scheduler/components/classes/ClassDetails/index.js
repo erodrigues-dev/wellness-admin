@@ -111,6 +111,21 @@ export function ClassDetails() {
     }
   };
 
+  const handleLabelChange = async (labelId) => {
+    try {
+      await updateAppointmentPartially({
+        id: selectedId,
+        calendarLabelId: labelId,
+      });
+
+      setSelectedNote(selectedNoteInitialState);
+
+      toast.success('Label saved successfully');
+    } catch (error) {
+      toast.error('Error on save label');
+    }
+  };
+
   return (
     <Window
       title="Class details"
@@ -141,14 +156,16 @@ export function ClassDetails() {
                 ?.map((appointment) => (
                   <AttendeesItem key={appointment?.id}>
                     <div>
-                      <input type="checkbox" />
                       <span>{appointment?.customer?.name}</span>
                       <KendoButton
                         onClick={() => handleChangeNoteClick(appointment)}
                       >
                         <RiDoubleQuotesL />
                       </KendoButton>
-                      <CalendarLabels />
+                      <CalendarLabels
+                        value={appointment?.calendarLabel?.id}
+                        onChange={handleLabelChange}
+                      />
                     </div>
                     {selectedNote?.id && (
                       <Form.Group>
