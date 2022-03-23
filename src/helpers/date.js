@@ -103,3 +103,5 @@ export function toDate(date) {
 export function toInputValue(date) {
   return new Date(date).toISOString().split('T')[0];
 }
+
+export const formatDate = (date, dateFormat) => format(date, dateFormat);

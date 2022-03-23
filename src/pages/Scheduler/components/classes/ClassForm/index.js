@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { Form, Button } from 'react-bootstrap';
-import { toast } from 'react-toastify';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
@@ -10,41 +9,23 @@ import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import Loading from '~/components/Loading';
 import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
-import { getClassById } from '~/services/scheduler-classes';
 
-import { useClassContext } from '../../data/ClassContext';
-import { useSchedulerContext } from '../../data/SchedulerContext';
+import { useClassContext } from '../../../data/ClassContext';
+import { useSchedulerContext } from '../../../data/SchedulerContext';
 import { validationSchema, getInitialValues } from './schema';
 import { DateFields, LimitAndColorWrapper } from './styles';
 
-export function ClassFormModal() {
+export function ClassForm() {
+  const { modal, calendars } = useSchedulerContext();
   const {
-    modal: { type, isOpen },
-  } = useSchedulerContext();
-
-  if (type === 'class' && isOpen) {
-    return <ClassFormComponent />;
-  }
-
-  return null;
-}
-
-function ClassFormComponent() {
-  const { modal, closeModal, calendars } = useSchedulerContext();
-  const { onSubmit, activities, fetchActivities } = useClassContext();
-  const { selectedId, isEdit } = modal;
-  const [fetchingClass, setFetchingClass] = useState(isEdit);
-  const [selectedClass, setSelectedClass] = useState(null);
-
-  useEffect(() => {
-    if (!selectedId) return;
-
-    setFetchingClass(true);
-    getClassById(selectedId)
-      .then(({ data }) => setSelectedClass(data))
-      .catch(() => toast.error('Error on fetch the selected calendar'))
-      .finally(() => setFetchingClass(false));
-  }, [selectedId]);
+    selectedClass,
+    fetchingClass,
+    onSubmit,
+    activities,
+    fetchActivities,
+    handleCloseModal,
+  } = useClassContext();
+  const { isEdit } = modal;
 
   useEffect(() => {
     if (selectedClass?.calendarId) fetchActivities(selectedClass?.calendarId);
@@ -53,25 +34,15 @@ function ClassFormComponent() {
   const formik = useFormik({
     onSubmit,
     validationSchema,
-    initialValues: getInitialValues({}),
+    initialValues: getInitialValues({
+      ...selectedClass,
+      dateStart: selectedClass?.dateStart
+        ? new Date(selectedClass?.dateStart)
+        : null,
+    }),
   });
 
-  const { setFieldValue, setValues } = formik;
-
-  useEffect(() => {
-    if (isEdit && selectedClass) {
-      const initialValues = getInitialValues({
-        ...selectedClass,
-        dateStart: new Date(selectedClass?.dateStart),
-      });
-
-      setValues(initialValues);
-    }
-  }, [isEdit, selectedClass, setValues]);
-
-  function handleCloseModal() {
-    closeModal();
-  }
+  const { setFieldValue } = formik;
 
   function handleSelectFields(value, field, cb) {
     const selectedItem = cb(value);

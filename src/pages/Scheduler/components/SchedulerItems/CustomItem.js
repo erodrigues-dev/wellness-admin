@@ -27,14 +27,14 @@ const Label = ({ calendarLabelId }) => {
 
 export function CustomItem(props) {
   const { openEditAppointment } = useAppointmentContext();
-  const { openEditClass } = useClassContext();
+  const { openClassDisplay } = useClassContext();
 
   const handleClick = () => {
     const calendar = props.group.resources[0];
     const { start, end } = props.dataItem;
 
     if (props.dataItem.type === 'class') {
-      openEditClass(props.dataItem.id);
+      openClassDisplay(props.dataItem.id);
     } else {
       openEditAppointment({
         calendar,

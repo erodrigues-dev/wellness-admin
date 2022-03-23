@@ -6,6 +6,7 @@ export async function createAppointment({
   dateStart,
   customerId,
   notes,
+  calendarClassId,
 }) {
   const response = await api.post('/scheduler/appointments', {
     calendarId,
@@ -13,6 +14,7 @@ export async function createAppointment({
     dateStart,
     customerId,
     notes,
+    calendarClassId,
   });
 
   return response;
@@ -60,6 +62,19 @@ export async function checkAppointmentAvailability({
       date,
     }
   );
+
+  return response;
+}
+
+export async function updateAppointmentPartially({
+  id,
+  notes,
+  calendarLabelId,
+}) {
+  const response = await api.patch(`/scheduler/appointments/${id}`, {
+    notes,
+    calendarLabelId,
+  });
 
   return response;
 }

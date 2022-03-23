@@ -24,7 +24,7 @@ const initialSelectedItemState = {
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { setModal, closeModal, setItems, mapAppointmentsToDataItem } =
+  const { modal, setModal, closeModal, setItems, mapAppointmentsToDataItem } =
     useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
@@ -50,11 +50,12 @@ export function AppointmentProvider({ children }) {
 
   const resetSelected = () => setSelected(initialSelectedItemState);
 
-  const openNewAppointment = () =>
+  const openNewAppointment = (selectedClass) =>
     setModal({
       type: 'appointment',
       isCreate: true,
       isOpen: true,
+      selectedClass,
     });
 
   const handleSelectedData = (data) =>
@@ -113,6 +114,21 @@ export function AppointmentProvider({ children }) {
     [handleSaveAppointmentMap, setItems]
   );
 
+  const handleModalAction = () => {
+    const { selectedClass } = modal;
+    if (selectedClass) {
+      setModal({
+        selectedId: selectedClass?.id,
+        type: 'class',
+        isDisplay: true,
+        isOpen: true,
+        selectedClass,
+      });
+    } else {
+      closeModal();
+    }
+  };
+
   const onSubmit = async (formValues) => {
     try {
       const values = formValues;
@@ -127,8 +143,8 @@ export function AppointmentProvider({ children }) {
       const { data } = await submitItem(submit);
       const items = handleItemOnSave(values, data);
 
-      saveAppointment(items);
-      closeModal();
+      if (!formValues?.calendarClassId) saveAppointment(items);
+      handleModalAction();
 
       toast.success('Appointment saved successfully');
     } catch (error) {
@@ -137,8 +153,11 @@ export function AppointmentProvider({ children }) {
   };
 
   useEffect(() => {
-    if (selected?.calendar?.id) fetchActivities(selected?.calendar?.id);
-  }, [fetchActivities, selected]);
+    const calendarId =
+      modal?.selectedClass?.calendarId ?? selected?.calendar?.id;
+
+    if (calendarId) fetchActivities(calendarId);
+  }, [fetchActivities, selected, modal]);
 
   return (
     <AppointmentContext.Provider
@@ -152,6 +171,7 @@ export function AppointmentProvider({ children }) {
         resetSelected,
         fetchActivities,
         setActivities,
+        handleModalAction,
       }}
     >
       {children}

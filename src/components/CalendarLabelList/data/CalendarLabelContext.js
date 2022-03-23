@@ -45,7 +45,7 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
     const selected = selectedLabel?.id === label?.id ? null : label;
 
     setSelectedLabel(selected);
-    onChange(selected?.id);
+    onChange(selected);
   };
 
   const submitItem = (id, values) =>
@@ -90,7 +90,7 @@ export const CalendarLabelProvider = ({ value, onChange, children }) => {
   const deleteLabel = () => {
     if (labelToEdit?.id === selectedLabel?.id) {
       setSelectedLabel(null);
-      onChange('');
+      onChange(null);
     }
 
     setLabels((prevState) => prevState.filter((x) => x.id !== labelToEdit?.id));

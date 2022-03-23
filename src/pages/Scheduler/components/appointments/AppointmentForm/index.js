@@ -14,12 +14,12 @@ import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import autocomplete from '~/services/autocomplete';
 import { checkAppointmentAvailability } from '~/services/scheduler-appointments';
 
-import { useAppointmentContext } from '../../data/AppointmentContext';
-import { useSchedulerContext } from '../../data/SchedulerContext';
+import { useAppointmentContext } from '../../../data/AppointmentContext';
+import { useSchedulerContext } from '../../../data/SchedulerContext';
 import { validationSchema, getInitialValues } from './schema';
 import { DateFields, FreeWarning } from './styles';
 
-export function AppointmentFormModal() {
+export function AppointmentForm() {
   const {
     modal: { type, isOpen },
   } = useSchedulerContext();
@@ -32,7 +32,7 @@ export function AppointmentFormModal() {
 }
 
 function AppointmentFormComponent() {
-  const { modal, closeModal, calendars } = useSchedulerContext();
+  const { modal, calendars } = useSchedulerContext();
   const {
     activities,
     setActivities,
@@ -40,8 +40,9 @@ function AppointmentFormComponent() {
     resetSelected,
     selected,
     fetchActivities,
+    handleModalAction,
   } = useAppointmentContext();
-  const { isEdit } = modal;
+  const { selectedClass, isEdit } = modal;
   const [isFree, setIsFree] = useState(true);
 
   const formik = useFormik({
@@ -49,13 +50,18 @@ function AppointmentFormComponent() {
     validationSchema,
     initialValues: getInitialValues({
       id: selected?.item?.id,
-      dateStart: selected?.item?.start ?? selected?.slotData?.start,
-      dateEnd: selected?.item?.end ?? selected?.slotData?.end,
-      activity: selected?.item?.activity,
-      calendar: selected?.calendar,
+      dateStart: selectedClass?.dateStart
+        ? new Date(selectedClass?.dateStart)
+        : selected?.item?.start ?? selected?.slotData?.start,
+      dateEnd: selectedClass?.dateEnd
+        ? new Date(selectedClass?.dateEnd)
+        : selected?.item?.end ?? selected?.slotData?.end,
+      activity: selectedClass?.activity ?? selected?.item?.activity,
+      calendar: selectedClass?.calendar ?? selected?.calendar,
       notes: selected?.item?.notes,
       customer: selected?.item?.customer,
       calendarLabelId: selected?.item?.calendarLabelId,
+      calendarClassId: selectedClass?.id,
     }),
   });
 
@@ -88,7 +94,7 @@ function AppointmentFormComponent() {
   }
 
   function handleCloseModal() {
-    closeModal();
+    handleModalAction();
     resetSelected();
     setActivities([]);
   }
@@ -98,8 +104,8 @@ function AppointmentFormComponent() {
     formik.setFieldTouched('calendar');
   }
 
-  const handleChangeLabel = (calendarLabelId) => {
-    formik.setFieldValue('calendarLabelId', calendarLabelId);
+  const handleChangeLabel = (calendarLabel) => {
+    formik.setFieldValue('calendarLabelId', calendarLabel?.id);
   };
 
   useEffect(() => {
@@ -138,7 +144,7 @@ function AppointmentFormComponent() {
           label="Calendar"
           inputOptions={{
             as: 'select',
-            disabled: isEdit,
+            disabled: isEdit || selectedClass,
           }}
           onChange={handleChangeCalendar}
         >
@@ -159,7 +165,10 @@ function AppointmentFormComponent() {
           inputOptions={{
             as: 'select',
             disabled:
-              isEdit || activities.loading || !formik.values.calendar?.id,
+              isEdit ||
+              activities.loading ||
+              !formik.values.calendar?.id ||
+              selectedClass,
           }}
           onChange={handleChangeActivity}
           loading={activities.loading}
@@ -179,6 +188,8 @@ function AppointmentFormComponent() {
             formik={formik}
             name="dateStart"
             label="Start Date"
+            // disabled={!!selectedClass}
+            disabled
           />
 
           <Input
