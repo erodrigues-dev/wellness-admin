@@ -124,7 +124,10 @@ export function ClassDetails() {
               <h5>Attendees</h5>
               <span>{getSlots()}</span>
             </div>
-            <KendoButton onClick={() => openNewAppointment(selectedClass)}>
+            <KendoButton
+              disabled={selectedClass?.slots - appointments?.list?.length <= 0}
+              onClick={() => openNewAppointment(selectedClass)}
+            >
               Add attendee
             </KendoButton>
           </AttendeesHeader>
