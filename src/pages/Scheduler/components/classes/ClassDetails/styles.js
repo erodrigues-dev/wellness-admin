@@ -44,8 +44,7 @@ export const AttendeesHeader = styled.div`
 export const AttendeesList = styled.ul`
   display: flex;
   flex-direction: column;
-  overflow: auto;
-  max-height: 290px;
+  list-style: none;
 `;
 
 export const AttendeesItem = styled.li`
@@ -53,14 +52,14 @@ export const AttendeesItem = styled.li`
   padding: 16px 0;
   padding-right: 8px;
 
+  &:last-child {
+    border: none;
+  }
+
   & > div {
     display: flex;
     align-items: center;
     column-gap: 8px;
-
-    &:last-child {
-      border: none;
-    }
 
     & > span {
       flex: 1;

@@ -7,7 +7,6 @@ import { Button as KendoButton } from '@progress/kendo-react-buttons';
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 
 import { CalendarLabels } from '~/components/CalendarLabelList';
-import Loading from '~/components/Loading';
 import { formatDate } from '~/helpers/date';
 import { useAppointmentContext } from '~/pages/Scheduler/data/AppointmentContext';
 import { useClassContext } from '~/pages/Scheduler/data/ClassContext';
@@ -62,7 +61,7 @@ export function ClassDetails() {
     if (!selectedClass) return '';
 
     const date = formatDate(new Date(), 'MMMM dd, yyyy');
-    const time = formatDate(new Date(selectedClass?.dateStart), 'h:mbbb');
+    const time = formatDate(new Date(selectedClass?.dateStart), 'hh:mmbbb');
 
     return `${date} at ${time}`;
   };
@@ -101,7 +100,7 @@ export function ClassDetails() {
   };
 
   if (!selectedClass || fetchingClass) {
-    return <Loading />;
+    return null;
   }
 
   return (
