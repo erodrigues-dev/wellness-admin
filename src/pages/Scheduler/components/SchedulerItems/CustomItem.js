@@ -4,6 +4,7 @@ import { SchedulerItem } from '@progress/kendo-react-scheduler';
 import styled from 'styled-components';
 
 import { useAppointmentContext } from '../../data/AppointmentContext';
+import { useBlockContext } from '../../data/BlockContext';
 import { useClassContext } from '../../data/ClassContext';
 import { useSchedulerContext } from '../../data/SchedulerContext';
 
@@ -28,12 +29,15 @@ const Label = ({ calendarLabelId }) => {
 export function CustomItem(props) {
   const { openEditAppointment } = useAppointmentContext();
   const { openClassDisplay } = useClassContext();
+  const { openEditBlock } = useBlockContext();
 
   const handleClick = () => {
     const calendar = props.group.resources[0];
     const { start, end } = props.dataItem;
 
-    if (props.dataItem.type === 'class') {
+    if (props.dataItem.type === 'block') {
+      openEditBlock(props.dataItem);
+    } else if (props.dataItem.type === 'class') {
       openClassDisplay(props.dataItem.id);
     } else {
       openEditAppointment({
