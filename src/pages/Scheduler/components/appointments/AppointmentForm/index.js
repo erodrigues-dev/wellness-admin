@@ -32,7 +32,7 @@ export function AppointmentForm() {
 }
 
 function AppointmentFormComponent() {
-  const { modal, closeModal, calendars } = useSchedulerContext();
+  const { modal, calendars } = useSchedulerContext();
   const {
     activities,
     setActivities,
@@ -40,6 +40,7 @@ function AppointmentFormComponent() {
     resetSelected,
     selected,
     fetchActivities,
+    handleModalAction,
   } = useAppointmentContext();
   const { selectedClass, isEdit } = modal;
   const [isFree, setIsFree] = useState(true);
@@ -93,7 +94,7 @@ function AppointmentFormComponent() {
   }
 
   function handleCloseModal() {
-    closeModal();
+    handleModalAction();
     resetSelected();
     setActivities([]);
   }

@@ -114,6 +114,21 @@ export function AppointmentProvider({ children }) {
     [handleSaveAppointmentMap, setItems]
   );
 
+  const handleModalAction = () => {
+    const { selectedClass } = modal;
+    if (selectedClass) {
+      setModal({
+        selectedId: selectedClass?.id,
+        type: 'class',
+        isDisplay: true,
+        isOpen: true,
+        selectedClass,
+      });
+    } else {
+      closeModal();
+    }
+  };
+
   const onSubmit = async (formValues) => {
     try {
       const values = formValues;
@@ -129,7 +144,7 @@ export function AppointmentProvider({ children }) {
       const items = handleItemOnSave(values, data);
 
       if (!formValues?.calendarClassId) saveAppointment(items);
-      closeModal();
+      handleModalAction();
 
       toast.success('Appointment saved successfully');
     } catch (error) {
@@ -156,6 +171,7 @@ export function AppointmentProvider({ children }) {
         resetSelected,
         fetchActivities,
         setActivities,
+        handleModalAction,
       }}
     >
       {children}
