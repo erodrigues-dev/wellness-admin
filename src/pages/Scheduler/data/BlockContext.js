@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import { toast } from 'react-toastify';
 
 import { createBlock, updateBlock } from '~/services/scheduler-blocks';
@@ -14,7 +14,8 @@ const initialSelectedItemState = {
 const BlockContext = createContext({});
 
 export function BlockProvider({ children }) {
-  const { setModal, closeModal } = useSchedulerContext();
+  const { setModal, closeModal, mapBlocksToDataItem, setItems } =
+    useSchedulerContext();
   const [selected, setSelected] = useState(initialSelectedItemState);
 
   const openNewBlock = () =>
@@ -41,6 +42,30 @@ export function BlockProvider({ children }) {
     });
   };
 
+  const handleSaveBlockMap = useCallback(
+    (blocks, newBlock) => {
+      const dataItem = mapBlocksToDataItem(newBlock);
+      const alreadyOnList = blocks.some((x) => x.id === newBlock.id);
+
+      if (alreadyOnList) {
+        return blocks.map((x) => (newBlock.id === x.id ? dataItem : x));
+      }
+
+      return [...blocks, dataItem];
+    },
+    [mapBlocksToDataItem]
+  );
+
+  const saveBlock = useCallback(
+    (item) => {
+      setItems((prevState) => ({
+        ...prevState,
+        blocks: handleSaveBlockMap(prevState.blocks, item),
+      }));
+    },
+    [handleSaveBlockMap, setItems]
+  );
+
   const submitItem = (values) =>
     values.id ? updateBlock(values) : createBlock(values);
 
@@ -51,9 +76,9 @@ export function BlockProvider({ children }) {
         calendarId: calendar?.id,
         ...values,
       };
+      const { data } = await submitItem(submit);
 
-      await submitItem(submit);
-
+      saveBlock(data);
       closeModal();
 
       toast.success('Block saved successfully');

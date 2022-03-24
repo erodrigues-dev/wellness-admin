@@ -24,10 +24,13 @@ export async function updateBlock({
   recurrenceRule,
 }) {
   const response = await api.put(`/scheduler/blocks/${id}`, {
-    calendarId,
-    dateStart,
-    dateEnd,
-    recurrenceRule,
+    data: {
+      calendarId,
+      dateStart,
+      dateEnd,
+      recurrenceRule,
+    },
+    updateOptions: {},
   });
 
   return response;

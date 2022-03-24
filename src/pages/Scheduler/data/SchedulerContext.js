@@ -168,6 +168,7 @@ export function SchedulerProvider({ children }) {
         mapAppointmentsToDataItem,
         mapClassesToDataItem,
         setItems,
+        mapBlocksToDataItem,
       }}
     >
       {children}

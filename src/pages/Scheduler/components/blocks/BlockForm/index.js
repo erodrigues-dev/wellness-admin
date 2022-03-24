@@ -22,10 +22,11 @@ export function BlockForm() {
     onSubmit,
     validationSchema,
     initialValues: getInitialValues({
-      id: selected?.item?.id,
-      dateStart: selected?.item?.start,
-      dateEnd: selected?.item?.end,
-      calendar: selected?.calendar,
+      id: selected?.slotData?.id,
+      dateStart: selected?.slotData?.start,
+      dateEnd: selected?.slotData?.end,
+      calendar: selected?.slotData?.calendar,
+      recurrenceRule: selected?.slotData?.recurrenceRule,
     }),
   });
 
