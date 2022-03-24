@@ -85,6 +85,8 @@ export function BlockForm() {
           formik={formik}
           name="dateStart"
           label="Start Date"
+          min={formik.values.dateEnd}
+          max={formik.values.dateEnd}
           disabled
         />
 
@@ -92,6 +94,8 @@ export function BlockForm() {
           formik={formik}
           name="dateEnd"
           label="End Date"
+          min={formik.values.dateStart}
+          max={formik.values.dateStart}
           disabled
         />
 
