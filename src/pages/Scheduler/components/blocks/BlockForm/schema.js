@@ -7,6 +7,7 @@ const defaultCustomer = {
 
 export const validationSchema = yup.object({
   id: yup.string(),
+  recurrenceRule: yup.string().label('recurrence'),
   dateStart: yup.string().required().label('start date'),
   dateEnd: yup.string().required().label('end date'),
   calendar: yup.object({
@@ -15,9 +16,16 @@ export const validationSchema = yup.object({
   }),
 });
 
-export const getInitialValues = ({ id, calendar, dateStart, dateEnd }) => ({
+export const getInitialValues = ({
+  id,
+  calendar,
+  dateStart,
+  dateEnd,
+  recurrenceRule,
+}) => ({
   id: id ?? '',
   dateStart: dateStart ?? '',
   dateEnd: dateEnd ?? '',
+  recurrenceRule: recurrenceRule ?? '',
   calendar: calendar ?? defaultCustomer,
 });

@@ -49,11 +49,11 @@ export function CustomItem(props) {
     }
   };
 
+  const handleItemColor = () =>
+    props.dataItem?.type === 'block' ? '#ddd' : props.dataItem?.color;
+
   return (
-    <SchedulerItem
-      {...props}
-      style={{ backgroundColor: props.dataItem?.color }}
-    >
+    <SchedulerItem {...props} style={{ backgroundColor: handleItemColor() }}>
       <div
         role="button"
         onKeyUp={() => {}}

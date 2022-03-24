@@ -82,6 +82,22 @@ export function SchedulerProvider({ children }) {
     };
   }, []);
 
+  const mapBlocksToDataItem = useCallback((data) => {
+    const title = ``;
+    const start = new Date(data.dateStart);
+    const end = new Date(data.dateEnd);
+
+    return {
+      id: data.id,
+      type: 'block',
+      title,
+      start,
+      end,
+      calendarId: data.calendar ? data.calendar.id : data.calendarId,
+      ...data,
+    };
+  }, []);
+
   const fetchCalendars = useCallback(async () => {
     try {
       const { data } = await calendarService.index();
@@ -104,8 +120,14 @@ export function SchedulerProvider({ children }) {
         });
         const appointments = data?.appointments?.map(mapAppointmentsToDataItem);
         const classes = data?.classes?.map(mapClassesToDataItem);
+        const blocks = data?.blocks?.map(mapBlocksToDataItem);
 
-        setItems((prevState) => ({ ...prevState, appointments, classes }));
+        setItems((prevState) => ({
+          ...prevState,
+          appointments,
+          classes,
+          blocks,
+        }));
       }
     } catch (error) {
       toast.error('Unable to list scheduler data');
@@ -115,6 +137,7 @@ export function SchedulerProvider({ children }) {
     mapClassesToDataItem,
     selectedCalendars,
     selectedDate,
+    mapBlocksToDataItem,
   ]);
 
   const closeModal = () => setModal(initialModalState);

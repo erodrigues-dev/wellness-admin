@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Form, Button } from 'react-bootstrap';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
@@ -7,6 +7,7 @@ import { useFormik } from 'formik';
 import ButtonLoading from '~/components/ButtonLoading';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { InputFormikAdapter } from '~/components/Form/Input';
+import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
 import { useBlockContext } from '~/pages/Scheduler/data/BlockContext';
 
 import { useSchedulerContext } from '../../../data/SchedulerContext';
@@ -28,6 +29,8 @@ export function BlockForm() {
     }),
   });
 
+  const { setFieldValue } = formik;
+
   function handleSelectFields(value, field, cb) {
     const selectedItem = cb(value);
 
@@ -41,6 +44,13 @@ export function BlockForm() {
       calendars.find((x) => x.id === id)
     );
   }
+
+  const handleRecurrenceChange = useCallback(
+    ({ value }) => {
+      setFieldValue('recurrenceRule', value);
+    },
+    [setFieldValue]
+  );
 
   return (
     <Window
@@ -82,6 +92,11 @@ export function BlockForm() {
           name="dateEnd"
           label="End Date"
           disabled
+        />
+
+        <RecurrenceEditor
+          value={formik.values.recurrenceRule}
+          onChange={handleRecurrenceChange}
         />
       </Form>
 

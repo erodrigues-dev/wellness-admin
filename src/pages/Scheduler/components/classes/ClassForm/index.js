@@ -72,7 +72,7 @@ export function ClassForm() {
     await fetchActivities(value);
   }
 
-  const handleRecurrenceChagne = useCallback(
+  const handleRecurrenceChange = useCallback(
     ({ value }) => {
       setFieldValue('recurrenceRule', value);
     },
@@ -173,7 +173,7 @@ export function ClassForm() {
 
         <RecurrenceEditor
           value={formik.values.recurrenceRule}
-          onChange={handleRecurrenceChagne}
+          onChange={handleRecurrenceChange}
           styles={{ marginBottom: '16px' }}
         />
 
