@@ -25,19 +25,19 @@ export function ClassProvider({ children }) {
     list: [],
     loading: false,
   });
-  const { isEdit, isDisplay, selectedId } = modal;
+  const { isEdit, isDisplay, selectedId, type } = modal;
   const [fetchingClass, setFetchingClass] = useState(isEdit || isDisplay);
   const [selectedClass, setSelectedClass] = useState(null);
 
   useEffect(() => {
-    if (!selectedId) return;
+    if (!selectedId || type !== 'class') return;
 
     setFetchingClass(true);
     getClassById(selectedId)
       .then(({ data }) => setSelectedClass(data))
       .catch(() => toast.error('Error on fetch the selected calendar'))
       .finally(() => setFetchingClass(false));
-  }, [selectedId]);
+  }, [selectedId, type]);
 
   const handleActivities = (state) =>
     setActivities((prevState) => ({ ...prevState, ...state }));

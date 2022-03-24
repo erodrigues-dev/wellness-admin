@@ -83,7 +83,7 @@ export function SchedulerProvider({ children }) {
   }, []);
 
   const mapBlocksToDataItem = useCallback((data) => {
-    const title = ``;
+    const title = `Unavailable period`;
     const start = new Date(data.dateStart);
     const end = new Date(data.dateEnd);
 

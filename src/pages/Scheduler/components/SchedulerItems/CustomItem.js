@@ -50,10 +50,23 @@ export function CustomItem(props) {
   };
 
   const handleItemColor = () =>
-    props.dataItem?.type === 'block' ? '#ddd' : props.dataItem?.color;
+    props.dataItem?.type === 'block'
+      ? `repeating-linear-gradient(
+      45deg,
+      #777,
+      #777 10px,
+      #555 10px,
+      #555 20px
+    )`
+      : props.dataItem?.color;
 
   return (
-    <SchedulerItem {...props} style={{ backgroundColor: handleItemColor() }}>
+    <SchedulerItem
+      {...props}
+      style={{
+        background: handleItemColor(),
+      }}
+    >
       <div
         role="button"
         onKeyUp={() => {}}
