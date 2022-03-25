@@ -64,7 +64,7 @@ export function makeStateFromRRuleString(value) {
     if (options.count) {
       state.repeatEnd = {
         radio: 'after',
-        count: options.count,
+        after: options.count,
       };
     }
 

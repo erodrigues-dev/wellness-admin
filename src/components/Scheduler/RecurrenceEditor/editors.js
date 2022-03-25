@@ -337,7 +337,7 @@ export function RepeatEnd({ value = { radio: 'never' }, onChange }) {
   const handleChangeRadio = ({ value: radio }) => {
     onChange({
       radio,
-      count: radio === 'after' ? 1 : null,
+      after: radio === 'after' ? 1 : null,
       on: radio === 'on' ? new Date() : null,
     });
   };
@@ -382,7 +382,7 @@ export function RepeatEnd({ value = { radio: 'never' }, onChange }) {
           <NumericTextBox
             min={1}
             width={160}
-            value={value.count}
+            value={value?.after}
             onChange={handleChangeAfter}
             disabled={value.radio !== 'after'}
           />
