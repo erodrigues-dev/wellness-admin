@@ -338,6 +338,7 @@ export function RepeatEnd({
   onChange,
   disableEndNever,
   maxEndAfter = 100,
+  maxEndOn,
 }) {
   const handleChangeRadio = ({ value: radio }) => {
     onChange({
@@ -421,6 +422,7 @@ export function RepeatEnd({
             value={value?.on}
             onChange={handleChangeOn}
             disabled={value?.radio !== 'on'}
+            max={maxEndOn}
           />
         </li>
       </ul>
