@@ -175,6 +175,7 @@ export function ClassForm() {
           value={formik.values.recurrenceRule}
           onChange={handleRecurrenceChagne}
           styles={{ marginBottom: '16px' }}
+          disableEndNever
         />
 
         <InputFormikAdapter

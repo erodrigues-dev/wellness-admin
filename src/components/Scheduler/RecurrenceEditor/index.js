@@ -13,7 +13,12 @@ import {
 import { makeStateFromRRuleString, makeRRule } from './rrule-parser';
 import { Container } from './styles';
 
-export function RecurrenceEditor({ value: externalValue, onChange, styles }) {
+export function RecurrenceEditor({
+  value: externalValue,
+  onChange,
+  styles,
+  disableEndNever,
+}) {
   const [data, setData] = useState(makeStateFromRRuleString(externalValue));
 
   function handleChangeRepeat({ label, value }) {
@@ -39,6 +44,7 @@ export function RecurrenceEditor({ value: externalValue, onChange, styles }) {
 
   return (
     <Container style={styles}>
+      <p>{externalValue}</p>
       <RepeatSelector value={data.repeat} onChange={handleChangeRepeat} />
       {data.repeat?.label !== 'Never' && (
         <>
@@ -67,6 +73,7 @@ export function RecurrenceEditor({ value: externalValue, onChange, styles }) {
           <RepeatEnd
             value={data.repeatEnd}
             onChange={(value) => handleChange('repeatEnd', value)}
+            disableEndNever={disableEndNever}
           />
         </>
       )}
