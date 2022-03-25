@@ -46,7 +46,6 @@ export function RecurrenceEditor({
 
   return (
     <Container style={styles}>
-      <p>{externalValue}</p>
       <RepeatSelector value={data.repeat} onChange={handleChangeRepeat} />
       {data.repeat?.label !== 'Never' && (
         <>
