@@ -6,9 +6,11 @@ import {
   startOfDay,
   parse,
   addMinutes,
+  addMonths,
+  endOfDay,
 } from 'date-fns';
 
-export { addMinutes };
+export { addMinutes, addMonths, endOfDay };
 
 const TIMEZONE = /\((.*)\)/.exec(new Date().toString())[1];
 

@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-to-interactive-role */
 /* eslint-disable jsx-a11y/role-has-required-aria-props */
 /* eslint-disable prefer-destructuring */
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { Button, ButtonGroup } from '@progress/kendo-react-buttons';
 import { DatePicker } from '@progress/kendo-react-dateinputs';
@@ -333,11 +333,17 @@ export function YearlyRepeatOn({
   );
 }
 
-export function RepeatEnd({ value = { radio: 'never' }, onChange }) {
+export function RepeatEnd({
+  value,
+  onChange,
+  disableEndNever,
+  maxEndAfter = 100,
+  maxEndOn,
+}) {
   const handleChangeRadio = ({ value: radio }) => {
     onChange({
       radio,
-      count: radio === 'after' ? 1 : null,
+      after: radio === 'after' ? 1 : null,
       on: radio === 'on' ? new Date() : null,
     });
   };
@@ -350,23 +356,33 @@ export function RepeatEnd({ value = { radio: 'never' }, onChange }) {
     onChange({ ...value, on });
   };
 
+  useEffect(() => {
+    if (!value) {
+      onChange(
+        disableEndNever ? { radio: 'after', after: 1 } : { radio: 'never' }
+      );
+    }
+  }, [value, disableEndNever, onChange]);
+
   return (
     <FieldWrapper>
       <Label>End</Label>
       <ul role="radiogroup" className="k-radio-list k-list-vertical k-reset">
-        <li
-          role="radio"
-          className="k-radio-item"
-          style={{ display: 'flex', alignItems: 'center', gap: 4 }}
-        >
-          <RadioButton
-            name="radio-repeat-end"
-            label="Never"
-            value="never"
-            checked={value.radio === 'never'}
-            onChange={handleChangeRadio}
-          />
-        </li>
+        {disableEndNever || (
+          <li
+            role="radio"
+            className="k-radio-item"
+            style={{ display: 'flex', alignItems: 'center', gap: 4 }}
+          >
+            <RadioButton
+              name="radio-repeat-end"
+              label="Never"
+              value="never"
+              checked={value?.radio === 'never'}
+              onChange={handleChangeRadio}
+            />
+          </li>
+        )}
         <li
           role="radio"
           className="k-radio-item"
@@ -376,15 +392,16 @@ export function RepeatEnd({ value = { radio: 'never' }, onChange }) {
             name="radio-repeat-end"
             label="After"
             value="after"
-            checked={value.radio === 'after'}
+            checked={value?.radio === 'after'}
             onChange={handleChangeRadio}
           />
           <NumericTextBox
-            min={1}
             width={160}
-            value={value.count}
+            value={value?.after}
             onChange={handleChangeAfter}
-            disabled={value.radio !== 'after'}
+            disabled={value?.radio !== 'after'}
+            min={1}
+            max={maxEndAfter}
           />
           <span>occurrence(s)</span>
         </li>
@@ -397,14 +414,15 @@ export function RepeatEnd({ value = { radio: 'never' }, onChange }) {
             name="radio-repeat-end"
             label="On"
             value="on"
-            checked={value.radio === 'on'}
+            checked={value?.radio === 'on'}
             onChange={handleChangeRadio}
           />
           <DatePicker
             width={240}
-            value={value.on}
+            value={value?.on}
             onChange={handleChangeOn}
-            disabled={value.radio !== 'on'}
+            disabled={value?.radio !== 'on'}
+            max={maxEndOn}
           />
         </li>
       </ul>
