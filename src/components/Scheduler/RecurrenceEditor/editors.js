@@ -333,7 +333,12 @@ export function YearlyRepeatOn({
   );
 }
 
-export function RepeatEnd({ value, onChange, disableEndNever }) {
+export function RepeatEnd({
+  value,
+  onChange,
+  disableEndNever,
+  maxEndAfter = 100,
+}) {
   const handleChangeRadio = ({ value: radio }) => {
     onChange({
       radio,
@@ -390,11 +395,12 @@ export function RepeatEnd({ value, onChange, disableEndNever }) {
             onChange={handleChangeRadio}
           />
           <NumericTextBox
-            min={1}
             width={160}
             value={value?.after}
             onChange={handleChangeAfter}
             disabled={value?.radio !== 'after'}
+            min={1}
+            max={maxEndAfter}
           />
           <span>occurrence(s)</span>
         </li>

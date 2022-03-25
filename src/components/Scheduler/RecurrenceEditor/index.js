@@ -18,6 +18,7 @@ export function RecurrenceEditor({
   onChange,
   styles,
   disableEndNever,
+  maxEndAfter,
 }) {
   const [data, setData] = useState(makeStateFromRRuleString(externalValue));
 
@@ -74,6 +75,7 @@ export function RecurrenceEditor({
             value={data.repeatEnd}
             onChange={(value) => handleChange('repeatEnd', value)}
             disableEndNever={disableEndNever}
+            maxEndAfter={maxEndAfter}
           />
         </>
       )}
