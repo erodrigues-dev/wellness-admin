@@ -188,8 +188,7 @@ function AppointmentFormComponent() {
             formik={formik}
             name="dateStart"
             label="Start Date"
-            // disabled={!!selectedClass}
-            disabled
+            disabled={Boolean(selectedClass)}
           />
 
           <Input
