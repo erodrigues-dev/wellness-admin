@@ -92,7 +92,7 @@ const InputDateTimePicker = ({
           autoComplete="off"
           disabled={disabled}
         />
-        <InputGroup.Append style={{ cursor: 'pointer' }}>
+        <InputGroup.Append style={{ cursor: disabled ? 'default' : 'pointer' }}>
           {dateTime && !disabled && (
             <InputGroup.Text onClick={handleClear}>
               <FiXCircle />
