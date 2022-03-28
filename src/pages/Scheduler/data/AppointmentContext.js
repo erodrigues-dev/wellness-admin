@@ -140,6 +140,11 @@ export function AppointmentProvider({ children }) {
         customerId: customer.id,
         ...destructuredValues,
       };
+
+      if (!submit.calendarClassId) {
+        delete submit.calendarClassId;
+      }
+
       const { data } = await submitItem(submit);
       const items = handleItemOnSave(values, data);
 
