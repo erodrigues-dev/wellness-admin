@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
@@ -65,6 +65,34 @@ function AppointmentFormComponent() {
     }),
   });
 
+  const checkAvailability = useCallback(async () => {
+    try {
+      const data = {
+        ignoreAppointmentId: formik.values.id || null,
+        calendarId: formik.values.calendar?.id || null,
+        activityId: formik.values.activity?.id || null,
+        date: formik.values.dateStart || null,
+      };
+
+      const hasDataToCheckAvailability =
+        data.calendarId && data.date && data.activityId;
+
+      if (hasDataToCheckAvailability) {
+        const { data: response } = await checkAppointmentAvailability(data);
+        setIsFree(response.isFree);
+      } else {
+        setIsFree(true);
+      }
+    } catch {
+      toast.error('Error on check availability');
+    }
+  }, [
+    formik.values.id,
+    formik.values.activity,
+    formik.values.calendar,
+    formik.values.dateStart,
+  ]);
+
   function handleSelectFields(value, field, cb) {
     const selectedItem = cb(value);
 
@@ -109,24 +137,8 @@ function AppointmentFormComponent() {
   };
 
   useEffect(() => {
-    const {
-      id,
-      calendar: { id: calendarId = null },
-      activity: { id: activityId = null },
-      dateStart: date,
-    } = formik.values;
-
-    if (calendarId && date && activityId) {
-      checkAppointmentAvailability({
-        date,
-        calendarId,
-        activityId,
-        ignoreAppointmentId: id || null,
-      })
-        .then(({ data }) => setIsFree(data.isFree))
-        .catch(() => toast.error('Error on check availability'));
-    }
-  }, [formik.values]);
+    checkAvailability();
+  }, [checkAvailability]);
 
   return (
     <Window
