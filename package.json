@@ -5,7 +5,9 @@
   "scripts": {
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "deploy:stg": "gh workflow run staging.yml -r",
+    "postdeploy:stg": "echo 'wait starting pipeline...' && sleep 3 && gh run watch"
   },
   "dependencies": {
     "@progress/kendo-date-math": "^1.5.3",
