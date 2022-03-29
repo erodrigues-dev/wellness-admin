@@ -109,17 +109,22 @@ function AppointmentFormComponent() {
   };
 
   useEffect(() => {
-    const { calendar, id, dateStart: date } = formik.values;
-    const calendarId = calendar?.id;
+    const {
+      id,
+      calendar: { id: calendarId = null },
+      activity: { id: activityId = null },
+      dateStart: date,
+    } = formik.values;
 
-    if (calendarId && date) {
+    if (calendarId && date && activityId) {
       checkAppointmentAvailability({
         date,
         calendarId,
+        activityId,
         ignoreAppointmentId: id || null,
       })
         .then(({ data }) => setIsFree(data.isFree))
-        .catch(() => toast.error('Error on fetch availability'));
+        .catch(() => toast.error('Error on check availability'));
     }
   }, [formik.values]);
 
