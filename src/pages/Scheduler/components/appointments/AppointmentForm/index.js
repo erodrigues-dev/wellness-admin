@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
@@ -32,6 +32,7 @@ export function AppointmentForm() {
 }
 
 function AppointmentFormComponent() {
+  const firstUpdate = useRef(true);
   const { modal, calendars } = useSchedulerContext();
   const {
     activities,
@@ -67,6 +68,11 @@ function AppointmentFormComponent() {
 
   const checkAvailability = useCallback(async () => {
     try {
+      if (firstUpdate.current) {
+        firstUpdate.current = false;
+        return;
+      }
+
       const data = {
         ignoreAppointmentId: formik.values.id || null,
         calendarId: formik.values.calendar?.id || null,
