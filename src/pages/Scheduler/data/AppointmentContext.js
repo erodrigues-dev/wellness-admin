@@ -50,13 +50,14 @@ export function AppointmentProvider({ children }) {
 
   const resetSelected = () => setSelected(initialSelectedItemState);
 
-  const openNewAppointment = (selectedClass) =>
+  const openNewAppointment = (selectedClass) => {
     setModal({
       type: 'appointment',
       isCreate: true,
       isOpen: true,
       selectedClass,
     });
+  };
 
   const handleSelectedData = (data) =>
     setSelected({
@@ -66,11 +67,13 @@ export function AppointmentProvider({ children }) {
     });
 
   const openFreeSlot = (data) => {
+    if (modal.isOpen) return;
     handleSelectedData(data);
     openNewAppointment();
   };
 
   const openEditAppointment = (data) => {
+    if (modal.isOpen) return;
     handleSelectedData(data);
     setModal({
       selectedId: data.id,
