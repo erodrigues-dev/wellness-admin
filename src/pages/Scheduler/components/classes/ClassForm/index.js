@@ -9,6 +9,7 @@ import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import Loading from '~/components/Loading';
 import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
+import { endOfDay, addMonths } from '~/helpers/date';
 
 import { useClassContext } from '../../../data/ClassContext';
 import { useSchedulerContext } from '../../../data/SchedulerContext';
@@ -175,6 +176,9 @@ export function ClassForm() {
           value={formik.values.recurrenceRule}
           onChange={handleRecurrenceChange}
           styles={{ marginBottom: '16px' }}
+          disableEndNever
+          maxEndAfter={180}
+          maxEndOn={addMonths(endOfDay(new Date()), 6)}
         />
 
         <InputFormikAdapter

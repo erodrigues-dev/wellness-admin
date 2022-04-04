@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { ToolbarItem } from '@progress/kendo-react-buttons';
+import { ToolbarItem, ToolbarSpacer } from '@progress/kendo-react-buttons';
 import { SchedulerHeader } from '@progress/kendo-react-scheduler';
 
 import { useSchedulerContext } from '../../data/SchedulerContext';
@@ -8,7 +8,7 @@ import { CalendarSelect } from './CalendarSelect';
 import { CustomButtons } from './CustomButtons';
 
 export function CustomHeader({ children }) {
-  const [Seletor, Datepicker, ...Others] = children;
+  const [Seletor, Datepicker] = children;
   const { calendars, selectedCalendars, setSelectedCalendars } =
     useSchedulerContext();
 
@@ -23,7 +23,7 @@ export function CustomHeader({ children }) {
           onChange={setSelectedCalendars}
         />
       </ToolbarItem>
-      {Others}
+      <ToolbarSpacer />
       <CustomButtons />
     </SchedulerHeader>
   );

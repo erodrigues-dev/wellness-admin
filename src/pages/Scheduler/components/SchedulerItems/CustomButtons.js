@@ -15,7 +15,7 @@ export const CustomButtons = () => {
 
   return (
     <ButtonsRight>
-      <Button type="button" onClick={openNewAppointment}>
+      <Button type="button" onClick={() => openNewAppointment()}>
         New
       </Button>
       <Button type="button" onClick={openNewClass}>

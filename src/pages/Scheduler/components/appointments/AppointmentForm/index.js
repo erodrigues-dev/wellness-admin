@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import { RiErrorWarningLine } from 'react-icons/ri';
 import { toast } from 'react-toastify';
@@ -32,6 +32,7 @@ export function AppointmentForm() {
 }
 
 function AppointmentFormComponent() {
+  const firstUpdate = useRef(true);
   const { modal, calendars } = useSchedulerContext();
   const {
     activities,
@@ -64,6 +65,39 @@ function AppointmentFormComponent() {
       calendarClassId: selectedClass?.id,
     }),
   });
+
+  const checkAvailability = useCallback(async () => {
+    try {
+      if (firstUpdate.current) {
+        firstUpdate.current = false;
+        return;
+      }
+
+      const data = {
+        ignoreAppointmentId: formik.values.id || null,
+        calendarId: formik.values.calendar?.id || null,
+        activityId: formik.values.activity?.id || null,
+        date: formik.values.dateStart || null,
+      };
+
+      const hasDataToCheckAvailability =
+        data.calendarId && data.date && data.activityId;
+
+      if (hasDataToCheckAvailability) {
+        const { data: response } = await checkAppointmentAvailability(data);
+        setIsFree(response.isFree);
+      } else {
+        setIsFree(true);
+      }
+    } catch {
+      toast.error('Error on check availability');
+    }
+  }, [
+    formik.values.id,
+    formik.values.activity,
+    formik.values.calendar,
+    formik.values.dateStart,
+  ]);
 
   function handleSelectFields(value, field, cb) {
     const selectedItem = cb(value);
@@ -109,19 +143,8 @@ function AppointmentFormComponent() {
   };
 
   useEffect(() => {
-    const { calendar, id, dateStart: date } = formik.values;
-    const calendarId = calendar?.id;
-
-    if (calendarId && date) {
-      checkAppointmentAvailability({
-        date,
-        calendarId,
-        ignoreAppointmentId: id || null,
-      })
-        .then(({ data }) => setIsFree(data.isFree))
-        .catch(() => toast.error('Error on fetch availability'));
-    }
-  }, [formik.values]);
+    checkAvailability();
+  }, [checkAvailability]);
 
   return (
     <Window
@@ -188,8 +211,7 @@ function AppointmentFormComponent() {
             formik={formik}
             name="dateStart"
             label="Start Date"
-            // disabled={!!selectedClass}
-            disabled
+            disabled={Boolean(selectedClass)}
           />
 
           <Input

@@ -140,6 +140,10 @@ export function SchedulerProvider({ children }) {
     mapBlocksToDataItem,
   ]);
 
+  const openModal = (data) => {
+    setModal((state) => (state.isOpen ? state : data));
+  };
+
   const closeModal = () => setModal(initialModalState);
 
   useEffect(() => {
@@ -158,9 +162,11 @@ export function SchedulerProvider({ children }) {
         items,
         settings,
         setSelectedCalendars,
+        selectedDate,
         setSelectedDate,
         modal,
-        setModal,
+        setModal: openModal,
+        openModal,
         closeModal,
         labels,
         setLabels,

@@ -5,6 +5,8 @@ import {
   DayView,
 } from '@progress/kendo-react-scheduler';
 
+import { isSameDay } from '~/helpers/date';
+
 import { AppointmentModals } from './components/appointments/AppointmentModals';
 import { BlockModals } from './components/blocks/BlockModals';
 import { ClassModals } from './components/classes/ClassModals';
@@ -48,7 +50,11 @@ function InnerScheduler() {
 
   const handleDateChange = useCallback(
     ({ value }) => {
-      setSelectedDate(new Date(value));
+      setSelectedDate((state) => {
+        if (isSameDay(value, state)) return state;
+
+        return new Date(value);
+      });
     },
     [setSelectedDate]
   );

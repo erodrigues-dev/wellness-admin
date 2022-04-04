@@ -51,6 +51,7 @@ export async function cancelAppointment(id) {
 
 export async function checkAppointmentAvailability({
   calendarId,
+  activityId,
   ignoreAppointmentId,
   date,
 }) {
@@ -58,6 +59,7 @@ export async function checkAppointmentAvailability({
     `/scheduler/appointments/check-availability`,
     {
       calendarId,
+      activityId,
       ignoreAppointmentId,
       date,
     }

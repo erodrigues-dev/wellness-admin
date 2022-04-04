@@ -18,6 +18,7 @@ const InputDateTimePicker = ({
   feedback,
   min,
   max,
+  disabled,
 }) => {
   const [dateTime, setDateTime] = useState(value);
   const [formatedValue, setFormatedValue] = useState('');
@@ -32,11 +33,13 @@ const InputDateTimePicker = ({
   }, [dateTime, onChange, name]);
 
   const handleToggleDatePicker = () => {
+    if (disabled) return;
     setOpenDatePicker((open) => !open);
     setOpenTimePicker(false);
   };
 
   const handleToggleTimePicker = () => {
+    if (disabled) return;
     if (!dateTime) {
       handleToggleDatePicker();
       return;
@@ -88,10 +91,11 @@ const InputDateTimePicker = ({
           isValid={isValid}
           isInvalid={isInvalid}
           placeholder="mm/dd/yyyy hh:mm"
-          autocomplete="off"
+          autoComplete="off"
+          disabled={disabled}
         />
-        <InputGroup.Append style={{ cursor: 'pointer' }}>
-          {dateTime && (
+        <InputGroup.Append style={{ cursor: disabled ? 'default' : 'pointer' }}>
+          {dateTime && !disabled && (
             <InputGroup.Text onClick={handleClear}>
               <FiXCircle />
             </InputGroup.Text>
