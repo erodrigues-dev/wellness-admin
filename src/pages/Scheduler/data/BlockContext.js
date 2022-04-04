@@ -76,9 +76,11 @@ export function BlockProvider({ children }) {
         calendarId: calendar?.id,
         ...values,
       };
-      const { data } = await submitItem(submit, updateOptions);
+      const { data: response } = await submitItem(submit, updateOptions);
 
-      saveBlock(data);
+      const returnedBlocks = Array.isArray(response) ? response : [response];
+
+      returnedBlocks.map((block) => saveBlock(block));
       closeModal();
 
       toast.success('Block saved successfully');
