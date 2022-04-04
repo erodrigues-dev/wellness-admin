@@ -1,6 +1,6 @@
 import * as yup from 'yup';
 
-const defaultCustomer = {
+const defaultCalendar = {
   id: '',
   name: '',
 };
@@ -27,5 +27,5 @@ export const getInitialValues = ({
   dateStart: dateStart ?? '',
   dateEnd: dateEnd ?? '',
   recurrenceRule: recurrenceRule ?? '',
-  calendar: calendar ?? defaultCustomer,
+  calendar: calendar ?? defaultCalendar,
 });
