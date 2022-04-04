@@ -139,6 +139,7 @@ export function SchedulerProvider({ children }) {
         items,
         settings,
         setSelectedCalendars,
+        selectedDate,
         setSelectedDate,
         modal,
         setModal: openModal,
