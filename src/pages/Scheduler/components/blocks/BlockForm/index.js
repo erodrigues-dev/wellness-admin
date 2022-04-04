@@ -67,7 +67,6 @@ export function BlockForm() {
           label="Calendar"
           inputOptions={{
             as: 'select',
-            disabled: isEdit || selectedClass,
           }}
           onChange={handleChangeCalendar}
         >
@@ -87,7 +86,6 @@ export function BlockForm() {
           label="Start Date"
           min={formik.values.dateEnd}
           max={formik.values.dateEnd}
-          disabled
         />
 
         <DateTimePickerFormikAdapter
@@ -96,7 +94,6 @@ export function BlockForm() {
           label="End Date"
           min={formik.values.dateStart}
           max={formik.values.dateStart}
-          disabled
         />
 
         <RecurrenceEditor
