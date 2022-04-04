@@ -53,10 +53,10 @@ export function CustomItem(props) {
     props.dataItem?.type === 'block'
       ? `repeating-linear-gradient(
       45deg,
-      #b6b6b6,
-      #b6b6b6 8px,
-      #ddd 8px,
-      #ddd 16px
+      #dc3545,
+      #dc3545 8px,
+      #d95562 8px,
+      #d95562 16px
     )`
       : props.dataItem?.color;
 
