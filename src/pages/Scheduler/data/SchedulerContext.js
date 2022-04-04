@@ -90,13 +90,16 @@ export function SchedulerProvider({ children }) {
     const end = new Date(data.dateEnd);
 
     return {
+      ...data,
       id: data.id,
       type: 'block',
       title,
       start,
       end,
       calendarId: data.calendar ? data.calendar.id : data.calendarId,
-      ...data,
+      recurrenceExceptions: data.recurrenceExceptions.map(
+        (exDate) => new Date(exDate)
+      ),
     };
   }, []);
 
