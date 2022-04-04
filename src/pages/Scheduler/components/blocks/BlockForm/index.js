@@ -5,6 +5,7 @@ import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
+import { confirm } from '~/components/ConfirmAlertWithButtons';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { InputFormikAdapter } from '~/components/Form/Input';
 import { RecurrenceEditor } from '~/components/Scheduler/RecurrenceEditor';
@@ -16,10 +17,10 @@ import { validationSchema, getInitialValues } from './schema';
 export function BlockForm() {
   const { modal, closeModal, calendars } = useSchedulerContext();
   const { onSubmit, selected } = useBlockContext();
-  const { selectedClass, isEdit } = modal;
+  const { isEdit } = modal;
 
   const formik = useFormik({
-    onSubmit,
+    onSubmit: handleSubmit,
     validationSchema,
     initialValues: getInitialValues({
       id: selected?.slotData?.id,
@@ -31,6 +32,45 @@ export function BlockForm() {
   });
 
   const { setFieldValue } = formik;
+
+  function handleSubmit(values) {
+    if (!isEdit) {
+      return onSubmit(values);
+    }
+
+    const originalDate = selected.slotData.start;
+
+    return confirm(
+      'Update recurrent block',
+      'Select an option to update this recurrent block',
+      [
+        {
+          text: 'Only this block',
+          action: () =>
+            onSubmit(values, {
+              updateOnDate: originalDate,
+            }),
+        },
+        {
+          text: 'This block and following',
+          action: () =>
+            onSubmit(values, {
+              updateOnDate: originalDate,
+              updateFollowing: true,
+            }),
+        },
+        {
+          text: 'Cancel',
+          color: 'secondary',
+          action: () => {},
+        },
+      ],
+      {
+        closeOnEscape: false,
+        closeOnClickOutside: false,
+      }
+    );
+  }
 
   function handleSelectFields(value, field, cb) {
     const selectedItem = cb(value);
