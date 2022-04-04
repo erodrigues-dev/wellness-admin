@@ -66,17 +66,17 @@ export function BlockProvider({ children }) {
     [handleSaveBlockMap, setItems]
   );
 
-  const submitItem = (values) =>
-    values.id ? updateBlock(values) : createBlock(values);
+  const submitItem = (values, options) =>
+    values.id ? updateBlock(values, options) : createBlock(values);
 
-  const onSubmit = async (formValues) => {
+  const onSubmit = async (formValues, updateOptions) => {
     try {
       const { calendar, ...values } = formValues;
       const submit = {
         calendarId: calendar?.id,
         ...values,
       };
-      const { data } = await submitItem(submit);
+      const { data } = await submitItem(submit, updateOptions);
 
       saveBlock(data);
       closeModal();

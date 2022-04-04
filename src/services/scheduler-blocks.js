@@ -16,21 +16,10 @@ export async function createBlock({
   return response;
 }
 
-export async function updateBlock({
-  id,
-  calendarId,
-  dateStart,
-  dateEnd,
-  recurrenceRule,
-}) {
+export async function updateBlock({ id, ...data }, updateOptions) {
   const response = await api.put(`/scheduler/blocks/${id}`, {
-    data: {
-      calendarId,
-      dateStart,
-      dateEnd,
-      recurrenceRule,
-    },
-    updateOptions: {},
+    data,
+    updateOptions,
   });
 
   return response;
