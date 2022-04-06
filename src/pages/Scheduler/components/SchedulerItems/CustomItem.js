@@ -52,11 +52,11 @@ export function CustomItem(props) {
   const getBackgroundColor = () => {
     if (props.dataItem?.type === 'block') {
       return `repeating-linear-gradient(
-      45deg,
-      #dc3545,
-      #dc3545 8px,
-      #d95562 8px,
-      #d95562 16px
+        45deg,
+        #dc3545,
+        #dc3545 8px,
+        #d95562 8px,
+        #d95562 16px
       )`;
     }
     return props.dataItem?.color;
@@ -66,12 +66,14 @@ export function CustomItem(props) {
     <SchedulerItem
       {...props}
       style={{ background: getBackgroundColor() }}
+      onClick={handleClick}
+      onDoubleClick={null}
+      onDrag={null}
     >
       <div
         role="button"
         onKeyUp={() => {}}
         tabIndex={0}
-        onClick={handleClick}
         style={{ height: '100%' }}
       >
         {props?.dataItem?.calendarLabelId && (
