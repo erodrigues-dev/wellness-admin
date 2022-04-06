@@ -91,7 +91,6 @@ export function SchedulerProvider({ children }) {
 
     return {
       ...data,
-      id: data.id,
       type: 'block',
       title,
       start,
