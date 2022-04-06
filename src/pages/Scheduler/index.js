@@ -10,6 +10,7 @@ import { isSameDay } from '~/helpers/date';
 import { AppointmentModals } from './components/appointments/AppointmentModals';
 import { BlockModals } from './components/blocks/BlockModals';
 import { ClassModals } from './components/classes/ClassModals';
+import { CustomEditItem } from './components/SchedulerItems/CustomEditItem';
 import { CustomHeader } from './components/SchedulerItems/CustomHeader';
 import { CustomItem } from './components/SchedulerItems/CustomItem';
 import { CustomSlot } from './components/SchedulerItems/CustomSlot';
@@ -59,10 +60,8 @@ function InnerScheduler() {
     [setSelectedDate]
   );
 
-  const handleSchedulerData = useMemo(() => {
-    // Later here we also will put the classes and blocks
+  const schedulerData = useMemo(() => {
     const { appointments, classes, blocks } = items;
-
     return [...appointments, ...classes, ...blocks];
   }, [items]);
 
@@ -80,10 +79,11 @@ function InnerScheduler() {
             height={contentRef.current?.clientHeight - 20 || 600}
             group={settings.group}
             resources={[{ ...settings.resources, data: selectedCalendars }]}
-            data={handleSchedulerData}
+            data={schedulerData}
             header={CustomHeader}
             onDateChange={handleDateChange}
             date={selectedDate}
+            editItem={CustomEditItem}
             item={CustomItem}
             slot={CustomSlot}
             editable={{
