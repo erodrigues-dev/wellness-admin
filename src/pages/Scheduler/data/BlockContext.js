@@ -18,12 +18,14 @@ export function BlockProvider({ children }) {
     useSchedulerContext();
   const [selected, setSelected] = useState(initialSelectedItemState);
 
-  const openNewBlock = () =>
+  const openNewBlock = () => {
+    setSelected(initialSelectedItemState);
     setModal({
       type: 'block',
       isCreate: true,
       isOpen: true,
     });
+  };
 
   const handleSelectedData = (data) =>
     setSelected({
