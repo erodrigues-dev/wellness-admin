@@ -40,14 +40,6 @@ export function SchedulerProvider({ children }) {
   const [labels, setLabels] = useState([]);
   const [fetchingLabels, setFetchingLabels] = useState(true);
 
-  useEffect(() => {
-    setFetchingLabels(true);
-    listCalendarLabels()
-      .then((response) => setLabels(response.data))
-      .catch(() => toast.error('Error on fetch calendar labels'))
-      .finally(() => setFetchingLabels(false));
-  }, []);
-
   const mapAppointmentsToDataItem = useCallback((data) => {
     const title = `${data?.customer?.name} (${data.activity.name})`;
     const start = new Date(data.dateStart);
@@ -150,6 +142,14 @@ export function SchedulerProvider({ children }) {
   };
 
   const closeModal = () => setModal(initialModalState);
+
+  useEffect(() => {
+    setFetchingLabels(true);
+    listCalendarLabels()
+      .then((response) => setLabels(response.data))
+      .catch(() => toast.error('Error on fetch calendar labels'))
+      .finally(() => setFetchingLabels(false));
+  }, []);
 
   useEffect(() => {
     fetchCalendars();
