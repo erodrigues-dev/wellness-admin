@@ -45,10 +45,14 @@ export function BlockProvider({ children }) {
   const handleSaveBlockMap = useCallback(
     (blocks, newBlock) => {
       const dataItem = mapBlocksToDataItem(newBlock);
-      const alreadyOnList = blocks.some((x) => x.id === newBlock.id);
+      const alreadyOnList = blocks.some(
+        (currentBlock) => currentBlock.id === newBlock.id
+      );
 
       if (alreadyOnList) {
-        return blocks.map((x) => (newBlock.id === x.id ? dataItem : x));
+        return blocks.map((currentBlock) =>
+          newBlock.id === currentBlock.id ? dataItem : currentBlock
+        );
       }
 
       return [...blocks, dataItem];
