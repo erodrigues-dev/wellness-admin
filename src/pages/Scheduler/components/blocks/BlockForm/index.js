@@ -33,43 +33,65 @@ export function BlockForm() {
 
   const { setFieldValue } = formik;
 
-  function handleSubmit(values) {
-    if (!isEdit) {
-      return onSubmit(values);
+  function isChanged(newValues, oldValues) {
+    return (
+      newValues.calendar?.id !== oldValues?.calendar?.id ||
+      newValues.dateStart.getTime() !==
+        new Date(oldValues?.dateStart).getTime() ||
+      newValues.dateEnd.getTime() !== new Date(oldValues?.dateEnd).getTime() ||
+      (newValues.recurrenceRule || null) !== (oldValues?.recurrenceRule || null)
+    );
+  }
+
+  function isRecurrent() {
+    return Boolean(selected?.slotData?.recurrenceRule);
+  }
+
+  function askToUpdate() {
+    return new Promise((resolve) => {
+      const originalDate = selected.slotData.start;
+      confirm(
+        'Update recurrent block',
+        'Select an option to update this recurrent block',
+        [
+          {
+            text: 'Only this block',
+            action: () => resolve({ updateOnDate: originalDate }),
+          },
+          {
+            text: 'This block and following',
+            action: () =>
+              resolve({
+                updateOnDate: originalDate,
+                updateFollowing: true,
+              }),
+          },
+          {
+            text: 'Cancel',
+            color: 'secondary',
+            action: () => resolve(null),
+          },
+        ],
+        {
+          closeOnEscape: false,
+          closeOnClickOutside: false,
+        }
+      );
+    });
+  }
+
+  async function handleSubmit(values) {
+    if (!isChanged(values, selected?.slotData)) {
+      return closeModal();
     }
 
-    const originalDate = selected.slotData.start;
+    if (isRecurrent()) {
+      const updateOptions = await askToUpdate();
+      if (!updateOptions) return null;
+      return onSubmit(values, updateOptions);
+    }
 
-    return confirm(
-      'Update recurrent block',
-      'Select an option to update this recurrent block',
-      [
-        {
-          text: 'Only this block',
-          action: () =>
-            onSubmit(values, {
-              updateOnDate: originalDate,
-            }),
-        },
-        {
-          text: 'This block and following',
-          action: () =>
-            onSubmit(values, {
-              updateOnDate: originalDate,
-              updateFollowing: true,
-            }),
-        },
-        {
-          text: 'Cancel',
-          color: 'secondary',
-          action: () => {},
-        },
-      ],
-      {
-        closeOnEscape: false,
-        closeOnClickOutside: false,
-      }
-    );
+    return onSubmit(values);
   }
 
   function handleSelectFields(value, field, cb) {
