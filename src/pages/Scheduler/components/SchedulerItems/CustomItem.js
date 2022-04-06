@@ -49,23 +49,23 @@ export function CustomItem(props) {
     }
   };
 
-  const handleItemColor = () =>
-    props.dataItem?.type === 'block'
-      ? `repeating-linear-gradient(
+  const getBackgroundColor = () => {
+    if (props.dataItem?.type === 'block') {
+      return `repeating-linear-gradient(
       45deg,
       #dc3545,
       #dc3545 8px,
       #d95562 8px,
       #d95562 16px
-    )`
-      : props.dataItem?.color;
+      )`;
+    }
+    return props.dataItem?.color;
+  };
 
   return (
     <SchedulerItem
       {...props}
-      style={{
-        background: handleItemColor(),
-      }}
+      style={{ background: getBackgroundColor() }}
     >
       <div
         role="button"
