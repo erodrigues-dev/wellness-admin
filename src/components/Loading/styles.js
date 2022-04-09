@@ -52,7 +52,7 @@ export const Container = styled.div`
   top: 50%;
   left: 50%;
   transform: translate(-100px, -100px);
-  z-index: 1000;
+  z-index: 20000;
 `;
 
 export const Wrapper = styled.div`

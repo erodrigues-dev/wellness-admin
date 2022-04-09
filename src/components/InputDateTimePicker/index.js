@@ -16,6 +16,8 @@ const InputDateTimePicker = ({
   isInvalid,
   isValid,
   feedback,
+  min,
+  max,
   disabled,
 }) => {
   const [dateTime, setDateTime] = useState(value);
@@ -112,6 +114,8 @@ const InputDateTimePicker = ({
           value={dateTime || new Date()}
           onChange={handleChangeDatePicker}
           onClose={handleToggleDatePicker}
+          minDate={min}
+          maxDate={max}
         />
       )}
       {openTimePicker && (

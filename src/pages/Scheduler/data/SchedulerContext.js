@@ -23,28 +23,22 @@ export const initialModalState = {
   isOpen: false,
 };
 
+const initialItemsState = {
+  appointments: [],
+  classes: [],
+  blocks: [],
+};
+
 export const SchedulerContext = createContext();
 
 export function SchedulerProvider({ children }) {
   const [calendars, setCalendars] = useState([]);
   const [selectedCalendars, setSelectedCalendars] = useState([]);
   const [selectedDate, setSelectedDate] = useState(clearTime(new Date()));
-  const [items, setItems] = useState({
-    appointments: [],
-    classes: [],
-    blocks: [],
-  });
+  const [items, setItems] = useState(initialItemsState);
   const [modal, setModal] = useState(initialModalState);
   const [labels, setLabels] = useState([]);
   const [fetchingLabels, setFetchingLabels] = useState(true);
-
-  useEffect(() => {
-    setFetchingLabels(true);
-    listCalendarLabels()
-      .then((response) => setLabels(response.data))
-      .catch(() => toast.error('Error on fetch calendar labels'))
-      .finally(() => setFetchingLabels(false));
-  }, []);
 
   const mapAppointmentsToDataItem = useCallback((data) => {
     const title = `${data?.customer?.name} (${data.activity.name})`;
@@ -82,6 +76,24 @@ export function SchedulerProvider({ children }) {
     };
   }, []);
 
+  const mapBlocksToDataItem = useCallback((data) => {
+    const title = `Unavailable period`;
+    const start = new Date(data.dateStart);
+    const end = new Date(data.dateEnd);
+
+    return {
+      ...data,
+      type: 'block',
+      title,
+      start,
+      end,
+      calendarId: data.calendar ? data.calendar.id : data.calendarId,
+      recurrenceExceptions: data.recurrenceExceptions.map(
+        (exDate) => new Date(exDate)
+      ),
+    };
+  }, []);
+
   const fetchCalendars = useCallback(async () => {
     try {
       const { data } = await calendarService.index();
@@ -98,23 +110,31 @@ export function SchedulerProvider({ children }) {
   const fetchSchedulerItems = useCallback(async () => {
     try {
       if (selectedCalendars.length > 0 && selectedDate) {
+        setItems(initialItemsState);
+
         const { data } = await listItems({
           calendars: selectedCalendars.map((item) => item.id),
           date: selectedDate,
         });
         const appointments = data?.appointments?.map(mapAppointmentsToDataItem);
         const classes = data?.classes?.map(mapClassesToDataItem);
+        const blocks = data?.blocks?.map(mapBlocksToDataItem);
 
-        setItems((prevState) => ({ ...prevState, appointments, classes }));
+        setItems({
+          appointments,
+          classes,
+          blocks,
+        });
       }
     } catch (error) {
       toast.error('Unable to list scheduler data');
     }
   }, [
+    selectedDate,
+    selectedCalendars,
     mapAppointmentsToDataItem,
     mapClassesToDataItem,
-    selectedCalendars,
-    selectedDate,
+    mapBlocksToDataItem,
   ]);
 
   const openModal = (data) => {
@@ -122,6 +142,14 @@ export function SchedulerProvider({ children }) {
   };
 
   const closeModal = () => setModal(initialModalState);
+
+  useEffect(() => {
+    setFetchingLabels(true);
+    listCalendarLabels()
+      .then((response) => setLabels(response.data))
+      .catch(() => toast.error('Error on fetch calendar labels'))
+      .finally(() => setFetchingLabels(false));
+  }, []);
 
   useEffect(() => {
     fetchCalendars();
@@ -151,6 +179,7 @@ export function SchedulerProvider({ children }) {
         mapAppointmentsToDataItem,
         mapClassesToDataItem,
         setItems,
+        mapBlocksToDataItem,
       }}
     >
       {children}

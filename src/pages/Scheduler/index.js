@@ -8,11 +8,14 @@ import {
 import { isSameDay } from '~/helpers/date';
 
 import { AppointmentModals } from './components/appointments/AppointmentModals';
+import { BlockModals } from './components/blocks/BlockModals';
 import { ClassModals } from './components/classes/ClassModals';
+import { CustomEditItem } from './components/SchedulerItems/CustomEditItem';
 import { CustomHeader } from './components/SchedulerItems/CustomHeader';
 import { CustomItem } from './components/SchedulerItems/CustomItem';
 import { CustomSlot } from './components/SchedulerItems/CustomSlot';
 import { AppointmentProvider } from './data/AppointmentContext';
+import { BlockProvider } from './data/BlockContext';
 import { ClassProvider } from './data/ClassContext';
 import {
   useSchedulerContext,
@@ -25,7 +28,9 @@ export function Scheduler() {
     <SchedulerProvider>
       <AppointmentProvider>
         <ClassProvider>
-          <InnerScheduler />
+          <BlockProvider>
+            <InnerScheduler />
+          </BlockProvider>
         </ClassProvider>
       </AppointmentProvider>
     </SchedulerProvider>
@@ -55,11 +60,9 @@ function InnerScheduler() {
     [setSelectedDate]
   );
 
-  const handleSchedulerData = useMemo(() => {
-    // Later here we also will put the classes and blocks
-    const { appointments, classes } = items;
-
-    return [...appointments, ...classes];
+  const schedulerData = useMemo(() => {
+    const { appointments, classes, blocks } = items;
+    return [...appointments, ...classes, ...blocks];
   }, [items]);
 
   return (
@@ -76,10 +79,11 @@ function InnerScheduler() {
             height={contentRef.current?.clientHeight - 20 || 600}
             group={settings.group}
             resources={[{ ...settings.resources, data: selectedCalendars }]}
-            data={handleSchedulerData}
+            data={schedulerData}
             header={CustomHeader}
             onDateChange={handleDateChange}
             date={selectedDate}
+            editItem={CustomEditItem}
             item={CustomItem}
             slot={CustomSlot}
             editable={{
@@ -97,6 +101,7 @@ function InnerScheduler() {
           </KendoScheduler>
           <AppointmentModals />
           <ClassModals />
+          <BlockModals />
         </Content>
       )}
     </Container>
