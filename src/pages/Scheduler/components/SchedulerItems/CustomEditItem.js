@@ -2,13 +2,15 @@ import React from 'react';
 
 import { SchedulerEditItem } from '@progress/kendo-react-scheduler';
 
+import { useSchedulerContext } from '../../data/SchedulerContext';
+
 export function CustomEditItem(props) {
+  const { handleRemoveItem } = useSchedulerContext();
+
   const handleRemoveClick = (e) => {
     e.syntheticEvent.preventDefault();
     e.syntheticEvent.stopPropagation();
-    console.log('>>> onRemoveItem', props.dataItem);
-    // TODO abrir modal com as opções de exclusão
-    // TODO excluir item
+    handleRemoveItem(props.dataItem);
   };
 
   return (

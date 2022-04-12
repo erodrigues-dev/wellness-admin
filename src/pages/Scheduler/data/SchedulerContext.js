@@ -217,7 +217,6 @@ export function SchedulerProvider({ children }) {
   const handleRemoveItem = useCallback(
     async (item) => {
       const { confirmed, following } = await confirmRemoveItem(item);
-
       if (!confirmed) return;
       const { ok } = await handleRemoveInAPI(item, following);
       if (ok) handleRemoveInScheduler(item);
