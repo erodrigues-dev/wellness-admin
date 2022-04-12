@@ -11,7 +11,9 @@ import { clearTime } from '~/helpers/date';
 import calendarService from '~/services/calendar';
 import { listCalendarLabels } from '~/services/calendar-labels';
 import { listItems } from '~/services/scheduler';
+import { deleteBlock } from '~/services/scheduler-blocks';
 
+import { confirm } from '../../../components/ConfirmAlertWithButtons';
 import { settings } from './settings';
 
 export const initialModalState = {
@@ -143,6 +145,86 @@ export function SchedulerProvider({ children }) {
 
   const closeModal = () => setModal(initialModalState);
 
+  const confirmRemoveRecurrent = (type) => {
+    return new Promise((resolve) => {
+      confirm(`Delete ${type}`, `Select a option to delete ${type}`, [
+        {
+          text: 'Only this',
+          action: () => resolve({ confirmed: true, following: false }),
+        },
+        {
+          text: 'This and following',
+          action: () => resolve({ confirmed: true, following: true }),
+        },
+        {
+          text: 'Cancel',
+          color: 'secondary',
+          action: () => resolve({ confirmed: false }),
+        },
+      ]);
+    });
+  };
+
+  const confirmRemoveNonRecurrent = (type) => {
+    return new Promise((resolve) => {
+      confirm(`Delete ${type}`, `Are you sure you want to delete ${type}`, [
+        {
+          text: 'Ok',
+          action: () => resolve({ confirmed: true }),
+        },
+        {
+          text: 'Cancel',
+          color: 'secondary',
+          action: () => resolve({ confirmed: false }),
+        },
+      ]);
+    });
+  };
+
+  const confirmRemoveItem = useCallback(async (item) => {
+    const { type, recurrenceRule } = item;
+    const isRecurrent = Boolean(recurrenceRule);
+    if (isRecurrent) return confirmRemoveRecurrent(type);
+    return confirmRemoveNonRecurrent(type);
+  }, []);
+
+  const handleRemoveBlock = async (item, following) => {
+    const { id, start: date } = item;
+    await deleteBlock({ id, date, following });
+  };
+
+  const handleRemoveInAPI = useCallback(async (item, following) => {
+    try {
+      const { type } = item;
+      if (type === 'block') await handleRemoveBlock(item, following);
+      return { ok: true };
+    } catch {
+      return { ok: false };
+    }
+  }, []);
+
+  const handleRemoveInScheduler = useCallback(async (item) => {
+    const { type } = item;
+    if (type === 'block')
+      setItems((state) => {
+        return {
+          ...state,
+          blocks: state.blocks.filter((block) => block.id !== item.id),
+        };
+      });
+  }, []);
+
+  const handleRemoveItem = useCallback(
+    async (item) => {
+      const { confirmed, following } = await confirmRemoveItem(item);
+
+      if (!confirmed) return;
+      const { ok } = await handleRemoveInAPI(item, following);
+      if (ok) handleRemoveInScheduler(item);
+    },
+    [confirmRemoveItem, handleRemoveInAPI, handleRemoveInScheduler]
+  );
+
   useEffect(() => {
     setFetchingLabels(true);
     listCalendarLabels()
@@ -180,6 +262,7 @@ export function SchedulerProvider({ children }) {
         mapClassesToDataItem,
         setItems,
         mapBlocksToDataItem,
+        handleRemoveItem,
       }}
     >
       {children}
