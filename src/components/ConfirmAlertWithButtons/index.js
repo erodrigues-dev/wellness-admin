@@ -4,7 +4,15 @@ import { confirmAlert } from 'react-confirm-alert';
 
 import { Container } from './styles';
 
-export const confirm = (title, message, buttons, options = {}) => {
+export const confirm = (
+  title,
+  message,
+  buttons,
+  options = {
+    closeOnEscape: false,
+    closeOnClickOutside: false,
+  }
+) => {
   return confirmAlert({
     ...options,
     customUI: ({ onClose }) => {
