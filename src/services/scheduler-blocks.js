@@ -24,3 +24,9 @@ export async function updateBlock({ id, ...data }, updateOptions) {
 
   return response;
 }
+
+export async function deleteBlock({ id, date, following }) {
+  await api.delete(`/scheduler/blocks/${id}`, {
+    params: { date, following },
+  });
+}
