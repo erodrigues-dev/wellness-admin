@@ -12,6 +12,7 @@ import calendarService from '~/services/calendar';
 import { listCalendarLabels } from '~/services/calendar-labels';
 import { listItems } from '~/services/scheduler';
 import { deleteBlock } from '~/services/scheduler-blocks';
+import { deleteClass } from '~/services/scheduler-classes';
 
 import { confirm } from '../../../components/ConfirmAlertWithButtons';
 import { settings } from './settings';
@@ -193,25 +194,37 @@ export function SchedulerProvider({ children }) {
     await deleteBlock({ id, date, following });
   };
 
+  const handleRemoveClass = async (item, following) => {
+    await deleteClass(item.id, following);
+  };
+
   const handleRemoveInAPI = useCallback(async (item, following) => {
     try {
       const { type } = item;
       if (type === 'block') await handleRemoveBlock(item, following);
+      if (type === 'class') await handleRemoveClass(item, following);
       return { ok: true };
     } catch {
+      toast.error(`Unable to delete ${item.type}`);
       return { ok: false };
     }
   }, []);
 
   const handleRemoveInScheduler = useCallback(async (item) => {
     const { type } = item;
-    if (type === 'block')
-      setItems((state) => {
-        return {
-          ...state,
-          blocks: state.blocks.filter((block) => block.id !== item.id),
-        };
-      });
+    setItems((state) => {
+      return {
+        ...state,
+        blocks:
+          type === 'class'
+            ? state.blocks.filter((block) => block.id !== item.id)
+            : state.blocks,
+        classes:
+          type === 'class'
+            ? state.classes.filter((clazz) => clazz.id !== item.id)
+            : state.classes,
+      };
+    });
   }, []);
 
   const handleRemoveItem = useCallback(

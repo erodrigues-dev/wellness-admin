@@ -56,3 +56,9 @@ export async function getAppointmentsList(id) {
 
   return response;
 }
+
+export async function deleteClass(id, following) {
+  await api.delete(`/scheduler/classes/${id}`, {
+    params: { following },
+  });
+}
