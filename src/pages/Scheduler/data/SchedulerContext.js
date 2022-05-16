@@ -216,7 +216,7 @@ export function SchedulerProvider({ children }) {
       return {
         ...state,
         blocks:
-          type === 'class'
+          type === 'block'
             ? state.blocks.filter((block) => block.id !== item.id)
             : state.blocks,
         classes:
