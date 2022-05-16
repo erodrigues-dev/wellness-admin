@@ -44,9 +44,7 @@ export async function updateAppointment({
 }
 
 export async function cancelAppointment(id) {
-  const response = await api.put(`/scheduler/appointments/${id}/cancel`);
-
-  return response;
+  await api.post(`/scheduler/appointments/${id}/cancel`);
 }
 
 export async function checkAppointmentAvailability({

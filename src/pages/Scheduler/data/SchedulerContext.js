@@ -11,6 +11,7 @@ import { clearTime } from '~/helpers/date';
 import calendarService from '~/services/calendar';
 import { listCalendarLabels } from '~/services/calendar-labels';
 import { listItems } from '~/services/scheduler';
+import { cancelAppointment } from '~/services/scheduler-appointments';
 import { deleteBlock } from '~/services/scheduler-blocks';
 import { deleteClass } from '~/services/scheduler-classes';
 
@@ -198,11 +199,16 @@ export function SchedulerProvider({ children }) {
     await deleteClass(item.id, following);
   };
 
+  const handleRemoveAppointment = async (item) => {
+    await cancelAppointment(item.id);
+  };
+
   const handleRemoveInAPI = useCallback(async (item, following) => {
     try {
       const { type } = item;
       if (type === 'block') await handleRemoveBlock(item, following);
       if (type === 'class') await handleRemoveClass(item, following);
+      if (type === 'appointment') await handleRemoveAppointment(item);
       return { ok: true };
     } catch {
       toast.error(`Unable to delete ${item.type}`);
@@ -217,12 +223,16 @@ export function SchedulerProvider({ children }) {
         ...state,
         blocks:
           type === 'block'
-            ? state.blocks.filter((block) => block.id !== item.id)
+            ? state.blocks.filter((current) => current.id !== item.id)
             : state.blocks,
         classes:
           type === 'class'
-            ? state.classes.filter((clazz) => clazz.id !== item.id)
+            ? state.classes.filter((current) => current.id !== item.id)
             : state.classes,
+        appointments:
+          type === 'appointment'
+            ? state.appointments.filter((current) => current.id !== item.id)
+            : state.appointments,
       };
     });
   }, []);
@@ -232,7 +242,10 @@ export function SchedulerProvider({ children }) {
       const { confirmed, following } = await confirmRemoveItem(item);
       if (!confirmed) return;
       const { ok } = await handleRemoveInAPI(item, following);
-      if (ok) handleRemoveInScheduler(item);
+      if (ok) {
+        handleRemoveInScheduler(item);
+        toast.success(`${item.type} deleted successfully`);
+      }
     },
     [confirmRemoveItem, handleRemoveInAPI, handleRemoveInScheduler]
   );
