@@ -8,7 +8,7 @@ import React, {
 import { toast } from 'react-toastify';
 
 import { clearTime } from '~/helpers/date';
-import calendarService from '~/services/calendar';
+import { listAll as listAllCalendars } from '~/services/calendar';
 import { listCalendarLabels } from '~/services/calendar-labels';
 import { listItems } from '~/services/scheduler';
 import { cancelAppointment } from '~/services/scheduler-appointments';
@@ -100,7 +100,7 @@ export function SchedulerProvider({ children }) {
 
   const fetchCalendars = useCallback(async () => {
     try {
-      const { data } = await calendarService.index();
+      const { data } = await listAllCalendars();
 
       if (data.length === 0) toast.error('Not exist calendars');
 

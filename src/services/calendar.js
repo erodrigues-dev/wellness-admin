@@ -14,6 +14,10 @@ function index({ page, filters } = {}) {
   });
 }
 
+export function listAll() {
+  return api.get('/calendars');
+}
+
 function get(id) {
   return api.get(`/calendars/${id}`);
 }
@@ -36,4 +40,5 @@ export default {
   create,
   update,
   destroy,
+  listAll,
 };
