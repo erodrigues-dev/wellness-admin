@@ -159,6 +159,7 @@ export function ClassForm() {
             label="Appointment limit"
             inputOptions={{
               type: 'number',
+              min: 1,
             }}
           />
 
