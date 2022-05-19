@@ -24,8 +24,14 @@ const initialSelectedItemState = {
 const AppointmentContext = createContext({});
 
 export function AppointmentProvider({ children }) {
-  const { modal, setModal, closeModal, setItems, mapAppointmentsToDataItem } =
-    useSchedulerContext();
+  const {
+    modal,
+    openModal,
+    forceOpenModal,
+    closeModal,
+    setItems,
+    mapAppointmentsToDataItem,
+  } = useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
     loading: false,
@@ -51,7 +57,16 @@ export function AppointmentProvider({ children }) {
   const resetSelected = () => setSelected(initialSelectedItemState);
 
   const openNewAppointment = (selectedClass) => {
-    setModal({
+    openModal({
+      type: 'appointment',
+      isCreate: true,
+      isOpen: true,
+      selectedClass,
+    });
+  };
+
+  const addAttndeeInClass = (selectedClass) => {
+    forceOpenModal({
       type: 'appointment',
       isCreate: true,
       isOpen: true,
@@ -75,7 +90,7 @@ export function AppointmentProvider({ children }) {
   const openEditAppointment = (data) => {
     if (modal.isOpen) return;
     handleSelectedData(data);
-    setModal({
+    openModal({
       selectedId: data.id,
       type: 'appointment',
       isEdit: true,
@@ -120,7 +135,7 @@ export function AppointmentProvider({ children }) {
   const handleModalAction = () => {
     const { selectedClass } = modal;
     if (selectedClass) {
-      setModal({
+      forceOpenModal({
         selectedId: selectedClass?.id,
         type: 'class',
         isDisplay: true,
@@ -176,6 +191,7 @@ export function AppointmentProvider({ children }) {
         openFreeSlot,
         openEditAppointment,
         openNewAppointment,
+        addAttndeeInClass,
         resetSelected,
         fetchActivities,
         setActivities,

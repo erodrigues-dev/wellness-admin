@@ -27,7 +27,7 @@ import {
 
 export function ClassDetails() {
   const { modal } = useSchedulerContext();
-  const { openNewAppointment } = useAppointmentContext();
+  const { addAttndeeInClass } = useAppointmentContext();
   const { openClassEdit, handleCloseModal, selectedClass, fetchingClass } =
     useClassContext();
   const [appointments, setAppointments] = useState({
@@ -126,7 +126,7 @@ export function ClassDetails() {
             </div>
             <KendoButton
               disabled={selectedClass?.slots - appointments?.list?.length <= 0}
-              onClick={() => openNewAppointment(selectedClass)}
+              onClick={() => addAttndeeInClass(selectedClass)}
             >
               Add attendee
             </KendoButton>

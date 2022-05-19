@@ -279,6 +279,7 @@ export function SchedulerProvider({ children }) {
         modal,
         setModal: openModal,
         openModal,
+        forceOpenModal: setModal,
         closeModal,
         labels,
         setLabels,
