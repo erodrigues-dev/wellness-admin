@@ -47,31 +47,38 @@ export function BlockForm() {
     return Boolean(selected?.slotData?.recurrenceRule);
   }
 
-  function askToUpdate() {
+  function askToUpdate(recurrenceIschanged) {
     return new Promise((resolve) => {
       const originalDate = selected.slotData.start;
+
+      const buttons = [
+        {
+          text: 'Only this block',
+          action: () => resolve({ updateOnDate: originalDate }),
+        },
+        {
+          text: 'This block and following',
+          action: () =>
+            resolve({
+              updateOnDate: originalDate,
+              updateFollowing: true,
+            }),
+        },
+        {
+          text: 'Cancel',
+          color: 'secondary',
+          action: () => resolve(null),
+        },
+      ];
+
+      if (recurrenceIschanged) {
+        buttons.shift();
+      }
+
       confirm(
         'Update recurrent block',
         'Select an option to update this recurrent block',
-        [
-          {
-            text: 'Only this block',
-            action: () => resolve({ updateOnDate: originalDate }),
-          },
-          {
-            text: 'This block and following',
-            action: () =>
-              resolve({
-                updateOnDate: originalDate,
-                updateFollowing: true,
-              }),
-          },
-          {
-            text: 'Cancel',
-            color: 'secondary',
-            action: () => resolve(null),
-          },
-        ],
+        buttons,
         {
           closeOnEscape: false,
           closeOnClickOutside: false,
@@ -86,7 +93,10 @@ export function BlockForm() {
     }
 
     if (isRecurrent()) {
-      const updateOptions = await askToUpdate();
+      const recurrenceIsChanged =
+        (values.recurrenceRule || null) !==
+        (selected?.slotData?.recurrenceRule || null);
+      const updateOptions = await askToUpdate(recurrenceIsChanged);
       if (!updateOptions) return null;
       return onSubmit(values, updateOptions);
     }
