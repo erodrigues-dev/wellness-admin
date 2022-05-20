@@ -69,6 +69,7 @@ export function SchedulerProvider({ children }) {
     const end = new Date(data.dateEnd);
 
     return {
+      ...data,
       id: data.id,
       type: 'class',
       title,
@@ -76,7 +77,6 @@ export function SchedulerProvider({ children }) {
       end,
       calendarId: data.calendar ? data.calendar.id : data.calendarId,
       activity: data.activity,
-      ...data,
     };
   }, []);
 
@@ -250,6 +250,25 @@ export function SchedulerProvider({ children }) {
     [confirmRemoveItem, handleRemoveInAPI, handleRemoveInScheduler]
   );
 
+  const incrementReservedSlotInClass = useCallback(
+    (id) => {
+      setItems((state) => ({
+        ...state,
+        classes: state.classes.map((clazz) => {
+          if (clazz.id === id) {
+            const updatedClass = {
+              ...clazz,
+              reservedSlots: (clazz.reservedSlots || 0) + 1,
+            };
+            return mapClassesToDataItem(updatedClass);
+          }
+          return clazz;
+        }),
+      }));
+    },
+    [mapClassesToDataItem]
+  );
+
   useEffect(() => {
     setFetchingLabels(true);
     listCalendarLabels()
@@ -289,6 +308,7 @@ export function SchedulerProvider({ children }) {
         setItems,
         mapBlocksToDataItem,
         handleRemoveItem,
+        incrementReservedSlotInClass,
       }}
     >
       {children}

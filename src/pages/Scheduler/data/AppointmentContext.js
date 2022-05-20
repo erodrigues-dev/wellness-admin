@@ -31,6 +31,7 @@ export function AppointmentProvider({ children }) {
     closeModal,
     setItems,
     mapAppointmentsToDataItem,
+    incrementReservedSlotInClass,
   } = useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
@@ -166,7 +167,14 @@ export function AppointmentProvider({ children }) {
       const { data } = await submitItem(submit);
       const items = handleItemOnSave(values, data);
 
-      if (!formValues?.calendarClassId) saveAppointment(items);
+      const hasCalendar = Boolean(formValues?.calendarClassId);
+
+      if (hasCalendar) {
+        incrementReservedSlotInClass(formValues?.calendarClassId);
+      } else {
+        saveAppointment(items);
+      }
+
       handleModalAction();
 
       toast.success('Appointment saved successfully');
