@@ -19,8 +19,14 @@ import { useSchedulerContext } from './SchedulerContext';
 const ClassContext = createContext({});
 
 export function ClassProvider({ children }) {
-  const { modal, setModal, closeModal, setItems, mapClassesToDataItem } =
-    useSchedulerContext();
+  const {
+    modal,
+    setModal,
+    forceOpenModal,
+    closeModal,
+    setItems,
+    mapClassesToDataItem,
+  } = useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
     loading: false,
@@ -112,7 +118,7 @@ export function ClassProvider({ children }) {
   };
 
   const openClassEdit = () => {
-    setModal({
+    forceOpenModal({
       selectedId,
       type: 'class',
       isEdit: true,
