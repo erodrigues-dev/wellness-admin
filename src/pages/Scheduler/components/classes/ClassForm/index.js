@@ -5,6 +5,7 @@ import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 import { useFormik } from 'formik';
 
 import ButtonLoading from '~/components/ButtonLoading';
+import { confirm } from '~/components/ConfirmAlertWithButtons';
 import { DateTimePickerFormikAdapter } from '~/components/Form/DateTimePicker';
 import { Input, InputFormikAdapter } from '~/components/Form/Input';
 import Loading from '~/components/Loading';
@@ -28,12 +29,8 @@ export function ClassForm() {
   } = useClassContext();
   const { isEdit } = modal;
 
-  useEffect(() => {
-    if (selectedClass?.calendarId) fetchActivities(selectedClass?.calendarId);
-  }, [fetchActivities, selectedClass]);
-
   const formik = useFormik({
-    onSubmit,
+    onSubmit: handleSubmit,
     validationSchema,
     initialValues: getInitialValues({
       ...selectedClass,
@@ -79,6 +76,67 @@ export function ClassForm() {
     },
     [setFieldValue]
   );
+
+  function isRecurrent() {
+    return Boolean(selectedClass.recurrenceRule);
+  }
+
+  function recurrenceHasChanged(newValues, oldValues) {
+    return (
+      (newValues.recurrenceRule || null) !== (oldValues?.recurrenceRule || null)
+    );
+  }
+
+  function askToUpdate(recurrenceIsChanged) {
+    return new Promise((resolve) => {
+      const buttons = [
+        {
+          text: 'Only this class',
+          action: () => resolve({ updateFollowing: false }),
+        },
+        {
+          text: 'This class and following',
+          action: () =>
+            resolve({
+              updateFollowing: true,
+            }),
+        },
+        {
+          text: 'Cancel',
+          color: 'secondary',
+          action: () => resolve(null),
+        },
+      ];
+
+      if (recurrenceIsChanged) {
+        buttons.shift();
+      }
+
+      confirm(
+        'Update Class',
+        'Select an option to update this class',
+        buttons,
+        {
+          closeOnEscape: false,
+          closeOnClickOutside: false,
+        }
+      );
+    });
+  }
+
+  async function handleSubmit(newValues) {
+    if (isRecurrent()) {
+      const isChanged = recurrenceHasChanged(newValues, selectedClass);
+      const { updateFollowing } = await askToUpdate(isChanged);
+      return onSubmit({ ...newValues, following: updateFollowing });
+    }
+
+    return onSubmit(newValues);
+  }
+
+  useEffect(() => {
+    if (selectedClass?.calendarId) fetchActivities(selectedClass?.calendarId);
+  }, [fetchActivities, selectedClass]);
 
   if (fetchingClass) {
     return <Loading />;
