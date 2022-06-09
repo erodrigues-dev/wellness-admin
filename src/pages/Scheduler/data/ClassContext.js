@@ -100,11 +100,11 @@ export function ClassProvider({ children }) {
       const { calendar, activity, recurrenceRule, notes, ...values } =
         formValues;
       const submit = {
+        ...values,
         calendarId: calendar?.id,
         activityId: activity?.id,
         recurrenceRule: recurrenceRule || null,
         notes: notes || null,
-        ...values,
       };
       const { data } = await submitItem(submit);
 
