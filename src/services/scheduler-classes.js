@@ -22,27 +22,8 @@ export async function createClass({
   return response;
 }
 
-export async function updateClass({
-  id,
-  calendarId,
-  activityId,
-  dateStart,
-  slots,
-  recurrenceRule,
-  color,
-  notes,
-}) {
-  const response = await api.put(`/scheduler/classes/${id}`, {
-    calendarId,
-    activityId,
-    dateStart,
-    slots,
-    color,
-    notes,
-    recurrenceRule,
-  });
-
-  return response;
+export function updateClass({ id, ...data }) {
+  return api.put(`/scheduler/classes/${id}`, data);
 }
 
 export async function getClassById(id) {
