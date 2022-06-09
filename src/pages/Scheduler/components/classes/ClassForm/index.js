@@ -127,8 +127,9 @@ export function ClassForm() {
   async function handleSubmit(newValues) {
     if (isRecurrent()) {
       const isChanged = recurrenceHasChanged(newValues, selectedClass);
-      const { updateFollowing } = await askToUpdate(isChanged);
-      return onSubmit({ ...newValues, following: updateFollowing });
+      const result = await askToUpdate(isChanged);
+      if (!result) return null;
+      return onSubmit({ ...newValues, following: result.updateFollowing });
     }
 
     return onSubmit(newValues);
