@@ -99,6 +99,16 @@ export function AppointmentProvider({ children }) {
     });
   };
 
+  const openDetailsAppointment = (data) => {
+    if (modal.isOpen) return;
+    handleSelectedData(data);
+    openModal({
+      selectedId: data.id,
+      type: 'appointment-details',
+      isOpen: true,
+    });
+  };
+
   const submitItem = (values) =>
     values.id ? updateAppointment(values) : createAppointment(values);
 
@@ -199,6 +209,7 @@ export function AppointmentProvider({ children }) {
         openFreeSlot,
         openEditAppointment,
         openNewAppointment,
+        openDetailsAppointment,
         addAttndeeInClass,
         resetSelected,
         fetchActivities,
