@@ -8,7 +8,7 @@ import { useClassContext } from '../../data/ClassContext';
 import { Label } from './Label';
 
 export function CustomItem(props) {
-  const { openEditAppointment } = useAppointmentContext();
+  const { openDetailsAppointment } = useAppointmentContext();
   const { openClassDisplay } = useClassContext();
   const { openEditBlock } = useBlockContext();
 
@@ -21,7 +21,7 @@ export function CustomItem(props) {
     } else if (props.dataItem.type === 'class') {
       openClassDisplay(props.dataItem.id);
     } else {
-      openEditAppointment({
+      openDetailsAppointment({
         calendar,
         start,
         end,
