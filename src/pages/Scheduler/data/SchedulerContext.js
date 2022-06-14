@@ -240,12 +240,14 @@ export function SchedulerProvider({ children }) {
   const handleRemoveItem = useCallback(
     async (item) => {
       const { confirmed, following } = await confirmRemoveItem(item);
-      if (!confirmed) return;
+      if (!confirmed) return false;
       const { ok } = await handleRemoveInAPI(item, following);
       if (ok) {
         handleRemoveInScheduler(item);
         toast.success(`${item.type} deleted successfully`);
       }
+
+      return ok;
     },
     [confirmRemoveItem, handleRemoveInAPI, handleRemoveInScheduler]
   );

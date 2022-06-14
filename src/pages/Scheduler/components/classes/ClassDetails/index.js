@@ -26,7 +26,7 @@ import {
 } from './styles';
 
 export function ClassDetails() {
-  const { modal } = useSchedulerContext();
+  const { modal, handleRemoveItem } = useSchedulerContext();
   const { addAttndeeInClass } = useAppointmentContext();
   const { openClassEdit, handleCloseModal, selectedClass, fetchingClass } =
     useClassContext();
@@ -97,6 +97,11 @@ export function ClassDetails() {
     } catch (error) {
       toast.error('Error on save label');
     }
+  };
+
+  const handleDelete = async () => {
+    const ok = await handleRemoveItem({ ...selectedClass, type: 'class' });
+    if (ok) handleCloseModal();
   };
 
   if (!selectedClass || fetchingClass) {
@@ -172,7 +177,7 @@ export function ClassDetails() {
         <Button variant="secondary" onClick={handleCloseModal}>
           Cancel
         </Button>
-        <Button variant="danger" onClick={() => null}>
+        <Button variant="danger" onClick={handleDelete}>
           Delete
         </Button>
         <Button onClick={openClassEdit}>Edit</Button>
