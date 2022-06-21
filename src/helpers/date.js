@@ -15,6 +15,10 @@ export { addMinutes, addMonths, endOfDay, isSameDay };
 
 const TIMEZONE = /\((.*)\)/.exec(new Date().toString())[1];
 
+export function formatToFullDate(value) {
+  return format(new Date(value), 'EEEE, LLLL dd, yyyy');
+}
+
 export function formatToList(value) {
   const date = parseJSON(value);
   return formatDistanceToNow(date, { addSuffix: true });
@@ -32,7 +36,6 @@ export function formatToDisplay(value) {
  */
 export function formatToDateTime(date) {
   if (date instanceof Date) return format(date, 'MM/dd/y h:mm a');
-
   return null;
 }
 
