@@ -48,6 +48,7 @@ export function getTimezone() {
 
 export function formatToTime(date) {
   if (date instanceof Date) return format(date, 'h:mm a').toLowerCase();
+  if (date) return format(new Date(date), 'h:mm a').toLowerCase();
 
   return date;
 }
