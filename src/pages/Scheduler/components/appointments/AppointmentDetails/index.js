@@ -3,10 +3,12 @@ import { Button } from 'react-bootstrap';
 
 import { Window, WindowActionsBar } from '@progress/kendo-react-dialogs';
 
-import { useSchedulerContext } from '../../../data/SchedulerContext';
+import { CalendarLabels } from '~/components/CalendarLabelList';
+import { formatToFullDate, formatToTime } from '~/helpers/date';
 
-// import { CalendarLabels } from '~/components/CalendarLabelList';
-// import { useAppointmentContext } from '../../../data/AppointmentContext';
+import { useAppointmentContext } from '../../../data/AppointmentContext';
+import { useSchedulerContext } from '../../../data/SchedulerContext';
+import { Contact, Header } from './styles';
 
 export function AppointmentDetails() {
   const {
@@ -22,6 +24,10 @@ export function AppointmentDetails() {
 
 function AppointmentDetailsComponent() {
   const { closeModal } = useSchedulerContext();
+  const { selected, openEditFromDetails, handleChangeLabel } =
+    useAppointmentContext();
+
+  const { item } = selected;
 
   return (
     <Window
@@ -30,13 +36,39 @@ function AppointmentDetailsComponent() {
       initialHeight={600}
       onClose={closeModal}
     >
-      <h2>Modal de detalhe</h2>
+      <Header>
+        <h2>{item.customer.name}</h2>
+        <h2>{item.activity.name}</h2>
+        <p>{formatToFullDate(item.dateStart)}</p>
+        <p>
+          {formatToTime(item.dateStart)} - {formatToTime(item.dateEnd)}
+        </p>
+        <p>{item.activity.duration}min</p>
+      </Header>
+
+      <CalendarLabels
+        value={item.calendarLabelId}
+        onChange={handleChangeLabel}
+      />
+
+      <Contact>
+        <ul>
+          <li>
+            <span>Phone</span>
+            <span>{item.customer.phone}</span>
+          </li>
+          <li>
+            <span>Email</span>
+            <span>{item.customer.email}</span>
+          </li>
+        </ul>
+      </Contact>
 
       <WindowActionsBar>
-        <Button variant="secondary" onClick={() => {}}>
+        <Button variant="secondary" onClick={closeModal}>
           Close
         </Button>
-        <Button onClick={() => {}}>Edit</Button>
+        <Button onClick={openEditFromDetails}>Edit</Button>
       </WindowActionsBar>
     </Window>
   );

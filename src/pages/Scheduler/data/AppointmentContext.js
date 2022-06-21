@@ -202,6 +202,18 @@ export function AppointmentProvider({ children }) {
     }
   };
 
+  const handleChangeLabel = useCallback(async (label) => {
+    // TODO send to api
+    setSelected((state) => ({
+      ...state,
+      item: {
+        ...state.item,
+        calendarLabel: label,
+        calendarLabelId: label?.id,
+      },
+    }));
+  }, []);
+
   useEffect(() => {
     const calendarId =
       modal?.selectedClass?.calendarId ?? selected?.calendar?.id;
@@ -227,6 +239,7 @@ export function AppointmentProvider({ children }) {
         fetchActivities,
         setActivities,
         handleModalAction,
+        handleChangeLabel,
       }}
     >
       {children}
