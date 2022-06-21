@@ -38,6 +38,7 @@ export function AppointmentProvider({ children }) {
     loading: false,
   });
   const [selected, setSelected] = useState(initialSelectedItemState);
+  const [activitiesCalendarId, setActivitiesCalendarId] = useState(null);
 
   const handleActivities = (state) =>
     setActivities((prevState) => ({ ...prevState, ...state }));
@@ -48,6 +49,7 @@ export function AppointmentProvider({ children }) {
       const { data } = await listActivities(calendarId);
 
       handleActivities({ list: data });
+      setActivitiesCalendarId(calendarId);
     } catch (error) {
       toast.error('Unable to list activities of calendar');
     } finally {
@@ -204,8 +206,10 @@ export function AppointmentProvider({ children }) {
     const calendarId =
       modal?.selectedClass?.calendarId ?? selected?.calendar?.id;
 
-    if (calendarId) fetchActivities(calendarId);
-  }, [fetchActivities, selected, modal]);
+    if (calendarId && calendarId !== activitiesCalendarId) {
+      fetchActivities(calendarId);
+    }
+  }, [fetchActivities, selected, modal, activitiesCalendarId]);
 
   return (
     <AppointmentContext.Provider
