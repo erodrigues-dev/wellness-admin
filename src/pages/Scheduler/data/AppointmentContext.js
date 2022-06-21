@@ -99,6 +99,13 @@ export function AppointmentProvider({ children }) {
     });
   };
 
+  const openEditFromDetails = () => {
+    forceOpenModal({
+      ...modal,
+      type: 'appointment',
+    });
+  };
+
   const openDetailsAppointment = (data) => {
     if (modal.isOpen) return;
     handleSelectedData(data);
@@ -210,6 +217,7 @@ export function AppointmentProvider({ children }) {
         openEditAppointment,
         openNewAppointment,
         openDetailsAppointment,
+        openEditFromDetails,
         addAttndeeInClass,
         resetSelected,
         fetchActivities,
