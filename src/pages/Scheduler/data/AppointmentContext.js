@@ -11,6 +11,7 @@ import { listActivities } from '~/services/scheduler';
 import {
   createAppointment,
   updateAppointment,
+  updateAppointmentPartially,
 } from '~/services/scheduler-appointments';
 
 import { useSchedulerContext } from './SchedulerContext';
@@ -32,12 +33,14 @@ export function AppointmentProvider({ children }) {
     setItems,
     mapAppointmentsToDataItem,
     incrementReservedSlotInClass,
+    updateAppointmentLabel,
   } = useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
     loading: false,
   });
   const [selected, setSelected] = useState(initialSelectedItemState);
+  const [activitiesCalendarId, setActivitiesCalendarId] = useState(null);
 
   const handleActivities = (state) =>
     setActivities((prevState) => ({ ...prevState, ...state }));
@@ -48,6 +51,7 @@ export function AppointmentProvider({ children }) {
       const { data } = await listActivities(calendarId);
 
       handleActivities({ list: data });
+      setActivitiesCalendarId(calendarId);
     } catch (error) {
       toast.error('Unable to list activities of calendar');
     } finally {
@@ -95,6 +99,23 @@ export function AppointmentProvider({ children }) {
       selectedId: data.id,
       type: 'appointment',
       isEdit: true,
+      isOpen: true,
+    });
+  };
+
+  const openEditFromDetails = () => {
+    forceOpenModal({
+      ...modal,
+      type: 'appointment',
+    });
+  };
+
+  const openDetailsAppointment = (data) => {
+    if (modal.isOpen) return;
+    handleSelectedData(data);
+    openModal({
+      selectedId: data.id,
+      type: 'appointment-details',
       isOpen: true,
     });
   };
@@ -183,12 +204,37 @@ export function AppointmentProvider({ children }) {
     }
   };
 
+  const handleChangeLabel = useCallback(
+    async (label) => {
+      const { id } = selected.item;
+      updateAppointmentPartially({
+        id,
+        calendarLabelId: label?.id || null,
+      }).catch(() => {
+        toast.error('Unexpected error ocurred');
+      });
+
+      updateAppointmentLabel(id, label);
+      setSelected((state) => ({
+        ...state,
+        item: {
+          ...state.item,
+          calendarLabel: label,
+          calendarLabelId: label?.id,
+        },
+      }));
+    },
+    [selected, updateAppointmentLabel]
+  );
+
   useEffect(() => {
     const calendarId =
       modal?.selectedClass?.calendarId ?? selected?.calendar?.id;
 
-    if (calendarId) fetchActivities(calendarId);
-  }, [fetchActivities, selected, modal]);
+    if (calendarId && calendarId !== activitiesCalendarId) {
+      fetchActivities(calendarId);
+    }
+  }, [fetchActivities, selected, modal, activitiesCalendarId]);
 
   return (
     <AppointmentContext.Provider
@@ -199,11 +245,14 @@ export function AppointmentProvider({ children }) {
         openFreeSlot,
         openEditAppointment,
         openNewAppointment,
+        openDetailsAppointment,
+        openEditFromDetails,
         addAttndeeInClass,
         resetSelected,
         fetchActivities,
         setActivities,
         handleModalAction,
+        handleChangeLabel,
       }}
     >
       {children}

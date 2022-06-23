@@ -78,7 +78,7 @@ export function ClassForm() {
   );
 
   function isRecurrent() {
-    return Boolean(selectedClass.recurrenceRule);
+    return Boolean(selectedClass?.recurrenceRule);
   }
 
   function recurrenceHasChanged(newValues, oldValues) {

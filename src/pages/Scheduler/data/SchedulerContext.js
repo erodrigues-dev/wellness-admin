@@ -271,6 +271,22 @@ export function SchedulerProvider({ children }) {
     [mapClassesToDataItem]
   );
 
+  const updateAppointmentLabel = useCallback((id, label) => {
+    setItems((state) => ({
+      ...state,
+      appointments: state.appointments.map((appointment) => {
+        if (appointment.id === id) {
+          return {
+            ...appointment,
+            calendarLabelId: label?.id,
+            calendarLabel: label,
+          };
+        }
+        return appointment;
+      }),
+    }));
+  }, []);
+
   useEffect(() => {
     setFetchingLabels(true);
     listCalendarLabels()
@@ -311,6 +327,7 @@ export function SchedulerProvider({ children }) {
         mapBlocksToDataItem,
         handleRemoveItem,
         incrementReservedSlotInClass,
+        updateAppointmentLabel,
       }}
     >
       {children}
