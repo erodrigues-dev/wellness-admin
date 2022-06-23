@@ -104,6 +104,15 @@ export function ClassDetails() {
     if (ok) handleCloseModal();
   };
 
+  const handleOpenAppointmentDetails = (event, appointment) => {
+    if (
+      event.target === event.currentTarget ||
+      event.target.classList.contains('open-details')
+    ) {
+      console.log(appointment);
+    }
+  };
+
   if (!selectedClass || fetchingClass) {
     return null;
   }
@@ -141,9 +150,16 @@ export function ClassDetails() {
               {appointments?.list
                 ?.filter((x) => !selectedNote?.id || x.id === selectedNote?.id)
                 ?.map((appointment) => (
-                  <AttendeesItem key={appointment?.id}>
+                  <AttendeesItem
+                    key={appointment?.id}
+                    onClick={(e) =>
+                      handleOpenAppointmentDetails(e, appointment)
+                    }
+                  >
                     <div>
-                      <span>{appointment?.customer?.name}</span>
+                      <span className="open-details">
+                        {appointment?.customer?.name}
+                      </span>
                       <KendoButton
                         onClick={() => handleChangeNoteClick(appointment)}
                       >
