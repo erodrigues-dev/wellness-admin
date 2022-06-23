@@ -11,6 +11,7 @@ import { listActivities } from '~/services/scheduler';
 import {
   createAppointment,
   updateAppointment,
+  updateAppointmentPartially,
 } from '~/services/scheduler-appointments';
 
 import { useSchedulerContext } from './SchedulerContext';
@@ -32,6 +33,7 @@ export function AppointmentProvider({ children }) {
     setItems,
     mapAppointmentsToDataItem,
     incrementReservedSlotInClass,
+    updateAppointmentLabel,
   } = useSchedulerContext();
   const [activities, setActivities] = useState({
     list: [],
@@ -202,17 +204,28 @@ export function AppointmentProvider({ children }) {
     }
   };
 
-  const handleChangeLabel = useCallback(async (label) => {
-    // TODO send to api
-    setSelected((state) => ({
-      ...state,
-      item: {
-        ...state.item,
-        calendarLabel: label,
-        calendarLabelId: label?.id,
-      },
-    }));
-  }, []);
+  const handleChangeLabel = useCallback(
+    async (label) => {
+      const { id } = selected.item;
+      updateAppointmentPartially({
+        id,
+        calendarLabelId: label?.id || null,
+      }).catch(() => {
+        toast.error('Unexpected error ocurred');
+      });
+
+      updateAppointmentLabel(id, label);
+      setSelected((state) => ({
+        ...state,
+        item: {
+          ...state.item,
+          calendarLabel: label,
+          calendarLabelId: label?.id,
+        },
+      }));
+    },
+    [selected, updateAppointmentLabel]
+  );
 
   useEffect(() => {
     const calendarId =
