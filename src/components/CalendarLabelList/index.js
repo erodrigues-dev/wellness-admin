@@ -25,24 +25,30 @@ export function CalendarLabelList() {
   const [buttonPosition, setButtonPosition] = useState(null);
   const openListButtonRef = useRef(null);
 
-  useEffect(() => {
-    document.addEventListener('scroll', () => {
-      setButtonPosition(openListButtonRef?.current?.getBoundingClientRect());
-    });
-  }, []);
-
   const getTopPosition = () =>
     `${openListButtonRef?.current?.getBoundingClientRect()?.top + 36}px`;
 
   const getLeftPosition = () =>
     `${openListButtonRef?.current?.getBoundingClientRect()?.right - 110}px`;
 
+  const handleOpen = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsOpened((prevState) => !prevState);
+  };
+
+  useEffect(() => {
+    document.addEventListener('scroll', () => {
+      setButtonPosition(openListButtonRef?.current?.getBoundingClientRect());
+    });
+  }, []);
+
   return (
     <Container>
       <div className="wrapper">
         <OpenListButton
           type="button"
-          onClick={() => setIsOpened((prevState) => !prevState)}
+          onClick={handleOpen}
           disabled={fetchingLabels}
           ref={openListButtonRef}
         >
