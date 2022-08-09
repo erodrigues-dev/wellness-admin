@@ -11,7 +11,10 @@ import { formatDate } from '~/helpers/date';
 import { useAppointmentContext } from '~/pages/Scheduler/data/AppointmentContext';
 import { useClassContext } from '~/pages/Scheduler/data/ClassContext';
 import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
-import { updateAppointmentPartially } from '~/services/scheduler-appointments';
+import {
+  updateAppointmentPartially,
+  getAppointment,
+} from '~/services/scheduler-appointments';
 import { getAppointmentsList } from '~/services/scheduler-classes';
 
 import NoteEdit from './NoteEdit';
@@ -104,11 +107,13 @@ export function ClassDetails() {
     if (ok) handleCloseModal();
   };
 
-  const handleOpenAppointmentDetails = (event, appointment) => {
+  const handleOpenAppointmentDetails = async (event, { id }) => {
     if (
       event.target === event.currentTarget ||
       event.target.classList.contains('open-details')
     ) {
+      console.log('recuperando appointment na api');
+      const { data: appointment } = await getAppointment(id);
       console.log(appointment);
     }
   };
