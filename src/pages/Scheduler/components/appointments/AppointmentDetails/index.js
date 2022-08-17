@@ -23,9 +23,12 @@ export function AppointmentDetails() {
 }
 
 function AppointmentDetailsComponent() {
-  const { closeModal } = useSchedulerContext();
-  const { selected, openEditFromDetails, handleChangeLabel } =
-    useAppointmentContext();
+  const {
+    selected,
+    openEditFromDetails,
+    closeAppointmentModal,
+    handleChangeLabel,
+  } = useAppointmentContext();
 
   const { item } = selected;
 
@@ -34,7 +37,7 @@ function AppointmentDetailsComponent() {
       title="Appointment Details"
       initialWidth={600}
       initialHeight={600}
-      onClose={closeModal}
+      onClose={closeAppointmentModal}
     >
       <Header>
         <h2>{item.customer.name}</h2>
@@ -65,7 +68,7 @@ function AppointmentDetailsComponent() {
       </Contact>
 
       <WindowActionsBar>
-        <Button variant="secondary" onClick={closeModal}>
+        <Button variant="secondary" onClick={closeAppointmentModal}>
           Close
         </Button>
         <Button onClick={openEditFromDetails}>Edit</Button>

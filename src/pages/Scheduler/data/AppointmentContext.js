@@ -79,12 +79,13 @@ export function AppointmentProvider({ children }) {
     });
   };
 
-  const handleSelectedData = (data) =>
+  const handleSelectedData = (data) => {
     setSelected({
       slotData: data,
       calendar: data.calendar,
       item: data.dataItem,
     });
+  };
 
   const openFreeSlot = (data) => {
     if (modal.isOpen) return;
@@ -110,14 +111,18 @@ export function AppointmentProvider({ children }) {
     });
   };
 
-  const openDetailsAppointment = (data) => {
-    if (modal.isOpen) return;
+  const openDetailsAppointment = (data, force) => {
+    if (modal.isOpen && !force) return;
     handleSelectedData(data);
-    openModal({
+    forceOpenModal({
       selectedId: data.id,
       type: 'appointment-details',
       isOpen: true,
     });
+  };
+
+  const closeAppointmentModal = () => {
+    closeModal();
   };
 
   const submitItem = (values) =>
@@ -253,6 +258,7 @@ export function AppointmentProvider({ children }) {
         setActivities,
         handleModalAction,
         handleChangeLabel,
+        closeAppointmentModal,
       }}
     >
       {children}

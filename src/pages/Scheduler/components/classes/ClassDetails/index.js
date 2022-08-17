@@ -30,7 +30,7 @@ import {
 
 export function ClassDetails() {
   const { modal, handleRemoveItem } = useSchedulerContext();
-  const { addAttndeeInClass } = useAppointmentContext();
+  const { addAttndeeInClass, openDetailsAppointment } = useAppointmentContext();
   const { openClassEdit, handleCloseModal, selectedClass, fetchingClass } =
     useClassContext();
   const [appointments, setAppointments] = useState({
@@ -113,8 +113,12 @@ export function ClassDetails() {
       event.target.classList.contains('open-details')
     ) {
       console.log('recuperando appointment na api');
-      const { data: appointment } = await getAppointment(id);
-      console.log(appointment);
+      const { data } = await getAppointment(id);
+      const selectedData = {
+        calendar: data.calendar,
+        dataItem: data,
+      };
+      openDetailsAppointment(selectedData, true);
     }
   };
 
