@@ -83,6 +83,11 @@ export const AttendeesItem = styled.li`
       align-self: flex-end;
     }
   }
+
+  .open-details {
+    cursor: pointer;
+    user-select: none;
+  }
 `;
 
 export const EmptyAttendees = styled.i`

@@ -11,7 +11,10 @@ import { formatDate } from '~/helpers/date';
 import { useAppointmentContext } from '~/pages/Scheduler/data/AppointmentContext';
 import { useClassContext } from '~/pages/Scheduler/data/ClassContext';
 import { useSchedulerContext } from '~/pages/Scheduler/data/SchedulerContext';
-import { updateAppointmentPartially } from '~/services/scheduler-appointments';
+import {
+  updateAppointmentPartially,
+  getAppointment,
+} from '~/services/scheduler-appointments';
 import { getAppointmentsList } from '~/services/scheduler-classes';
 
 import NoteEdit from './NoteEdit';
@@ -27,7 +30,7 @@ import {
 
 export function ClassDetails() {
   const { modal, handleRemoveItem } = useSchedulerContext();
-  const { addAttndeeInClass } = useAppointmentContext();
+  const { addAttndeeInClass, openDetailsAppointment } = useAppointmentContext();
   const { openClassEdit, handleCloseModal, selectedClass, fetchingClass } =
     useClassContext();
   const [appointments, setAppointments] = useState({
@@ -104,6 +107,21 @@ export function ClassDetails() {
     if (ok) handleCloseModal();
   };
 
+  const handleOpenAppointmentDetails = async (event, { id }) => {
+    if (
+      event.target === event.currentTarget ||
+      event.target.classList.contains('open-details')
+    ) {
+      console.log('recuperando appointment na api');
+      const { data } = await getAppointment(id);
+      const selectedData = {
+        calendar: data.calendar,
+        dataItem: data,
+      };
+      openDetailsAppointment(selectedData, true);
+    }
+  };
+
   if (!selectedClass || fetchingClass) {
     return null;
   }
@@ -141,9 +159,16 @@ export function ClassDetails() {
               {appointments?.list
                 ?.filter((x) => !selectedNote?.id || x.id === selectedNote?.id)
                 ?.map((appointment) => (
-                  <AttendeesItem key={appointment?.id}>
+                  <AttendeesItem
+                    key={appointment?.id}
+                    onClick={(e) =>
+                      handleOpenAppointmentDetails(e, appointment)
+                    }
+                  >
                     <div>
-                      <span>{appointment?.customer?.name}</span>
+                      <span className="open-details">
+                        {appointment?.customer?.name}
+                      </span>
                       <KendoButton
                         onClick={() => handleChangeNoteClick(appointment)}
                       >

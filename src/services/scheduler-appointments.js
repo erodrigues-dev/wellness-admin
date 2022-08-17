@@ -1,5 +1,9 @@
 import api from './api';
 
+export function getAppointment(id) {
+  return api.get(`/scheduler/appointments/${id}`);
+}
+
 export async function createAppointment({
   calendarId,
   activityId,
